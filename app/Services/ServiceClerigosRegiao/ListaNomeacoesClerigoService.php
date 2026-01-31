@@ -40,7 +40,8 @@ class ListaNomeacoesClerigoService
             ->with('funcaoministerial')
             ->with('pessoa')
             ->with('instituicao')
-            ->orderBy('pessoas_nomeacoes.data_nomeacao', 'DESC')
+            ->orderByRaw('data_termino IS NULL DESC')
+            //->orderBy('pessoas_nomeacoes.data_nomeacao', 'DESC')
             ->orderBy('pessoas_pessoas.nome', 'ASC')
             ->get();
         return [
