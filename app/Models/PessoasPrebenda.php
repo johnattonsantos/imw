@@ -5,10 +5,12 @@ namespace App\Models;
 use App\Traits\FormatterUtils;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class PessoasPrebenda extends Model
+class PessoasPrebenda extends Model implements Auditable
 {
-    use HasFactory, FormatterUtils;
+    use HasFactory, FormatterUtils, AuditableTrait;
 
     protected $table = 'pessoas_prebendas';
 

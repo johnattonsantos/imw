@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class MembresiaMembroRecadastramento extends Model
+class MembresiaMembroRecadastramento extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, HasUuids, Compoships;
+    use HasFactory, SoftDeletes, HasUuids, Compoships, AuditableTrait;
 
     // status
     const STATUS_ATIVO = 'A';

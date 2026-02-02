@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ClerigosRegiaoController;
 use App\Http\Controllers\CongregacoesController;
@@ -461,6 +462,9 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Grupo de rotas para 'usuarios'
+        Route::get('/auditorias', [AuditoriaController::class, 'index'])->name('auditorias.index')->middleware(['seguranca:usuarios-index']);
+        Route::get('/auditorias/export/xlsx', [AuditoriaController::class, 'exportXlsx'])->name('auditorias.export.xlsx')->middleware(['seguranca:usuarios-index']);
+        Route::get('/auditorias/export/pdf', [AuditoriaController::class, 'exportPdf'])->name('auditorias.export.pdf')->middleware(['seguranca:usuarios-index']);
         Route::prefix('seguranca/users')->name('usuarios.')->group(function () {
             Route::get('/', [UsuarioController::class, 'index'])->name('index')->middleware(['seguranca:usuarios-index']);
             Route::get('/novo', [UsuarioController::class, 'novo'])->name('novo')->middleware(['seguranca:usuarios-cadastrar']);

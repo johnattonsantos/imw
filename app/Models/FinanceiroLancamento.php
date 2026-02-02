@@ -6,10 +6,12 @@ use App\Traits\Identifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class FinanceiroLancamento extends Model
+class FinanceiroLancamento extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, AuditableTrait;
 
     const TP_LANCAMENTO_ENTRADA = 'E';
     const TP_LANCAMENTO_SAIDA = 'S';

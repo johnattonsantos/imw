@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class FinanceiroPlanoConta extends Model
+class FinanceiroPlanoConta extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, Identifiable;
+    use HasFactory, SoftDeletes, Identifiable, AuditableTrait;
 
     const TP_ENTRADA = 'E';
     const TP_SAIDA = 'S';

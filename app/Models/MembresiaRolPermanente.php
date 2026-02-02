@@ -6,10 +6,12 @@ use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class MembresiaRolPermanente extends Model
+class MembresiaRolPermanente extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, Compoships;
+    use HasFactory, SoftDeletes, Compoships, AuditableTrait;
 
     const STATUS_RECEBIMENTO = 'A';
     const STATUS_EXCLUSAO = 'I';

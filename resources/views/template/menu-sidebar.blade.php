@@ -1088,7 +1088,7 @@
              </li>
 
              <li class="menu">
-                 <a href="#segurancaLocal" data-toggle="collapse" aria-expanded="{{Request::is('seguranca/*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                 <a href="#segurancaLocal" data-toggle="collapse" aria-expanded="{{ Request::is('seguranca/*', 'auditorias*') ? 'true' : 'false' }}" class="dropdown-toggle">
                      <div class="">
                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -1106,7 +1106,7 @@
                          </svg>
                      </div>
                  </a>
-                 <ul class="collapse submenu list-unstyled {{ Request::is('seguranca/*') ? 'collapse show' : '' }}" id="segurancaLocal" data-parent="#segurancaLocal">
+                 <ul class="collapse submenu list-unstyled {{ Request::is('seguranca/*', 'auditorias*') ? 'collapse show' : '' }}" id="segurancaLocal" data-parent="#segurancaLocal">
                      @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-usuarios-instituicao'))
                          @php
                              // Obtém o perfil_id da sessão
@@ -1125,6 +1125,12 @@
                          <li  {!! Request::is('seguranca/users', 'seguranca/users/*') ? 'class="active"' : '' !!}>
                              <a href="{{ $hrefRoute }}"> Gerenciar usuários</a>
                          </li>
+
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('usuarios-index'))
+                             <li {!! Request::is('auditorias*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('auditorias.index') }}"> Auditorias</a>
+                             </li>
+                         @endif
                      @endif
 
                  </ul>
