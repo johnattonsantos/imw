@@ -38,11 +38,22 @@
 
                     <div class="col-md-2 mb-2">
                         <label for="event">Evento</label>
+                        @php
+                            $eventLabels = [
+                                'login' => 'Login',
+                                'login_failed' => 'Login Falho',
+                                'logout' => 'Logout',
+                                'created' => 'Criado',
+                                'updated' => 'Atualizado',
+                                'CREATED' => 'Criado',
+                                'UPDATED' => 'Atualizado',
+                            ];
+                        @endphp
                         <select name="event" id="event" class="form-control form-control-sm">
                             <option value="">Todos</option>
                             @foreach($events as $event)
                                 <option value="{{ $event }}" @selected(request('event') === $event)>
-                                    {{ strtoupper($event) }}
+                                    {{ $eventLabels[$event] ?? strtoupper($event) }}
                                 </option>
                             @endforeach
                         </select>
