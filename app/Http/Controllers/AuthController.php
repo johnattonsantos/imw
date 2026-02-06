@@ -46,6 +46,27 @@ class AuthController extends Controller
             return redirect()->route('dashboard');
         }
 
+        try {
+            Audit::create([
+                'user_type' => null,
+                'user_id' => null,
+                'event' => 'login_failed',
+                'auditable_type' => \App\Models\User::class,
+                'auditable_id' => 0,
+                'old_values' => [],
+                'new_values' => [
+                    'email' => $request->input('email'),
+                    'message' => 'Tentativa de login sem sucesso',
+                ],
+                'url' => $request->fullUrl(),
+                'ip_address' => $request->ip(),
+                'user_agent' => substr((string) $request->userAgent(), 0, 1023),
+                'tags' => 'auth',
+            ]);
+        } catch (\Throwable $e) {
+            // Nunca bloquear o fluxo por falha de auditoria.
+        }
+
         session()->flash('error', 'E-mail ou senha inválida!');
         return redirect()->back();
     }
@@ -61,6 +82,29 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        if ($user) {
+            try {
+                Audit::create([
+                    'user_type' => get_class($user),
+                    'user_id' => $user->id,
+                    'event' => 'logout',
+                    'auditable_type' => get_class($user),
+                    'auditable_id' => $user->id,
+                    'old_values' => [],
+                    'new_values' => [
+                        'message' => 'Logout realizado com sucesso',
+                    ],
+                    'url' => $request->fullUrl(),
+                    'ip_address' => $request->ip(),
+                    'user_agent' => substr((string) $request->userAgent(), 0, 1023),
+                    'tags' => 'auth',
+                ]);
+            } catch (\Throwable $e) {
+                // Nunca bloquear o logout por falha de auditoria.
+            }
+        }
+
         Auth::logout();
         session()->flush();
         $request->session()->invalidate();
