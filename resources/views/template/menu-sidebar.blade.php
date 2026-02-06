@@ -1126,7 +1126,7 @@
                              <a href="{{ $hrefRoute }}"> Gerenciar usuários</a>
                          </li>
 
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('usuarios-index'))
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('auditoria'))
                              <li {!! Request::is('auditorias*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('auditorias.index') }}"> Auditorias</a>
                              </li>

@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Password;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use OwenIt\Auditing\Models\Audit;
 
 class AuthController extends Controller
 {
@@ -17,6 +19,30 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            $user = Auth::user();
+            if ($user) {
+                try {
+                    Audit::create([
+                        'user_type' => get_class($user),
+                        'user_id' => $user->id,
+                        'event' => 'login',
+                        'auditable_type' => get_class($user),
+                        'auditable_id' => $user->id,
+                        'old_values' => [],
+                        'new_values' => [
+                            'message' => 'Login realizado com sucesso',
+                        ],
+                        'url' => $request->fullUrl(),
+                        'ip_address' => $request->ip(),
+                        'user_agent' => substr((string) $request->userAgent(), 0, 1023),
+                        'tags' => 'auth',
+                    ]);
+                } catch (\Throwable $e) {
+                    // Nunca bloquear o login por falha de auditoria.
+                }
+            }
+
             return redirect()->route('dashboard');
         }
 
@@ -70,7 +96,7 @@ class AuthController extends Controller
             'password' => 'required|confirmed|min:8',
             'token' => 'required|string',
         ]);
-    
+
         // Lógica para redefinir a senha do usuário
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
@@ -79,7 +105,7 @@ class AuthController extends Controller
                 $user->save();
             }
         );
-    
+
         // Verificar o status da redefinição de senha
         if ($status === Password::PASSWORD_RESET) {
             return back()->with('status', 'Senha redefinida com sucesso!');
@@ -95,5 +121,5 @@ class AuthController extends Controller
 
         return view('auth.reset')->with(compact('token', 'email'));
     }
-    
+
 }
