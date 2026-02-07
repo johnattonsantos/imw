@@ -7,6 +7,7 @@ use App\Http\Controllers\ClerigosRegiaoController;
 use App\Http\Controllers\CongregacoesController;
 use App\Http\Controllers\CongregadosController;
 use App\Http\Controllers\ClerigoPerfilController;
+use App\Http\Controllers\ComunicacaoController;
 use App\Http\Controllers\ContabilidadeController;
 use App\Http\Controllers\DistritoRelatorioController;
 use App\Http\Controllers\FinanceiroCaixasController;
@@ -163,6 +164,20 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('notificacoes-tranferencia')->name('notificacoes-tranferencia.')->controller(NotificacoesTranferenciaController::class)->group(function () {
             Route::get('', 'index')->name('index');
+        });
+
+        Route::prefix('comunicacao')->name('comunicacao.')->controller(ComunicacaoController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/novo', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/detalhes/{comunicacao}', 'show')->name('show');
+            Route::get('/editar/{comunicacao}', 'edit')->name('edit');
+            Route::put('/update/{comunicacao}', 'update')->name('update');
+            Route::delete('/deletar/{comunicacao}', 'destroy')->name('destroy');
+            Route::get('/download/{comunicacao}', 'download')->name('download');
+            Route::get('/visualizar/{comunicacao}', 'visualizar')->name('visualizar');
+            Route::get('/export/xlsx', 'exportXlsx')->name('export.xlsx');
+            Route::get('/export/pdf', 'exportPdf')->name('export.pdf');
         });
 
         /* Por enquanto somente visualiações */

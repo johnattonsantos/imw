@@ -45,8 +45,10 @@
                                 'logout' => 'Logout',
                                 'created' => 'Criado',
                                 'updated' => 'Atualizado',
+                                'deleted' => 'Deletado',
                                 'CREATED' => 'Criado',
                                 'UPDATED' => 'Atualizado',
+                                'DELETED' => 'Deletado',
                             ];
                         @endphp
                         <select name="event" id="event" class="form-control form-control-sm">
@@ -105,6 +107,7 @@
                             <th>Evento</th>
                             <th>Entidade</th>
                             <th>Registro</th>
+                            <th>IP</th>
                             <th>Detalhes</th>
                         </tr>
                     </thead>
@@ -125,6 +128,7 @@
                                 <td><span class="badge badge-info">{{ strtoupper($audit->event) }}</span></td>
                                 <td>{{ class_basename($audit->auditable_type) }}</td>
                                 <td>#{{ $audit->auditable_id }}</td>
+                                <td>{{ $audit->ip_address ?: '-' }}</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse"
                                         data-target="#audit-{{ $audit->id }}" aria-expanded="false"
@@ -134,7 +138,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="6" class="p-0 border-top-0">
+                                <td colspan="7" class="p-0 border-top-0">
                                     <div class="collapse" id="audit-{{ $audit->id }}">
                                         <div class="p-3">
                                             <div class="row">
@@ -153,7 +157,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">Nenhum registro encontrado para os filtros informados.</td>
+                                <td colspan="7" class="text-center">Nenhum registro encontrado para os filtros informados.</td>
                             </tr>
                         @endforelse
                     </tbody>
