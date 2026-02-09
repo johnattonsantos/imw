@@ -7,6 +7,7 @@ use App\Http\Controllers\ClerigosRegiaoController;
 use App\Http\Controllers\CongregacoesController;
 use App\Http\Controllers\CongregadosController;
 use App\Http\Controllers\ClerigoPerfilController;
+use App\Http\Controllers\CategoriaComunicacaoController;
 use App\Http\Controllers\ComunicacaoController;
 use App\Http\Controllers\ContabilidadeController;
 use App\Http\Controllers\DistritoRelatorioController;
@@ -173,11 +174,20 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detalhes/{comunicacao}', 'show')->name('show');
             Route::get('/editar/{comunicacao}', 'edit')->name('edit');
             Route::put('/update/{comunicacao}', 'update')->name('update');
+            Route::post('/update-ajax/{comunicacao}', 'update')->name('update.ajax');
             Route::delete('/deletar/{comunicacao}', 'destroy')->name('destroy');
             Route::get('/download/{comunicacao}', 'download')->name('download');
             Route::get('/visualizar/{comunicacao}', 'visualizar')->name('visualizar');
             Route::get('/export/xlsx', 'exportXlsx')->name('export.xlsx');
             Route::get('/export/pdf', 'exportPdf')->name('export.pdf');
+        });
+
+        Route::prefix('categoria-comunicacao')->name('categoria-comunicacao.')->controller(CategoriaComunicacaoController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/detalhes/{categoriaComunicacao}', 'show')->name('show');
+            Route::post('/update/{categoriaComunicacao}', 'update')->name('update');
+            Route::delete('/deletar/{categoriaComunicacao}', 'destroy')->name('destroy');
         });
 
         /* Por enquanto somente visualiações */

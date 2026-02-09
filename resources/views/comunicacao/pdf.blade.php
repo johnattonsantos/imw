@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Relatorio Comunicacao</title>
+    <title>Relatorio Comunicação</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 12px; }
@@ -11,7 +11,7 @@
     </style>
 </head>
 <body>
-    <h2>Relatorio de Comunicacao</h2>
+    <h2>Relatorio de Comunicação</h2>
     <p><strong>Gerado em:</strong> {{ now()->format('d/m/Y H:i:s') }}</p>
     <p><strong>Busca:</strong> {{ $search ?: 'Sem filtro' }}</p>
     <p><strong>Total:</strong> {{ $comunicacoes->count() }} registro(s)</p>
@@ -20,8 +20,9 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Titulo</th>
-                <th>Comentario</th>
+                <th>Categoria</th>
+                <th>Título</th>
+                <th>Comentário</th>
                 <th>Arquivo</th>
                 <th>Instituicao</th>
                 <th>Criado em</th>
@@ -31,6 +32,7 @@
             @forelse($comunicacoes as $comunicacao)
                 <tr>
                     <td>{{ $comunicacao->id }}</td>
+                    <td>{{ optional($comunicacao->categoria)->nome ?: '-' }}</td>
                     <td>{{ $comunicacao->titulo }}</td>
                     <td>{{ strip_tags($comunicacao->comentario) }}</td>
                     <td>{{ $comunicacao->arquivo ?: '-' }}</td>
@@ -39,7 +41,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="text-align: center;">Nenhum registro encontrado.</td>
+                    <td colspan="7" style="text-align: center;">Nenhum registro encontrado.</td>
                 </tr>
             @endforelse
         </tbody>

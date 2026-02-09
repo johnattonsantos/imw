@@ -22,6 +22,7 @@ class ComunicacaoExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             'ID',
+            'Categoria',
             'Titulo',
             'Comentario',
             'Arquivo',
@@ -34,6 +35,7 @@ class ComunicacaoExport implements FromCollection, WithHeadings, WithMapping
     {
         return [
             $comunicacao->id,
+            optional($comunicacao->categoria)->nome,
             $comunicacao->titulo,
             strip_tags($comunicacao->comentario),
             $comunicacao->arquivo,

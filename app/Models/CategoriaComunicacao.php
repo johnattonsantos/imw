@@ -4,21 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Comunicacao extends Model implements Auditable
+class CategoriaComunicacao extends Model implements Auditable
 {
     use HasFactory, AuditableTrait;
 
-    protected $table = 'comunicacao';
+    protected $table = 'categoria_comunicacao';
 
     protected $fillable = [
         'instituicao_id',
-        'categoria_comunicacao_id',
-        'titulo',
-        'comentario',
-        'arquivo',
+        'nome',
     ];
 
     public function instituicao()
@@ -26,8 +23,8 @@ class Comunicacao extends Model implements Auditable
         return $this->belongsTo(InstituicoesInstituicao::class, 'instituicao_id');
     }
 
-    public function categoria()
+    public function comunicacoes()
     {
-        return $this->belongsTo(CategoriaComunicacao::class, 'categoria_comunicacao_id');
+        return $this->hasMany(Comunicacao::class, 'categoria_comunicacao_id');
     }
 }

@@ -30,6 +30,8 @@ return [
 
     'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
+    'comunicacao_disk' => env('COMUNICACAO_FILESYSTEM_DISK', 'public'),
+
 
     'disks' => [
 
