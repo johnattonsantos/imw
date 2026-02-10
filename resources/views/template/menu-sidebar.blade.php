@@ -54,7 +54,7 @@
                  </a>
              </li>
              @if (session('session_perfil') && (int) session('session_perfil')->perfil_id === 3)
-                 <li class="menu {{ Request::is('comunicacao*') ? 'active' : '' }}">
+                 <!-- <li class="menu {{ Request::is('comunicacao*') ? 'active' : '' }}">
                      <a href="{{ route('comunicacao.index') }}" aria-expanded="false" class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -78,7 +78,7 @@
                              <span>Categoria Comunicação</span>
                          </div>
                      </a>
-                 </li>
+                 </li> -->
              @endif
              @if (optional($baseParams->notificacoesTransferencia)->count())
                  <li class="menu container-fluid col-xs-4">
