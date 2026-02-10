@@ -10,8 +10,6 @@ class CategoriaComunicacaoController extends Controller
 {
     public function index(Request $request)
     {
-        $this->ensurePerfilComunicacao();
-
         $query = CategoriaComunicacao::query()
             ->where('instituicao_id', $this->instituicaoId());
 
@@ -29,7 +27,6 @@ class CategoriaComunicacaoController extends Controller
 
     public function store(Request $request)
     {
-        $this->ensurePerfilComunicacao();
 
         $validated = $request->validate([
             'nome' => [
@@ -54,7 +51,6 @@ class CategoriaComunicacaoController extends Controller
 
     public function show(CategoriaComunicacao $categoriaComunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($categoriaComunicacao);
 
         return response()->json([
@@ -64,7 +60,6 @@ class CategoriaComunicacaoController extends Controller
 
     public function update(Request $request, CategoriaComunicacao $categoriaComunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($categoriaComunicacao);
 
         $validated = $request->validate([
@@ -90,7 +85,6 @@ class CategoriaComunicacaoController extends Controller
 
     public function destroy(CategoriaComunicacao $categoriaComunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($categoriaComunicacao);
 
         if ($categoriaComunicacao->comunicacoes()->exists()) {
@@ -104,12 +98,6 @@ class CategoriaComunicacaoController extends Controller
         return response()->json([
             'message' => 'Categoria excluida com sucesso.',
         ]);
-    }
-
-    private function ensurePerfilComunicacao(): void
-    {
-        $perfilId = (int) optional(session('session_perfil'))->perfil_id;
-        abort_if($perfilId !== 3, 403, 'Perfil sem permissao para o modulo Comunicacao.');
     }
 
     private function instituicaoId(): int

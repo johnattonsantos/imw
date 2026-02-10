@@ -45,7 +45,9 @@
             </form>
 
             <div class="mb-3 d-flex" style="gap: 8px;">
+                @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao-novo'))
                 <button type="button" id="btn-open-create" class="btn btn-primary btn-sm">Novo</button>
+                @endif
                 <a href="{{ route('comunicacao.export.xlsx', request()->query()) }}" class="btn btn-success btn-sm">Exportar XLSX</a>
                 <a href="{{ route('comunicacao.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm">Exportar PDF</a>
             </div>
@@ -110,11 +112,14 @@
                                             <circle cx="12" cy="12" r="3"></circle>
                                         </svg>
                                     </button>
+                                    @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao-editar'))
                                     <button type="button" class="btn btn-sm btn-dark btn-rounded btn-edit bs-tooltip" data-id="{{ $comunicacao->id }}" title="Editar" aria-label="Editar">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
                                             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                                         </svg>
                                     </button>
+                                    @endif
+                                    @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao-deletar'))
                                     <button type="button" class="btn btn-sm btn-danger btn-rounded btn-delete bs-tooltip" data-id="{{ $comunicacao->id }}" title="Excluir" aria-label="Excluir">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                                             <polyline points="3 6 5 6 21 6"></polyline>
@@ -124,6 +129,7 @@
                                             <path d="M9 6V4h6v2"></path>
                                         </svg>
                                     </button>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

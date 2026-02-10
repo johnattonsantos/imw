@@ -19,12 +19,12 @@ class ComunicacaoController extends Controller
 
     public function index(Request $request)
     {
-        $this->ensurePerfilComunicacao();
 
         $comunicacoes = $this->buildQuery($request)
             ->latest('created_at')
             ->paginate(15)
             ->withQueryString();
+           // dd($comunicacoes);
 
         $categorias = $this->categorias();
 
@@ -33,7 +33,6 @@ class ComunicacaoController extends Controller
 
     public function create()
     {
-        $this->ensurePerfilComunicacao();
 
         $categorias = $this->categorias();
 
@@ -42,7 +41,6 @@ class ComunicacaoController extends Controller
 
     public function store(Request $request)
     {
-        $this->ensurePerfilComunicacao();
 
         $validated = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
@@ -85,7 +83,6 @@ class ComunicacaoController extends Controller
 
     public function show(Comunicacao $comunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($comunicacao);
 
         if (request()->ajax() || request()->expectsJson()) {
@@ -99,7 +96,6 @@ class ComunicacaoController extends Controller
 
     public function edit(Comunicacao $comunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($comunicacao);
 
         $categorias = $this->categorias();
@@ -109,7 +105,6 @@ class ComunicacaoController extends Controller
 
     public function update(Request $request, Comunicacao $comunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($comunicacao);
 
         $validated = $request->validate([
@@ -155,7 +150,6 @@ class ComunicacaoController extends Controller
 
     public function destroy(Comunicacao $comunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($comunicacao);
 
         if ($comunicacao->arquivo) {
@@ -175,7 +169,6 @@ class ComunicacaoController extends Controller
 
     public function download(Comunicacao $comunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($comunicacao);
 
         abort_if(!$comunicacao->arquivo, 404);
@@ -185,7 +178,6 @@ class ComunicacaoController extends Controller
 
     public function visualizar(Comunicacao $comunicacao)
     {
-        $this->ensurePerfilComunicacao();
         $this->ensureSameInstituicao($comunicacao);
 
         abort_if(!$comunicacao->arquivo, 404);
@@ -208,7 +200,6 @@ class ComunicacaoController extends Controller
 
     public function exportXlsx(Request $request)
     {
-        $this->ensurePerfilComunicacao();
 
         $comunicacoes = $this->buildQuery($request)
             ->with('instituicao')
@@ -223,7 +214,6 @@ class ComunicacaoController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $this->ensurePerfilComunicacao();
 
         $comunicacoes = $this->buildQuery($request)
             ->with('instituicao')
@@ -255,15 +245,9 @@ class ComunicacaoController extends Controller
         return $query;
     }
 
-    private function ensurePerfilComunicacao(): void
-    {
-        $perfilId = (int) optional(session('session_perfil'))->perfil_id;
-        abort_if($perfilId !== 3, 403, 'Perfil sem permissao para o modulo Comunicacao.');
-    }
-
     private function instituicaoId(): int
     {
-        $instituicaoId = (int) optional(session('session_perfil'))->instituicao_id;
+        $instituicaoId = (int) session('session_perfil')->instituicoes->regiao->id;
         abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
 
         return $instituicaoId;

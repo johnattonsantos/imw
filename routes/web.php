@@ -180,7 +180,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/visualizar/{comunicacao}', 'visualizar')->name('visualizar');
             Route::get('/export/xlsx', 'exportXlsx')->name('export.xlsx');
             Route::get('/export/pdf', 'exportPdf')->name('export.pdf');
-        });
+        })->middleware(['seguranca:comunicacao']);
 
         Route::prefix('categoria-comunicacao')->name('categoria-comunicacao.')->controller(CategoriaComunicacaoController::class)->group(function () {
             Route::get('/', 'index')->name('index');
@@ -188,7 +188,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/detalhes/{categoriaComunicacao}', 'show')->name('show');
             Route::post('/update/{categoriaComunicacao}', 'update')->name('update');
             Route::delete('/deletar/{categoriaComunicacao}', 'destroy')->name('destroy');
-        });
+        })->middleware(['seguranca:categoria-comunicacao']);
 
         /* Por enquanto somente visualiações */
         Route::prefix('financeiro')->name('financeiro.')->group(function () {
