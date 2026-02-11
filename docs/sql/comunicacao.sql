@@ -53,32 +53,33 @@ WHERE r.nome = 'tipo-arquivo'
 ORDER BY r.id DESC
 LIMIT 1;
 
-CREATE TABLE `tipo_arquivo_comunicacao` (
+
+CREATE TABLE `tipo_arquivo` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `instituicao_id` bigint(20) UNSIGNED NOT NULL,
   `extensao` varchar(10) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `tipo_arquivo_comunicacao` (`id`, `instituicao_id`, `extensao`, `created_at`, `updated_at`) VALUES
-(1, 23, 'jpg', '2026-02-11 17:48:09', '2026-02-11 17:48:09'),
-(2, 23, 'pdf', '2026-02-11 17:49:06', '2026-02-11 17:49:06'),
-(3, 23, 'xls', '2026-02-11 17:49:41', '2026-02-11 17:49:41'),
-(4, 23, 'xlsx', '2026-02-11 17:49:48', '2026-02-11 17:49:48'),
-(5, 23, 'doc', '2026-02-11 17:49:55', '2026-02-11 17:49:55'),
-(6, 23, 'docx', '2026-02-11 17:50:01', '2026-02-11 17:50:01'),
-(7, 23, 'zip', '2026-02-11 17:50:05', '2026-02-11 17:50:05'),
-(8, 23, 'rar', '2026-02-11 17:50:17', '2026-02-11 17:50:17'),
-(9, 23, 'mp3', '2026-02-11 17:50:22', '2026-02-11 17:50:22'),
-(10, 23, 'mp4', '2026-02-11 17:50:27', '2026-02-11 17:50:27');
+INSERT INTO `tipo_arquivo` (`id`, `extensao`, `created_at`, `updated_at`) VALUES
+(1, 'pdf', '2026-02-11 18:14:45', '2026-02-11 18:14:45'),
+(2, 'doc', '2026-02-11 18:14:53', '2026-02-11 18:14:53'),
+(3, 'jpg', '2026-02-11 18:14:59', '2026-02-11 18:14:59'),
+(4, 'docx', '2026-02-11 18:15:03', '2026-02-11 18:15:03'),
+(5, 'rar', '2026-02-11 18:15:09', '2026-02-11 18:15:09'),
+(6, 'zip', '2026-02-11 18:15:13', '2026-02-11 18:15:13'),
+(7, 'xls', '2026-02-11 18:16:06', '2026-02-11 18:16:06'),
+(8, 'xlsx', '2026-02-11 18:16:12', '2026-02-11 18:16:12'),
+(9, 'mp3', '2026-02-11 18:16:18', '2026-02-11 18:16:18'),
+(10, 'mp4', '2026-02-11 18:16:23', '2026-02-11 18:16:23'),
+(11, 'jpeg', '2026-02-11 18:16:31', '2026-02-11 18:16:31'),
+(12, 'png', '2026-02-11 18:16:35', '2026-02-11 18:16:35'),
+(13, 'gif', '2026-02-11 18:17:22', '2026-02-11 18:17:22'),
+(14, 'webp', '2026-02-11 18:17:27', '2026-02-11 18:17:27');
 
-ALTER TABLE `tipo_arquivo_comunicacao`
+ALTER TABLE `tipo_arquivo`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `tipo_arquivo_comunicacao_instituicao_extensao_unique` (`instituicao_id`,`extensao`);
+  ADD UNIQUE KEY `tipo_arquivo_extensao_unique` (`extensao`);
 
-ALTER TABLE `tipo_arquivo_comunicacao`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
-
-ALTER TABLE `tipo_arquivo_comunicacao`
-  ADD CONSTRAINT `tipo_arquivo_comunicacao_instituicao_id_foreign` FOREIGN KEY (`instituicao_id`) REFERENCES `instituicoes_instituicoes` (`id`) ON DELETE CASCADE;
+ALTER TABLE `tipo_arquivo`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
