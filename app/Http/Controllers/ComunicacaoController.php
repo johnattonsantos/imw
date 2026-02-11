@@ -23,8 +23,8 @@ class ComunicacaoController extends Controller
 
         $comunicacoes = $this->buildQuery($request)
             ->latest('created_at')
-            ->paginate(15)
-            ->withQueryString();
+            ->paginate(15);
+            //->withQueryString();
            // dd($comunicacoes);
 
         $categorias = $this->categorias();
@@ -273,10 +273,10 @@ class ComunicacaoController extends Controller
 
     private function instituicaoId(): int
     {
-        $perfil = session('session_perfil');
-        $instituicaoId = (int) (optional($perfil)->instituicao_id ?? data_get($perfil, 'instituicoes.regiao.id', 0));
-        abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
-
+        // $perfil = session('session_perfil');
+        // $instituicaoId = (int) (optional($perfil)->instituicao_id ?? data_get($perfil, 'instituicoes.regiao.id', 0));
+        // abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
+        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
         return $instituicaoId;
     }
 
