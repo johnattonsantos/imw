@@ -182,8 +182,8 @@
                     <div class="form-group">
                         <label for="comunicacao-arquivo">Arquivo</label>
                         <input type="file" id="comunicacao-arquivo" name="arquivo" class="form-control"
-                            accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.zip,.rar">
-                        <small class="text-muted d-block mt-2">Formatos: PDF, imagem, Word, Excel, ZIP, RAR. Tamanho maximo: 10MB</small>
+                            accept="{{ $arquivoAccept }}">
+                        <small class="text-muted d-block mt-2">Formatos: {{ $arquivoFormatosTexto }}. Tamanho maximo: 10MB</small>
                         <small class="text-muted d-block mt-2" id="comunicacao-arquivo-atual"></small>
                     </div>
                 </div>

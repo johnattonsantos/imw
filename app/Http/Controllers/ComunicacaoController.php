@@ -5,18 +5,19 @@ namespace App\Http\Controllers;
 use App\Exports\ComunicacaoExport;
 use App\Models\CategoriaComunicacao;
 use App\Models\Comunicacao;
+use App\Models\TipoArquivoComunicacao;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ComunicacaoController extends Controller
 {
-    private const ALLOWED_FILE_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'doc', 'docx', 'xls', 'xlsx', 'zip', 'rar'];
-
     public function index(Request $request)
     {
 
@@ -28,7 +29,10 @@ class ComunicacaoController extends Controller
 
         $categorias = $this->categorias();
 
-        return view('comunicacao.index', compact('comunicacoes', 'categorias'));
+        $arquivoAccept = $this->arquivoAcceptAttribute();
+        $arquivoFormatosTexto = $this->arquivoFormatosTexto();
+
+        return view('comunicacao.index', compact('comunicacoes', 'categorias', 'arquivoAccept', 'arquivoFormatosTexto'));
     }
 
     public function create()
@@ -36,11 +40,22 @@ class ComunicacaoController extends Controller
 
         $categorias = $this->categorias();
 
-        return view('comunicacao.create', compact('categorias'));
+        $arquivoAccept = $this->arquivoAcceptAttribute();
+        $arquivoFormatosTexto = $this->arquivoFormatosTexto();
+
+        return view('comunicacao.create', compact('categorias', 'arquivoAccept', 'arquivoFormatosTexto'));
     }
 
     public function store(Request $request)
     {
+
+        $allowedExtensions = $this->allowedFileExtensions();
+        $this->ensureFileTypeConfiguredForUpload($request, $allowedExtensions);
+
+        $arquivoRules = ['nullable', 'file', 'max:10240'];
+        if (!empty($allowedExtensions)) {
+            $arquivoRules[] = 'mimes:' . implode(',', $allowedExtensions);
+        }
 
         $validated = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
@@ -51,9 +66,9 @@ class ComunicacaoController extends Controller
                 Rule::exists('categoria_comunicacao', 'id')
                     ->where(fn ($query) => $query->where('instituicao_id', $this->instituicaoId())),
             ],
-            'arquivo' => ['nullable', 'file', 'mimes:' . implode(',', self::ALLOWED_FILE_EXTENSIONS), 'max:10240'],
+            'arquivo' => $arquivoRules,
         ], [
-            'arquivo.mimes' => 'Arquivo invalido. Envie apenas PDF, imagem, Word, Excel, ZIP ou RAR.',
+            'arquivo.mimes' => 'Arquivo invalido. Envie apenas: ' . $this->arquivoFormatosTexto($allowedExtensions) . '.',
             'categoria_comunicacao_id.required' => 'Selecione uma categoria.',
             'categoria_comunicacao_id.exists' => 'Categoria invalida.',
         ]);
@@ -100,12 +115,23 @@ class ComunicacaoController extends Controller
 
         $categorias = $this->categorias();
 
-        return view('comunicacao.edit', compact('comunicacao', 'categorias'));
+        $arquivoAccept = $this->arquivoAcceptAttribute();
+        $arquivoFormatosTexto = $this->arquivoFormatosTexto();
+
+        return view('comunicacao.edit', compact('comunicacao', 'categorias', 'arquivoAccept', 'arquivoFormatosTexto'));
     }
 
     public function update(Request $request, Comunicacao $comunicacao)
     {
         $this->ensureSameInstituicao($comunicacao);
+
+        $allowedExtensions = $this->allowedFileExtensions();
+        $this->ensureFileTypeConfiguredForUpload($request, $allowedExtensions);
+
+        $arquivoRules = ['nullable', 'file', 'max:10240'];
+        if (!empty($allowedExtensions)) {
+            $arquivoRules[] = 'mimes:' . implode(',', $allowedExtensions);
+        }
 
         $validated = $request->validate([
             'titulo' => ['required', 'string', 'max:255'],
@@ -116,9 +142,9 @@ class ComunicacaoController extends Controller
                 Rule::exists('categoria_comunicacao', 'id')
                     ->where(fn ($query) => $query->where('instituicao_id', $this->instituicaoId())),
             ],
-            'arquivo' => ['nullable', 'file', 'mimes:' . implode(',', self::ALLOWED_FILE_EXTENSIONS), 'max:10240'],
+            'arquivo' => $arquivoRules,
         ], [
-            'arquivo.mimes' => 'Arquivo invalido. Envie apenas PDF, imagem, Word, Excel, ZIP ou RAR.',
+            'arquivo.mimes' => 'Arquivo invalido. Envie apenas: ' . $this->arquivoFormatosTexto($allowedExtensions) . '.',
             'categoria_comunicacao_id.required' => 'Selecione uma categoria.',
             'categoria_comunicacao_id.exists' => 'Categoria invalida.',
         ]);
@@ -247,7 +273,8 @@ class ComunicacaoController extends Controller
 
     private function instituicaoId(): int
     {
-        $instituicaoId = (int) session('session_perfil')->instituicoes->regiao->id;
+        $perfil = session('session_perfil');
+        $instituicaoId = (int) (optional($perfil)->instituicao_id ?? data_get($perfil, 'instituicoes.regiao.id', 0));
         abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
 
         return $instituicaoId;
@@ -297,5 +324,58 @@ class ComunicacaoController extends Controller
     private function storageDisk(): FilesystemAdapter
     {
         return Storage::disk($this->storageDiskName());
+    }
+
+    private function allowedFileExtensions(): array
+    {
+        $extensions = TipoArquivoComunicacao::query()
+            ->where('instituicao_id', $this->instituicaoId())
+            ->orderBy('extensao')
+            ->pluck('extensao')
+            ->map(fn ($value) => strtolower(trim((string) $value)))
+            ->map(fn ($value) => ltrim($value, '.'))
+            ->filter(fn ($value) => preg_match('/^[a-z0-9]+$/', $value) === 1)
+            ->unique()
+            ->values()
+            ->all();
+
+        return $extensions;
+    }
+
+    private function arquivoAcceptAttribute(?array $extensions = null): string
+    {
+        $extensions = $extensions ?? $this->allowedFileExtensions();
+
+        return collect($extensions)
+            ->map(fn ($ext) => '.' . ltrim((string) $ext, '.'))
+            ->implode(',');
+    }
+
+    private function arquivoFormatosTexto(?array $extensions = null): string
+    {
+        $extensions = $extensions ?? $this->allowedFileExtensions();
+
+        if (empty($extensions)) {
+            return 'Nenhum tipo configurado';
+        }
+
+        return collect($extensions)
+            ->map(fn ($ext) => Str::upper((string) $ext))
+            ->implode(', ');
+    }
+
+    private function ensureFileTypeConfiguredForUpload(Request $request, array $allowedExtensions): void
+    {
+        if (!$request->hasFile('arquivo')) {
+            return;
+        }
+
+        if (!empty($allowedExtensions)) {
+            return;
+        }
+
+        throw ValidationException::withMessages([
+            'arquivo' => 'Nenhum tipo de arquivo foi configurado. Cadastre ao menos um tipo em "Tipo Arquivo Comunicacao".',
+        ]);
     }
 }

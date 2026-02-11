@@ -81,6 +81,18 @@
                          </div>
                      </a>
                  </li>
+                 <li class="menu {{ Request::is('tipo-arquivo-comunicacao*') ? 'active' : '' }}">
+                     <a href="{{ route('tipo-arquivo-comunicacao.index') }}" aria-expanded="false" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-paperclip">
+                                 <path d="M21.44 11.05l-9.19 9.19a5.5 5.5 0 0 1-7.78-7.78l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a1.5 1.5 0 0 1-2.12-2.12l8.48-8.48"></path>
+                             </svg>
+                             <span>Tipo Arquivo Comunicação</span>
+                         </div>
+                     </a>
+                 </li>
              @endif
              @if (optional($baseParams->notificacoesTransferencia)->count())
                  <li class="menu container-fluid col-xs-4">

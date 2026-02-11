@@ -107,8 +107,8 @@
                 <div class="form-group">
                     <label for="arquivo">Arquivo</label>
                     <input type="file" name="arquivo" id="arquivo" class="form-control @error('arquivo') is-invalid @enderror"
-                        accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.zip,.rar">
-                    <small class="text-muted">Formatos: PDF, imagem, Word, Excel, ZIP, RAR. Tamanho maximo: 10MB</small>
+                        accept="{{ $arquivoAccept }}">
+                    <small class="text-muted">Formatos: {{ $arquivoFormatosTexto }}. Tamanho maximo: 10MB</small>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Salvar</button>

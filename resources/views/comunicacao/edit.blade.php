@@ -108,7 +108,7 @@
                 <div class="form-group">
                     <label for="arquivo">Arquivo</label>
                     <input type="file" name="arquivo" id="arquivo" class="form-control @error('arquivo') is-invalid @enderror"
-                        accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.zip,.rar">
+                        accept="{{ $arquivoAccept }}">
                     @if ($comunicacao->arquivo)
                         @php
                             $arquivoExt = strtolower((string) pathinfo($comunicacao->arquivo, PATHINFO_EXTENSION));
@@ -138,7 +138,7 @@
                             </a>
                         </small>
                     @endif
-                    <small class="text-muted d-block mt-2">Formatos: PDF, imagem, Word, Excel, ZIP, RAR. Tamanho maximo: 10MB</small>
+                    <small class="text-muted d-block mt-2">Formatos: {{ $arquivoFormatosTexto }}. Tamanho maximo: 10MB</small>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Salvar</button>
