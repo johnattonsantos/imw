@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\ComunicacaoExport;
 use App\Models\CategoriaComunicacao;
 use App\Models\Comunicacao;
-use App\Models\TipoArquivoComunicacao;
+use App\Models\TipoArquivo;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -328,8 +328,7 @@ class ComunicacaoController extends Controller
 
     private function allowedFileExtensions(): array
     {
-        $extensions = TipoArquivoComunicacao::query()
-            ->where('instituicao_id', $this->instituicaoId())
+        $extensions = TipoArquivo::query()
             ->orderBy('extensao')
             ->pluck('extensao')
             ->map(fn ($value) => strtolower(trim((string) $value)))

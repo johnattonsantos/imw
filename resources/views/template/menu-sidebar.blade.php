@@ -81,8 +81,10 @@
                          </div>
                      </a>
                  </li>
-                 <li class="menu {{ Request::is('tipo-arquivo-comunicacao*') ? 'active' : '' }}">
-                     <a href="{{ route('tipo-arquivo-comunicacao.index') }}" aria-expanded="false" class="dropdown-toggle">
+                  @endif
+                 @if (auth()->check() && auth()->user()->hasPerfilRegra('tipo-arquivo'))
+                 <li class="menu {{ Request::is('tipo-arquivo*') ? 'active' : '' }}">
+                     <a href="{{ route('tipo-arquivo.index') }}" aria-expanded="false" class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

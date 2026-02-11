@@ -7,19 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class TipoArquivoComunicacao extends Model implements Auditable
+class TipoArquivo extends Model implements Auditable
 {
     use HasFactory, AuditableTrait;
 
-    protected $table = 'tipo_arquivo_comunicacao';
+    protected $table = 'tipo_arquivo';
 
     protected $fillable = [
-        'instituicao_id',
         'extensao',
     ];
-
-    public function instituicao()
-    {
-        return $this->belongsTo(InstituicoesInstituicao::class, 'instituicao_id');
-    }
 }

@@ -3,7 +3,7 @@
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
     ['text' => 'Home', 'url' => '/', 'active' => false],
-    ['text' => 'Tipo Arquivo Comunicacao', 'url' => '/tipo-arquivo-comunicacao', 'active' => true],
+    ['text' => 'Tipo Arquivo', 'url' => '/tipo-arquivo', 'active' => true],
 ]"></x-breadcrumb>
 @endsection
 
@@ -122,10 +122,10 @@
 <script>
     (function() {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const storeUrl = "{{ route('tipo-arquivo-comunicacao.store') }}";
-        const showUrlTemplate = "{{ route('tipo-arquivo-comunicacao.show', ['tipoArquivoComunicacao' => '__ID__']) }}";
-        const updateUrlTemplate = "{{ route('tipo-arquivo-comunicacao.update', ['tipoArquivoComunicacao' => '__ID__']) }}";
-        const deleteUrlTemplate = "{{ route('tipo-arquivo-comunicacao.destroy', ['tipoArquivoComunicacao' => '__ID__']) }}";
+        const storeUrl = "{{ route('tipo-arquivo.store') }}";
+        const showUrlTemplate = "{{ route('tipo-arquivo.show', ['tipoArquivo' => '__ID__']) }}";
+        const updateUrlTemplate = "{{ route('tipo-arquivo.update', ['tipoArquivo' => '__ID__']) }}";
+        const deleteUrlTemplate = "{{ route('tipo-arquivo.destroy', ['tipoArquivo' => '__ID__']) }}";
 
         let currentMode = 'create';
 

@@ -9,7 +9,7 @@ use App\Http\Controllers\CongregadosController;
 use App\Http\Controllers\ClerigoPerfilController;
 use App\Http\Controllers\CategoriaComunicacaoController;
 use App\Http\Controllers\ComunicacaoController;
-use App\Http\Controllers\TipoArquivoComunicacaoController;
+use App\Http\Controllers\TipoArquivoController;
 use App\Http\Controllers\ContabilidadeController;
 use App\Http\Controllers\DistritoRelatorioController;
 use App\Http\Controllers\FinanceiroCaixasController;
@@ -191,13 +191,13 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/deletar/{categoriaComunicacao}', 'destroy')->name('destroy');
         })->middleware(['seguranca:categoria-comunicacao']);
 
-        Route::prefix('tipo-arquivo-comunicacao')->name('tipo-arquivo-comunicacao.')->controller(TipoArquivoComunicacaoController::class)->group(function () {
+        Route::prefix('tipo-arquivo')->name('tipo-arquivo.')->controller(TipoArquivoController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/store', 'store')->name('store');
-            Route::get('/detalhes/{tipoArquivoComunicacao}', 'show')->name('show');
-            Route::post('/update/{tipoArquivoComunicacao}', 'update')->name('update');
-            Route::delete('/deletar/{tipoArquivoComunicacao}', 'destroy')->name('destroy');
-        })->middleware(['seguranca:categoria-comunicacao']);
+            Route::get('/detalhes/{tipoArquivo}', 'show')->name('show');
+            Route::post('/update/{tipoArquivo}', 'update')->name('update');
+            Route::delete('/deletar/{tipoArquivo}', 'destroy')->name('destroy');
+        })->middleware(['seguranca:tipo-arquivo']);
 
         /* Por enquanto somente visualiações */
         Route::prefix('financeiro')->name('financeiro.')->group(function () {
