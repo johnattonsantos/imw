@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\AuditoriasExport;
+use App\Models\InstituicoesInstituicao;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,9 +23,18 @@ class AuditoriaController extends Controller
             ->paginate(20)
             ->withQueryString();
 
-        [$users, $events, $entidades] = $this->filterOptions();
+        [$users, $events, $entidades, $instituicoes] = $this->filterOptions();
+        $instituicaoIds = $audits->getCollection()
+            ->map(fn (Audit $audit) => $this->resolveAuditInstituicaoId($audit))
+            ->filter()
+            ->unique()
+            ->values();
 
-        return view('auditorias.index', compact('audits', 'users', 'events', 'entidades'));
+        $instituicaoMap = InstituicoesInstituicao::query()
+            ->whereIn('id', $instituicaoIds)
+            ->pluck('nome', 'id');
+
+        return view('auditorias.index', compact('audits', 'users', 'events', 'entidades', 'instituicoes', 'instituicaoMap'));
     }
 
     public function exportXlsx(Request $request)
@@ -63,6 +73,7 @@ class AuditoriaController extends Controller
     {
         return $request->validate([
             'user_id' => ['nullable', 'integer', 'exists:users,id'],
+            'instituicao_id' => ['nullable', 'integer', 'exists:instituicoes_instituicoes,id'],
             'event' => ['nullable', 'string', 'max:50'],
             'auditable_type' => ['nullable', 'string', 'max:255'],
             'periodo_inicio' => ['nullable', 'date'],
@@ -76,6 +87,17 @@ class AuditoriaController extends Controller
 
         if (!empty($filters['user_id'])) {
             $query->where('user_id', $filters['user_id']);
+        }
+
+        if (!empty($filters['instituicao_id'])) {
+            $instituicaoId = (int) $filters['instituicao_id'];
+            $query->where(function (Builder $builder) use ($instituicaoId) {
+                $builder->where('instituicao_id', $instituicaoId)
+                    ->orWhere('new_values', 'like', '%"instituicao_id":' . $instituicaoId . '%')
+                    ->orWhere('new_values', 'like', '%"instituicao_id":"' . $instituicaoId . '"%')
+                    ->orWhere('old_values', 'like', '%"instituicao_id":' . $instituicaoId . '%')
+                    ->orWhere('old_values', 'like', '%"instituicao_id":"' . $instituicaoId . '"%');
+            });
         }
 
         if (!empty($filters['event'])) {
@@ -117,7 +139,25 @@ class AuditoriaController extends Controller
             ->orderBy('auditable_type')
             ->pluck('auditable_type');
 
-        return [$users, $events, $entidades];
+        $instituicoes = InstituicoesInstituicao::query()
+            ->whereIn('id', Audit::query()->whereNotNull('instituicao_id')->select('instituicao_id')->distinct())
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
+
+        return [$users, $events, $entidades, $instituicoes];
+    }
+
+    private function resolveAuditInstituicaoId(Audit $audit): ?int
+    {
+        if (!empty($audit->instituicao_id)) {
+            return (int) $audit->instituicao_id;
+        }
+
+        $newValues = is_array($audit->new_values) ? $audit->new_values : (json_decode($audit->new_values ?? '', true) ?: []);
+        $oldValues = is_array($audit->old_values) ? $audit->old_values : (json_decode($audit->old_values ?? '', true) ?: []);
+        $instituicaoId = data_get($newValues, 'instituicao_id', data_get($oldValues, 'instituicao_id'));
+
+        return !empty($instituicaoId) ? (int) $instituicaoId : null;
     }
 
 

@@ -34,3 +34,7 @@ ALTER TABLE `audits`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
   ALTER TABLE audits CHANGE auditable_id auditable_id VARCHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+
+  ALTER TABLE `audits` ADD `instituicao_id` BIGINT(20) UNSIGNED NULL DEFAULT NULL AFTER `user_id`;
+
+  ALTER TABLE `audits` MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;

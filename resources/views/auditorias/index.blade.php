@@ -23,8 +23,8 @@
         </div>
         <div class="widget-content widget-content-area">
             <form method="GET" action="{{ route('auditorias.index') }}" class="mb-4">
-                <div class="row">
-                    <div class="col-md-4 mb-2">
+                <div class="row align-items-end">
+                    <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="user_id">Usuario</label>
                         <select name="user_id" id="user_id" class="form-control form-control-sm">
                             <option value="">Todos</option>
@@ -36,7 +36,19 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2 mb-2">
+                    <div class="col-12 col-md-6 col-lg-2 mb-3">
+                        <label for="instituicao_id">Instituicao</label>
+                        <select name="instituicao_id" id="instituicao_id" class="form-control form-control-sm">
+                            <option value="">Todas</option>
+                            @foreach($instituicoes as $instituicao)
+                                <option value="{{ $instituicao->id }}" @selected((string) request('instituicao_id') === (string) $instituicao->id)>
+                                    {{ $instituicao->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4 col-lg-2 mb-3">
                         <label for="event">Evento</label>
                         @php
                             $eventLabels = [
@@ -61,7 +73,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2 mb-2">
+                    <div class="col-12 col-md-4 col-lg-1 mb-3">
                         <label for="auditable_type">Entidade</label>
                         <select name="auditable_type" id="auditable_type" class="form-control form-control-sm">
                             <option value="">Todas</option>
@@ -73,20 +85,20 @@
                         </select>
                     </div>
 
-                    <div class="col-md-2 mb-2">
+                    <div class="col-12 col-md-6 col-lg-2 mb-3">
                         <label for="periodo_inicio">Periodo inicio</label>
                         <input type="date" name="periodo_inicio" id="periodo_inicio" class="form-control form-control-sm"
                             value="{{ request('periodo_inicio') }}">
                     </div>
 
-                    <div class="col-md-2 mb-2">
+                    <div class="col-12 col-md-6 col-lg-2 mb-3">
                         <label for="periodo_fim">Periodo fim</label>
                         <input type="date" name="periodo_fim" id="periodo_fim" class="form-control form-control-sm"
                             value="{{ request('periodo_fim') }}">
                     </div>
                 </div>
 
-                <div class="mt-2 d-flex" style="gap: 8px;">
+                <div class="mt-2 d-flex flex-wrap" style="gap: 8px;">
                     <button type="submit" class="btn btn-primary btn-sm ">Filtrar</button>
                     <a href="{{ route('auditorias.index') }}" class="btn btn-light btn-sm">Limpar filtros</a>
                     <a href="{{ route('auditorias.export.xlsx', request()->query()) }}" class="btn btn-success btn-sm">Exportar XLSX</a>
@@ -104,6 +116,7 @@
                         <tr>
                             <th>Data/Hora</th>
                             <th>Usuario</th>
+                            <th>Instituicao</th>
                             <th>Evento</th>
                             <th>Entidade</th>
                             <th>Registro</th>
@@ -116,6 +129,7 @@
                             @php
                                 $oldValues = is_array($audit->old_values) ? $audit->old_values : (json_decode($audit->old_values ?? '', true) ?: []);
                                 $newValues = is_array($audit->new_values) ? $audit->new_values : (json_decode($audit->new_values ?? '', true) ?: []);
+                                $auditInstituicaoId = $audit->instituicao_id ?? ($newValues['instituicao_id'] ?? ($oldValues['instituicao_id'] ?? null));
                             @endphp
                             <tr>
                                 <td>{{ optional($audit->created_at)->format('d/m/Y H:i:s') }}</td>
@@ -123,6 +137,14 @@
                                     {{ optional($audit->user)->name ?? 'Sistema' }}
                                     @if(optional($audit->user)->email)
                                         <br><small class="text-muted">{{ $audit->user->email }}</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($auditInstituicaoId)
+                                        {{ $instituicaoMap[$auditInstituicaoId] ?? 'Instituicao nao encontrada' }}
+                                        <br><small class="text-muted">#{{ $auditInstituicaoId }}</small>
+                                    @else
+                                        -
                                     @endif
                                 </td>
                                 <td><span class="badge badge-info">{{ strtoupper($audit->event) }}</span></td>
@@ -138,7 +160,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="7" class="p-0 border-top-0">
+                                <td colspan="8" class="p-0 border-top-0">
                                     <div class="collapse" id="audit-{{ $audit->id }}">
                                         <div class="p-3">
                                             <div class="row">
@@ -157,7 +179,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Nenhum registro encontrado para os filtros informados.</td>
+                                <td colspan="8" class="text-center">Nenhum registro encontrado para os filtros informados.</td>
                             </tr>
                         @endforelse
                     </tbody>

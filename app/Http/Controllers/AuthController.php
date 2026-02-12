@@ -26,6 +26,7 @@ class AuthController extends Controller
                     Audit::create([
                         'user_type' => get_class($user),
                         'user_id' => $user->id,
+                        'instituicao_id' => $this->sessionInstituicaoId(),
                         'event' => 'login',
                         'auditable_type' => get_class($user),
                         'auditable_id' => $user->id,
@@ -50,6 +51,7 @@ class AuthController extends Controller
             Audit::create([
                 'user_type' => null,
                 'user_id' => null,
+                'instituicao_id' => $this->sessionInstituicaoId(),
                 'event' => 'login_failed',
                 'auditable_type' => \App\Models\User::class,
                 'auditable_id' => 0,
@@ -88,6 +90,7 @@ class AuthController extends Controller
                 Audit::create([
                     'user_type' => get_class($user),
                     'user_id' => $user->id,
+                    'instituicao_id' => $this->sessionInstituicaoId(),
                     'event' => 'logout',
                     'auditable_type' => get_class($user),
                     'auditable_id' => $user->id,
@@ -164,6 +167,13 @@ class AuthController extends Controller
         $email = $request->query('email');
 
         return view('auth.reset')->with(compact('token', 'email'));
+    }
+
+    private function sessionInstituicaoId(): ?int
+    {
+        $instituicaoId = data_get(session('session_perfil'), 'instituicao_id');
+
+        return $instituicaoId ? (int) $instituicaoId : null;
     }
 
 }
