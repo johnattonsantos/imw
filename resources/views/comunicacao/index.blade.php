@@ -50,6 +50,7 @@
                 @endif
                 <a href="{{ route('comunicacao.export.xlsx', request()->query()) }}" class="btn btn-success btn-sm">Exportar XLSX</a>
                 <a href="{{ route('comunicacao.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm">Exportar PDF</a>
+                <a href="./uploads/formulario-cadastro-membresia.pdf" target="_blank" class="btn btn-warning btn-sm">Formulário Cadastro Membresia</a>
             </div>
 
             <div class="table-responsive">

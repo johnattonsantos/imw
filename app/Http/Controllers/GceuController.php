@@ -178,7 +178,7 @@ class GceuController extends Controller
         $data['pastores'] = PessoasPessoa::select('pessoas_pessoas.id', 'pessoas_pessoas.nome')
                 ->join('pessoas_nomeacoes', 'pessoas_nomeacoes.pessoa_id', 'pessoas_pessoas.id')
                 ->join('pessoas_funcaoministerial', 'pessoas_funcaoministerial.id', 'pessoas_nomeacoes.funcao_ministerial_id')
-                ->where(['pessoas_pessoas.igreja_id' => $igrejaId])->whereIn('pessoas_funcaoministerial.ordem', [3,4,5])->whereNull('pessoas_nomeacoes.data_termino')->get();
+                ->where(['pessoas_nomeacoes.instituicao_id' => $igrejaId])->whereIn('pessoas_funcaoministerial.ordem', [3,4,5])->whereNull('pessoas_nomeacoes.data_termino')->get();
         $data['cartaPastoral'] = app(EditarGCeuCartaPastoralService::class)->findOne($id);
         if (!$data['cartaPastoral']) {
             return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta Pastoral não encontrada.');
@@ -217,7 +217,7 @@ class GceuController extends Controller
             $data['pastores'] = PessoasPessoa::select('pessoas_pessoas.id', 'pessoas_pessoas.nome')
                     ->join('pessoas_nomeacoes', 'pessoas_nomeacoes.pessoa_id', 'pessoas_pessoas.id')
                     ->join('pessoas_funcaoministerial', 'pessoas_funcaoministerial.id', 'pessoas_nomeacoes.funcao_ministerial_id')
-                    ->where(['pessoas_pessoas.igreja_id' => $igrejaId])->whereIn('pessoas_funcaoministerial.ordem', [3,4,5])->whereNull('pessoas_nomeacoes.data_termino')->get();
+                    ->where(['pessoas_nomeacoes.instituicao_id' => $igrejaId])->whereIn('pessoas_funcaoministerial.ordem', [3,4,5])->whereNull('pessoas_nomeacoes.data_termino')->get();
             $data['instituicao_id'] = $igrejaId;
             $data['instituicao'] = Identifiable::fetchSessionIgrejaLocal()->nome;
             return view('gceu.carta-pastoral.create', $data);
