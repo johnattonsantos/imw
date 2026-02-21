@@ -11,6 +11,7 @@ trait HistoricoNomeacoesUtils
 {
     public static function fetchHistoricoNomeacoes($regiao, $visao)
     {
+        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
         if ($visao == 1) {
             $clerigos = DB::table('pessoas_pessoas as pp')
                 ->select(
@@ -32,7 +33,7 @@ trait HistoricoNomeacoesUtils
                 })
                 ->leftJoin('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
                 ->leftJoin('instituicoes_instituicoes as ii_pai', 'ii.instituicao_pai_id', '=', 'ii_pai.id')
-                ->where(['pp.status_id' => 1, 'pp.regiao_id' => 23])
+                ->where(['pp.status_id' => 1, 'pp.regiao_id' => $instituicaoId])
                 ->when(request()->get('situacao'), function ($query) {
                     $query->where('pf.titular', request()->get('situacao'));
                 })
@@ -67,7 +68,7 @@ trait HistoricoNomeacoesUtils
                 })
                 ->leftJoin('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
                 ->leftJoin('instituicoes_instituicoes as ii_pai', 'ii.instituicao_pai_id', '=', 'ii_pai.id')
-                ->where(['ii.ativo' => 1, 'ii.regiao_id' => 23])
+                ->where(['ii.ativo' => 1, 'ii.regiao_id' => $instituicaoId])
                 ->when(request()->get('situacao'), function ($query) {
                     $query->where('pf.titular', request()->get('situacao'));
                 })

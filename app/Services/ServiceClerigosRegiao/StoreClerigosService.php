@@ -25,7 +25,7 @@ class StoreClerigosService
         }else{
             $filePath = '';
         }
-
+        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
         PessoasPessoa::create([
             'nome' => $request['nome'],
             'identidade' => $request['identidade'],
@@ -36,7 +36,7 @@ class StoreClerigosService
             'cpf' => $request['cpf'],
             'endereco' => $request['endereco'],
             'numero' => $request['numero'],
-            'regiao_id' =>   $data['regiao_id'] = 23,
+            'regiao_id' =>   $data['regiao_id'] = $instituicaoId,
             'complemento' => $request['complemento'],
             'bairro' => $request['bairro'],
             'cidade' => $request['cidade'],

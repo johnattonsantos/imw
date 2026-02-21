@@ -31,6 +31,8 @@ trait ContabilidadeDados
 
     public static function fetchPrebandas($params)
     {
+        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
+
         $ano = $params['ano'];
         $mes = $params['mes'];
         $prebendas = DB::select("SELECT pp2.id, pp.nome, pp.cpf, pp2.valor AS valor_prebendas, (SELECT count(*) FROM pessoas_dependentes pd WHERE pd.declarar_em_irpf = 1 AND pd.pessoa_id = pp.id) AS n_dependentes, 
@@ -46,7 +48,7 @@ trait ContabilidadeDados
             instituicoes_instituicoes ii2 
             where pn.instituicao_id=ii.id
             and ii.instituicao_pai_id=ii2.id
-            and ii2.instituicao_pai_id=23
+            and ii2.instituicao_pai_id=$instituicaoId
             and pn.data_termino is null) AND pp2.ano = {$ano}
         group by pp.nome, pp.cpf, pp2.valor, pp.id, pp2.id
         ORDER BY `pp2`.`valor` DESC");
@@ -55,6 +57,8 @@ trait ContabilidadeDados
 
     public static function fetchPrebandasCotaOrcamentaria($params)
     {
+        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
+
         $ano = $params['ano'];
         $mes = $params['mes'];
         $instituicao_id = $params['instituicao_id'];
@@ -72,7 +76,7 @@ trait ContabilidadeDados
             where pn.instituicao_id = $instituicao_id
             /*where pn.instituicao_id in(2225,2587)*/
             and ii.instituicao_pai_id=ii2.id
-            and ii2.instituicao_pai_id=23
+            and ii2.instituicao_pai_id=$instituicaoId
             and pn.data_termino is null) AND pp2.ano = {$ano}
         group by pp.nome, pp.cpf, pp2.valor, pp.id, pp2.id
         ORDER BY `pp2`.`valor` DESC");

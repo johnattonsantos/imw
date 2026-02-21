@@ -11,6 +11,7 @@ class UpdateClerigosService
     public function execute($request, $id)
     {
         $clerigo = PessoasPessoa::findOrFail($id);
+        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
 
         if ($request->file('image')) {
             $photo = $request->file('image');  
@@ -40,7 +41,7 @@ class UpdateClerigosService
                     'cep' => $request->input('cep'),
                     'email' => $request->input('email'),
                     'estado_civil' => $request->input('estado_civil'),
-                    'regiao_id' => 23,
+                    'regiao_id' => $instituicaoId,
                     'sexo' => $request->input('sexo'),
                     'formacao_id' => $request->input('formacao_id'),
                     'nome_mae' => $request->input('nome_mae', ''),
@@ -86,7 +87,7 @@ class UpdateClerigosService
                 'cep' => $request->input('cep'),
                 'email' => $request->input('email'),
                 'estado_civil' => $request->input('estado_civil'),
-                'regiao_id' => 23,
+                'regiao_id' => $instituicaoId,
                 'sexo' => $request->input('sexo'),
                 'formacao_id' => $request->input('formacao_id'),
                 'nome_mae' => $request->input('nome_mae', ''),
