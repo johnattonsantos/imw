@@ -25,7 +25,7 @@ class GCeuMembrosService
             $data['gceuMembros'] = [];
             $data['totalFuncao'] = [];
         }
-        $data['membros'] = MembresiaMembro::where(['igreja_id' => $igrejaId])->get();
+        $data['membros'] = MembresiaMembro::where(['igreja_id' => $igrejaId, 'status' => 'A'])->get();
         return $data;
     }
 

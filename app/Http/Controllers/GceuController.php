@@ -133,10 +133,11 @@ class GceuController extends Controller
 
     public function membros(Request $request)
     {
-        ///dd($request->all());
+        //dd($request->all());
         $data = $request->all();
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $data = app(GCeuMembrosService::class)->getList($igrejaId, $data);
+
         if (!$data) {
             return redirect()->route('gceu.index')->with('error', 'Carta pastoral não encontrada.');
         }
@@ -295,7 +296,6 @@ class GceuController extends Controller
 
     public function gceuRelatorioFuncoes()
     {
-
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $funcao = app(GCeuRelatorioFuncoesService::class)->getFuncao(request()->funcao_id);
         $data = app(GCeuRelatorioFuncoesService::class)->getList($igrejaId, request()->funcao_id, request()->gceu_id);
