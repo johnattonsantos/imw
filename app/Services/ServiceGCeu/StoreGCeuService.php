@@ -12,12 +12,8 @@ class StoreGCeuService
     public function execute(array $data): void
     {
         $congregacaoId = $data['congregacao_id'] == 'sede' ? null : $data['congregacao_id'];
-        $contato = preg_replace('/[^0-9]/', '', $data['contato']);
         $dataGCeu = [
             'nome' => $data['nome'],
-            'anfitriao' => $data['anfitriao'],
-            'email' => $data['email'],
-            'contato' => $contato,
             'congregacao_id' => $congregacaoId,
             'instituicao_id' => Identifiable::fetchSessionIgrejaLocal()->id,
             'cep' => $data['cep'],

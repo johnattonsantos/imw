@@ -24,22 +24,34 @@
             <form class="form-vertical" action="{{ route('gceu.update',$gceu->id) }}" id="form_create_gceu" method="post">
                 @csrf
                 <div class="row">
-                    <div class="form-group mb-4 col-6">
+                    <div class="form-group mb-4 col-8">
                         <label class="control-label" for="nome">* Nome do GCEU</label>
                         <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" id="nome" required placeholder="Nome do GCEU" minlength="4" value="{{ $gceu->nome }}" maxlength="150">
                         @error('nome')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="form-group mb-4 col-6">
+                    <div class="form-group mb-4 col-md-4">
+                        <label class="control-label">* Congregação</label>
+                        <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" required>
+                            <option value="sede" {{ $gceu->congregacao_id == '' ? 'selected' : '' }}>SEDE</option>
+                            @foreach ($congregacoes as $congregacao)
+                                <option value="{{ $congregacao->id }}" {{ $gceu->congregacao_id == $congregacao->id ? 'selected' : '' }}>{{ $congregacao->nome }}</option>
+                            @endforeach
+                        </select>
+                        @error('congregacao_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <!-- <div class="form-group mb-4 col-6">
                         <label class="control-label" for="anfitriao">* Anfitrião</label>
                         <input type="text" name="anfitriao" id="anfitriao" class="form-control @error('anfitriao') is-invalid @enderror" placeholder="Nome do Anfitrião" minlength="4" value="{{ $gceu->anfitriao }}" required maxlength="100">
                         @error('anfitriao')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> -->
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="form-group mb-4 col-md-5">
                         <label class="control-label" for="email">E-mail</label>
                         <input id="email" name="email" type="email" placeholder="E-mail" class="form-control @error('email') is-invalid @enderror" value="{{ $gceu->email }}" maxlength="100">
@@ -68,7 +80,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
                         <h4>Endereço GCEU</h4>

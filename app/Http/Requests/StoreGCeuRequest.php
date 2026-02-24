@@ -28,8 +28,6 @@ class StoreGCeuRequest extends FormRequest
     {
         return [
             'nome' => 'required',
-            'anfitriao' => 'required',
-            'contato' => 'nullable|string|min:10',
             'congregacao_id' => 'required',
             'cep' => 'required'
         ];

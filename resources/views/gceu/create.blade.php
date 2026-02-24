@@ -20,22 +20,35 @@
             <form class="form-vertical" action="{{ route('gceu.store') }}" id="form_create_gceu" method="post">
                 @csrf
                 <div class="row">
-                    <div class="form-group mb-4 col-6">
+                    <div class="form-group mb-4 col-8">
                         <label class="control-label" for="nome">* Nome do GCEU</label>
                         <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" id="nome" required placeholder="Nome do GCEU" minlength="4" value="{{ old('nome') }}" maxlength="150">
                         @error('nome')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="form-group mb-4 col-6">
+                    <div class="form-group mb-4 col-md-4">
+                        <label class="control-label">* Congregação</label>
+                        <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" required>
+                            <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>Selecione</option>
+                            <option value="sede" {{ old('congregacao_id') == 'sede' ? 'selected' : '' }}>SEDE</option>
+                            @foreach ($congregacoes as $congregacao)
+                                <option value="{{ $congregacao->id }}" {{ old('congregacao_id') == $congregacao->id ? 'selected' : '' }}>{{ $congregacao->nome }}</option>
+                            @endforeach
+                        </select>
+                        @error('congregacao_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <!-- <div class="form-group mb-4 col-6">
                         <label class="control-label" for="anfitriao">* Anfitrião</label>
                         <input type="text" name="anfitriao" id="anfitriao" class="form-control @error('anfitriao') is-invalid @enderror" placeholder="Nome do Anfitrião" minlength="4" value="{{ old('anfitriao') }}" required maxlength="100">
                         @error('anfitriao')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
-                    </div>
+                    </div> -->
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                     <div class="form-group mb-4 col-md-5">
                         <label class="control-label" for="email">E-mail</label>
                         <input id="email" name="email" type="email" placeholder="E-mail" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" maxlength="100">
@@ -52,20 +65,8 @@
                         @enderror
                     </div>
                     
-                    <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">* Congregação</label>
-                        <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" required>
-                            <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>Selecione</option>
-                            <option value="sede" {{ old('congregacao_id') == 'sede' ? 'selected' : '' }}>SEDE</option>
-                            @foreach ($congregacoes as $congregacao)
-                                <option value="{{ $congregacao->id }}" {{ old('congregacao_id') == $congregacao->id ? 'selected' : '' }}>{{ $congregacao->nome }}</option>
-                            @endforeach
-                        </select>
-                        @error('congregacao_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                </div>
+                    
+                </div> -->
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
                         <h4>Endereço GCEU</h4>
@@ -124,7 +125,6 @@
 @section('extras-scripts')
 <script>
     $(document).ready(function() {
-        $('#contato').mask('(00) 00000-0000');
         $('#cep').mask('000000-00');
     });
     $('#cep').blur(function() {
@@ -144,13 +144,5 @@
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        Inputmask("999.999.999-99").mask(document.getElementById("cpf"));
-        Inputmask("99999-999").mask(document.getElementById("cep"));
-        Inputmask("(99) 99999-9999").mask(document.getElementById("contato"));
-        Inputmask("(99) 99999-9999").mask(document.getElementById("telefone_alternativo"));
-        Inputmask("9999 9999 9999").mask(document.getElementById("titulo_eleitor"));
-        Inputmask("99.999.999-9").mask(document.getElementById("identidade"));
-    });
 </script>
 @endsection

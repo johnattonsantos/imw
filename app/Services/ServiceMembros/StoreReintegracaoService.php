@@ -18,7 +18,7 @@ class StoreReintegracaoService
             $params = $this->fetchParams($params);
 
             DB::beginTransaction();
-            $pessoa = MembresiaMembro::onlyTrashed()->find($id);
+            $pessoa = MembresiaMembro::findOrFail($id);
             $pessoa->restore();
             $pessoa->update([
                 'vinculo'        => MembresiaMembro::VINCULO_MEMBRO,
