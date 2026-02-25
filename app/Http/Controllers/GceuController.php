@@ -38,6 +38,7 @@ use App\Services\ServiceGCeu\VisualizarGCeuService;
 use App\Services\ServiceVisitantes\IdentificaDadosIndexService;
 use App\Traits\Identifiable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -253,10 +254,37 @@ class GceuController extends Controller
         $filename = now()->format('Ymd_His') . '_' . Str::uuid() . '.' . $extension;
         $path = 'gceu/carta-pastoral/' . date('Y/m') . '/' . $filename;
 
-        Storage::disk('s3')->put($path, file_get_contents($file), 'public');
+        Storage::disk('s3')->put($path, file_get_contents($file));
+        $token = rtrim(strtr(base64_encode($path), '+/', '-_'), '=');
 
         return response()->json([
-            'location' => Storage::disk('s3')->url($path),
+            'location' => URL::signedRoute('gceu.carta-pastoral.image', ['token' => $token]),
+        ]);
+    }
+
+    public function cartaPastoralImage(Request $request, string $token)
+    {
+        if (! $request->hasValidSignature()) {
+            abort(403);
+        }
+
+        $base64 = strtr($token, '-_', '+/');
+        $padding = strlen($base64) % 4;
+        if ($padding > 0) {
+            $base64 .= str_repeat('=', 4 - $padding);
+        }
+
+        $path = base64_decode($base64, true);
+        if (! is_string($path) || $path === '' || ! Storage::disk('s3')->exists($path)) {
+            abort(404);
+        }
+
+        $mimeType = Storage::disk('s3')->mimeType($path) ?: 'application/octet-stream';
+        $content = Storage::disk('s3')->get($path);
+
+        return response($content, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=86400',
         ]);
     }
 
