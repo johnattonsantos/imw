@@ -39,6 +39,8 @@ use App\Services\ServiceVisitantes\IdentificaDadosIndexService;
 use App\Traits\Identifiable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class GceuController extends Controller
@@ -238,6 +240,24 @@ class GceuController extends Controller
             DB::rollback();
             return redirect()->route('gceu.carta-pastoral')->with('error', $e->getMessage());
         }
+    }
+
+    public function cartaPastoralUploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'image', 'max:5120'],
+        ]);
+
+        $file = $request->file('file');
+        $extension = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $filename = now()->format('Ymd_His') . '_' . Str::uuid() . '.' . $extension;
+        $path = 'gceu/carta-pastoral/' . date('Y/m') . '/' . $filename;
+
+        Storage::disk('s3')->put($path, file_get_contents($file), 'public');
+
+        return response()->json([
+            'location' => Storage::disk('s3')->url($path),
+        ]);
     }
 
     public function cartaPastoralVisualizarHtml($id)

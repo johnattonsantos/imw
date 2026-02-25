@@ -67,6 +67,9 @@
 @section('extras-scripts')
 <script src="{{ asset('gceu/tinymce/tinymce.min.js') }}?time={{ time() }}"></script>
     <script>
+        const uploadImageUrl = "{{ route('gceu.carta-pastoral.upload-image') }}";
+        const csrfToken = "{{ csrf_token() }}";
+
         tinymce.init({
                     selector: 'textarea',
                     height: 250,
@@ -76,17 +79,47 @@
                     plugins: [
                     'advlist autolink lists link image charmap print preview anchor',
                     'searchreplace visualblocks code fullscreen',
-                    'insertdatetime media table contextmenu paste code',
-                    'responsivefilemanager',
+                    'insertdatetime media table contextmenu paste code'
                     ],
-                    toolbar: " undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent forecolor | responsivefilemanager ",
+                    toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent forecolor | image link",
                     relative_urls : false,
                     remove_script_host : false,
                     image_advtab: true,
-                    external_filemanager_path:"/gceu/tinymce/filemanager/",
-                    filemanager_title:"Procurar imagem" ,
-                    external_plugins: { "filemanager" : "{{ asset('gceu/tinymce/filemanager/plugin.min.js') }}"},
-                    content_css: ['//www.tinymce.com/css/codepen.min.css']
+                    content_css: ['//www.tinymce.com/css/codepen.min.css'],
+                    automatic_uploads: true,
+                    images_upload_handler: function (blobInfo, success, failure, progress) {
+                        const xhr = new XMLHttpRequest();
+                        xhr.withCredentials = false;
+                        xhr.open('POST', uploadImageUrl);
+                        xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+                        xhr.upload.onprogress = function (event) {
+                            progress(event.loaded / event.total * 100);
+                        };
+
+                        xhr.onload = function () {
+                            if (xhr.status < 200 || xhr.status >= 300) {
+                                failure('Falha no upload: HTTP ' + xhr.status);
+                                return;
+                            }
+
+                            const json = JSON.parse(xhr.responseText || '{}');
+                            if (!json.location) {
+                                failure('Resposta inválida do servidor');
+                                return;
+                            }
+
+                            success(json.location);
+                        };
+
+                        xhr.onerror = function () {
+                            failure('Falha no upload da imagem.');
+                        };
+
+                        const formData = new FormData();
+                        formData.append('file', blobInfo.blob(), blobInfo.filename());
+                        xhr.send(formData);
+                    }
         });
     </script>
 @endsection
