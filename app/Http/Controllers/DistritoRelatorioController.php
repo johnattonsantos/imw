@@ -12,6 +12,7 @@ use App\Services\ServiceDistritoRelatorios\OrcamentoService;
 use App\Services\ServiceDistritoRelatorios\QuantidadeMembrosService;
 use App\Services\ServiceDistritoRelatorios\SaldoIgrejasService;
 use App\Services\ServiceDistritoRelatorios\VariacaoFinanceiraService;
+use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoAniversariantesDistrito;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
@@ -203,5 +204,12 @@ class DistritoRelatorioController extends Controller
     public function AspirantePorIgreja(Request $request){
         $data = app(AspirantesIgrejasService::class)->execute($request->all());
         return view('distrito.relatorios.igreja.aspirantes', $data);
+    }
+
+    public function clerigoAniversariante(Request $request)
+    {
+        
+        $data = app(ClerigoAniversariantesDistrito::class)->execute($request->all());
+        return view('distrito.relatorios.clerigos-prebendas.clerigos-aniversariantes', $data);
     }
 }

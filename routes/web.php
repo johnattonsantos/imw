@@ -283,6 +283,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/congregacoes-por-igrejas', [DistritoRelatorioController::class, 'CongregacaoPorIgreja'])->name('relatorio.congregacaoporigreja')->middleware('seguranca:distrito-relatorio-congregacoes-igrejas');
 
             Route::get('/apirantes-por-igrejas', [DistritoRelatorioController::class, 'AspirantePorIgreja'])->name('relatorio.apirateporigreja')->middleware('seguranca:distrito-relatorio-aspirantes-igrejas');
+            //clerigos 
+            Route::get('/clerigos-aniversariantes',[DistritoRelatorioController::class, 'clerigoAniversariante'])->name('relatorio.clerigosaniversariantes')->middleware('seguranca:distrito-clerigos-aniversariantes');
 
             //Orcamentos
             Route::get('/cota-orcamentaria', [FinanceiroController::class, 'CotaOrcamentariaDistrito'])->name('cota.orcamentaria')->middleware(['seguranca:distrito-cota-orcamentaria']);

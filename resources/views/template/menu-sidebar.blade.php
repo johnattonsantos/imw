@@ -469,6 +469,14 @@
                                  <a href="{{ route('distrito.relatorio.apirateporigreja') }}">Aspirantes por Igreja</a>
                              @endif
                          </li>
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-clerigos-aniversariantes'))
+                            <li class="submenu-fixo mt-3 mb-3">
+                                        <span>Clérigos</span>
+                            </li>   
+                            <li {!! Request::is('regiao/relatorio/clerigos-aniversariantes') ? 'class="active"' : '' !!}>      
+                                        <a href="{{ route('distrito.relatorio.clerigosaniversariantes') }}">Clérigos Aniversariantes</a>
+                            </li>
+                         @endif
                          <li class="submenu-fixo mt-3 mb-3">
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-igrejas'))
                                  <span>Igrejas</span>
@@ -664,6 +672,7 @@
                                      Nomeacões</a>
                              @endif
                          </li>
+
                          <li class="submenu-fixo mt-3 mb-3">
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-congregacoes-igrejas'))
                                 <span>Igrejas</span>
