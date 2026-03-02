@@ -258,7 +258,7 @@
                     'searchreplace visualblocks code fullscreen',
                     'insertdatetime media table contextmenu paste code',
                 ],
-                toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent forecolor | image link',
+                toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent forecolor | link',
                 relative_urls: false,
                 remove_script_host: false,
                 image_advtab: true,
