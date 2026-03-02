@@ -38,6 +38,7 @@ use App\Services\ServiceGCeu\VisualizarGCeuService;
 use App\Services\ServiceVisitantes\IdentificaDadosIndexService;
 use App\Traits\Identifiable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -254,7 +255,7 @@ class GceuController extends Controller
         $filename = now()->format('Ymd_His') . '_' . Str::uuid() . '.' . $extension;
         $path = 'gceu/carta-pastoral/' . date('Y/m') . '/' . $filename;
 
-        Storage::disk('s3')->put($path, file_get_contents($file));
+        $this->editorDisk()->put($path, file_get_contents($file));
         $token = rtrim(strtr(base64_encode($path), '+/', '-_'), '=');
 
         return response()->json([
@@ -275,17 +276,24 @@ class GceuController extends Controller
         }
 
         $path = base64_decode($base64, true);
-        if (! is_string($path) || $path === '' || ! Storage::disk('s3')->exists($path)) {
+        $disk = $this->editorDisk();
+
+        if (! is_string($path) || $path === '' || ! $disk->exists($path)) {
             abort(404);
         }
 
-        $mimeType = Storage::disk('s3')->mimeType($path) ?: 'application/octet-stream';
-        $content = Storage::disk('s3')->get($path);
+        $mimeType = $disk->mimeType($path) ?: 'application/octet-stream';
+        $content = $disk->get($path);
 
         return response($content, 200, [
             'Content-Type' => $mimeType,
             'Cache-Control' => 'public, max-age=86400',
         ]);
+    }
+
+    private function editorDisk()
+    {
+        return Storage::disk((string) Config::get('filesystems.editor_disk', 's3'));
     }
 
     public function cartaPastoralVisualizarHtml($id)

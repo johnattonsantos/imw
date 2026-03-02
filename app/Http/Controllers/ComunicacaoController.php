@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Exports\ComunicacaoExport;
 use App\Models\CategoriaComunicacao;
 use App\Models\Comunicacao;
-use App\Models\TipoArquivo;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -266,7 +266,7 @@ class ComunicacaoController extends Controller
         $filename = now()->format('Ymd_His') . '_' . Str::uuid() . '.' . $extension;
         $path = 'comunicacao/editor/' . date('Y/m') . '/' . $filename;
 
-        $this->storageDisk()->put($path, file_get_contents($file));
+        $this->editorDisk()->put($path, file_get_contents($file));
         $token = rtrim(strtr(base64_encode($path), '+/', '-_'), '=');
 
         return response()->json([
@@ -287,7 +287,7 @@ class ComunicacaoController extends Controller
         }
 
         $path = base64_decode($base64, true);
-        $disk = $this->storageDisk();
+        $disk = $this->editorDisk();
 
         if (!is_string($path) || $path === '' || !$disk->exists($path)) {
             abort(404);
@@ -374,15 +374,26 @@ class ComunicacaoController extends Controller
         return Storage::disk($this->storageDiskName());
     }
 
+    private function editorDiskName(): string
+    {
+        return (string) Config::get('filesystems.editor_disk', 's3');
+    }
+
+    private function editorDisk(): FilesystemAdapter
+    {
+        return Storage::disk($this->editorDiskName());
+    }
+
     private function allowedFileExtensions(): array
     {
-        $extensions = TipoArquivo::query()
-            ->orderBy('extensao')
-            ->pluck('extensao')
+        $configured = (string) Config::get('comunicacao.allowed_upload_extensions', '');
+
+        $extensions = collect(preg_split('/[\s,;]+/', $configured) ?: [])
             ->map(fn ($value) => strtolower(trim((string) $value)))
             ->map(fn ($value) => ltrim($value, '.'))
             ->filter(fn ($value) => preg_match('/^[a-z0-9]+$/', $value) === 1)
             ->unique()
+            ->sort()
             ->values()
             ->all();
 

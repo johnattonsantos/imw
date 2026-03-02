@@ -31,6 +31,7 @@ return [
     'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
     'comunicacao_disk' => env('COMUNICACAO_FILESYSTEM_DISK', 'public'),
+    'editor_disk' => env('EDITOR_FILESYSTEM_DISK', 's3'),
 
 
     'disks' => [
@@ -55,8 +56,10 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => null, // Não é necessário definir um endpoint customizado
-            'endpoint' => null, // Remova isso para usar o endpoint padrão da Amazon S3
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'throw' => false,
         ],
     ],
 
