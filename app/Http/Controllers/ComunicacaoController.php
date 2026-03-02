@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -252,6 +253,53 @@ class ComunicacaoController extends Controller
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('comunicacao_' . now()->format('Ymd_His') . '.pdf');
+    }
+
+    public function uploadEditorImage(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'image', 'max:5120'],
+        ]);
+
+        $file = $request->file('file');
+        $extension = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $filename = now()->format('Ymd_His') . '_' . Str::uuid() . '.' . $extension;
+        $path = 'comunicacao/editor/' . date('Y/m') . '/' . $filename;
+
+        $this->storageDisk()->put($path, file_get_contents($file));
+        $token = rtrim(strtr(base64_encode($path), '+/', '-_'), '=');
+
+        return response()->json([
+            'location' => URL::signedRoute('comunicacao.editor-image', ['token' => $token]),
+        ]);
+    }
+
+    public function editorImage(Request $request, string $token)
+    {
+        if (!$request->hasValidSignature()) {
+            abort(403);
+        }
+
+        $base64 = strtr($token, '-_', '+/');
+        $padding = strlen($base64) % 4;
+        if ($padding > 0) {
+            $base64 .= str_repeat('=', 4 - $padding);
+        }
+
+        $path = base64_decode($base64, true);
+        $disk = $this->storageDisk();
+
+        if (!is_string($path) || $path === '' || !$disk->exists($path)) {
+            abort(404);
+        }
+
+        $mimeType = $disk->mimeType($path) ?: 'application/octet-stream';
+        $content = $disk->get($path);
+
+        return response($content, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
     }
 
     private function buildQuery(Request $request): Builder

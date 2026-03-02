@@ -172,6 +172,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/novo', 'create')->name('create');
             Route::post('/store', 'store')->name('store');
+            Route::post('/upload-image', 'uploadEditorImage')->name('upload-image');
+            Route::get('/editor-image/{token}', 'editorImage')->name('editor-image')->middleware('signed');
             Route::get('/detalhes/{comunicacao}', 'show')->name('show');
             Route::get('/editar/{comunicacao}', 'edit')->name('edit');
             Route::put('/update/{comunicacao}', 'update')->name('update');
