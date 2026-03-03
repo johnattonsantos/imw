@@ -41,9 +41,8 @@ class FinanceiroController extends Controller
     public function movimentocaixa(Request $request)
     {
         try {
-            $filters = $request->only(['caixa_id', 'plano_conta_id', 'd1', 'd2']);
+            $filters = $request->only(['caixa_id', 'plano_conta_id', 'd1', 'd2', 'consolidado']);
             $data = app(IdentificaDadosMovimentacoesCaixaService::class)->execute($filters);
-    
             return view('financeiro.movimentocaixa', $data);
         } catch(\Exception $e) {
             dd($e);

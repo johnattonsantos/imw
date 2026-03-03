@@ -137,7 +137,7 @@
                     <!-- Conteúdo -->
                     <form action="">
                         <div class="row">
-                            <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+                            <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
                                 <label for="caixa_id">Caixa</label>
                                 <select class="form-control select2" data-bs-toggle="select2" width="fit" name="caixa_id"
                                     id="caixa_id">
@@ -148,7 +148,7 @@
                                 </select>
                             </div>
 
-                            <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+                            <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
                                 <label for="plano_conta_id">Plano de Contas</label>
                                 <select class="form-control select2" data-bs-toggle="select2" width="fit"
                                     name="plano_conta_id" id="plano_conta_id">
@@ -181,7 +181,15 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+                             <div class="mb-3 col-lg-2 col-md-6 col-sm-12">
+                                <label for="consolidado">Consolidado</label>
+                                <select class="form-control select2" data-bs-toggle="select2" width="fit" name="consolidado"
+                                    id="consolidado">
+                                    <option value="0" {{request()->input('consolidado') ? '' : 'selected'}}>Não</option>
+                                    <option value="1" {{request()->input('consolidado') == 1 ? 'selected' : ''}}>Sim</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 col-lg-2 col-md-6 col-sm-12">
                                 <div class="col-auto" style="margin-top: 32px;">
                                     <button type="submit" class="btn btn-primary btn-lg btn-rounded"><x-bx-search />
                                         Pesquisar</button>

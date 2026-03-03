@@ -13,7 +13,6 @@ class IdentificaDadosMovimentacoesCaixaService
 
     public function execute($filters = [])
     {
-        
         return [
             'planoContas' => FinanceiroUtils::planoContas(),
             'caixas'      => FinanceiroUtils::caixas(),
