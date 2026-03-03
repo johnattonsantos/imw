@@ -41,6 +41,11 @@ class FinanceiroController extends Controller
     public function movimentocaixa(Request $request)
     {
         try {
+            if($request['consolidado'] == 1){
+                if($request['d1'] == '' && $request['d1'] == ''){
+                    return redirect()->back()->with('error', 'Para verificar consolidados informe Data Início e Data Fim');
+                }
+            }
             $filters = $request->only(['caixa_id', 'plano_conta_id', 'd1', 'd2', 'consolidado']);
             $data = app(IdentificaDadosMovimentacoesCaixaService::class)->execute($filters);
             return view('financeiro.movimentocaixa', $data);
