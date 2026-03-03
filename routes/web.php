@@ -117,6 +117,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::controller(HomeController::class)->group(function () {
             Route::get('/', 'dashboard')->name('dashboard');
+            Route::get('/dashboard/chart-data', 'chartData')->name('dashboard.chart-data');
             Route::get('perfil', 'perfil')->name('perfil');
         });
 
