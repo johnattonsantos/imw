@@ -60,6 +60,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
         $(document).ready(function() {
+            const minAllowedDate = new Date();
+            minAllowedDate.setHours(0, 0, 0, 0);
+            minAllowedDate.setDate(minAllowedDate.getDate() - 60);
+
+            const maxAllowedDate = new Date();
+            maxAllowedDate.setHours(0, 0, 0, 0);
+
+            function isValidAllowedDate(value) {
+                if (!value) {
+                    return true;
+                }
+
+                try {
+                    const parsed = $.datepicker.parseDate('dd/mm/yy', value);
+                    parsed.setHours(0, 0, 0, 0);
+                    return parsed >= minAllowedDate && parsed <= maxAllowedDate;
+                } catch (e) {
+                    return false;
+                }
+            }
+
             $('#movimentoCaixaTable').DataTable({
                 "pageLength": 1000,
                 "language": {
@@ -91,7 +112,27 @@
             // Aplicar máscara de data e datepicker
             $('#d1, #d2').mask('00/00/0000');
             $('#d1, #d2').datepicker({
-                dateFormat: 'dd/mm/yy'
+                dateFormat: 'dd/mm/yy',
+                minDate: -60,
+                maxDate: 0
+            });
+
+            $('#d1, #d2').on('change', function() {
+                const value = $(this).val();
+                if (!isValidAllowedDate(value)) {
+                    $(this).val('');
+                    swal('Atenção', 'Informe uma data entre hoje e os últimos 60 dias.', 'warning');
+                }
+            });
+
+            $('form').on('submit', function(e) {
+                const d1 = $('#d1').val();
+                const d2 = $('#d2').val();
+
+                if (!isValidAllowedDate(d1) || !isValidAllowedDate(d2)) {
+                    e.preventDefault();
+                    swal('Atenção', 'Não é permitido informar data anterior a 60 dias.', 'warning');
+                }
             });
 
             // Limpar o campo Pagante ao carregar a página
@@ -164,7 +205,7 @@
                                 <label for="d1">Data Inicio</label>
                                 <div class="input-group">
                                     <input class="form-control datepicker" id="d1" name="d1" maxlength="20"
-                                        value="" type="text" placeholder="">
+                                        value="{{ request('d1', now()->subDays(60)->format('d/m/Y')) }}" type="text" placeholder="">
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
