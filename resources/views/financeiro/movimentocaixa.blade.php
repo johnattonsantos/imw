@@ -60,25 +60,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
         $(document).ready(function() {
-            const minAllowedDate = new Date();
-            minAllowedDate.setHours(0, 0, 0, 0);
-            minAllowedDate.setDate(minAllowedDate.getDate() - 60);
+            const MAX_RANGE_DAYS = 60;
 
-            const maxAllowedDate = new Date();
-            maxAllowedDate.setHours(0, 0, 0, 0);
-
-            function isValidAllowedDate(value) {
+            function parseDate(value) {
                 if (!value) {
-                    return true;
+                    return null;
                 }
 
                 try {
                     const parsed = $.datepicker.parseDate('dd/mm/yy', value);
                     parsed.setHours(0, 0, 0, 0);
-                    return parsed >= minAllowedDate && parsed <= maxAllowedDate;
+                    return parsed;
                 } catch (e) {
+                    return null;
+                }
+            }
+
+            function addDays(date, days) {
+                const result = new Date(date.getTime());
+                result.setDate(result.getDate() + days);
+                return result;
+            }
+
+            function isRangeValid(startDate, endDate) {
+                if (!startDate || !endDate) {
+                    return true;
+                }
+
+                if (endDate < startDate) {
                     return false;
                 }
+
+                const diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+                return diffInDays <= MAX_RANGE_DAYS;
+            }
+
+            function updateDatepickerLimits() {
+                const startDate = parseDate($('#d1').val());
+                const endDate = parseDate($('#d2').val());
+
+                $('#d1').datepicker('option', 'minDate', endDate ? addDays(endDate, -MAX_RANGE_DAYS) : null);
+                $('#d1').datepicker('option', 'maxDate', endDate || null);
+
+                $('#d2').datepicker('option', 'minDate', startDate || null);
+                $('#d2').datepicker('option', 'maxDate', startDate ? addDays(startDate, MAX_RANGE_DAYS) : null);
             }
 
             $('#movimentoCaixaTable').DataTable({
@@ -112,28 +137,49 @@
             // Aplicar máscara de data e datepicker
             $('#d1, #d2').mask('00/00/0000');
             $('#d1, #d2').datepicker({
-                dateFormat: 'dd/mm/yy',
-                minDate: -60,
-                maxDate: 0
+                dateFormat: 'dd/mm/yy'
             });
 
             $('#d1, #d2').on('change', function() {
-                const value = $(this).val();
-                if (!isValidAllowedDate(value)) {
+                const currentValue = $(this).val();
+                const currentDate = parseDate(currentValue);
+                const startDate = parseDate($('#d1').val());
+                const endDate = parseDate($('#d2').val());
+
+                if (currentValue && !currentDate) {
                     $(this).val('');
-                    swal('Atenção', 'Informe uma data entre hoje e os últimos 60 dias.', 'warning');
+                    swal('Atenção', 'Informe uma data válida no formato dd/mm/aaaa.', 'warning');
+                    updateDatepickerLimits();
+                    return;
                 }
+
+                if (!isRangeValid(startDate, endDate)) {
+                    $(this).val('');
+                    swal('Atenção', 'O intervalo entre Data Início e Data Fim deve ser de até 60 dias.', 'warning');
+                }
+
+                updateDatepickerLimits();
             });
 
             $('form').on('submit', function(e) {
-                const d1 = $('#d1').val();
-                const d2 = $('#d2').val();
+                const d1Value = $('#d1').val();
+                const d2Value = $('#d2').val();
+                const startDate = parseDate(d1Value);
+                const endDate = parseDate(d2Value);
 
-                if (!isValidAllowedDate(d1) || !isValidAllowedDate(d2)) {
+                if ((d1Value && !startDate) || (d2Value && !endDate)) {
                     e.preventDefault();
-                    swal('Atenção', 'Não é permitido informar data anterior a 60 dias.', 'warning');
+                    swal('Atenção', 'Informe datas válidas no formato dd/mm/aaaa.', 'warning');
+                    return;
+                }
+
+                if (!isRangeValid(startDate, endDate)) {
+                    e.preventDefault();
+                    swal('Atenção', 'O intervalo entre Data Início e Data Fim deve ser de até 60 dias.', 'warning');
                 }
             });
+
+            updateDatepickerLimits();
 
             // Limpar o campo Pagante ao carregar a página
             $('#pagante_favorecido').val('').trigger('change');
@@ -205,7 +251,7 @@
                                 <label for="d1">Data Inicio</label>
                                 <div class="input-group">
                                     <input class="form-control datepicker" id="d1" name="d1" maxlength="20"
-                                        value="{{ request('d1', now()->subDays(60)->format('d/m/Y')) }}" type="text" placeholder="">
+                                        value="{{ request('d1') }}" type="text" placeholder="">
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
