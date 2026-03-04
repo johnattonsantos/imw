@@ -32,6 +32,41 @@
             transform: translateY(-50%);
         }
 
+        .date-input-group {
+            position: relative;
+        }
+
+        .date-input-group .datepicker {
+            padding-right: 58px;
+        }
+
+        .date-input-group .input-group-addon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .date-clear-btn {
+            position: absolute;
+            right: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1;
+            padding: 0 4px;
+            cursor: pointer;
+            z-index: 3;
+            pointer-events: auto;
+        }
+
+        .date-clear-btn:hover {
+            color: #343a40;
+        }
+
         .swal2-popup .swal2-styled.swal2-cancel {
             color: white !important;
         }
@@ -106,6 +141,11 @@
                 $('#d2').datepicker('option', 'maxDate', startDate ? addDays(startDate, MAX_RANGE_DAYS) : null);
             }
 
+            function toggleClearButton(inputSelector) {
+                const hasValue = $(inputSelector).val().trim() !== '';
+                $(`${inputSelector}-clear`).toggle(hasValue);
+            }
+
             $('#movimentoCaixaTable').DataTable({
                 "pageLength": 1000,
                 "language": {
@@ -159,6 +199,23 @@
                 }
 
                 updateDatepickerLimits();
+                toggleClearButton('#d1');
+                toggleClearButton('#d2');
+            });
+
+            $('#d1, #d2').on('keyup', function() {
+                toggleClearButton(`#${this.id}`);
+            });
+
+            $(document).on('click', '.date-clear-btn', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const target = $(this).data('target');
+                $(target).val('');
+                $(target).trigger('input');
+                $(target).trigger('change');
+                toggleClearButton(target);
             });
 
             $('form').on('submit', function(e) {
@@ -180,6 +237,8 @@
             });
 
             updateDatepickerLimits();
+            toggleClearButton('#d1');
+            toggleClearButton('#d2');
 
             // Limpar o campo Pagante ao carregar a página
             $('#pagante_favorecido').val('').trigger('change');
@@ -249,9 +308,11 @@
 
                             <div class="mb-3 col-lg-4 col-md-6 col-sm-12 pf lgpd">
                                 <label for="d1">Data Inicio</label>
-                                <div class="input-group">
+                                <div class="input-group date-input-group">
                                     <input class="form-control datepicker" id="d1" name="d1" maxlength="20"
                                         value="{{ request('d1') }}" type="text" placeholder="">
+                                    <button type="button" class="date-clear-btn" id="d1-clear" data-target="#d1"
+                                        aria-label="Limpar Data Início">&times;</button>
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
@@ -260,9 +321,11 @@
 
                             <div class="mb-3 col-lg-4 col-md-6 col-sm-12 pf lgpd">
                                 <label for="d2">Data Fim</label>
-                                <div class="input-group">
+                                <div class="input-group date-input-group">
                                     <input class="form-control datepicker" id="d2" name="d2" maxlength="20"
-                                        value="" type="text" placeholder="">
+                                        value="{{ request('d2') }}" type="text" placeholder="">
+                                    <button type="button" class="date-clear-btn" id="d2-clear" data-target="#d2"
+                                        aria-label="Limpar Data Fim">&times;</button>
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
