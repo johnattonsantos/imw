@@ -66,12 +66,12 @@ trait FinanceiroUtils
 
         // Filtrar por data inicial
         if (isset($filters['d1'])) {
-            $query->whereDate('data_lancamento', '>=', Carbon::createFromFormat('d/m/Y', $filters['d1'])->format('Y-m-d'));
+            $query->whereDate('data_movimento', '>=', Carbon::createFromFormat('d/m/Y', $filters['d1'])->format('Y-m-d'));
         }
 
         // Filtrar por data final
         if (isset($filters['d2'])) {
-            $query->whereDate('data_lancamento', '<=', Carbon::createFromFormat('d/m/Y', $filters['d2'])->format('Y-m-d'));
+            $query->whereDate('data_movimento', '<=', Carbon::createFromFormat('d/m/Y', $filters['d2'])->format('Y-m-d'));
         }
         if(!isset($filters['consolidado'])){
             return $query->where('instituicao_id', session()->get('session_perfil')->instituicao_id)
