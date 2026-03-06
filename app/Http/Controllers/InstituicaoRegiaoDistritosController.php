@@ -120,6 +120,10 @@ class InstituicaoRegiaoDistritosController extends Controller
     public function nomeacoes($id, Request $request)
     {
         $data = app(ListaNomeacoesClerigoService::class)->instituicao($id);
+        if (!$data['instituicao']) {
+            return redirect()->back()->with('error', 'Essa instituição não está ativa. Por favor ative ela e tente novamente');
+        }
+        
         return view('instituicoes.nomeacoes.index', $data);
     }
 
