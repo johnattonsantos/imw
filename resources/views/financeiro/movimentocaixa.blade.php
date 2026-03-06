@@ -32,6 +32,41 @@
             transform: translateY(-50%);
         }
 
+        .date-input-group {
+            position: relative;
+        }
+
+        .date-input-group .datepicker {
+            padding-right: 58px;
+        }
+
+        .date-input-group .input-group-addon {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .date-clear-btn {
+            position: absolute;
+            right: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            font-size: 14px;
+            line-height: 1;
+            padding: 0 4px;
+            cursor: pointer;
+            z-index: 3;
+            pointer-events: auto;
+        }
+
+        .date-clear-btn:hover {
+            color: #343a40;
+        }
+
         .swal2-popup .swal2-styled.swal2-cancel {
             color: white !important;
         }
@@ -60,6 +95,57 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script>
         $(document).ready(function() {
+            const MAX_RANGE_DAYS = 60;
+
+            function parseDate(value) {
+                if (!value) {
+                    return null;
+                }
+
+                try {
+                    const parsed = $.datepicker.parseDate('dd/mm/yy', value);
+                    parsed.setHours(0, 0, 0, 0);
+                    return parsed;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            function addDays(date, days) {
+                const result = new Date(date.getTime());
+                result.setDate(result.getDate() + days);
+                return result;
+            }
+
+            function isRangeValid(startDate, endDate) {
+                if (!startDate || !endDate) {
+                    return true;
+                }
+
+                if (endDate < startDate) {
+                    return false;
+                }
+
+                const diffInDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+                return diffInDays <= MAX_RANGE_DAYS;
+            }
+
+            function updateDatepickerLimits() {
+                const startDate = parseDate($('#d1').val());
+                const endDate = parseDate($('#d2').val());
+
+                $('#d1').datepicker('option', 'minDate', endDate ? addDays(endDate, -MAX_RANGE_DAYS) : null);
+                $('#d1').datepicker('option', 'maxDate', endDate || null);
+
+                $('#d2').datepicker('option', 'minDate', startDate || null);
+                $('#d2').datepicker('option', 'maxDate', startDate ? addDays(startDate, MAX_RANGE_DAYS) : null);
+            }
+
+            function toggleClearButton(inputSelector) {
+                const hasValue = $(inputSelector).val().trim() !== '';
+                $(`${inputSelector}-clear`).toggle(hasValue);
+            }
+
             $('#movimentoCaixaTable').DataTable({
                 "pageLength": 1000,
                 "language": {
@@ -93,6 +179,66 @@
             $('#d1, #d2').datepicker({
                 dateFormat: 'dd/mm/yy'
             });
+
+            $('#d1, #d2').on('change', function() {
+                const currentValue = $(this).val();
+                const currentDate = parseDate(currentValue);
+                const startDate = parseDate($('#d1').val());
+                const endDate = parseDate($('#d2').val());
+
+                if (currentValue && !currentDate) {
+                    $(this).val('');
+                    swal('Atenção', 'Informe uma data válida no formato dd/mm/aaaa.', 'warning');
+                    updateDatepickerLimits();
+                    return;
+                }
+
+                if (!isRangeValid(startDate, endDate)) {
+                    $(this).val('');
+                    swal('Atenção', 'O intervalo entre Data Início e Data Fim deve ser de até 60 dias.', 'warning');
+                }
+
+                updateDatepickerLimits();
+                toggleClearButton('#d1');
+                toggleClearButton('#d2');
+            });
+
+            $('#d1, #d2').on('keyup', function() {
+                toggleClearButton(`#${this.id}`);
+            });
+
+            $(document).on('click', '.date-clear-btn', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const target = $(this).data('target');
+                $(target).val('');
+                $(target).trigger('input');
+                $(target).trigger('change');
+                toggleClearButton(target);
+            });
+
+            $('form').on('submit', function(e) {
+                const d1Value = $('#d1').val();
+                const d2Value = $('#d2').val();
+                const startDate = parseDate(d1Value);
+                const endDate = parseDate(d2Value);
+
+                if ((d1Value && !startDate) || (d2Value && !endDate)) {
+                    e.preventDefault();
+                    swal('Atenção', 'Informe datas válidas no formato dd/mm/aaaa.', 'warning');
+                    return;
+                }
+
+                if (!isRangeValid(startDate, endDate)) {
+                    e.preventDefault();
+                    swal('Atenção', 'O intervalo entre Data Início e Data Fim deve ser de até 60 dias.', 'warning');
+                }
+            });
+
+            updateDatepickerLimits();
+            toggleClearButton('#d1');
+            toggleClearButton('#d2');
 
             // Limpar o campo Pagante ao carregar a página
             $('#pagante_favorecido').val('').trigger('change');
@@ -137,7 +283,7 @@
                     <!-- Conteúdo -->
                     <form action="">
                         <div class="row">
-                            <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+                            <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
                                 <label for="caixa_id">Caixa</label>
                                 <select class="form-control select2" data-bs-toggle="select2" width="fit" name="caixa_id"
                                     id="caixa_id">
@@ -148,7 +294,7 @@
                                 </select>
                             </div>
 
-                            <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+                            <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
                                 <label for="plano_conta_id">Plano de Contas</label>
                                 <select class="form-control select2" data-bs-toggle="select2" width="fit"
                                     name="plano_conta_id" id="plano_conta_id">
@@ -162,9 +308,11 @@
 
                             <div class="mb-3 col-lg-4 col-md-6 col-sm-12 pf lgpd">
                                 <label for="d1">Data Inicio</label>
-                                <div class="input-group">
+                                <div class="input-group date-input-group">
                                     <input class="form-control datepicker" id="d1" name="d1" maxlength="20"
-                                        value="" type="text" placeholder="">
+                                        value="{{ request('d1') }}" type="text" placeholder="">
+                                    <button type="button" class="date-clear-btn" id="d1-clear" data-target="#d1"
+                                        aria-label="Limpar Data Início">&times;</button>
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
@@ -173,15 +321,25 @@
 
                             <div class="mb-3 col-lg-4 col-md-6 col-sm-12 pf lgpd">
                                 <label for="d2">Data Fim</label>
-                                <div class="input-group">
+                                <div class="input-group date-input-group">
                                     <input class="form-control datepicker" id="d2" name="d2" maxlength="20"
-                                        value="" type="text" placeholder="">
+                                        value="{{ request('d2') }}" type="text" placeholder="">
+                                    <button type="button" class="date-clear-btn" id="d2-clear" data-target="#d2"
+                                        aria-label="Limpar Data Fim">&times;</button>
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
                                 </div>
                             </div>
-                            <div class="mb-3 col-lg-4 col-md-6 col-sm-12">
+                             <div class="mb-3 col-lg-2 col-md-6 col-sm-12">
+                                <label for="consolidado">Consolidado</label>
+                                <select class="form-control select2" data-bs-toggle="select2" width="fit" name="consolidado"
+                                    id="consolidado">
+                                    <option value="0" {{request()->input('consolidado') ? '' : 'selected'}}>Não</option>
+                                    <option value="1" {{request()->input('consolidado') == 1 ? 'selected' : ''}}>Sim</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 col-lg-2 col-md-6 col-sm-12">
                                 <div class="col-auto" style="margin-top: 32px;">
                                     <button type="submit" class="btn btn-primary btn-lg btn-rounded"><x-bx-search />
                                         Pesquisar</button>

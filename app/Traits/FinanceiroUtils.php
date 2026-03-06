@@ -73,14 +73,28 @@ trait FinanceiroUtils
         if (isset($filters['d2'])) {
             $query->whereDate('data_lancamento', '<=', Carbon::createFromFormat('d/m/Y', $filters['d2'])->format('Y-m-d'));
         }
-
-        return $query->where('instituicao_id', session()->get('session_perfil')->instituicao_id)
-            ->where(function ($query) {
-                $query->where('conciliado', 0)
-                    ->orWhereNull('conciliado');
-            })
-            ->orderBy('data_movimento', 'desc')
-            ->get();
+        if(!isset($filters['consolidado'])){
+            return $query->where('instituicao_id', session()->get('session_perfil')->instituicao_id)
+                ->where(function ($query) {
+                    $query->where('conciliado', 0)
+                        ->orWhereNull('conciliado');
+                })
+                ->orderBy('data_movimento', 'desc')
+                ->get();
+        }else{
+            return $query->where('instituicao_id', session()->get('session_perfil')->instituicao_id)
+               ->when(request()->input('consolidado') == 1, function ($query) {
+                    $query->where('conciliado',request()->input('consolidado'));
+                })
+                ->when(request()->input('consolidado') == 0, function ($query) {
+                     $query->where(function ($query) {
+                        $query->where('conciliado', 0)
+                            ->orWhereNull('conciliado');
+                    });
+                })
+                ->orderBy('data_movimento', 'desc')
+                ->get();
+        }
     }
 
     public static function caixas()
