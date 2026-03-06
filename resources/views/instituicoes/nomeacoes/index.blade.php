@@ -104,42 +104,43 @@
                                         </thead>
                                         <tbody>
                                             @foreach ($nomeacoes as $index => $nomeacao)
-                                                <tr>
+                                                @if(isset($nomeacao->pessoa->nome))
+                                                    <tr>
 
-                                                    <td>
-                                                        {{ $nomeacao->pessoa->nome }}
-                                                    </td>
-                                                    <td>
-                                                        {{ $nomeacao->funcaoMinisterial?->funcao }}
-                                                    </td>
+                                                        <td>
+                                                            {{ $nomeacao->pessoa->nome }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $nomeacao->funcaoMinisterial?->funcao }}
+                                                        </td>
 
-                                                    <td>
-                                                        {{ $nomeacao->data_nomeacao }}
-                                                    </td>
+                                                        <td>
+                                                            {{ $nomeacao->data_nomeacao }}
+                                                        </td>
 
-                                                    <td>
-                                                        {{ $nomeacao->data_termino }}
-                                                    </td>
+                                                        <td>
+                                                            {{ $nomeacao->data_termino }}
+                                                        </td>
 
-                                                    <td class="table-action">
-                                                        @if (!$nomeacao->data_termino)
-                                                            <button type="button" class="btn btn-sm btn-danger btn-rounded"
-                                                                data-bs-toggle="modal" data-bs-target="#modalFinalizar"
-                                                                data-nomeacao-id="{{ $nomeacao->id }}"
-                                                                onclick="abrirModal({{ $instituicao->id }},{{ $nomeacao->id }}, {{ $nomeacao->funcao }})">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                                                    height="24" viewBox="0 0 24 24" fill="none"
-                                                                    stroke="currentColor" stroke-width="2"
-                                                                    stroke-linecap="round" stroke-linejoin="round"
-                                                                    class="feather feather-slash">
-                                                                    <circle cx="12" cy="12" r="10"></circle>
-                                                                    <line x1="4.93" y1="4.93" x2="19.07"
-                                                                        y2="19.07"></line>
-                                                                </svg>
-                                                            </button>
-                                                        @endif
-                                                    </td>
-
+                                                        <td class="table-action">
+                                                            @if (!$nomeacao->data_termino)
+                                                                <button type="button" class="btn btn-sm btn-danger btn-rounded"
+                                                                    data-bs-toggle="modal" data-bs-target="#modalFinalizar"
+                                                                    data-nomeacao-id="{{ $nomeacao->id }}"
+                                                                    onclick="abrirModal({{ $instituicao->id }},{{ $nomeacao->id }}, {{ $nomeacao->funcao }})">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                                        stroke="currentColor" stroke-width="2"
+                                                                        stroke-linecap="round" stroke-linejoin="round"
+                                                                        class="feather feather-slash">
+                                                                        <circle cx="12" cy="12" r="10"></circle>
+                                                                        <line x1="4.93" y1="4.93" x2="19.07"
+                                                                            y2="19.07"></line>
+                                                                    </svg>
+                                                                </button>
+                                                            @endif
+                                                        </td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         </tbody>
