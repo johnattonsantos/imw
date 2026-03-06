@@ -79,6 +79,16 @@
     .card-body ul li i {
         font-size: 1.25rem;
     }
+    .chart-header-stack {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px;
+    }
+    .chart-header-stack > .d-flex {
+        flex-wrap: wrap;
+        row-gap: 8px;
+    }
 </style>
 @endsection
 
@@ -123,7 +133,7 @@
         <div class="col-md-6">
             <div class="card h-100" id="card-membros-chart">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                         <h6 class="card-title mb-0">Gráfico de Membros Ativos vs Inativos</h6>
                         <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-membros-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
                     </div>
@@ -138,7 +148,7 @@
         <div class="col-md-6">
             <div class="card h-100" id="card-visitantes-chart">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                         <h6 class="card-title mb-0">Membresia (<span id="ano-visitantes-text">{{ $anoVisitantes }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="sexo-membresia-select" class="form-control form-control-sm" style="width: 120px;">
@@ -175,7 +185,7 @@
         <div class="col-md-6">
             <div class="card h-100" id="card-rol-es-chart">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                         <h6 class="card-title mb-0">Entradas x Saidas do Rol (<span id="ano-rol-es-text">{{ $anoRol }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="ano-rol-es-select" class="form-control form-control-sm" style="width: 100px;">
@@ -200,7 +210,7 @@
         <div class="col-md-6">
             <div class="card h-100" id="card-rol-cresc-chart">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                         <h6 class="card-title mb-0">Crescimento Liquido do Rol (<span id="ano-rol-cresc-text">{{ $anoRol }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="ano-rol-cresc-select" class="form-control form-control-sm" style="width: 100px;">
@@ -228,7 +238,7 @@
         <div class="col-md-12">
             <div class="card h-100" id="card-financeiro-chart">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                         <h6 class="card-title mb-0">Financeiro: Entradas x Saidas (<span id="ano-financeiro-text">{{ $anoFinanceiro }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="ano-financeiro-select" class="form-control form-control-sm" style="width: 100px;">
@@ -278,7 +288,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-evolucao-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 1 - Evolução de Membros por Igreja (<span id="ano-distrito-evolucao-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-evolucao-select" class="form-control form-control-sm" style="width: 220px;">
@@ -309,7 +319,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-es-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 2 - Entradas x Saídas de Membros (<span id="ano-distrito-es-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-es-select" class="form-control form-control-sm" style="width: 220px;">
@@ -343,7 +353,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-top-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 3 - Top 10 Igrejas por Total de Membros (<span id="ano-distrito-top-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-top-select" class="form-control form-control-sm" style="width: 220px;">
@@ -374,7 +384,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-vinculos-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 4 - Distribuição por Vínculo (<span id="ano-distrito-vinculos-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-vinculos-select" class="form-control form-control-sm" style="width: 220px;">
@@ -408,7 +418,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-sexo-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 5 - Novos Membros por Sexo (<span id="ano-distrito-sexo-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-sexo-select" class="form-control form-control-sm" style="width: 220px;">
@@ -439,7 +449,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-status-rol-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 6 - Situação do Rol (<span id="ano-distrito-status-rol-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-status-rol-select" class="form-control form-control-sm" style="width: 220px;">
@@ -473,7 +483,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-crescimento-acumulado-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 7 - Crescimento Líquido Acumulado (<span id="ano-distrito-crescimento-acumulado-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-crescimento-acumulado-select" class="form-control form-control-sm" style="width: 220px;">
@@ -504,7 +514,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-crescimento-igrejas-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 8 - Ranking de Crescimento por Igreja (<span id="ano-distrito-crescimento-igrejas-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-crescimento-igrejas-select" class="form-control form-control-sm" style="width: 220px;">
@@ -538,7 +548,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-entradas-igrejas-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 9 - Ranking de Entradas por Igreja (<span id="ano-distrito-entradas-igrejas-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-entradas-igrejas-select" class="form-control form-control-sm" style="width: 220px;">
@@ -569,7 +579,7 @@
     <div class="col-md-6">
         <div class="card h-100" id="card-distrito-saidas-igrejas-chart">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                     <h6 class="card-title mb-0">Gráfico 10 - Ranking de Saídas por Igreja (<span id="ano-distrito-saidas-igrejas-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-saidas-igrejas-select" class="form-control form-control-sm" style="width: 220px;">
@@ -701,7 +711,64 @@
 
 <!-- Incluir scripts para os gráficos (por exemplo, Chart.js) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script>
+    if (typeof ChartDataLabels !== 'undefined') {
+        Chart.register(ChartDataLabels);
+    }
+
+    Chart.defaults.plugins.datalabels = {
+        display: true,
+        color: '#212529',
+        font: {
+            size: 10,
+            weight: '600'
+        },
+        formatter: function (value) {
+            if (value === null || value === undefined) {
+                return '';
+            }
+            return Number(value).toLocaleString('pt-BR');
+        }
+    };
+
+    // Fallback para garantir valor visivel em cada ponto dos graficos de linha.
+    const linePointValuePlugin = {
+        id: 'linePointValuePlugin',
+        afterDatasetsDraw(chart) {
+            if (chart.config.type !== 'line') return;
+
+            const { ctx } = chart;
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                if (!chart.isDatasetVisible(datasetIndex)) return;
+
+                const meta = chart.getDatasetMeta(datasetIndex);
+                if (!meta || meta.hidden) return;
+
+                meta.data.forEach((point, pointIndex) => {
+                    const rawValue = dataset.data?.[pointIndex];
+                    if (rawValue === null || rawValue === undefined) return;
+
+                    const parsedValue = Number(rawValue);
+                    const label = Number.isFinite(parsedValue)
+                        ? parsedValue.toLocaleString('pt-BR')
+                        : String(rawValue);
+
+                    ctx.save();
+                    ctx.font = '600 10px sans-serif';
+                    ctx.fillStyle = (Array.isArray(dataset.borderColor) ? dataset.borderColor[0] : dataset.borderColor) || '#212529';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText(label, point.x, point.y - 6);
+                    ctx.restore();
+                });
+            });
+        }
+    };
+    Chart.register(linePointValuePlugin);
+    Chart.overrides.line.plugins = Chart.overrides.line.plugins || {};
+    Chart.overrides.line.plugins.datalabels = { display: false };
+
     const labelsMeses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     const chartDataUrl = "{{ route('dashboard.chart-data') }}";
 
@@ -813,7 +880,17 @@
                     }
                 ]
             },
-            options: { scales: { y: { beginAtZero: true } } }
+            options: {
+                scales: { y: { beginAtZero: true } },
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4
+                    }
+                }
+            }
         });
     }
 
@@ -839,7 +916,17 @@
                     }
                 ]
             },
-            options: { scales: { y: { beginAtZero: true } } }
+            options: {
+                scales: { y: { beginAtZero: true } },
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4
+                    }
+                }
+            }
         });
     }
 
@@ -920,6 +1007,14 @@
             options: {
                 scales: {
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4
+                    }
                 }
             }
         });
@@ -950,6 +1045,14 @@
             options: {
                 scales: {
                     y: { beginAtZero: true }
+                },
+                plugins: {
+                    datalabels: {
+                        display: true,
+                        anchor: 'end',
+                        align: 'top',
+                        offset: 4
+                    }
                 }
             }
         });
