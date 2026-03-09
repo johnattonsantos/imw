@@ -66,7 +66,7 @@
         color: white !important;
     }
     .card-title {
-        font-size: 1.25rem;
+        font-size: 1rem;
     }
     .card-text {
         font-size: 1rem;
@@ -88,6 +88,21 @@
     .chart-header-stack > .d-flex {
         flex-wrap: wrap;
         row-gap: 8px;
+    }
+    .chart-title-actions-row {
+        width: 100%;
+    }
+    .chart-title-actions-row .card-title {
+        margin-bottom: 0;
+    }
+    .btn-chart-actions {
+        min-width: 34px;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
 @endsection
@@ -712,6 +727,7 @@
 <!-- Incluir scripts para os gráficos (por exemplo, Chart.js) -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
     if (typeof ChartDataLabels !== 'undefined') {
         Chart.register(ChartDataLabels);
@@ -771,6 +787,134 @@
 
     const labelsMeses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     const chartDataUrl = "{{ route('dashboard.chart-data') }}";
+
+    function getChartFromCard(cardEl) {
+        if (!cardEl) return null;
+        const canvas = cardEl.querySelector('canvas');
+        if (!canvas || typeof Chart.getChart !== 'function') return null;
+        return Chart.getChart(canvas);
+    }
+
+    function exportChartImage(cardId) {
+        const cardEl = document.getElementById(cardId);
+        const chart = getChartFromCard(cardEl);
+        if (!chart) return;
+
+        const sourceCanvas = chart.canvas;
+        const exportCanvas = document.createElement('canvas');
+        exportCanvas.width = sourceCanvas.width;
+        exportCanvas.height = sourceCanvas.height;
+        const exportCtx = exportCanvas.getContext('2d');
+        exportCtx.fillStyle = '#ffffff';
+        exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
+        exportCtx.drawImage(sourceCanvas, 0, 0);
+
+        const url = exportCanvas.toDataURL('image/png', 1);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${cardId}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function exportChartPdf(cardId) {
+        const cardEl = document.getElementById(cardId);
+        const chart = getChartFromCard(cardEl);
+        if (!chart || !window.jspdf || !window.jspdf.jsPDF) return;
+
+        const imgData = chart.toBase64Image('image/png', 1);
+        const jsPDF = window.jspdf.jsPDF;
+        const title = cardEl.querySelector('.card-title')?.innerText?.trim() || 'Grafico';
+
+        const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const margin = 10;
+        const titleHeight = 8;
+        const maxWidth = pageWidth - (margin * 2);
+        const maxHeight = pageHeight - (margin * 2) - titleHeight;
+
+        const img = new Image();
+        img.onload = function () {
+            const ratio = Math.min(maxWidth / img.width, maxHeight / img.height);
+            const renderWidth = img.width * ratio;
+            const renderHeight = img.height * ratio;
+            const x = (pageWidth - renderWidth) / 2;
+            const y = margin + titleHeight + ((maxHeight - renderHeight) / 2);
+
+            pdf.setFontSize(11);
+            pdf.text(title, margin, margin + 4);
+            pdf.addImage(imgData, 'PNG', x, y, renderWidth, renderHeight);
+            pdf.save(`${cardId}.pdf`);
+        };
+        img.src = imgData;
+    }
+
+    function attachChartActionMenus() {
+        const canvases = document.querySelectorAll('.card[id^="card-"] canvas');
+        const cardIds = Array.from(new Set(Array.from(canvases).map((canvas) => canvas.closest('.card')?.id).filter(Boolean)));
+
+        cardIds.forEach((cardId) => {
+            const cardEl = document.getElementById(cardId);
+            if (!cardEl || cardEl.dataset.actionsAttached === '1') return;
+
+            const header = cardEl.querySelector('.chart-header-stack');
+            if (!header) return;
+
+            let controlsRow = header.querySelector(':scope > .d-flex');
+            if (!controlsRow) {
+                controlsRow = document.createElement('div');
+                controlsRow.className = 'd-flex';
+                controlsRow.style.gap = '8px';
+                header.appendChild(controlsRow);
+            }
+
+            const currentFullscreenBtn = cardEl.querySelector(`.btn-chart-fullscreen[data-target="${cardId}"]`);
+            if (currentFullscreenBtn) {
+                currentFullscreenBtn.remove();
+            }
+
+            const dropdown = document.createElement('div');
+            dropdown.className = 'dropdown';
+            dropdown.innerHTML = `
+                <button class="btn btn-outline-secondary btn-sm btn-chart-actions dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    data-bs-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    title="Ações do gráfico"
+                    aria-label="Ações do gráfico">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="#" class="dropdown-item js-chart-action" data-action="fullscreen" data-target="${cardId}">
+                        <i class="fas fa-expand mr-2"></i>Tela cheia
+                    </a>
+                    <a href="#" class="dropdown-item js-chart-action" data-action="image" data-target="${cardId}">
+                        <i class="fas fa-image mr-2"></i>Exportar imagem
+                    </a>
+                    <a href="#" class="dropdown-item js-chart-action" data-action="pdf" data-target="${cardId}">
+                        <i class="fas fa-file-pdf mr-2"></i>Exportar PDF
+                    </a>
+                </div>
+            `;
+
+            const titleEl = header.querySelector('.card-title');
+            let titleRow = header.querySelector('.chart-title-actions-row');
+            if (!titleRow) {
+                titleRow = document.createElement('div');
+                titleRow.className = 'd-flex justify-content-between align-items-start chart-title-actions-row';
+                header.prepend(titleRow);
+            }
+            if (titleEl && !titleRow.contains(titleEl)) {
+                titleRow.prepend(titleEl);
+            }
+            titleRow.appendChild(dropdown);
+            cardEl.dataset.actionsAttached = '1';
+        });
+    }
 
     const visitantesPorMes = @json(array_values($visitantesPorMes));
     const congregadosPorMes = @json(array_values($congregadosPorMes));
@@ -1553,11 +1697,27 @@
         }
     }
 
-    document.querySelectorAll('.btn-chart-fullscreen').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const targetId = this.getAttribute('data-target');
+    attachChartActionMenus();
+    document.addEventListener('click', function (event) {
+        const actionEl = event.target.closest('.js-chart-action');
+        if (!actionEl) return;
+
+        event.preventDefault();
+        const targetId = actionEl.getAttribute('data-target');
+        const action = actionEl.getAttribute('data-action');
+        if (!targetId || !action) return;
+
+        if (action === 'fullscreen') {
             abrirFullscreen(targetId);
-        });
+            return;
+        }
+        if (action === 'pdf') {
+            exportChartPdf(targetId);
+            return;
+        }
+        if (action === 'image') {
+            exportChartImage(targetId);
+        }
     });
 
     function resizeChartsFullscreen() {
