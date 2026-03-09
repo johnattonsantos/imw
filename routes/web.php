@@ -360,6 +360,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/cnpj-igrejas', 'cnpjIgreja')->name('cnpj.igreja')->middleware('seguranca:regiao-relatorio-cnpj-igreja');
             Route::get('/contato-igrejas', 'ContatoIgreja')->name('contato.igreja')->middleware('seguranca:regiao-relatorio-contato-igreja');
             Route::get('/conta-bancaria-igrejas', 'ContaBancariaIgreja')->name('conta.bancaria.igreja')->middleware('seguranca:regiao-relatorio-conta-bancaria-igreja');
+            Route::get('/igrejas-por-pastores', 'igrejasPorPastores')->name('relatorio.igrejas.pastores')->middleware('seguranca:regiao-relatorio-congregacoes-igrejas');
+            Route::get('/igrejas-por-clerigos', 'igrejasPorClerigos')->name('relatorio.igrejas.clerigos')->middleware('seguranca:regiao-relatorio-congregacoes-igrejas');
         });
 
         Route::prefix('regiao/estatistica')->name('regiao.')->group(function () {

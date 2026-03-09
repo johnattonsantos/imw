@@ -15,6 +15,8 @@ use App\Services\ServiceRegiaoRelatorios\EstatisticaTotalMembrosService;
 use App\Services\ServiceRegiaoRelatorios\LancamentoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\LivroRazaoGeralService;
 use App\Services\ServiceRegiaoRelatorios\FinanceiroPorCategoriaService;
+use App\Services\ServiceRegiaoRelatorios\IgrejasPorClerigosService;
+use App\Services\ServiceRegiaoRelatorios\IgrejasPorPastoresService;
 use App\Services\ServiceRegiaoRelatorios\MembrosMinisterioService;
 use App\Services\ServiceRegiaoRelatorios\OrcamentoService;
 use App\Services\ServiceRegiaoRelatorios\QuantidadeMembrosService;
@@ -377,6 +379,18 @@ class RegiaoRelatorioController extends Controller
     {
         $data = app(ContaBancariaIgreja::class)->execute($request->all());
         return view('regiao.relatorios.igreja.conta-bancaria-igrejas', $data);
+    }
+
+    public function igrejasPorPastores(Request $request)
+    {
+        $data = app(IgrejasPorPastoresService::class)->execute($request->all());
+        return view('regiao.relatorios.igreja.igrejas-por-pastores', $data);
+    }
+
+    public function igrejasPorClerigos(Request $request)
+    {
+        $data = app(IgrejasPorClerigosService::class)->execute($request->all());
+        return view('regiao.relatorios.igreja.igrejas-por-clerigos', $data);
     }
 
     public function anoEclesiastico(Request $request)

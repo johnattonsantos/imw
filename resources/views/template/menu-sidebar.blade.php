@@ -684,6 +684,16 @@
                                 <a href="{{ route('regiao.conta.bancaria.igreja') }}">Conta Bancária por Igreja</a>
                             @endif
                         </li>
+                        <!-- <li {!! Request::is('regiao/relatorio/igrejas-por-pastores') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
+                                <a href="{{ route('regiao.relatorio.igrejas.pastores') }}">Igrejas por Pastores</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/igrejas-por-clerigos') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
+                                <a href="{{ route('regiao.relatorio.igrejas.clerigos') }}">Igrejas por Clérigos</a>
+                            @endif
+                        </li> -->
 
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">
