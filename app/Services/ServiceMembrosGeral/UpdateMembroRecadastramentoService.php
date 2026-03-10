@@ -40,9 +40,7 @@ class UpdateMembroRecadastramentoService
         // if (isset($data['rol_atual']) && $data['rol_atual']) {
         //     $this->updateMembroRol($data['rol_atual'], $membroID);
         // }
-        if (isset($data['dt_recepcao']) && $data['dt_recepcao']) {
-            $this->UpdateDtRecepcao($data['dt_recepcao'], $membroID);
-        }
+        $this->updateDadosRolPermanente($data, $membroID);
         if (isset($data['foto']) && $data['foto']) {
             $this->handlePhotoUpload($data['foto'], $membroID);
         } else {
@@ -88,7 +86,8 @@ class UpdateMembroRecadastramentoService
         $cpf = preg_replace('/[^0-9]/', '', $data['cpf']);
         $result = [
             'membro_id' => $data['membro_id'],
-            'rol_atual' => $data['rol_atual'] ?? null,
+            'status'          => $data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO,
+            'rol_atual' => isset($data['rol_atual']) ? (int) $data['rol_atual'] : null,
             'nome'            => $data['nome'],
             'sexo'            => $data['sexo'],
             'data_nascimento' => Carbon::createFromFormat('Y-m-d', $data['data_nascimento']),
@@ -318,11 +317,16 @@ class UpdateMembroRecadastramentoService
             ]);
         }
     }
-    private function UpdateDtRecepcao($dtRecepcao, $membroId)
+    private function updateDadosRolPermanente(array $data, $membroId): void
     {
         $rolPermanente = MembresiaRolPermanente::where('membro_id', $membroId)->where('lastrec', 1)->first();
         if ($rolPermanente) {
-            $rolPermanente->dt_recepcao = Carbon::parse($dtRecepcao);
+            $isInativo = ($data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO) === MembresiaMembroRecadastramento::STATUS_INATIVO;
+            $rolPermanente->dt_recepcao = !empty($data['dt_recepcao']) ? Carbon::parse($data['dt_recepcao']) : null;
+            $rolPermanente->modo_recepcao_id = $data['modo_recepcao_id'] ?? null;
+            $rolPermanente->dt_exclusao = $isInativo && !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null;
+            $rolPermanente->modo_exclusao_id = $isInativo ? ($data['modo_exclusao_id'] ?? null) : null;
+            $rolPermanente->status = $isInativo ? MembresiaRolPermanente::STATUS_EXCLUSAO : MembresiaRolPermanente::STATUS_RECEBIMENTO;
             $rolPermanente->save();
         }
     }

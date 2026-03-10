@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\TodaysDeadlineRule;
+use App\Rules\UniqueRolIgrejaRule;
 use App\Rules\ValidaCPF;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
@@ -27,8 +28,10 @@ class UpdateMembroRequest extends FormRequest
     public function rules()
     {
         $membroId = $this->input('membro_id');
+        $isRecadastramento = $this->routeIs('recadastramento-membro.update');
         $dataNascimento = $this->input('data_nascimento');
         $minDate = '1910-01-01';
+        $minDateRecepcao = '1967-01-05';
         $currentDate = date('Y-m-d');
 
         return [
@@ -82,24 +85,71 @@ class UpdateMembroRequest extends FormRequest
 
             ],
             'dt_recepcao' => [
-                'sometimes',
+                'nullable',
                 'date',
-                function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
+                function ($attribute, $value, $fail) use ($dataNascimento, $minDateRecepcao, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
                         $fail('A data de recepção deve ser após a data de nascimento.');
                     }
-                    if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de recepção deve ser após a data de nascimento e a data atual.');
+                    if (strtotime($value) < strtotime($minDateRecepcao) || strtotime($value) > strtotime($currentDate)) {
+                        $fail('A data de recepção deve estar entre 05/01/1967 e a data atual.');
                     }
                 },
                 new TodaysDeadlineRule
             ],
+            'modo_recepcao_id' => 'nullable|exists:membresia_situacoes,id',
+            'dt_exclusao' => [
+                'nullable',
+                'date',
+                $isRecadastramento ? 'required_if:status,I' : 'nullable',
+                function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
+                    if (empty($value)) {
+                        return;
+                    }
+
+                    if (strtotime($value) <= strtotime($dataNascimento)) {
+                        $fail('A data de exclusão deve ser após a data de nascimento.');
+                    }
+                    if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
+                        $fail('A data de exclusão deve ser após a data de nascimento e a data atual.');
+                    }
+                },
+                function ($attribute, $value, $fail) use ($currentDate) {
+                    if ($this->input('status') !== 'I') {
+                        return;
+                    }
+
+                    if (empty($value)) {
+                        return;
+                    }
+
+                    $dtRecepcao = $this->input('dt_recepcao');
+                    if (empty($dtRecepcao)) {
+                        $fail('Para status Inativo, informe também a data de recepção.');
+                        return;
+                    }
+
+                    if (strtotime($value) < strtotime($dtRecepcao) || strtotime($value) > strtotime($currentDate)) {
+                        $fail('A data de exclusão deve estar entre a data de recepção e a data atual.');
+                    }
+                },
+            ],
+            'modo_exclusao_id' => $isRecadastramento
+                ? 'nullable|exists:membresia_situacoes,id|required_if:status,I'
+                : 'nullable|exists:membresia_situacoes,id',
             'estado_civil' => 'required',
             'nacionalidade' => 'required',
             'naturalidade' => 'required',
+            'status' => $isRecadastramento ? 'required|in:A,I' : 'nullable|in:A,I',
             'uf' => 'sometimes|required',
+            'rol_atual' => [
+                'required',
+                'integer',
+                'min:1',
+                new UniqueRolIgrejaRule($membroId),
+            ],
             'cpf' => [
-                'nullable',
+                'required',
                 new ValidaCPF,
                 function ($attribute, $value, $fail) use ($membroId) {
                     // Remove todos os caracteres que não são números
@@ -141,6 +191,19 @@ class UpdateMembroRequest extends FormRequest
                 },
             ],
             'congregacao_id' => 'nullable',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'rol_atual.required' => 'O campo Nº Rol é obrigatório.',
+            'rol_atual.integer' => 'O campo Nº Rol deve conter apenas números.',
+            'rol_atual.min' => 'O campo Nº Rol deve ser maior que zero.',
+            'status.required' => 'O campo Status é obrigatório.',
+            'status.in' => 'O campo Status deve ser Ativo ou Inativo.',
+            'dt_exclusao.required_if' => 'Para status Inativo, a data de exclusão é obrigatória.',
+            'modo_exclusao_id.required_if' => 'Para status Inativo, o modo de exclusão é obrigatório.',
         ];
     }
 }

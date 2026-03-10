@@ -10,6 +10,7 @@ use App\Models\MembresiaCurso;
 use App\Models\MembresiaFormacao;
 use App\Models\MembresiaFuncaoEclesiastica;
 use App\Models\MembresiaMembro;
+use App\Models\MembresiaSituacao;
 use App\Models\MembresiaSetor;
 use App\Models\MembresiaTipoAtuacao;
 use App\Traits\Identifiable;
@@ -52,6 +53,8 @@ class EditarMembroService
             'formacoes'            => $formacoes,
             'funcoesEclesiasticas' => $funcoesEclesiasticas,
             'congregacoes'         => Identifiable::fetchCongregacoes(),
+            'modosRecepcao'        => Identifiable::fetchModos(MembresiaSituacao::TIPO_ADESAO),
+            'modosExclusao'        => Identifiable::fetchModos(MembresiaSituacao::TIPO_EXCLUSAO),
             'gceus'                => $gceus,
             'gceuFuncoes'          => $gceuFuncoes,
             'gceuMembros'          => $gceuMembros

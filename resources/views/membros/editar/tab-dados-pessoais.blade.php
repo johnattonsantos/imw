@@ -402,18 +402,33 @@
                 @enderror
               </div>
                 <div class="col-xl-3">
-                        <label for="rol_atual">Nº Rol</label>
-                        <input type="text" class="form-control @error('rol_atual') is-invalid @enderror" id="rol_atual" name="rol_atual" value="{{ old('rol_atual', $pessoa->rol_atual) }}" maxlength="100">
+                        <label for="rol_atual">* Nº Rol</label>
+                        <input type="number" min="1" step="1" inputmode="numeric" class="form-control @error('rol_atual') is-invalid @enderror" id="rol_atual" name="rol_atual" value="{{ old('rol_atual', $pessoa->rol_atual) }}" required>
                     @error('rol_atual')
                         <span class="help-block text-danger">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
+            @if(request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update'))
+              <div class="row mb-4">
+                <div class="col-xl-3">
+                  <label for="status">* Status</label>
+                  <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
+                    <option value="">Selecione</option>
+                    <option value="A" {{ old('status', $pessoa->status) === 'A' ? 'selected' : '' }}>Ativo</option>
+                    <option value="I" {{ old('status', $pessoa->status) === 'I' ? 'selected' : '' }}>Inativo</option>
+                  </select>
+                  @error('status')
+                    <span class="help-block text-danger">{{ $message }}</span>
+                  @enderror
+                </div>
+              </div>
+            @endif
 
             <div class="row mb-4">
               <div class="col-xl-3">
                 <label for="cpf">* CPF</label>
-                <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf" name="cpf" value="{{ old('cpf', $pessoa->cpf) }}" maxlength="100">
+                <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf" name="cpf" value="{{ old('cpf', $pessoa->cpf) }}" maxlength="100" required>
                 @error('cpf')
                 <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
@@ -471,14 +486,53 @@
                   <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
               </div>
-              <!-- <div class="col-xl-3">
-                <label for="dt_recepcao">Data de Recepção</label>
-                <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ old('dt_recepcao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_recepcao)->format('Y-m-d')) }}">
-                @error('dt_recepcao')
-                  <span class="help-block text-danger">{{ $message }}</span>
-                @enderror
-              </div> -->
             </div>
+            @if(request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update'))
+              <div class="row mb-4">
+                <div class="col-xl-3">
+                  <label for="dt_recepcao">Data de Recepção</label>
+                  <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ old('dt_recepcao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_recepcao)->format('Y-m-d')) }}">
+                  @error('dt_recepcao')
+                    <span class="help-block text-danger">{{ $message }}</span>
+                  @enderror
+                </div>
+                <div class="col-xl-3">
+                  <label for="modo_recepcao_id">Modo de Recepção</label>
+                  <select id="modo_recepcao_id" name="modo_recepcao_id" class="form-control @error('modo_recepcao_id') is-invalid @enderror">
+                    <option value="">Selecione</option>
+                    @foreach ($modosRecepcao as $modo)
+                      <option value="{{ $modo->id }}" {{ (string) old('modo_recepcao_id', optional($pessoa->rolAtualSessionIgreja)->modo_recepcao_id) === (string) $modo->id ? 'selected' : '' }}>
+                        {{ $modo->nome }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('modo_recepcao_id')
+                    <span class="help-block text-danger">{{ $message }}</span>
+                  @enderror
+                </div>
+                <div class="col-xl-3">
+                  <label for="dt_exclusao">Data de Exclusão</label>
+                  <input type="date" class="form-control @error('dt_exclusao') is-invalid @enderror" id="dt_exclusao" name="dt_exclusao" value="{{ old('dt_exclusao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_exclusao)->format('Y-m-d')) }}">
+                  @error('dt_exclusao')
+                    <span class="help-block text-danger">{{ $message }}</span>
+                  @enderror
+                </div>
+                <div class="col-xl-3">
+                  <label for="modo_exclusao_id">Modo de Exclusão</label>
+                  <select id="modo_exclusao_id" name="modo_exclusao_id" class="form-control @error('modo_exclusao_id') is-invalid @enderror">
+                    <option value="">Selecione</option>
+                    @foreach ($modosExclusao as $modo)
+                      <option value="{{ $modo->id }}" {{ (string) old('modo_exclusao_id', optional($pessoa->rolAtualSessionIgreja)->modo_exclusao_id) === (string) $modo->id ? 'selected' : '' }}>
+                        {{ $modo->nome }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('modo_exclusao_id')
+                    <span class="help-block text-danger">{{ $message }}</span>
+                  @enderror
+                </div>
+              </div>
+            @endif
             <div class="row mb-4">
               <div class="col-md-6">
                 <label for="historico">Pastor Oficiante</label>
@@ -522,6 +576,21 @@
         $('#naturalidade').val('');
       } else {
         $('#uf').attr('disabled', false);
+      }
+    });
+
+    $(document).ready(function () {
+      if ($('#status').length) {
+        function toggleExclusaoFieldsByStatus() {
+          const status = $('#status').val();
+          const isInativo = status === 'I';
+
+          $('#dt_exclusao').prop('required', isInativo);
+          $('#modo_exclusao_id').prop('required', isInativo);
+        }
+
+        toggleExclusaoFieldsByStatus();
+        $('#status').on('change', toggleExclusaoFieldsByStatus);
       }
     });
 </script>

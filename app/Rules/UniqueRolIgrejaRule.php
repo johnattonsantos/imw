@@ -46,6 +46,6 @@ class UniqueRolIgrejaRule implements Rule
      */
     public function message()
     {
-        return 'Nº de Rol já existente';
+        return 'Este Nº Rol já está sendo utilizado por outro membro.';
     }
 }

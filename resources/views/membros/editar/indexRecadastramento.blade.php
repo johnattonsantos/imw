@@ -56,7 +56,7 @@
     </div>
 
     <div class="form-group mt-4" style="margin-top: -25px !important;">
-      <button type="submit" title="Salvar" class="btn btn-primary btn-lg ml-4">Atualizar</button>
+      <button type="submit" title="Salvar" class="btn btn-primary btn-lg ml-4">Validar</button>
     </div>
 
 </form>
