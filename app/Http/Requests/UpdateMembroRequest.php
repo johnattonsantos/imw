@@ -175,9 +175,19 @@ class UpdateMembroRequest extends FormRequest
                 }
             }],
             'email_alternativo' => 'email|nullable',
-            'telefone_preferencial' => ['nullable', 'regex:/^(\+\d{2}\s?)?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/', 'min:10'],
+            'telefone_preferencial' => [
+                $isRecadastramento ? 'required' : 'nullable',
+                'regex:/^(\+\d{2}\s?)?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/',
+                'min:10'
+            ],
             'telefone_alternativo' => ['nullable', 'regex:/^(\+\d{2}\s?)?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/', 'min:10'],
             'telefone_whatsapp' => ['nullable', 'regex:/^(\+\d{2}\s?)?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/', 'min:10'],
+            'cep' => $isRecadastramento ? 'required' : 'nullable',
+            'endereco' => $isRecadastramento ? 'required' : 'nullable',
+            'numero' => $isRecadastramento ? 'required' : 'nullable',
+            'bairro' => $isRecadastramento ? 'required' : 'nullable',
+            'cidade' => $isRecadastramento ? 'required' : 'nullable',
+            'estado' => $isRecadastramento ? 'required' : 'nullable',
             'data_casamento' => [
                 'nullable',
                 'date',
@@ -204,6 +214,13 @@ class UpdateMembroRequest extends FormRequest
             'status.in' => 'O campo Status deve ser Ativo ou Inativo.',
             'dt_exclusao.required_if' => 'Para status Inativo, a data de exclusão é obrigatória.',
             'modo_exclusao_id.required_if' => 'Para status Inativo, o modo de exclusão é obrigatório.',
+            'telefone_preferencial.required' => 'O campo Telefone é obrigatório.',
+            'cep.required' => 'O campo CEP é obrigatório.',
+            'endereco.required' => 'O campo Endereço é obrigatório.',
+            'numero.required' => 'O campo Número é obrigatório.',
+            'bairro.required' => 'O campo Bairro é obrigatório.',
+            'cidade.required' => 'O campo Cidade é obrigatório.',
+            'estado.required' => 'O campo Estado é obrigatório.',
         ];
     }
 }
