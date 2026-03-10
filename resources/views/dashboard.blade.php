@@ -278,16 +278,66 @@
     </div>
 @elseif($instituicao->tipoInstituicao->sigla == 'R')
     <div class="row flex-fill mt-4">
-        <div class="col-12 text-center">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h6 class="card-title"><b>Bem-vindo(a) à Área Regional!</b></h6>
-                    <p class="card-text">
-                        Aqui você pode acessar informações e gerenciar atividades da região. Explore recursos, eventos e relatórios regionais.
-                    </p>
-                </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="card-title mb-0"><b>{{ session('session_perfil')->instituicao_nome }} - Indicadores Regionais</b></h6>
+                <small class="text-muted">Gráficos por ano e distrito da região logada</small>
             </div>
         </div>
+    </div>
+
+    @php
+        $regionChartConfigs = [
+            ['id' => 'regiao-evolucao', 'title' => 'Gráfico 1 - Evolução de Membros por Distrito', 'canvas' => 'regiaoEvolucaoDistritosChart'],
+            ['id' => 'regiao-es', 'title' => 'Gráfico 2 - Entradas x Saídas da Região', 'canvas' => 'regiaoEntradasSaidasChart'],
+            ['id' => 'regiao-top-distritos', 'title' => 'Gráfico 3 - Top 10 Distritos por Total de Membros', 'canvas' => 'regiaoTopDistritosChart'],
+            ['id' => 'regiao-vinculos', 'title' => 'Gráfico 4 - Distribuição Regional por Vínculo', 'canvas' => 'regiaoVinculosChart'],
+            ['id' => 'regiao-sexo', 'title' => 'Gráfico 5 - Novos Membros por Sexo', 'canvas' => 'regiaoSexoChart'],
+            ['id' => 'regiao-status-rol', 'title' => 'Gráfico 6 - Situação do Rol Regional', 'canvas' => 'regiaoStatusRolChart'],
+            ['id' => 'regiao-crescimento-acumulado', 'title' => 'Gráfico 7 - Crescimento Líquido Acumulado', 'canvas' => 'regiaoCrescimentoAcumuladoChart'],
+            ['id' => 'regiao-crescimento-distritos', 'title' => 'Gráfico 8 - Ranking de Crescimento por Distrito', 'canvas' => 'regiaoCrescimentoDistritosChart'],
+            ['id' => 'regiao-entradas-igrejas', 'title' => 'Gráfico 9 - Ranking de Entradas por Igreja', 'canvas' => 'regiaoEntradasIgrejasChart'],
+            ['id' => 'regiao-saidas-igrejas', 'title' => 'Gráfico 10 - Ranking de Saídas por Igreja', 'canvas' => 'regiaoSaidasIgrejasChart'],
+        ];
+    @endphp
+
+    <div class="row flex-fill mt-2">
+    @foreach($regionChartConfigs as $config)
+            <div class="col-md-6 mt-4">
+                <div class="card h-100" id="card-{{ $config['id'] }}-chart">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
+                            <h6 class="card-title mb-0">{{ $config['title'] }} (<span id="ano-{{ $config['id'] }}-text">{{ $anoDistrito }}</span>)</h6>
+                            <div class="d-flex" style="gap: 8px;">
+                                <select id="distrito-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
+                                    <option value="">Todos distritos</option>
+                                    @foreach($regiaoDistritos as $distrito)
+                                        <option value="{{ $distrito->id }}">{{ $distrito->nome }}</option>
+                                    @endforeach
+                                </select>
+                                <select id="igreja-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
+                                    <option value="">Todas igrejas</option>
+                                </select>
+                                <select id="ano-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 100px;">
+                                    @foreach($anosDisponiveis as $ano)
+                                        <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
+                                    @endforeach
+                                </select>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-{{ $config['id'] }}-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div id="loading-{{ $config['id'] }}" class="chart-loading">
+                                <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
+                                Carregando...
+                            </div>
+                            <canvas id="{{ $config['canvas'] }}"></canvas>
+                        </div>
+                        <div id="error-{{ $config['id'] }}" class="chart-error"></div>
+                    </div>
+                </div>
+            </div>
+    @endforeach
     </div>
 @elseif($instituicao->tipoInstituicao->sigla == 'D')
 <div class="row flex-fill mt-4">
@@ -942,6 +992,25 @@
     const distritoEntradasIgrejasTotais = @json($distritoEntradasIgrejasTotais);
     const distritoSaidasIgrejasLabels = @json($distritoSaidasIgrejasLabels);
     const distritoSaidasIgrejasTotais = @json($distritoSaidasIgrejasTotais);
+    const regiaoEvolucaoDatasets = @json($regiaoEvolucaoDatasets);
+    const regiaoEntradasPorMes = @json(array_values($regiaoEntradasPorMes));
+    const regiaoSaidasPorMes = @json(array_values($regiaoSaidasPorMes));
+    const regiaoTopDistritosLabels = @json($regiaoTopDistritosLabels);
+    const regiaoTopDistritosTotais = @json($regiaoTopDistritosTotais);
+    const regiaoVinculosLabels = ['Membros', 'Congregados', 'Visitantes'];
+    const regiaoVinculosTotais = @json($regiaoVinculosTotais);
+    const regiaoSexoLabels = ['Masculino', 'Feminino', 'Nao informado'];
+    const regiaoSexoTotais = @json($regiaoSexoTotais);
+    const regiaoStatusRolLabels = ['Ativos', 'Inativos'];
+    const regiaoStatusRolTotais = @json($regiaoStatusRolTotais);
+    const regiaoCrescimentoAcumulado = @json(array_values($regiaoCrescimentoAcumulado));
+    const regiaoCrescimentoDistritosLabels = @json($regiaoCrescimentoDistritosLabels);
+    const regiaoCrescimentoDistritosTotais = @json($regiaoCrescimentoDistritosTotais);
+    const regiaoEntradasIgrejasLabels = @json($regiaoEntradasIgrejasLabels);
+    const regiaoEntradasIgrejasTotais = @json($regiaoEntradasIgrejasTotais);
+    const regiaoSaidasIgrejasLabels = @json($regiaoSaidasIgrejasLabels);
+    const regiaoSaidasIgrejasTotais = @json($regiaoSaidasIgrejasTotais);
+    const regiaoIgrejasPorDistrito = @json($regiaoIgrejasPorDistrito);
 
     const membrosChartCanvas = document.getElementById('membrosChart');
     if (membrosChartCanvas) {
@@ -973,6 +1042,16 @@
     const distritoCrescimentoIgrejasCanvas = document.getElementById('distritoCrescimentoIgrejasChart');
     const distritoEntradasIgrejasCanvas = document.getElementById('distritoEntradasIgrejasChart');
     const distritoSaidasIgrejasCanvas = document.getElementById('distritoSaidasIgrejasChart');
+    const regiaoEvolucaoDistritosCanvas = document.getElementById('regiaoEvolucaoDistritosChart');
+    const regiaoEntradasSaidasCanvas = document.getElementById('regiaoEntradasSaidasChart');
+    const regiaoTopDistritosCanvas = document.getElementById('regiaoTopDistritosChart');
+    const regiaoVinculosCanvas = document.getElementById('regiaoVinculosChart');
+    const regiaoSexoCanvas = document.getElementById('regiaoSexoChart');
+    const regiaoStatusRolCanvas = document.getElementById('regiaoStatusRolChart');
+    const regiaoCrescimentoAcumuladoCanvas = document.getElementById('regiaoCrescimentoAcumuladoChart');
+    const regiaoCrescimentoDistritosCanvas = document.getElementById('regiaoCrescimentoDistritosChart');
+    const regiaoEntradasIgrejasCanvas = document.getElementById('regiaoEntradasIgrejasChart');
+    const regiaoSaidasIgrejasCanvas = document.getElementById('regiaoSaidasIgrejasChart');
 
     let visitantesChart = null;
     let rolEntradasSaidasChart = null;
@@ -988,6 +1067,16 @@
     let distritoCrescimentoIgrejasChart = null;
     let distritoEntradasIgrejasChart = null;
     let distritoSaidasIgrejasChart = null;
+    let regiaoEvolucaoDistritosChart = null;
+    let regiaoEntradasSaidasChart = null;
+    let regiaoTopDistritosChart = null;
+    let regiaoVinculosChart = null;
+    let regiaoSexoChart = null;
+    let regiaoStatusRolChart = null;
+    let regiaoCrescimentoAcumuladoChart = null;
+    let regiaoCrescimentoDistritosChart = null;
+    let regiaoEntradasIgrejasChart = null;
+    let regiaoSaidasIgrejasChart = null;
 
     if (visitantesChartCanvas) {
         visitantesChart = new Chart(visitantesChartCanvas.getContext('2d'), {
@@ -1382,6 +1471,149 @@
         });
     }
 
+    if (regiaoEvolucaoDistritosCanvas) {
+        regiaoEvolucaoDistritosChart = new Chart(regiaoEvolucaoDistritosCanvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labelsMeses,
+                datasets: buildDistritoEvolucaoDatasets(regiaoEvolucaoDatasets)
+            },
+            options: {
+                scales: { y: { beginAtZero: true } },
+                plugins: { datalabels: { display: true, anchor: 'end', align: 'top', offset: 4 } }
+            }
+        });
+    }
+
+    if (regiaoEntradasSaidasCanvas) {
+        regiaoEntradasSaidasChart = new Chart(regiaoEntradasSaidasCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: labelsMeses,
+                datasets: [
+                    { label: 'Entradas', data: regiaoEntradasPorMes, backgroundColor: 'rgba(25, 135, 84, 0.35)', borderColor: 'rgba(25, 135, 84, 1)', borderWidth: 1 },
+                    { label: 'Saidas', data: regiaoSaidasPorMes, backgroundColor: 'rgba(220, 53, 69, 0.35)', borderColor: 'rgba(220, 53, 69, 1)', borderWidth: 1 }
+                ]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    if (regiaoTopDistritosCanvas) {
+        regiaoTopDistritosChart = new Chart(regiaoTopDistritosCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: regiaoTopDistritosLabels,
+                datasets: [{ label: 'Membros', data: regiaoTopDistritosTotais, backgroundColor: 'rgba(23, 162, 184, 0.35)', borderColor: 'rgba(23, 162, 184, 1)', borderWidth: 1 }]
+            },
+            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+        });
+    }
+
+    if (regiaoVinculosCanvas) {
+        regiaoVinculosChart = new Chart(regiaoVinculosCanvas.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: regiaoVinculosLabels,
+                datasets: [{
+                    label: 'Cadastros',
+                    data: regiaoVinculosTotais,
+                    backgroundColor: ['rgba(54, 162, 235, 0.35)', 'rgba(255, 193, 7, 0.35)', 'rgba(40, 167, 69, 0.35)'],
+                    borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 193, 7, 1)', 'rgba(40, 167, 69, 1)'],
+                    borderWidth: 1
+                }]
+            }
+        });
+    }
+
+    if (regiaoSexoCanvas) {
+        regiaoSexoChart = new Chart(regiaoSexoCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: regiaoSexoLabels,
+                datasets: [{
+                    label: 'Membros',
+                    data: regiaoSexoTotais,
+                    backgroundColor: ['rgba(54, 162, 235, 0.35)', 'rgba(255, 99, 132, 0.35)', 'rgba(108, 117, 125, 0.35)'],
+                    borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(108, 117, 125, 1)'],
+                    borderWidth: 1
+                }]
+            },
+            options: { scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    if (regiaoStatusRolCanvas) {
+        regiaoStatusRolChart = new Chart(regiaoStatusRolCanvas.getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: regiaoStatusRolLabels,
+                datasets: [{
+                    label: 'Membros no Rol',
+                    data: regiaoStatusRolTotais,
+                    backgroundColor: ['rgba(40, 167, 69, 0.35)', 'rgba(220, 53, 69, 0.35)'],
+                    borderColor: ['rgba(40, 167, 69, 1)', 'rgba(220, 53, 69, 1)'],
+                    borderWidth: 1
+                }]
+            }
+        });
+    }
+
+    if (regiaoCrescimentoAcumuladoCanvas) {
+        regiaoCrescimentoAcumuladoChart = new Chart(regiaoCrescimentoAcumuladoCanvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labelsMeses,
+                datasets: [{
+                    label: 'Crescimento Liquido Acumulado',
+                    data: regiaoCrescimentoAcumulado,
+                    borderColor: 'rgba(111, 66, 193, 1)',
+                    backgroundColor: 'rgba(111, 66, 193, 0.2)',
+                    fill: true,
+                    tension: 0.3,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true } },
+                plugins: { datalabels: { display: true, anchor: 'end', align: 'top', offset: 4 } }
+            }
+        });
+    }
+
+    if (regiaoCrescimentoDistritosCanvas) {
+        regiaoCrescimentoDistritosChart = new Chart(regiaoCrescimentoDistritosCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: regiaoCrescimentoDistritosLabels,
+                datasets: [{ label: 'Saldo', data: regiaoCrescimentoDistritosTotais, backgroundColor: 'rgba(0, 123, 255, 0.35)', borderColor: 'rgba(0, 123, 255, 1)', borderWidth: 1 }]
+            },
+            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+        });
+    }
+
+    if (regiaoEntradasIgrejasCanvas) {
+        regiaoEntradasIgrejasChart = new Chart(regiaoEntradasIgrejasCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: regiaoEntradasIgrejasLabels,
+                datasets: [{ label: 'Entradas', data: regiaoEntradasIgrejasTotais, backgroundColor: 'rgba(25, 135, 84, 0.35)', borderColor: 'rgba(25, 135, 84, 1)', borderWidth: 1 }]
+            },
+            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+        });
+    }
+
+    if (regiaoSaidasIgrejasCanvas) {
+        regiaoSaidasIgrejasChart = new Chart(regiaoSaidasIgrejasCanvas.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: regiaoSaidasIgrejasLabels,
+                datasets: [{ label: 'Saidas', data: regiaoSaidasIgrejasTotais, backgroundColor: 'rgba(253, 126, 20, 0.35)', borderColor: 'rgba(253, 126, 20, 1)', borderWidth: 1 }]
+            },
+            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+        });
+    }
+
     function setLoading(id, isLoading) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -1418,11 +1650,36 @@
             distrito_crescimento_igrejas: 'igreja-distrito-crescimento-igrejas-select',
             distrito_entradas_igrejas: 'igreja-distrito-entradas-igrejas-select',
             distrito_saidas_igrejas: 'igreja-distrito-saidas-igrejas-select',
+            regiao_evolucao_distritos: 'igreja-regiao-evolucao-select',
+            regiao_entradas_saidas: 'igreja-regiao-es-select',
+            regiao_top_distritos: 'igreja-regiao-top-distritos-select',
+            regiao_vinculos: 'igreja-regiao-vinculos-select',
+            regiao_sexo_membros: 'igreja-regiao-sexo-select',
+            regiao_status_rol: 'igreja-regiao-status-rol-select',
+            regiao_crescimento_acumulado: 'igreja-regiao-crescimento-acumulado-select',
+            regiao_crescimento_distritos: 'igreja-regiao-crescimento-distritos-select',
+            regiao_entradas_igrejas: 'igreja-regiao-entradas-igrejas-select',
+            regiao_saidas_igrejas: 'igreja-regiao-saidas-igrejas-select',
+        };
+        const distritoPorChart = {
+            regiao_evolucao_distritos: 'distrito-regiao-evolucao-select',
+            regiao_entradas_saidas: 'distrito-regiao-es-select',
+            regiao_top_distritos: 'distrito-regiao-top-distritos-select',
+            regiao_vinculos: 'distrito-regiao-vinculos-select',
+            regiao_sexo_membros: 'distrito-regiao-sexo-select',
+            regiao_status_rol: 'distrito-regiao-status-rol-select',
+            regiao_crescimento_acumulado: 'distrito-regiao-crescimento-acumulado-select',
+            regiao_crescimento_distritos: 'distrito-regiao-crescimento-distritos-select',
+            regiao_entradas_igrejas: 'distrito-regiao-entradas-igrejas-select',
+            regiao_saidas_igrejas: 'distrito-regiao-saidas-igrejas-select',
         };
         const igreja = igrejaPorChart[chart]
             ? (document.getElementById(igrejaPorChart[chart])?.value || '')
             : '';
-        const url = `${chartDataUrl}?chart=${encodeURIComponent(chart)}&ano=${encodeURIComponent(ano)}&sexo=${encodeURIComponent(sexo)}&status=${encodeURIComponent(status)}&igreja_id=${encodeURIComponent(igreja)}`;
+        const distrito = distritoPorChart[chart]
+            ? (document.getElementById(distritoPorChart[chart])?.value || '')
+            : '';
+        const url = `${chartDataUrl}?chart=${encodeURIComponent(chart)}&ano=${encodeURIComponent(ano)}&sexo=${encodeURIComponent(sexo)}&status=${encodeURIComponent(status)}&igreja_id=${encodeURIComponent(igreja)}&distrito_id=${encodeURIComponent(distrito)}`;
         const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
         if (!response.ok) {
             throw new Error('Falha ao buscar dados do grafico.');
@@ -1446,6 +1703,16 @@
             distrito_crescimento_igrejas: { loadingId: 'loading-distrito-crescimento-igrejas', anoTextId: 'ano-distrito-crescimento-igrejas-text', errorId: 'error-distrito-crescimento-igrejas', chartInstance: distritoCrescimentoIgrejasChart },
             distrito_entradas_igrejas: { loadingId: 'loading-distrito-entradas-igrejas', anoTextId: 'ano-distrito-entradas-igrejas-text', errorId: 'error-distrito-entradas-igrejas', chartInstance: distritoEntradasIgrejasChart },
             distrito_saidas_igrejas: { loadingId: 'loading-distrito-saidas-igrejas', anoTextId: 'ano-distrito-saidas-igrejas-text', errorId: 'error-distrito-saidas-igrejas', chartInstance: distritoSaidasIgrejasChart },
+            regiao_evolucao_distritos: { loadingId: 'loading-regiao-evolucao', anoTextId: 'ano-regiao-evolucao-text', errorId: 'error-regiao-evolucao', chartInstance: regiaoEvolucaoDistritosChart },
+            regiao_entradas_saidas: { loadingId: 'loading-regiao-es', anoTextId: 'ano-regiao-es-text', errorId: 'error-regiao-es', chartInstance: regiaoEntradasSaidasChart },
+            regiao_top_distritos: { loadingId: 'loading-regiao-top-distritos', anoTextId: 'ano-regiao-top-distritos-text', errorId: 'error-regiao-top-distritos', chartInstance: regiaoTopDistritosChart },
+            regiao_vinculos: { loadingId: 'loading-regiao-vinculos', anoTextId: 'ano-regiao-vinculos-text', errorId: 'error-regiao-vinculos', chartInstance: regiaoVinculosChart },
+            regiao_sexo_membros: { loadingId: 'loading-regiao-sexo', anoTextId: 'ano-regiao-sexo-text', errorId: 'error-regiao-sexo', chartInstance: regiaoSexoChart },
+            regiao_status_rol: { loadingId: 'loading-regiao-status-rol', anoTextId: 'ano-regiao-status-rol-text', errorId: 'error-regiao-status-rol', chartInstance: regiaoStatusRolChart },
+            regiao_crescimento_acumulado: { loadingId: 'loading-regiao-crescimento-acumulado', anoTextId: 'ano-regiao-crescimento-acumulado-text', errorId: 'error-regiao-crescimento-acumulado', chartInstance: regiaoCrescimentoAcumuladoChart },
+            regiao_crescimento_distritos: { loadingId: 'loading-regiao-crescimento-distritos', anoTextId: 'ano-regiao-crescimento-distritos-text', errorId: 'error-regiao-crescimento-distritos', chartInstance: regiaoCrescimentoDistritosChart },
+            regiao_entradas_igrejas: { loadingId: 'loading-regiao-entradas-igrejas', anoTextId: 'ano-regiao-entradas-igrejas-text', errorId: 'error-regiao-entradas-igrejas', chartInstance: regiaoEntradasIgrejasChart },
+            regiao_saidas_igrejas: { loadingId: 'loading-regiao-saidas-igrejas', anoTextId: 'ano-regiao-saidas-igrejas-text', errorId: 'error-regiao-saidas-igrejas', chartInstance: regiaoSaidasIgrejasChart },
         };
 
         const cfg = mapa[chart];
@@ -1456,7 +1723,7 @@
         try {
             const payload = await carregarDadosGrafico(chart, ano);
             cfg.chartInstance.data.labels = payload.labels;
-            if (chart === 'distrito_evolucao') {
+            if (chart === 'distrito_evolucao' || chart === 'regiao_evolucao_distritos') {
                 cfg.chartInstance.data.datasets = buildDistritoEvolucaoDatasets(payload.datasets || []);
             } else {
                 cfg.chartInstance.data.datasets = (payload.datasets || []).map((dataset, idx) => ({
@@ -1678,6 +1945,64 @@
         });
     }
 
+    function bindRegionalChartFilters(chartName, suffix) {
+        const anoSelect = document.getElementById(`ano-${suffix}-select`);
+        if (anoSelect) {
+            anoSelect.addEventListener('change', function () {
+                atualizarGrafico(chartName, this.value);
+            });
+        }
+
+        const distritoSelect = document.getElementById(`distrito-${suffix}-select`);
+        const igrejaSelect = document.getElementById(`igreja-${suffix}-select`);
+
+        function populateRegionalChurchSelect() {
+            if (!igrejaSelect) return;
+
+            const distritoId = distritoSelect?.value || '';
+            const igrejas = distritoId && regiaoIgrejasPorDistrito[distritoId]
+                ? regiaoIgrejasPorDistrito[distritoId]
+                : [];
+
+            igrejaSelect.innerHTML = '<option value="">Todas igrejas</option>';
+            igrejas.forEach(function (igreja) {
+                const option = document.createElement('option');
+                option.value = igreja.id;
+                option.textContent = igreja.nome;
+                igrejaSelect.appendChild(option);
+            });
+        }
+
+        if (distritoSelect) {
+            populateRegionalChurchSelect();
+            distritoSelect.addEventListener('change', function () {
+                populateRegionalChurchSelect();
+                const anoAtual = document.getElementById(`ano-${suffix}-select`)?.value;
+                if (!anoAtual) return;
+                atualizarGrafico(chartName, anoAtual);
+            });
+        }
+
+        if (igrejaSelect) {
+            igrejaSelect.addEventListener('change', function () {
+                const anoAtual = document.getElementById(`ano-${suffix}-select`)?.value;
+                if (!anoAtual) return;
+                atualizarGrafico(chartName, anoAtual);
+            });
+        }
+    }
+
+    bindRegionalChartFilters('regiao_evolucao_distritos', 'regiao-evolucao');
+    bindRegionalChartFilters('regiao_entradas_saidas', 'regiao-es');
+    bindRegionalChartFilters('regiao_top_distritos', 'regiao-top-distritos');
+    bindRegionalChartFilters('regiao_vinculos', 'regiao-vinculos');
+    bindRegionalChartFilters('regiao_sexo_membros', 'regiao-sexo');
+    bindRegionalChartFilters('regiao_status_rol', 'regiao-status-rol');
+    bindRegionalChartFilters('regiao_crescimento_acumulado', 'regiao-crescimento-acumulado');
+    bindRegionalChartFilters('regiao_crescimento_distritos', 'regiao-crescimento-distritos');
+    bindRegionalChartFilters('regiao_entradas_igrejas', 'regiao-entradas-igrejas');
+    bindRegionalChartFilters('regiao_saidas_igrejas', 'regiao-saidas-igrejas');
+
     function abrirFullscreen(targetId) {
         const el = document.getElementById(targetId);
         if (!el) return;
@@ -1721,7 +2046,7 @@
     });
 
     function resizeChartsFullscreen() {
-        [visitantesChart, rolEntradasSaidasChart, rolCrescimentoChart, financeiroEntradasSaidasChart, distritoEvolucaoChart, distritoEntradasSaidasChart, distritoTopIgrejasChart, distritoVinculosChart, distritoSexoChart, distritoStatusRolChart, distritoCrescimentoAcumuladoChart, distritoCrescimentoIgrejasChart, distritoEntradasIgrejasChart, distritoSaidasIgrejasChart].forEach(function (chart) {
+        [visitantesChart, rolEntradasSaidasChart, rolCrescimentoChart, financeiroEntradasSaidasChart, distritoEvolucaoChart, distritoEntradasSaidasChart, distritoTopIgrejasChart, distritoVinculosChart, distritoSexoChart, distritoStatusRolChart, distritoCrescimentoAcumuladoChart, distritoCrescimentoIgrejasChart, distritoEntradasIgrejasChart, distritoSaidasIgrejasChart, regiaoEvolucaoDistritosChart, regiaoEntradasSaidasChart, regiaoTopDistritosChart, regiaoVinculosChart, regiaoSexoChart, regiaoStatusRolChart, regiaoCrescimentoAcumuladoChart, regiaoCrescimentoDistritosChart, regiaoEntradasIgrejasChart, regiaoSaidasIgrejasChart].forEach(function (chart) {
             if (chart && typeof chart.resize === 'function') {
                 chart.resize();
             }
