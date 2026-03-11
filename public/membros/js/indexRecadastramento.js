@@ -3,7 +3,6 @@ $(document).ready(function() {
     function getSearchParameters() {
         return {
             search: $('#searchInput').val(),
-            status: $('input[name="status"]:checked').val(),
         }
     }
 

@@ -24,7 +24,6 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
                     ->whereColumn('membresia_migracao.id', 'vw_rol_membros_recadastro.membro_id')
                     ->limit(1),
             ])
-            ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
             ->when($search !== '', function ($query) use ($search) {
                 $query->where('membro', 'like', "%{$search}%");
             })
@@ -33,18 +32,6 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
                     ->from('membresia_migracao')
                     ->whereColumn('membresia_migracao.id', 'vw_rol_membros_recadastro.membro_id')
                     ->where('membresia_migracao.validado', 0);
-            })
-            ->when((isset($parameters['status']) && $parameters['status'] == 'rol_atual' || !isset($parameters['status'])), function ($query) {
-                $query->where('status', 'A');
-            })
-            ->when(isset($parameters['status']) && $parameters['status'] == 'inativo', function ($query) {
-                $query->where('status', 'I');
-            })
-            ->when(isset($parameters['status']) && $parameters['status'] == 'rol_permanente', function ($query) {
-                $query->whereIn('status', ['A', 'I']);
-            })
-            ->when(isset($parameters['status']) && $parameters['status'] == 'has_errors', function ($query) {
-                $query->where('has_errors', 1);
             });
     }
 
