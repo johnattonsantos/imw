@@ -159,7 +159,7 @@ class MembrosController extends Controller
             DB::beginTransaction();
             app(UpdateMembroRecadastramentoService::class)->execute($request->all(), MembresiaMembro::VINCULO_MEMBRO);
             DB::commit();
-            return redirect()->action([MembrosController::class, 'editarRecadastramento'], ['id' => $request->input('membro_id')])->with('success', 'Registro atualizado.');
+            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('success', 'Registro validado com sucesso.');
        /*  } catch(\Exception $e) {
             DB::rollback();
             dd($e);

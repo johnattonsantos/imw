@@ -29,6 +29,15 @@ class UpdateMembroRequest extends FormRequest
     {
         $membroId = $this->input('membro_id');
         $isRecadastramento = $this->routeIs('recadastramento-membro.update');
+        $cpf = preg_replace('/[^0-9]/', '', $this->input('cpf', ''));
+        $membroIdRegraRol = $membroId;
+
+        if ($isRecadastramento && $cpf !== '') {
+            $membroOficialId = DB::table('membresia_membros')->where('cpf', $cpf)->value('id');
+            if (!empty($membroOficialId)) {
+                $membroIdRegraRol = $membroOficialId;
+            }
+        }
         $dataNascimento = $this->input('data_nascimento');
         $minDate = '1910-01-01';
         $minDateRecepcao = '1967-01-05';
@@ -146,7 +155,7 @@ class UpdateMembroRequest extends FormRequest
                 'required',
                 'integer',
                 'min:1',
-                new UniqueRolIgrejaRule($membroId),
+                new UniqueRolIgrejaRule($membroIdRegraRol, false),
             ],
             'cpf' => [
                 'required',

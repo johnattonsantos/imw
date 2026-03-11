@@ -41,6 +41,7 @@ $(document).ready(function() {
             {data: 'recepcao', name: 'recepcao'},
             {data: 'exclusao', name: 'exclusao'},
             {data: 'congregacao', name: 'congregacao'},
+            {data: 'validado', name: 'validado'},
         ],
         columnDefs: [
             {
@@ -61,7 +62,7 @@ $(document).ready(function() {
                 }
             },
             {
-                targets: 5,
+                targets: 6,
                 orderable: 0,
                 render: function (data, type, row, meta) {
                     return `${row.actions}`

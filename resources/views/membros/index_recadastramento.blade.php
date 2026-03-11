@@ -88,10 +88,11 @@
                         </div> -->
                     </div>
                     <div class="col-4">
+                        <label for="searchInput">Pesquisar por nome</label>
                         <input type="text" name="search" id="searchInput" class="form-control form-control-sm" placeholder="Pesquisar..."
                                value="{{ request()->input('search') }}">
                     </div>
-                    <div class="col-auto" style="margin-left: -19px;">
+                    <div class="col-auto" style="margin-left: -19px; margin-top:30px">
                         <button type="submit" id="searchButton" class="btn btn-primary btn-rounded"><x-bx-search /> Pesquisar</button>
                     </div>
                 </form>
@@ -104,6 +105,7 @@
                                 <th>RECEPÇÃO</th>
                                 <th>EXCLUSÃO</th>
                                 <th>CONGREGAÇÃO</th>
+                                <th>VALIDADO</th>
                                 <th></th>
                             </tr>
                         </thead>

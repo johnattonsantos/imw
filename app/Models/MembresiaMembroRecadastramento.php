@@ -60,15 +60,17 @@ class MembresiaMembroRecadastramento extends Model implements Auditable
         'codigo_host',
         'congregacao_id',
         'has_errors',
+        'validado',
     ];
 
     protected $casts = [
-        'data_nascimento' => 'date'
+        'data_nascimento' => 'date',
+        'validado' => 'boolean',
     ];
 
     public function contato()
     {
-        return $this->hasOne(MembresiaContato::class, 'membro_id');
+        return $this->hasOne(MembresiaContatoRecadastramento::class, 'membro_id')->withDefault();
     }
 
     public function familiar()
@@ -97,12 +99,12 @@ class MembresiaMembroRecadastramento extends Model implements Auditable
 
     public function rolPermanente()
     {
-        return $this->hasMany(MembresiaRolPermanente::class, 'membro_id');
+        return $this->hasMany(MembresiaRolPermanenteRecadastramento::class, 'membro_id');
     }
 
     public function rolAtualSessionIgreja(): HasOne
     {
-        return $this->hasOne(MembresiaRolPermanente::class, 'membro_id', 'id')->withTrashed()->where('lastrec', 1)->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id);
+        return $this->hasOne(MembresiaRolPermanenteRecadastramento::class, 'membro_id', 'id')->withTrashed()->where('lastrec', 1)->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id);
     }
 
     public function disciplinas()

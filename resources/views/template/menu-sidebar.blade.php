@@ -128,11 +128,11 @@
                                  <a href="{{ route('membro.index') }}">Membros</a>
                              @endif
                          </li>
-                         <!-- <li {!! Request::is('secretaria/recadastramento-membro*') ? 'class="active"' : '' !!}>
+                         <li {!! Request::is('secretaria/recadastramento-membro*') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('membros-index'))
                                  <a href="{{ route('recadastramento-membro.indexRecadastramento') }}">Membresia Validação</a>
                              @endif
-                         </li> -->
+                         </li>
                          <li {!! Request::is('secretaria/congregado*') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('congregados-index'))
                                  <a href="{{ route('congregado.index') }}">Congregados</a>
