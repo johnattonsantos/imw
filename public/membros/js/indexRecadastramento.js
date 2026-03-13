@@ -52,7 +52,7 @@ $(document).ready(function() {
                     } else if (row.dt_exclusao) {
                         return `<span class="badge badge-danger"> ${row.membro} </span>`
                     } else if (row.has_errors) {
-                        return `<span class="badge badge-warning"> ${row.membro} </span>`
+                        return row.membro
                     } else if (row.notificacao_transferencia_ativa) {
                         return `<span class="font-italic text-secondary">${row.membro} (Em transferência para ${row.notificacao_transferencia_ativa.igreja_destino.nome})</span>`
                     } else {

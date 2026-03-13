@@ -26,7 +26,8 @@ class UpdateMembroRecadastramentoService
 
     public function execute(array $data, $vinculo): void
     {
-        $dataMembro = $this->prepareMembroData($data, $vinculo);
+        $membroMigracao = MembresiaMembroRecadastramento::find($data['membro_id']);
+        $dataMembro = $this->prepareMembroData($data, $vinculo, $membroMigracao);
         $dataContato = $this->prepareContatoData($data);
         $dataFamiliar = $this->prepareFamiliarData($data);
         $dataFormacoes = $this->prepareFormacoesData($data);
@@ -82,9 +83,13 @@ class UpdateMembroRecadastramentoService
     }
 
 
-    private function prepareMembroData(array $data, $vinculo): array
+    private function prepareMembroData(array $data, $vinculo, ?MembresiaMembroRecadastramento $membroMigracao = null): array
     {
         $cpf = preg_replace('/[^0-9]/', '', $data['cpf']);
+        $igrejaId = $membroMigracao->igreja_id ?? self::fetchSessionIgrejaLocal()->id;
+        $distritoId = $membroMigracao->distrito_id ?? self::fetchtSessionDistrito()->id;
+        $regiaoId = $membroMigracao->regiao_id ?? self::fetchtSessionRegiao()->id;
+
         $result = [
             'membro_id' => $data['membro_id'],
             'status'          => $data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO,
@@ -101,6 +106,9 @@ class UpdateMembroRecadastramentoService
             'profissao'  => $data['profissao'],
             'funcao_eclesiastica_id'  => $data['funcao_eclesiastica_id'],
             'cpf'  => $cpf !== '' ? $cpf : null,
+            'distrito_id' => $distritoId,
+            'igreja_id' => $igrejaId,
+            'regiao_id' => $regiaoId,
             'tipo_documento'  => $data['tipo_documento'],
             'documento'  => $data['documento'],
             'documento_complemento'  => $data['documento_complemento'],
@@ -224,11 +232,10 @@ class UpdateMembroRecadastramentoService
 
     private function handleUpdateMembro($data, $membroMigracaoId)
     {
-        $membroId = $this->resolveMembroOficialId($data, $membroMigracaoId);
         $payload = $data;
         unset($payload['membro_id']);
 
-        $membresia = MembresiaMembro::updateOrCreate(['id' => $membroId], $payload);
+        $membresia = MembresiaMembro::updateOrCreate(['id' => $membroMigracaoId], $payload);
         return $membresia->id;
     }
 
@@ -350,23 +357,6 @@ class UpdateMembroRecadastramentoService
             ['membro_id' => $membroId, 'lastrec' => 1],
             $payload
         );
-    }
-
-    private function resolveMembroOficialId(array $data, $membroMigracaoId)
-    {
-        $cpf = preg_replace('/[^0-9]/', '', $data['cpf'] ?? '');
-        if ($cpf !== '') {
-            $existentePorCpf = MembresiaMembro::where('cpf', $cpf)->first();
-            if ($existentePorCpf) {
-                return $existentePorCpf->id;
-            }
-        }
-
-        if (MembresiaMembro::where('id', $membroMigracaoId)->exists()) {
-            return $membroMigracaoId;
-        }
-
-        return $membroMigracaoId;
     }
 
     private function updateValidadoFlags($membroId, $membroMigracaoId): void
