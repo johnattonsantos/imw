@@ -58,9 +58,6 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
             ->addColumn('exclusao', function (RolMembroRecadastramento $rolMembro) {
                 return $rolMembro->dt_exclusao ? $rolMembro->dt_exclusao->format('d/m/Y') : '';
             })
-            ->addColumn('validado', function (RolMembroRecadastramento $rolMembro) {
-                return (int) ($rolMembro->validado_migracao ?? 0) === 1 ? 'Sim' : 'Não';
-            })
             ->addColumn('actions', function (RolMembroRecadastramento $rolMembro) {
                 return view('membros.slice-actions-recadastramento', ['rolMembro' => $rolMembro]);
             })

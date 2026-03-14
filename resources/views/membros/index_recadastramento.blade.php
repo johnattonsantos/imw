@@ -106,7 +106,6 @@
                                 <th>RECEPÇÃO</th>
                                 <th>EXCLUSÃO</th>
                                 <th>CONGREGAÇÃO</th>
-                                <th>VALIDADO</th>
                                 <th></th>
                             </tr>
                         </thead>
