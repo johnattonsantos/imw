@@ -3,7 +3,6 @@ $(document).ready(function() {
     function getSearchParameters() {
         return {
             search: $('#searchInput').val(),
-            status: $('input[name="status"]:checked').val(),
         }
     }
 
@@ -38,6 +37,7 @@ $(document).ready(function() {
         columns: [
             {data: 'numero_rol', name: 'numero_rol'},
             {data: 'membro', name: 'membro'},
+            {data: 'status_text', name: 'status_text'},
             {data: 'recepcao', name: 'recepcao'},
             {data: 'exclusao', name: 'exclusao'},
             {data: 'congregacao', name: 'congregacao'},
@@ -52,7 +52,7 @@ $(document).ready(function() {
                     } else if (row.dt_exclusao) {
                         return `<span class="badge badge-danger"> ${row.membro} </span>`
                     } else if (row.has_errors) {
-                        return `<span class="badge badge-warning"> ${row.membro} </span>`
+                        return row.membro
                     } else if (row.notificacao_transferencia_ativa) {
                         return `<span class="font-italic text-secondary">${row.membro} (Em transferência para ${row.notificacao_transferencia_ativa.igreja_destino.nome})</span>`
                     } else {
@@ -61,7 +61,7 @@ $(document).ready(function() {
                 }
             },
             {
-                targets: 5,
+                targets: 6,
                 orderable: 0,
                 render: function (data, type, row, meta) {
                     return `${row.actions}`

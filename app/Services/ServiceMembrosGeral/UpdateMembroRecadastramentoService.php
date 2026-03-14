@@ -13,44 +13,47 @@ use App\Models\MembresiaTipoAtuacao;
 use App\Models\MembresiaRolPermanente;
 use Illuminate\Support\Facades\Storage;
 use App\Models\MembresiaFuncaoMinisterial;
-use App\Exceptions\MembroNotFoundException;
 use App\Models\GCeuMembros;
 use App\Models\MembresiaFuncaoEclesiastica;
 use App\Models\MembresiaFormacaoEclesiastica;
 use App\Models\MembresiaMembroRecadastramento;
+use App\Traits\Identifiable;
 use Ramsey\Uuid\Uuid;
 
 class UpdateMembroRecadastramentoService
 {
+    use Identifiable;
 
     public function execute(array $data, $vinculo): void
     {
-        $dataMembro = $this->prepareMembroData($data, $vinculo);
-        //$dataContato = $this->prepareContatoData($data);
-        //$dataFamiliar = $this->prepareFamiliarData($data);
+        $membroDestinoId = $data['membro_id']; // id vindo do GET/recadastramento
+        $membroMigracao = MembresiaMembroRecadastramento::find($membroDestinoId);
+        $dataMembro = $this->prepareMembroData($data, $vinculo, $membroMigracao);
+        $dataContato = $this->prepareContatoData($data);
+        $dataFamiliar = $this->prepareFamiliarData($data);
         $dataFormacoes = $this->prepareFormacoesData($data);
         $dataMinisteriais = $this->prepareMinisteriaisData($data);
         $dataGceu = $this->prepareGceuData($data);
-        $membroID = $this->handleUpdateMembro($dataMembro);
-        //$this->handleUpdateContato($dataContato, $membroID);
-        //$this->handleUpdateFamiliar($dataFamiliar, $membroID);
-        $this->handleUpdateFormacoes($dataFormacoes, $membroID);
-        $this->handleUpdateMinisteriais($dataMinisteriais, $membroID);
-        $this->handleUpdateGceu($dataGceu, $membroID);
-        // if (isset($data['rol_atual']) && $data['rol_atual']) {
-        //     $this->updateMembroRol($data['rol_atual'], $membroID);
-        // }
-        $this->updateDadosRolPermanente($data, $membroID);
-        if (isset($data['foto']) && $data['foto']) {
-            $this->handlePhotoUpload($data['foto'], $membroID);
-        } else {
-            $this->handlePhotoUpload(null, $membroID, false);
+        $this->handleUpdateMembro($dataMembro, $membroDestinoId);
+        $this->handleUpdateContato($dataContato, $membroDestinoId);
+        if ($this->shouldUpdateFamiliar($data)) {
+            $this->handleUpdateFamiliar($dataFamiliar, $membroDestinoId);
         }
+        $this->handleUpdateFormacoes($dataFormacoes, $membroDestinoId);
+        $this->handleUpdateMinisteriais($dataMinisteriais, $membroDestinoId);
+        $this->handleUpdateGceu($dataGceu, $membroDestinoId);
+        $this->updateDadosRolPermanente($data, $membroDestinoId);
+        if (isset($data['foto']) && $data['foto']) {
+            $this->handlePhotoUpload($data['foto'], $membroDestinoId);
+        } else {
+            $this->handlePhotoUpload(null, $membroDestinoId, false);
+        }
+        $this->updateValidadoFlags($membroDestinoId, $membroDestinoId);
     }
 
     private function handlePhotoUpload($photo, $membroId, $isNew = true)
     {
-        $membro = MembresiaMembroRecadastramento::find($membroId);
+        $membro = MembresiaMembro::find($membroId);
         if ($membro) {
             if ($isNew && $photo) {
                 if ($photo->isValid()) {
@@ -81,9 +84,13 @@ class UpdateMembroRecadastramentoService
     }
 
 
-    private function prepareMembroData(array $data, $vinculo): array
+    private function prepareMembroData(array $data, $vinculo, ?MembresiaMembroRecadastramento $membroMigracao = null): array
     {
         $cpf = preg_replace('/[^0-9]/', '', $data['cpf']);
+        $igrejaId = $membroMigracao->igreja_id ?? self::fetchSessionIgrejaLocal()->id;
+        $distritoId = $membroMigracao->distrito_id ?? self::fetchtSessionDistrito()->id;
+        $regiaoId = $membroMigracao->regiao_id ?? self::fetchtSessionRegiao()->id;
+
         $result = [
             'membro_id' => $data['membro_id'],
             'status'          => $data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO,
@@ -100,6 +107,9 @@ class UpdateMembroRecadastramentoService
             'profissao'  => $data['profissao'],
             'funcao_eclesiastica_id'  => $data['funcao_eclesiastica_id'],
             'cpf'  => $cpf !== '' ? $cpf : null,
+            'distrito_id' => $distritoId,
+            'igreja_id' => $igrejaId,
+            'regiao_id' => $regiaoId,
             'tipo_documento'  => $data['tipo_documento'],
             'documento'  => $data['documento'],
             'documento_complemento'  => $data['documento_complemento'],
@@ -152,14 +162,24 @@ class UpdateMembroRecadastramentoService
     private function prepareFamiliarData(array $data): array
     {
         return [
-            'mae_nome' => $data['mae_nome'],
-            'pai_nome' => $data['pai_nome'],
-            'conjuge_nome' => $data['conjuge_nome'],
-            'data_casamento' => $data['data_casamento'],
-            'filhos' => $data['filhos'],
-            'historico_familiar' => $data['historico_familiar'],
+            'mae_nome' => $data['mae_nome'] ?? null,
+            'pai_nome' => $data['pai_nome'] ?? null,
+            'conjuge_nome' => $data['conjuge_nome'] ?? null,
+            'data_casamento' => $data['data_casamento'] ?? null,
+            'filhos' => $data['filhos'] ?? null,
+            'historico_familiar' => $data['historico_familiar'] ?? null,
             'membro_id' => $data['membro_id'],
         ];
+    }
+
+    private function shouldUpdateFamiliar(array $data): bool
+    {
+        return array_key_exists('mae_nome', $data)
+            || array_key_exists('pai_nome', $data)
+            || array_key_exists('conjuge_nome', $data)
+            || array_key_exists('data_casamento', $data)
+            || array_key_exists('filhos', $data)
+            || array_key_exists('historico_familiar', $data);
     }
 
     private function prepareFormacoesData(array $data): array
@@ -211,19 +231,34 @@ class UpdateMembroRecadastramentoService
         return $dataGceuMembro;
     }
 
-    private function handleUpdateMembro($data)
+    private function handleUpdateMembro($data, $membroMigracaoId)
     {
-        $membresia = MembresiaMembroRecadastramento::updateOrCreate(['id' => $data['membro_id']], $data);
+        $payload = $data;
+        unset($payload['membro_id']);
+
+        $membresia = MembresiaMembro::find($membroMigracaoId);
+
+        if (!$membresia) {
+            $membresia = new MembresiaMembro();
+            // Mantém o mesmo ID da tabela de migração no registro oficial.
+            $membresia->id = $membroMigracaoId;
+        }
+
+        $membresia->fill($payload);
+        $membresia->save();
+
         return $membresia->id;
     }
 
     private function handleUpdateContato($data, $membroId): void
     {
+        $data['membro_id'] = $membroId;
         MembresiaContato::updateOrCreate(['membro_id' => $membroId], $data);
     }
 
     private function handleUpdateFamiliar($data, $membroId): void
     {
+        $data['membro_id'] = $membroId;
         MembresiaFamiliar::updateOrCreate(['membro_id' => $membroId], $data);
     }
 
@@ -303,31 +338,41 @@ class UpdateMembroRecadastramentoService
             ->delete();
     }
 
-    private function updateMembroRol($rolAtual, $membroId)
-    {
-        $rolPermanente = MembresiaRolPermanente::where('membro_id', $membroId)->where('lastrec', 1)->first();
-        if ($rolPermanente) {
-            $rolPermanente->numero_rol = $rolAtual ?? null;
-            $rolPermanente->save();
-        } else {
-            MembresiaRolPermanente::create([
-                'membro_id' => $membroId,
-                'numero_rol' => $rolAtual ?? null,
-                'lastrec' => 1
-            ]);
-        }
-    }
     private function updateDadosRolPermanente(array $data, $membroId): void
     {
-        $rolPermanente = MembresiaRolPermanente::where('membro_id', $membroId)->where('lastrec', 1)->first();
-        if ($rolPermanente) {
-            $isInativo = ($data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO) === MembresiaMembroRecadastramento::STATUS_INATIVO;
-            $rolPermanente->dt_recepcao = !empty($data['dt_recepcao']) ? Carbon::parse($data['dt_recepcao']) : null;
-            $rolPermanente->modo_recepcao_id = $data['modo_recepcao_id'] ?? null;
-            $rolPermanente->dt_exclusao = $isInativo && !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null;
-            $rolPermanente->modo_exclusao_id = $isInativo ? ($data['modo_exclusao_id'] ?? null) : null;
-            $rolPermanente->status = $isInativo ? MembresiaRolPermanente::STATUS_EXCLUSAO : MembresiaRolPermanente::STATUS_RECEBIMENTO;
-            $rolPermanente->save();
+        $membro = MembresiaMembro::find($membroId);
+        if (!$membro) {
+            return;
         }
+
+        $igrejaId = $membro->igreja_id ?: self::fetchSessionIgrejaLocal()->id;
+        $distritoId = $membro->distrito_id ?: self::fetchtSessionDistrito()->id;
+        $regiaoId = $membro->regiao_id ?: self::fetchtSessionRegiao()->id;
+
+        $isInativo = ($data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO) === MembresiaMembroRecadastramento::STATUS_INATIVO;
+        $payload = [
+            'numero_rol' => isset($data['rol_atual']) ? (int) $data['rol_atual'] : null,
+            'dt_recepcao' => Carbon::parse($data['dt_recepcao']),
+            'modo_recepcao_id' => $data['modo_recepcao_id'],
+            'dt_exclusao' => $isInativo && !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null,
+            'modo_exclusao_id' => $isInativo ? ($data['modo_exclusao_id'] ?? null) : null,
+            'status' => $isInativo ? MembresiaRolPermanente::STATUS_EXCLUSAO : MembresiaRolPermanente::STATUS_RECEBIMENTO,
+            'distrito_id' => $distritoId,
+            'igreja_id' => $igrejaId,
+            'regiao_id' => $regiaoId,
+            'congregacao_id' => $data['congregacao_id'] ?? $membro->congregacao_id,
+            'lastrec' => 1,
+        ];
+
+        MembresiaRolPermanente::updateOrCreate(
+            ['membro_id' => $membroId, 'lastrec' => 1],
+            $payload
+        );
+    }
+
+    private function updateValidadoFlags($membroId, $membroMigracaoId): void
+    {
+        MembresiaMembro::where('id', $membroId)->update(['validado' => 1]);
+        MembresiaMembroRecadastramento::where('id', $membroMigracaoId)->update(['validado' => 1]);
     }
 }

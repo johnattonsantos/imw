@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\RolMembroRecadastramento;
 use App\Traits\Identifiable;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
@@ -14,22 +15,24 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
 
     public function getQueryBuilder($parameters): Builder
     {
+        $search = trim($parameters['search'] ?? '');
+
         return RolMembroRecadastramento::with('notificacaoTransferenciaAtiva.igrejaDestino')
+            ->addSelect([
+                'validado_migracao' => DB::table('membresia_migracao')
+                    ->select('validado')
+                    ->whereColumn('membresia_migracao.id', 'vw_rol_membros_recadastro.membro_id')
+                    ->limit(1),
+            ])
             ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
-            ->when(trim($parameters['search']), function ($query) use ($parameters) {
-                $query->where('membro', 'like', "%{$parameters['search']}%");
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('membro', 'like', "%{$search}%");
             })
-            ->when((isset($parameters['status']) && $parameters['status'] == 'rol_atual' || !isset($parameters['status'])), function ($query) {
-                $query->where('status', 'A');
-            })
-            ->when(isset($parameters['status']) && $parameters['status'] == 'inativo', function ($query) {
-                $query->where('status', 'I');
-            })
-            ->when(isset($parameters['status']) && $parameters['status'] == 'rol_permanente', function ($query) {
-                $query->whereIn('status', ['A', 'I']);
-            })
-            ->when(isset($parameters['status']) && $parameters['status'] == 'has_errors', function ($query) {
-                $query->where('has_errors', 1);
+            ->whereExists(function ($query) {
+                $query->selectRaw('1')
+                    ->from('membresia_migracao')
+                    ->whereColumn('membresia_migracao.id', 'vw_rol_membros_recadastro.membro_id')
+                    ->where('membresia_migracao.validado', 0);
             });
     }
 
@@ -41,9 +44,13 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
 
                 $query->when($order['column'] == 0, fn ($q) => $q->orderBy('numero_rol', $order['dir']))
                       ->when($order['column'] == 1, fn ($q) => $q->orderBy('membro', $order['dir']))
-                      ->when($order['column'] == 2, fn ($q) => $q->orderBy('dt_recepcao', $order['dir']))
-                      ->when($order['column'] == 3, fn ($q) => $q->orderBy('dt_exclusao', $order['dir']))
-                      ->when($order['column'] == 4, fn ($q) => $q->orderBy('congregacao', $order['dir']));
+                      ->when($order['column'] == 2, fn ($q) => $q->orderBy('status', $order['dir']))
+                      ->when($order['column'] == 3, fn ($q) => $q->orderBy('dt_recepcao', $order['dir']))
+                      ->when($order['column'] == 4, fn ($q) => $q->orderBy('dt_exclusao', $order['dir']))
+                      ->when($order['column'] == 5, fn ($q) => $q->orderBy('congregacao', $order['dir']));
+            })
+            ->addColumn('status_text', function (RolMembroRecadastramento $rolMembro) {
+                return $rolMembro->status === 'I' ? 'Inativo' : 'Ativo';
             })
             ->addColumn('recepcao', function (RolMembroRecadastramento $rolMembro) {
                 return $rolMembro->dt_recepcao ? $rolMembro->dt_recepcao->format('d/m/Y') : ''; 

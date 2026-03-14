@@ -29,6 +29,15 @@ class UpdateMembroRequest extends FormRequest
     {
         $membroId = $this->input('membro_id');
         $isRecadastramento = $this->routeIs('recadastramento-membro.update');
+        $cpf = preg_replace('/[^0-9]/', '', $this->input('cpf', ''));
+        $membroIdRegraRol = $membroId;
+
+        if ($isRecadastramento && $cpf !== '') {
+            $membroOficialId = DB::table('membresia_membros')->where('cpf', $cpf)->value('id');
+            if (!empty($membroOficialId)) {
+                $membroIdRegraRol = $membroOficialId;
+            }
+        }
         $dataNascimento = $this->input('data_nascimento');
         $minDate = '1910-01-01';
         $minDateRecepcao = '1967-01-05';
@@ -85,9 +94,12 @@ class UpdateMembroRequest extends FormRequest
 
             ],
             'dt_recepcao' => [
-                'nullable',
+                $isRecadastramento ? 'required' : 'nullable',
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDateRecepcao, $currentDate) {
+                    if (empty($value)) {
+                        return;
+                    }
                     if (strtotime($value) <= strtotime($dataNascimento)) {
                         $fail('A data de recepção deve ser após a data de nascimento.');
                     }
@@ -97,7 +109,9 @@ class UpdateMembroRequest extends FormRequest
                 },
                 new TodaysDeadlineRule
             ],
-            'modo_recepcao_id' => 'nullable|exists:membresia_situacoes,id',
+            'modo_recepcao_id' => $isRecadastramento
+                ? 'required|exists:membresia_situacoes,id'
+                : 'nullable|exists:membresia_situacoes,id',
             'dt_exclusao' => [
                 'nullable',
                 'date',
@@ -146,7 +160,7 @@ class UpdateMembroRequest extends FormRequest
                 'required',
                 'integer',
                 'min:1',
-                new UniqueRolIgrejaRule($membroId),
+                new UniqueRolIgrejaRule($membroIdRegraRol, false),
             ],
             'cpf' => [
                 'required',
@@ -212,6 +226,8 @@ class UpdateMembroRequest extends FormRequest
             'rol_atual.min' => 'O campo Nº Rol deve ser maior que zero.',
             'status.required' => 'O campo Status é obrigatório.',
             'status.in' => 'O campo Status deve ser Ativo ou Inativo.',
+            'dt_recepcao.required' => 'A data de recepção é obrigatória.',
+            'modo_recepcao_id.required' => 'O modo de recepção é obrigatório.',
             'dt_exclusao.required_if' => 'Para status Inativo, a data de exclusão é obrigatória.',
             'modo_exclusao_id.required_if' => 'Para status Inativo, o modo de exclusão é obrigatório.',
             'telefone_preferencial.required' => 'O campo Telefone é obrigatório.',

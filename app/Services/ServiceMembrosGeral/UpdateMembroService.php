@@ -307,22 +307,24 @@ class UpdateMembroService
         if ($rolPermanente) {
             $rolPermanente->numero_rol = $rolAtual ?? null;
             $rolPermanente->save();
-        } else {
-            MembresiaRolPermanente::create([
-                'membro_id' => $membroId,
-                'numero_rol' => $rolAtual ?? null,
-                'lastrec' => 1
-            ]);
         }
     }
     private function updateDadosRolPermanente(array $data, $membroId): void
     {
         $rolPermanente = MembresiaRolPermanente::where('membro_id', $membroId)->where('lastrec', 1)->first();
         if ($rolPermanente) {
-            $rolPermanente->dt_recepcao = !empty($data['dt_recepcao']) ? Carbon::parse($data['dt_recepcao']) : null;
-            $rolPermanente->modo_recepcao_id = $data['modo_recepcao_id'] ?? null;
-            $rolPermanente->dt_exclusao = !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null;
-            $rolPermanente->modo_exclusao_id = $data['modo_exclusao_id'] ?? null;
+            if (array_key_exists('dt_recepcao', $data) && !empty($data['dt_recepcao'])) {
+                $rolPermanente->dt_recepcao = Carbon::parse($data['dt_recepcao']);
+            }
+            if (array_key_exists('modo_recepcao_id', $data) && !empty($data['modo_recepcao_id'])) {
+                $rolPermanente->modo_recepcao_id = $data['modo_recepcao_id'];
+            }
+            if (array_key_exists('dt_exclusao', $data)) {
+                $rolPermanente->dt_exclusao = !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null;
+            }
+            if (array_key_exists('modo_exclusao_id', $data)) {
+                $rolPermanente->modo_exclusao_id = $data['modo_exclusao_id'] ?? null;
+            }
             $rolPermanente->save();
         }
     }

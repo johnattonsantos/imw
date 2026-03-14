@@ -60,10 +60,12 @@ class MembresiaMembro extends Model implements Auditable
         'codigo_host',
         'congregacao_id',
         'has_errors',
+        'validado',
     ];
 
     protected $casts = [
-        'data_nascimento' => 'date'
+        'data_nascimento' => 'date',
+        'validado' => 'boolean',
     ];
 
     public function contato()

@@ -100,7 +100,7 @@
                          <circle cx="12" cy="12" r="10"></circle>
                      </svg><span>MENU PRINCIPAL</span></div>
              </li>
-             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-secretaria'))
+             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-secretaria') || auth()->user()->hasPerfilRegra('membresia-validacao'))
                  <li class="menu">
                      <a href="#secretaria" data-toggle="collapse" aria-expanded="{{Request::is('secretaria/*') ? 'true' : 'false' }}" class="dropdown-toggle">
                          <div class="">
@@ -128,11 +128,11 @@
                                  <a href="{{ route('membro.index') }}">Membros</a>
                              @endif
                          </li>
-                         <!-- <li {!! Request::is('secretaria/recadastramento-membro*') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('membros-index'))
+                         <li {!! Request::is('secretaria/recadastramento-membro*') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('membresia-validacao'))
                                  <a href="{{ route('recadastramento-membro.indexRecadastramento') }}">Membresia Validação</a>
                              @endif
-                         </li> -->
+                         </li>
                          <li {!! Request::is('secretaria/congregado*') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('congregados-index'))
                                  <a href="{{ route('congregado.index') }}">Congregados</a>

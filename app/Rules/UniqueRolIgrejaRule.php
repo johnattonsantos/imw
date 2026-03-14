@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\Models\MembresiaRolPermanente;
+use App\Models\MembresiaRolPermanenteRecadastramento;
 use App\Traits\Identifiable;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -11,15 +12,17 @@ class UniqueRolIgrejaRule implements Rule
     use Identifiable;
 
     private $membroId;
+    private $useMigracao;
 
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct($membroId = null)
+    public function __construct($membroId = null, bool $useMigracao = false)
     {
         $this->membroId = $membroId;
+        $this->useMigracao = $useMigracao;
     }
 
     /**
@@ -31,7 +34,9 @@ class UniqueRolIgrejaRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $hasRolPermanente = (booL) MembresiaRolPermanente::where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
+        $model = $this->useMigracao ? MembresiaRolPermanenteRecadastramento::class : MembresiaRolPermanente::class;
+
+        $hasRolPermanente = (booL) $model::where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
             ->where('numero_rol', $value)
             ->when($this->membroId, fn ($query) => $query->where('membro_id', '<>', $this->membroId))
             ->exists();

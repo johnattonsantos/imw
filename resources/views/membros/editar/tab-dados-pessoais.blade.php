@@ -17,7 +17,7 @@
             <div class="row mb-4">
               <div class="col-xl-6">
                 <label for="nome">* Nome</label>
-                <input type="text" class="form-control @error('nome') is-invalid @enderror" id="nome" name="nome" value="{{ old('nome', $pessoa->nome) }}" maxlength="100">
+                <input type="text" class="form-control @error('nome') is-invalid @enderror" id="nome" name="nome" value="{{ old('nome', $pessoa->nome) }}" maxlength="100" required>
                 @error('nome')
                 <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
@@ -26,15 +26,15 @@
 
               <div class="col-xl-3">
                 <label for="nascimento">* Data de Nascimento</label>
-                <input type="date" class="form-control @error('data_nascimento') is-invalid @enderror" id="data_nascimento" name="data_nascimento" value="{{ old('data_nascimento', optional($pessoa->data_nascimento)->format('Y-m-d')) }}">
+                <input type="date" class="form-control @error('data_nascimento') is-invalid @enderror" id="data_nascimento" name="data_nascimento" value="{{ old('data_nascimento', optional($pessoa->data_nascimento)->format('Y-m-d')) }}" required>
                 @error('data_nascimento')
                 <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
               </div>
 
               <div class="col-xl-3">
-                <label for="sexo">Sexo</label>
-                <select class="form-control" id="sexo" name="sexo">
+                <label for="sexo">* Sexo</label>
+                <select class="form-control" id="sexo" name="sexo" required>
                   <option value="">Selecione</option>
                   <option value="M" {{ $pessoa->sexo == 'M' ? 'selected' : '' }}>Masculino</option>
                   <option value="F" {{ $pessoa->sexo == 'F' ? 'selected' : '' }}>Feminino</option>
@@ -49,7 +49,7 @@
 
               <div class="col-xl-3">
                 <label for="estado_civil">* Estado Civíl</label>
-                <select class="form-control @error('estado_civil') is-invalid @enderror" id="estado_civil" name="estado_civil">
+                <select class="form-control @error('estado_civil') is-invalid @enderror" id="estado_civil" name="estado_civil" required>
                   <option value="">Selecione</option>
                   <option value="S" {{ $pessoa->estado_civil == 'S' ? 'selected' : '' }}>Solteiro</option>
                   <option value="C" {{ $pessoa->estado_civil == 'C' ? 'selected' : '' }}>Casado</option>
@@ -63,7 +63,7 @@
 
               <div class="col-xl-3">
                 <label for="nacionalidade">* Nacionalidade</label>
-                <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade">
+                <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade" required>
                   <option value="">Selecione</option>
                   @php
                     //Colocar no banco de dados
@@ -319,7 +319,7 @@
 
                   @endphp
                   @foreach ($paises as $sigla => $nome)
-                    <option value="{{ $sigla }}" {{ old('nacionalidade', $pessoa->nacionalidade) == $sigla ? 'selected' : '' }}>{{ $nome }}</option>
+                    <option value="{{ $sigla }}" {{ old('nacionalidade', $pessoa->nacionalidade ?? 'BR') == $sigla ? 'selected' : '' }}>{{ $nome }}</option>
                   @endforeach
                 </select>
                 @error('nacionalidade')
@@ -329,7 +329,7 @@
 
               <div class="col-xl-3">
                 <label for="naturalidade">* Naturalidade</label>
-                <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50">
+                <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50" required>
                 @error('naturalidade')
                   <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
@@ -337,7 +337,7 @@
 
               <div class="col-xl-3">
                 <label for="uf">* UF</label>
-                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" {{ $pessoa->nacionalidade != 'BR' ? 'disabled' : '' }}>
+                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" required>
                   <option value="">Selecione</option>
                   @php
                     //Colocar no banco de dados , esta estranho assim
@@ -490,15 +490,15 @@
             @if(request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update'))
               <div class="row mb-4">
                 <div class="col-xl-3">
-                  <label for="dt_recepcao">Data de Recepção</label>
-                  <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ old('dt_recepcao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_recepcao)->format('Y-m-d')) }}">
+                  <label for="dt_recepcao">* Data de Recepção</label>
+                  <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ old('dt_recepcao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_recepcao)->format('Y-m-d')) }}" required>
                   @error('dt_recepcao')
                     <span class="help-block text-danger">{{ $message }}</span>
                   @enderror
                 </div>
                 <div class="col-xl-3">
-                  <label for="modo_recepcao_id">Modo de Recepção</label>
-                  <select id="modo_recepcao_id" name="modo_recepcao_id" class="form-control @error('modo_recepcao_id') is-invalid @enderror">
+                  <label for="modo_recepcao_id">* Modo de Recepção</label>
+                  <select id="modo_recepcao_id" name="modo_recepcao_id" class="form-control @error('modo_recepcao_id') is-invalid @enderror" required>
                     <option value="">Selecione</option>
                     @foreach ($modosRecepcao as $modo)
                       <option value="{{ $modo->id }}" {{ (string) old('modo_recepcao_id', optional($pessoa->rolAtualSessionIgreja)->modo_recepcao_id) === (string) $modo->id ? 'selected' : '' }}>
@@ -587,6 +587,8 @@
 
           $('#dt_exclusao').prop('required', isInativo);
           $('#modo_exclusao_id').prop('required', isInativo);
+          $('#dt_exclusao').prop('disabled', !isInativo);
+          $('#modo_exclusao_id').prop('disabled', !isInativo);
         }
 
         toggleExclusaoFieldsByStatus();
