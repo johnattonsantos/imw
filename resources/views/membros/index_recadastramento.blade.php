@@ -102,6 +102,7 @@
                             <tr>
                                 <th>ROL</th>
                                 <th>NOME</th>
+                                <th>STATUS</th>
                                 <th>RECEPÇÃO</th>
                                 <th>EXCLUSÃO</th>
                                 <th>CONGREGAÇÃO</th>

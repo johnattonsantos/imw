@@ -26,28 +26,29 @@ class UpdateMembroRecadastramentoService
 
     public function execute(array $data, $vinculo): void
     {
-        $membroMigracao = MembresiaMembroRecadastramento::find($data['membro_id']);
+        $membroDestinoId = $data['membro_id']; // id vindo do GET/recadastramento
+        $membroMigracao = MembresiaMembroRecadastramento::find($membroDestinoId);
         $dataMembro = $this->prepareMembroData($data, $vinculo, $membroMigracao);
         $dataContato = $this->prepareContatoData($data);
         $dataFamiliar = $this->prepareFamiliarData($data);
         $dataFormacoes = $this->prepareFormacoesData($data);
         $dataMinisteriais = $this->prepareMinisteriaisData($data);
         $dataGceu = $this->prepareGceuData($data);
-        $membroID = $this->handleUpdateMembro($dataMembro, $data['membro_id']);
-        $this->handleUpdateContato($dataContato, $membroID);
+        $this->handleUpdateMembro($dataMembro, $membroDestinoId);
+        $this->handleUpdateContato($dataContato, $membroDestinoId);
         if ($this->shouldUpdateFamiliar($data)) {
-            $this->handleUpdateFamiliar($dataFamiliar, $membroID);
+            $this->handleUpdateFamiliar($dataFamiliar, $membroDestinoId);
         }
-        $this->handleUpdateFormacoes($dataFormacoes, $membroID);
-        $this->handleUpdateMinisteriais($dataMinisteriais, $membroID);
-        $this->handleUpdateGceu($dataGceu, $membroID);
-        $this->updateDadosRolPermanente($data, $membroID);
+        $this->handleUpdateFormacoes($dataFormacoes, $membroDestinoId);
+        $this->handleUpdateMinisteriais($dataMinisteriais, $membroDestinoId);
+        $this->handleUpdateGceu($dataGceu, $membroDestinoId);
+        $this->updateDadosRolPermanente($data, $membroDestinoId);
         if (isset($data['foto']) && $data['foto']) {
-            $this->handlePhotoUpload($data['foto'], $membroID);
+            $this->handlePhotoUpload($data['foto'], $membroDestinoId);
         } else {
-            $this->handlePhotoUpload(null, $membroID, false);
+            $this->handlePhotoUpload(null, $membroDestinoId, false);
         }
-        $this->updateValidadoFlags($membroID, $data['membro_id']);
+        $this->updateValidadoFlags($membroDestinoId, $membroDestinoId);
     }
 
     private function handlePhotoUpload($photo, $membroId, $isNew = true)
@@ -235,7 +236,17 @@ class UpdateMembroRecadastramentoService
         $payload = $data;
         unset($payload['membro_id']);
 
-        $membresia = MembresiaMembro::updateOrCreate(['id' => $membroMigracaoId], $payload);
+        $membresia = MembresiaMembro::find($membroMigracaoId);
+
+        if (!$membresia) {
+            $membresia = new MembresiaMembro();
+            // Mantém o mesmo ID da tabela de migração no registro oficial.
+            $membresia->id = $membroMigracaoId;
+        }
+
+        $membresia->fill($payload);
+        $membresia->save();
+
         return $membresia->id;
     }
 

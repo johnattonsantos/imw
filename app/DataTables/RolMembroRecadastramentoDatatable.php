@@ -24,6 +24,7 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
                     ->whereColumn('membresia_migracao.id', 'vw_rol_membros_recadastro.membro_id')
                     ->limit(1),
             ])
+            ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
             ->when($search !== '', function ($query) use ($search) {
                 $query->where('membro', 'like', "%{$search}%");
             })
@@ -43,9 +44,13 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
 
                 $query->when($order['column'] == 0, fn ($q) => $q->orderBy('numero_rol', $order['dir']))
                       ->when($order['column'] == 1, fn ($q) => $q->orderBy('membro', $order['dir']))
-                      ->when($order['column'] == 2, fn ($q) => $q->orderBy('dt_recepcao', $order['dir']))
-                      ->when($order['column'] == 3, fn ($q) => $q->orderBy('dt_exclusao', $order['dir']))
-                      ->when($order['column'] == 4, fn ($q) => $q->orderBy('congregacao', $order['dir']));
+                      ->when($order['column'] == 2, fn ($q) => $q->orderBy('status', $order['dir']))
+                      ->when($order['column'] == 3, fn ($q) => $q->orderBy('dt_recepcao', $order['dir']))
+                      ->when($order['column'] == 4, fn ($q) => $q->orderBy('dt_exclusao', $order['dir']))
+                      ->when($order['column'] == 5, fn ($q) => $q->orderBy('congregacao', $order['dir']));
+            })
+            ->addColumn('status_text', function (RolMembroRecadastramento $rolMembro) {
+                return $rolMembro->status === 'I' ? 'Inativo' : 'Ativo';
             })
             ->addColumn('recepcao', function (RolMembroRecadastramento $rolMembro) {
                 return $rolMembro->dt_recepcao ? $rolMembro->dt_recepcao->format('d/m/Y') : ''; 

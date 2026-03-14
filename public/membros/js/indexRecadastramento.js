@@ -37,6 +37,7 @@ $(document).ready(function() {
         columns: [
             {data: 'numero_rol', name: 'numero_rol'},
             {data: 'membro', name: 'membro'},
+            {data: 'status_text', name: 'status_text'},
             {data: 'recepcao', name: 'recepcao'},
             {data: 'exclusao', name: 'exclusao'},
             {data: 'congregacao', name: 'congregacao'},
@@ -61,7 +62,7 @@ $(document).ready(function() {
                 }
             },
             {
-                targets: 6,
+                targets: 7,
                 orderable: 0,
                 render: function (data, type, row, meta) {
                     return `${row.actions}`
