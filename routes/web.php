@@ -109,13 +109,13 @@ Route::middleware(['auth'])->group(function () {
 
         // Grupo de rotas para 'membresia recadastramento'
         Route::prefix('secretaria/recadastramento-membro')->name('recadastramento-membro.')->group(function () {
-            Route::get('', [MembrosController::class, 'indexRecadastramento'])->name('indexRecadastramento')->middleware(['seguranca:membros-index']);
-            Route::get('list-recadastramento', [MembrosController::class, 'listRecadastramento'])->name('listRecadastramento')->middleware(['seguranca:membros-index']);
-            Route::get('editar/{id}', [MembrosController::class, 'editarRecadastramento'])->name('editar')->middleware(['seguranca:membros-editar']);
-            Route::post('atualizar/{id}', [MembrosController::class, 'updateRecadastramento'])->name('update')->middleware(['seguranca:membros-atualizar']);
-            Route::get('reintegrar/{id}', [MembrosController::class, 'reintegrar'])->name('reintegrar')->middleware(['seguranca:membros-reintegrar']);
-            Route::post('reintegrar/store/{id}', [MembrosController::class, 'storeReintegracao'])->name('reintegrar.store')->middleware(['seguranca:membros-cadastrar']);
-            Route::delete('exclusao/transferencia/cancel/{notificacaoTransferencia}', [MembrosController::class, 'cancelExclusaoPorTransferencia'])->name('exclusao_transferencia.cancel')->middleware(['seguranca:membros-exclusaotransferencia']);
+            Route::get('', [MembrosController::class, 'indexRecadastramento'])->name('indexRecadastramento')->middleware(['seguranca:membresia-validacao']);
+            Route::get('list-recadastramento', [MembrosController::class, 'listRecadastramento'])->name('listRecadastramento')->middleware(['seguranca:membresia-validacao']);
+            Route::get('editar/{id}', [MembrosController::class, 'editarRecadastramento'])->name('editar')->middleware(['seguranca:membresia-validacao']);
+            Route::post('atualizar/{id}', [MembrosController::class, 'updateRecadastramento'])->name('update')->middleware(['seguranca:membresia-validacao']);
+            Route::get('reintegrar/{id}', [MembrosController::class, 'reintegrar'])->name('reintegrar')->middleware(['seguranca:membresia-validacao']);
+            Route::post('reintegrar/store/{id}', [MembrosController::class, 'storeReintegracao'])->name('reintegrar.store')->middleware(['seguranca:membresia-validacao']);
+            Route::delete('exclusao/transferencia/cancel/{notificacaoTransferencia}', [MembrosController::class, 'cancelExclusaoPorTransferencia'])->name('exclusao_transferencia.cancel')->middleware(['seguranca:membresia-validacao']);
         });
 
         Route::controller(HomeController::class)->group(function () {
