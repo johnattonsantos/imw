@@ -27,13 +27,11 @@ class IdentificaDadosExcluirMembroService
         $membro = Identifiable::fetchPessoa($id, MembresiaMembro::VINCULO_MEMBRO);
 
         $rolAtual = $membro->rolPermanente()
-            ->orderByDesc('numero_rol')
+            ->orderByDesc('id')
             ->firstOr(fn() => throw new IdentificaDadosExcluirMembroException('Rol atual não identificado'));
-
         if($rolAtual->dt_exclusao) {
             throw new IdentificaDadosExcluirMembroException('Não pe possível excluir um membro já excluído');
         }
-
         return $membro;
     }
 }

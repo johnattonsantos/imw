@@ -205,7 +205,6 @@ class MembrosController extends Controller
     {
         try {
             $data = app(IdentificaDadosExcluirMembroService::class)->execute($id);
-
             $pessoa       = $data['pessoa'];
             $pastores     = $data['pastores'];
             $modos        = $data['modos'];

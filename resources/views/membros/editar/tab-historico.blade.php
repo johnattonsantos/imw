@@ -69,9 +69,11 @@
                 <a href="{{ route('membro.disciplinar', ['id' => $pessoa->id]) }}" class="btn btn-warning">
                     <x-bx-block/> Disciplinar
                 </a>
-                <a href="{{ route('membro.exclusao', ['id' => $pessoa->id]) }}" class="btn btn-danger">
-                    <x-bx-minus-circle/> Excluir
-                </a>
+                @if($pessoa->status === \App\Models\MembresiaMembro::STATUS_ATIVO)
+                    <a href="{{ route('membro.exclusao', ['id' => $pessoa->id]) }}" class="btn btn-danger">
+                        <x-bx-minus-circle/> Excluir
+                    </a>
+                @endif
                 <!-- <a href="{{ route('membro.transferencia_interna', ['id' => $pessoa->id]) }}" class="btn btn-primary">
                     <x-bx-transfer-alt/> Transferir Internamente
                 </a> -->

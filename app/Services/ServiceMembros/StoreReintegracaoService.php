@@ -18,9 +18,11 @@ class StoreReintegracaoService
             $params = $this->fetchParams($params);
 
             DB::beginTransaction();
-            $pessoa = MembresiaMembro::findOrFail($id);
+            $pessoa = MembresiaMembro::withTrashed()->findOrFail($id);
+            
             $pessoa->restore();
             $pessoa->update([
+                'status'         => MembresiaMembro::STATUS_ATIVO,
                 'vinculo'        => MembresiaMembro::VINCULO_MEMBRO,
                 'rol_atual'      => $params['numero_rol'], 
                 'congregacao_id' => $params['congregacao_id'],
@@ -29,6 +31,7 @@ class StoreReintegracaoService
             // atualiza o rol atual
             optional($pessoa->rolAtualSessionIgreja())->update(['lastrec' => 0]);
 
+            $params['status'] = MembresiaRolPermanente::STATUS_RECEBIMENTO;
             $pessoa->rolPermanente()->create($params);
             DB::commit();
         } catch (\Exception $e) {
