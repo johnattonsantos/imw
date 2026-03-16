@@ -225,7 +225,7 @@
 @section('extras-scripts')
     <script>
         const TIPO_BENEFICIARIO_CLERIGO = '3';
-        const PLANOS_FORCA_CLERIGO = ['2.18.23', '2.18.11'];
+        const PLANOS_FORCA_CLERIGO = ['2.18.23', '2.18.11', '1.01.07', '1.07.01'];
 
         function isPlanoContaComForcaClerigo() {
             const numeracaoPlanoConta = String($('#plano_conta_id option:selected').data('numeracao') || '').trim();
