@@ -379,8 +379,23 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="profissao">Profissão</label>
-                <input type="text" class="form-control" id="profissao" name="profissao" value="{{ old('profissao', $pessoa->profissao) }}" maxlength="100">
+                @if(request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update'))
+                  <label for="profissao">* Profissão</label>
+                  <select class="form-control @error('profissao') is-invalid @enderror" id="profissao" name="profissao" required>
+                    <option value="">Selecione</option>
+                    @foreach (($profissoes ?? []) as $profissao)
+                      @php
+                        $profissaoDescricao = $profissao->descricao ?? $profissao->nome ?? $profissao->profissao ?? ('Profissão #' . $profissao->id);
+                      @endphp
+                      <option value="{{ $profissao->id }}" {{ (string) old('profissao', $pessoa->profissao) === (string) $profissao->id ? 'selected' : '' }}>
+                        {{ $profissaoDescricao }}
+                      </option>
+                    @endforeach
+                  </select>
+                @else
+                  <label for="profissao">Profissão</label>
+                  <input type="text" class="form-control @error('profissao') is-invalid @enderror" id="profissao" name="profissao" value="{{ old('profissao', $pessoa->profissao) }}" maxlength="100">
+                @endif
                 @error('profissao')
                   <span class="help-block text-danger">{{ $message }}</span>
                 @enderror

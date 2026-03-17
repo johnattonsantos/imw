@@ -14,6 +14,8 @@ use App\Models\MembresiaSituacao;
 use App\Models\MembresiaSetor;
 use App\Models\MembresiaTipoAtuacao;
 use App\Traits\Identifiable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
@@ -41,6 +43,7 @@ class EditarMembroService
         $funcoes = MembresiaTipoAtuacao::orderBy('descricao', 'asc')->get();
         $cursos = MembresiaCurso::orderBy('nome', 'asc')->get();
         $formacoes = MembresiaFormacao::orderBy('id', 'asc')->get();
+        $profissoes = $this->fetchProfissoesAtivas();
         $funcoesEclesiasticas = MembresiaFuncaoEclesiastica::orderBy('descricao', 'asc')->get();
         $gceus = GCeu::where(['status' => 'A', 'instituicao_id' => $igrejaId])->orderBy('nome', 'asc')->get();
         $gceuFuncoes = GCeuFuncoes::orderBy('funcao', 'asc')->get();
@@ -51,6 +54,7 @@ class EditarMembroService
             'funcoes'              => $funcoes,
             'cursos'               => $cursos,
             'formacoes'            => $formacoes,
+            'profissoes'           => $profissoes,
             'funcoesEclesiasticas' => $funcoesEclesiasticas,
             'congregacoes'         => Identifiable::fetchCongregacoes(),
             'modosRecepcao'        => Identifiable::fetchModos(MembresiaSituacao::TIPO_ADESAO),
@@ -59,5 +63,27 @@ class EditarMembroService
             'gceuFuncoes'          => $gceuFuncoes,
             'gceuMembros'          => $gceuMembros
         ];
+    }
+
+    private function fetchProfissoesAtivas()
+    {
+        $query = DB::table('membresia_profissoes');
+
+        if (Schema::hasColumn('membresia_profissoes', 'ativo')) {
+            $query->where('ativo', 1);
+        } elseif (Schema::hasColumn('membresia_profissoes', 'status')) {
+            $query->where(function ($q) {
+                $q->where('status', 1)->orWhere('status', 'A');
+            });
+        }
+
+        return $query->get()->sortBy(function ($profissao) {
+            return mb_strtolower(trim(
+                $profissao->descricao
+                ?? $profissao->nome
+                ?? $profissao->profissao
+                ?? (string) $profissao->id
+            ));
+        })->values();
     }
 }

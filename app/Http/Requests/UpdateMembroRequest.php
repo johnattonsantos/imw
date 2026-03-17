@@ -154,6 +154,7 @@ class UpdateMembroRequest extends FormRequest
             'estado_civil' => 'required',
             'nacionalidade' => 'required',
             'naturalidade' => 'required',
+            'profissao' => $isRecadastramento ? 'required|exists:membresia_profissoes,id' : 'nullable|string|max:100',
             'status' => $isRecadastramento ? 'required|in:A,I' : 'nullable|in:A,I',
             'uf' => 'sometimes|required',
             'rol_atual' => [
@@ -237,6 +238,7 @@ class UpdateMembroRequest extends FormRequest
             'bairro.required' => 'O campo Bairro é obrigatório.',
             'cidade.required' => 'O campo Cidade é obrigatório.',
             'estado.required' => 'O campo Estado é obrigatório.',
+            'profissao.required' => 'O campo Profissão é obrigatório.',
         ];
     }
 }

@@ -17,7 +17,7 @@
 <style>
     .swal2-popup .swal2-styled.swal2-cancel {
         color: white!important;
-    },
+    }
 </style>
 @endsection
 
