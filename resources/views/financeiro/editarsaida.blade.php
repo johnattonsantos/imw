@@ -76,6 +76,7 @@
                             <option value="" hidden disabled>Selecione</option>
                             @foreach ($planoContas as $pc)
                                 <option {{ !$pc->selecionavel ? 'disabled' : '' }} value="{{ $pc->id }}"
+                                    data-numeracao="{{ $pc->numeracao }}"
                                     {{ $saida->plano_conta_id == $pc->id ? 'selected' : '' }}>
                                     {{ $pc->numeracao }} - {{ $pc->nome }}
                                 </option>
@@ -202,6 +203,34 @@
     <script src="{{ asset('theme/plugins/sweetalerts/promise-polyfill.js') }}"></script>
     <script src="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.js') }}"></script>
     <script>
+        const TIPO_BENEFICIARIO_CLERIGO = '3';
+        const PLANOS_FORCA_CLERIGO = ['1.01.07', '1.07.01', '2.18.23', '2.18.11'];
+
+        function isPlanoContaComForcaClerigo() {
+            const numeracaoPlanoConta = String($('#plano_conta_id option:selected').data('numeracao') || '').trim();
+            return PLANOS_FORCA_CLERIGO.includes(numeracaoPlanoConta);
+        }
+
+        function aplicarRegraTipoBeneficiarioPorPlanoConta() {
+            const $tipoBeneficiario = $('#tipo_pagante_favorecido_id');
+            const forcarClerigo = isPlanoContaComForcaClerigo();
+            const possuiOpcaoClerigo = $tipoBeneficiario.find(`option[value="${TIPO_BENEFICIARIO_CLERIGO}"]`).length > 0;
+
+            if (forcarClerigo && possuiOpcaoClerigo) {
+                $tipoBeneficiario.val(TIPO_BENEFICIARIO_CLERIGO).trigger('change');
+                $tipoBeneficiario.find('option').each(function() {
+                    const value = String($(this).val() || '');
+                    if (value !== '' && value !== TIPO_BENEFICIARIO_CLERIGO) {
+                        $(this).prop('disabled', true);
+                    }
+                });
+                return;
+            }
+
+            $tipoBeneficiario.find('option').prop('disabled', false);
+            $tipoBeneficiario.find('option[value=""]').prop('disabled', true);
+        }
+
         // máscara de valor
         $('#valor').mask('0.000.000.000,00', {
             reverse: true
@@ -219,7 +248,13 @@
             allowClear: true
         }); 
 
+        $('#plano_conta_id').change(function() {
+            aplicarRegraTipoBeneficiarioPorPlanoConta();
+            $('#tipo_pagante_favorecido_id').trigger('change');
+        });
+
         $(document).ready(function() {
+            aplicarRegraTipoBeneficiarioPorPlanoConta();
             $('#tipo_pagante_favorecido_id').trigger('change'); // disparar o evento change ao carregar a página
             loadAnexos();
         });

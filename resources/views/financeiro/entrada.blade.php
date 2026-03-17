@@ -75,7 +75,12 @@
                         <select class="form-control @error('plano_conta_id') is-invalid @enderror" id="plano_conta_id" name="plano_conta_id" required>
                             <option value="" hidden disabled>Selecione</option>
                             @foreach ($planoContas as $pc)
-                                <option {{ !$pc->selecionavel ? 'disabled' : '' }} value="{{ $pc->id }}" {{ old('plano_conta_id') == $pc->id ? 'selected' : '' }}>
+                                <option
+                                    {{ !$pc->selecionavel ? 'disabled' : '' }}
+                                    value="{{ $pc->id }}"
+                                    data-numeracao="{{ $pc->numeracao }}"
+                                    {{ old('plano_conta_id') == $pc->id ? 'selected' : '' }}
+                                >
                                     {{ $pc->numeracao }} - {{ $pc->nome }}
                                 </option>
                             @endforeach
@@ -181,9 +186,38 @@
 
 @section('extras-scripts')
     <script>
+        const TIPO_PAGANTE_CLERIGO = '3';
+        const PLANOS_FORCA_CLERIGO = ['1.01.07', '1.07.01', '2.18.23', '2.18.11'];
+
+        function isPlanoContaComForcaClerigo() {
+            const numeracaoPlanoConta = String($('#plano_conta_id option:selected').data('numeracao') || '').trim();
+            return PLANOS_FORCA_CLERIGO.includes(numeracaoPlanoConta);
+        }
+
+        function aplicarRegraTipoPagantePorPlanoConta() {
+            const $tipoPagante = $('#tipo_pagante_favorecido_id');
+            const forcarClerigo = isPlanoContaComForcaClerigo();
+            const possuiOpcaoClerigo = $tipoPagante.find(`option[value="${TIPO_PAGANTE_CLERIGO}"]`).length > 0;
+
+            if (forcarClerigo && possuiOpcaoClerigo) {
+                $tipoPagante.val(TIPO_PAGANTE_CLERIGO).trigger('change');
+                $tipoPagante.find('option').each(function() {
+                    const value = String($(this).val() || '');
+                    if (value !== '' && value !== TIPO_PAGANTE_CLERIGO) {
+                        $(this).prop('disabled', true);
+                    }
+                });
+                return;
+            }
+
+            $tipoPagante.find('option').prop('disabled', false);
+            $tipoPagante.find('option[value=""]').prop('disabled', true);
+        }
+
         $(document).ready(function() {
             // limpar o campo Pagante
             $('#pagante_favorecido').val('').trigger('change');
+            aplicarRegraTipoPagantePorPlanoConta();
             let planoContaId = $('#plano_conta_id').val();
             if(planoContaId == 4 || planoContaId == 5 || planoContaId == 110186){
                 $('.ano_mes').show();
@@ -215,6 +249,7 @@
         }); 
 
         $('#plano_conta_id').change(function() {
+            aplicarRegraTipoPagantePorPlanoConta();
             let planoContaId = $('#plano_conta_id').val();
             if(planoContaId == 4 || planoContaId == 5 || planoContaId == 110186){
                 $('.ano_mes').show();

@@ -45,6 +45,7 @@ class IdentificaDadosRelatorioAniversariantesService
             )
             ->join('membresia_contatos', 'membresia_contatos.membro_id', 'membresia_membros.id')
             ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
+            ->where('status', 'A')
             ->when($params['vinculo'], fn($query) => $query->whereIn('vinculo', $params['vinculo']))
             ->when($params['congregacao_id'], fn ($query) => $query->where('congregacao_id', $params['congregacao_id']))
             ->when($params['mes'], fn ($query) => $query->whereMonth('data_nascimento', $params['mes']))->orderBy('nome')
