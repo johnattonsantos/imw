@@ -31,18 +31,20 @@
                 <table class="table table-bordered table-striped table-hover mb-4" id="relatorio-esposas-pastores">
                     <thead>
                         <tr>
+                            <th>Distrito</th>
+                            <th>Igreja</th>
                             <th>Esposa</th>
-                            <th>CPF</th>
                             <th>Data de Nascimento</th>
-                            <th>Pastor</th>
+                            <th>Cônjuge</th>
                             <th>Telefone</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($esposas as $item)
                             <tr>
+                                <td>{{ $item->distrito_nome ?? '-' }}</td>
+                                <td>{{ $item->igreja_nome ?? '-' }}</td>
                                 <td>{{ $item->esposa_nome }}</td>
-                                <td>{{ $item->esposa_cpf ? formatStr($item->esposa_cpf, '###.###.###-##') : '-' }}</td>
                                 <td>{{ $item->esposa_data_nascimento ? \Carbon\Carbon::parse($item->esposa_data_nascimento)->format('d/m/Y') : '-' }}</td>
                                 <td>{{ $item->pastor_nome }}</td>
                                 <td>{{ $item->pastor_telefone ? formatarTelefone($item->pastor_telefone) : '-' }}</td>
@@ -77,21 +79,21 @@
                         className: 'btn btn-primary btn-rounded',
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         titleAttr: 'Excel',
-                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}"
+                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicao_nome }}"
                     },
                     {
                         extend: 'pdf',
                         className: 'btn btn-danger btn-rounded',
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         titleAttr: 'PDF',
-                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}"
+                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicao_nome }}"
                     },
                     {
                         extend: 'print',
                         className: 'btn btn-info btn-rounded',
                         text: '<i class="fas fa-print"></i> Imprimir',
                         titleAttr: 'Imprimir',
-                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}"
+                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicao_nome }}"
                     }
                 ]
             }

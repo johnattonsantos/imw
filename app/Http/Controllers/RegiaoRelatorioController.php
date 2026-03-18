@@ -86,6 +86,37 @@ class RegiaoRelatorioController extends Controller
         return $pdf->stream('relatorio_quantidademembros.pdf' . date('YmdHis'));
     }
 
+    public function esposasDePastores()
+    {
+        try {
+            $regiaoId = Identifiable::fetchtSessionRegiao()->id;
+
+            $esposas = \Illuminate\Support\Facades\DB::table('pessoas_pessoas as pp')
+                ->join('pessoas_dependentes as pd', 'pd.pessoa_id', '=', 'pp.id')
+                ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'pp.igreja_id')
+                ->leftJoin('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'pp.distrito_id')
+                ->select(
+                    'distrito.nome as distrito_nome',
+                    'igreja.nome as igreja_nome',
+                    'pd.nome as esposa_nome',
+                    'pd.data_nascimento as esposa_data_nascimento',
+                    'pp.nome as pastor_nome',
+                    'pp.telefone_preferencial as pastor_telefone'
+                )
+                ->where('pp.regiao_id', $regiaoId)
+                ->where('pp.categoria', 'pastor')
+                ->where('pd.parentesco', 'Cônjuge')
+                ->orderBy('distrito.nome')
+                ->orderBy('igreja.nome')
+                ->orderBy('pd.nome')
+                ->get();
+
+            return view('relatorios.esposas-de-pastores', compact('esposas'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de esposas de pastores');
+        }
+    }
+
 
     public function estatisticagenero(Request $request)
     {

@@ -320,6 +320,7 @@ Route::middleware(['auth'])->group(function () {
             //Membresia DEV
             Route::get('/membrosministerio', [RegiaoRelatorioController::class, 'membrosministerio'])->name('relatorio.membrosministerio')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/membrosministerio/pdf', [RegiaoRelatorioController::class, 'membrosministerioPdf'])->name('relatorio.membrosministerio-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/esposas-de-pastores', [RegiaoRelatorioController::class, 'esposasDePastores'])->name('relatorio.esposas-de-pastores')->middleware(['seguranca:regiao-menu-relatorio']);
 
             //
             Route::get('/quantidademembros', [RegiaoRelatorioController::class, 'quantidademembros'])->name('relatorio.quantidademembros')->middleware(['seguranca:regiao-menu-relatorio']);
@@ -519,7 +520,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/historico-eclesiastico', 'historicoEclesiastico')->name('historico-eclesiastico')->middleware('seguranca:relatorio-historico-eclesiastico');
             Route::get('/membros-disciplinados', 'membrosDisciplinados')->name('membros-disciplinados')->middleware('seguranca:relatorio-membro-disciplinado');
             Route::get('/funcao-eclesiastica', 'funcaoEclesiastica')->name('funcao-eclesiastica')->middleware('seguranca:relatorio-funcao-eclesiastica');
-            Route::get('/esposas-de-pastores', 'esposasDePastores')->name('esposas-de-pastores')->middleware('seguranca:menu-relatorios-secretaria');
         });
 
         // Segurança

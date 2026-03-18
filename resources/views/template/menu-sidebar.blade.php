@@ -174,11 +174,6 @@
                                  <a href="{{ route('relatorio.funcao-eclesiastica') }}">Função Eclesiástica</a>
                              @endif
                          </li>
-                         <li {!! Request::is('secretaria/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-secretaria'))
-                                 <a href="{{ route('relatorio.esposas-de-pastores') }}">Esposas de Pastores</a>
-                             @endif
-                         </li>
                      </ul>
                  </li>
              @endif
@@ -625,6 +620,9 @@
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-ano-eclesiastico'))
                                  <a href="{{ route('regiao.relatorio.ano.eclesiastico') }}">Mapa Estatístico Membros</a>
                              @endif
+                         </li>
+                         <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Esposas de Pastores</a>
                          </li>
                         <li class="submenu-fixo mt-3 mb-3">
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-instituicoes-igrejas'))
