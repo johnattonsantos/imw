@@ -174,6 +174,11 @@
                                  <a href="{{ route('relatorio.funcao-eclesiastica') }}">Função Eclesiástica</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-secretaria'))
+                                 <a href="{{ route('relatorio.esposas-de-pastores') }}">Esposas de Pastores</a>
+                             @endif
+                         </li>
                      </ul>
                  </li>
              @endif

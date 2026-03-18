@@ -7,11 +7,15 @@ use App\Services\ServiceRelatorio\IdentificaDadosRelatorioFuncoesEclesiasticasSe
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioHistoricoEclesiasticoService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembresiaService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembrosDisciplinadosService;
+use App\Traits\Identifiable;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\PDF;
+use Illuminate\Support\Facades\DB;
 
 class RelatorioController extends Controller
 {
+    use Identifiable;
+
     public function membresia(Request $request)
     {
         try {
@@ -85,6 +89,32 @@ class RelatorioController extends Controller
         } catch (\Exception $e) {
             dd($e);
             return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membros disciplinados');
+        }
+    }
+
+    public function esposasDePastores()
+    {
+        try {
+            $igrejaId = self::fetchSessionIgrejaLocal()->id;
+
+            $esposas = DB::table('pessoas_pessoas as pp')
+                ->join('pessoas_dependentes as pd', 'pd.pessoa_id', '=', 'pp.id')
+                ->select(
+                    'pd.nome as esposa_nome',
+                    'pd.cpf as esposa_cpf',
+                    'pd.data_nascimento as esposa_data_nascimento',
+                    'pp.nome as pastor_nome',
+                    'pp.telefone_preferencial as pastor_telefone'
+                )
+                ->where('pp.igreja_id', $igrejaId)
+                ->where('pp.categoria', 'pastor')
+                ->where('pd.parentesco', 'Cônjuge')
+                ->orderBy('pd.nome')
+                ->get();
+
+            return view('relatorios.esposas-de-pastores', compact('esposas'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de esposas de pastores');
         }
     }
     

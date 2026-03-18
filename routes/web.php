@@ -519,6 +519,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/historico-eclesiastico', 'historicoEclesiastico')->name('historico-eclesiastico')->middleware('seguranca:relatorio-historico-eclesiastico');
             Route::get('/membros-disciplinados', 'membrosDisciplinados')->name('membros-disciplinados')->middleware('seguranca:relatorio-membro-disciplinado');
             Route::get('/funcao-eclesiastica', 'funcaoEclesiastica')->name('funcao-eclesiastica')->middleware('seguranca:relatorio-funcao-eclesiastica');
+            Route::get('/esposas-de-pastores', 'esposasDePastores')->name('esposas-de-pastores')->middleware('seguranca:menu-relatorios-secretaria');
         });
 
         // Segurança
