@@ -835,7 +835,7 @@
     Chart.overrides.line.plugins = Chart.overrides.line.plugins || {};
     Chart.overrides.line.plugins.datalabels = { display: false };
 
-    const labelsMeses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    const labelsMeses = @json($labelsMeses);
     const chartDataUrl = "{{ route('dashboard.chart-data') }}";
 
     function getChartFromCard(cardEl) {
