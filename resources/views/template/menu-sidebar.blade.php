@@ -621,9 +621,6 @@
                                  <a href="{{ route('regiao.relatorio.ano.eclesiastico') }}">Mapa Estatístico Membros</a>
                              @endif
                          </li>
-                         <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Cônjuges dos Clérigos</a>
-                         </li>
                         <li class="submenu-fixo mt-3 mb-3">
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-instituicoes-igrejas'))
                                 <span>Clérigos</span>
@@ -638,6 +635,9 @@
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-esposas'))
                                 <a href="{{ route('regiao.relatorio.clerigosesposas') }}">Clérigos Esposas</a>
                             @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
+                            <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Cônjuges dos Clérigos</a>
                         </li>
                         <li {!! Request::is('regiao/relatorio/clerigos-dados') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
