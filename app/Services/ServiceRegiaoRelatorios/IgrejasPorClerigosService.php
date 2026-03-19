@@ -47,6 +47,7 @@ class IgrejasPorClerigosService
             ->select('pp.id', 'pp.nome')
             ->join('pessoas_nomeacoes as pn', 'pn.pessoa_id', '=', 'pp.id')
             ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'pn.instituicao_id')
+            ->where('pp.situacao_id', 1)
             ->where('igreja.regiao_id', $regiaoId)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->whereNull('pp.deleted_at')
@@ -86,6 +87,7 @@ class IgrejasPorClerigosService
                         AND mr.deleted_at IS NULL
                 ) as total_membros_fim")
             )
+            ->where('pp.situacao_id', 1)
             ->where('igreja.regiao_id', $regiaoId)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('distrito.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)

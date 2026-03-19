@@ -4,7 +4,7 @@
 <x-breadcrumb :breadcrumbs="[
     ['text' => 'Home', 'url' => '/', 'active' => false],
     ['text' => 'Relatórios', 'url' => '#', 'active' => false],
-    ['text' => 'Esposas de Pastores', 'url' => '#', 'active' => true]
+    ['text' => 'Cônjuges dos Clérigos', 'url' => '#', 'active' => true]
 ]"></x-breadcrumb>
 @endsection
 
@@ -22,7 +22,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Esposas de Pastores</h4>
+                    <h4>Cônjuges dos Clérigos</h4>
                 </div>
             </div>
         </div>
@@ -31,23 +31,23 @@
                 <table class="table table-bordered table-striped table-hover mb-4" id="relatorio-esposas-pastores">
                     <thead>
                         <tr>
+                            <th>Clérigo</th>
+                            <th>Cônjuge</th>
+                            <th>Data de Nascimento</th>
+                            <th>Telefone</th>
                             <th>Distrito</th>
                             <th>Igreja</th>
-                            <th>Esposa</th>
-                            <th>Data de Nascimento</th>
-                            <th>Cônjuge</th>
-                            <th>Telefone</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($esposas as $item)
                             <tr>
-                                <td>{{ $item->distrito_nome ?? '-' }}</td>
-                                <td>{{ $item->igreja_nome ?? '-' }}</td>
+                                <td>{{ $item->pastor_nome }}</td>
                                 <td>{{ $item->esposa_nome }}</td>
                                 <td>{{ $item->esposa_data_nascimento ? \Carbon\Carbon::parse($item->esposa_data_nascimento)->format('d/m/Y') : '-' }}</td>
-                                <td>{{ $item->pastor_nome }}</td>
                                 <td>{{ $item->pastor_telefone ? formatarTelefone($item->pastor_telefone) : '-' }}</td>
+                                <td>{{ $item->distrito_nome ?? '-' }}</td>
+                                <td>{{ $item->igreja_nome ?? '-' }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -79,21 +79,21 @@
                         className: 'btn btn-primary btn-rounded',
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         titleAttr: 'Excel',
-                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicao_nome }}"
+                        title: "RELATÓRIO CÔNJUGES DOS CLÉRIGOS - {{ session()->get('session_perfil')->instituicao_nome }}"
                     },
                     {
                         extend: 'pdf',
-                        className: 'btn btn-danger btn-rounded',
+                        className: 'btn btn-primary btn-rounded',
                         text: '<i class="fas fa-file-pdf"></i> PDF',
                         titleAttr: 'PDF',
-                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicao_nome }}"
+                        title: "RELATÓRIO CÔNJUGES DOS CLÉRIGOS - {{ session()->get('session_perfil')->instituicao_nome }}"
                     },
                     {
                         extend: 'print',
-                        className: 'btn btn-info btn-rounded',
+                        className: 'btn btn-primary btn-rounded',
                         text: '<i class="fas fa-print"></i> Imprimir',
                         titleAttr: 'Imprimir',
-                        title: "RELATÓRIO ESPOSAS DE PASTORES - {{ session()->get('session_perfil')->instituicao_nome }}"
+                        title: "RELATÓRIO CÔNJUGES DOS CLÉRIGOS - {{ session()->get('session_perfil')->instituicao_nome }}"
                     }
                 ]
             }

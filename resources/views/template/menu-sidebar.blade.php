@@ -622,7 +622,7 @@
                              @endif
                          </li>
                          <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Esposas de Pastores</a>
+                             <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Cônjuges dos Clérigos</a>
                          </li>
                         <li class="submenu-fixo mt-3 mb-3">
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-instituicoes-igrejas'))
