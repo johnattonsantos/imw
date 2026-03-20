@@ -696,7 +696,12 @@
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
                                 <a href="{{ route('regiao.relatorio.igrejas.clerigos') }}">Igrejas por Clérigos</a>
                             @endif
-                        </li> 
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/clerigo-por-igreja') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
+                                <a href="{{ route('regiao.relatorio.clerigo.por.igreja') }}">Clérigo por Igreja</a>
+                            @endif
+                        </li>
 
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">

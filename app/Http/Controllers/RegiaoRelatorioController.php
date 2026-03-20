@@ -425,6 +425,12 @@ class RegiaoRelatorioController extends Controller
         return view('regiao.relatorios.igreja.igrejas-por-clerigos', $data);
     }
 
+    public function clerigoPorIgreja(Request $request)
+    {
+        $data = app(IgrejasPorClerigosService::class)->execute($request->all());
+        return view('regiao.relatorios.igreja.clerigo-por-igreja', $data);
+    }
+
     public function anoEclesiastico(Request $request)
     {
         $dataInicial = isset($request->data_inicial) ? formatDate($request->data_inicial) : '';
