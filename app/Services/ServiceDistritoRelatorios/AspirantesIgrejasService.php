@@ -10,7 +10,10 @@ class AspirantesIgrejasService
 
     public function execute(array $params = [])
     {
-        $data =  [];
+        $data =  [
+            'aspirantes' => collect(),
+        ];
+
         $params['distritoId'] = session()->get('session_perfil')->instituicao_id;
         if(isset($params['action'])) {
             $data =  [
