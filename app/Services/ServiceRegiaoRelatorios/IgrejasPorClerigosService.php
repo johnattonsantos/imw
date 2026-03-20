@@ -46,8 +46,10 @@ class IgrejasPorClerigosService
         return DB::table('pessoas_pessoas as pp')
             ->select('pp.id', 'pp.nome')
             ->join('pessoas_nomeacoes as pn', 'pn.pessoa_id', '=', 'pp.id')
+            ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
             ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'pn.instituicao_id')
             ->where('pp.situacao_id', 1)
+            ->where('pf.titular', 1)
             ->where('igreja.regiao_id', $regiaoId)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->whereNull('pp.deleted_at')
@@ -62,6 +64,7 @@ class IgrejasPorClerigosService
     {
         $query = DB::table('pessoas_nomeacoes as pn')
             ->join('pessoas_pessoas as pp', 'pp.id', '=', 'pn.pessoa_id')
+            ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
             ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'pn.instituicao_id')
             ->join('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'igreja.instituicao_pai_id')
             ->select(
@@ -88,6 +91,7 @@ class IgrejasPorClerigosService
                 ) as total_membros_fim")
             )
             ->where('pp.situacao_id', 1)
+            ->where('pf.titular', 1)
             ->where('igreja.regiao_id', $regiaoId)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('distrito.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)

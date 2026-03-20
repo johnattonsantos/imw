@@ -631,11 +631,6 @@
                                 <a href="{{ route('regiao.relatorio.clerigosaniversariantes') }}">Clérigos Aniversariantes</a>
                             @endif
                         </li>
-                        <li {!! Request::is('regiao/relatorio/clerigos-esposas') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-esposas'))
-                                <a href="{{ route('regiao.relatorio.clerigosesposas') }}">Clérigos Esposas</a>
-                            @endif
-                        </li>
                         <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
                             <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Cônjuges dos Clérigos</a>
                         </li>
@@ -687,16 +682,16 @@
                                 <a href="{{ route('regiao.conta.bancaria.igreja') }}">Conta Bancária por Igreja</a>
                             @endif
                         </li>
-                       <li {!! Request::is('regiao/relatorio/igrejas-por-pastores') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
-                                <a href="{{ route('regiao.relatorio.igrejas.pastores') }}">Igrejas por Pastores</a>
-                            @endif
-                        </li>
                         <li {!! Request::is('regiao/relatorio/igrejas-por-clerigos') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
                                 <a href="{{ route('regiao.relatorio.igrejas.clerigos') }}">Igrejas por Clérigos</a>
                             @endif
-                        </li> 
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/clerigo-por-igreja') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
+                                <a href="{{ route('regiao.relatorio.clerigo.por.igreja') }}">Clérigo por Igreja</a>
+                            @endif
+                        </li>
 
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">

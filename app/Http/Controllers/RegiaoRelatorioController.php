@@ -104,7 +104,6 @@ class RegiaoRelatorioController extends Controller
                     'pp.telefone_preferencial as pastor_telefone'
                 )
                 ->where('pp.regiao_id', $regiaoId)
-                ->where('pp.categoria', 'pastor')
                 ->whereIn('pp.situacao_id', [1, 4, 8])
                 ->where('pd.parentesco', 'Cônjuge')
                 ->orderBy('distrito.nome')
@@ -423,6 +422,12 @@ class RegiaoRelatorioController extends Controller
     {
         $data = app(IgrejasPorClerigosService::class)->execute($request->all());
         return view('regiao.relatorios.igreja.igrejas-por-clerigos', $data);
+    }
+
+    public function clerigoPorIgreja(Request $request)
+    {
+        $data = app(IgrejasPorClerigosService::class)->execute($request->all());
+        return view('regiao.relatorios.igreja.clerigo-por-igreja', $data);
     }
 
     public function anoEclesiastico(Request $request)
