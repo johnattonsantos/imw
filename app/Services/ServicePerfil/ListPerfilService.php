@@ -27,22 +27,29 @@ class ListPerfilService
             return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar essa página.');
         }
 
-        $pessoa = PessoasPessoa::where('id', $usuario->pessoa_id)->first();
-        $regiao_id = $pessoa->regiao_id;
-        $instituicao = InstituicoesInstituicao::where('id', $regiao_id)->first();
-
-        $pessoa['nome_regiao'] = $instituicao->nome;
         if (!$usuario->pessoa_id) {
-            $pessoa['pessoa_id'] = $usuario->pessoa_id;            
-        }else{
-            if ($pessoa->foto) {
-                $disk = Storage::disk('s3');
-                $pessoa->foto = $disk->temporaryUrl($pessoa->foto, Carbon::now()->addMinutes(15));
-            }
-            $pessoa['pessoa_id'] = $usuario->pessoa_id;
+            return ['pessoa_id' => null];
         }
+
+        $pessoa = PessoasPessoa::where('id', $usuario->pessoa_id)->first();
+        if (!$pessoa) {
+            return ['pessoa_id' => null];
+        }
+
+        $instituicao = null;
+        if (!empty($pessoa->regiao_id)) {
+            $instituicao = InstituicoesInstituicao::where('id', $pessoa->regiao_id)->first();
+        }
+
+        $pessoa['nome_regiao'] = optional($instituicao)->nome ?? '';
+
+        if ($pessoa->foto) {
+            $disk = Storage::disk('s3');
+            $pessoa->foto = $disk->temporaryUrl($pessoa->foto, Carbon::now()->addMinutes(15));
+        }
+
+        $pessoa['pessoa_id'] = $usuario->pessoa_id;
         return $pessoa;
     }
 }
-
 

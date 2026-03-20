@@ -26,46 +26,56 @@
             font-family: Arial, Helvetica, sans-serif;
             font-size: 20px;
         }
+        .carteira-wrapper{
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .carteira-bg{
+            width: 100%;
+            height: auto;
+            display: block;
+        }
         .regiao_top{
-            position: absolute; top:213px; margin-left: 330px; font-size: 14px; color: #4361ee;
+            position: absolute; top:213px; left: 330px; font-size: 14px; color: #4361ee;
         }
         .foto{
-            position: absolute; top:169px; margin-left: 633px;
+            position: absolute; top:150px; left: 633px;
             width: 210px;
             height: 268px;
         }
         .nome{
-            position: absolute; top:565px; margin-left:70px;
+            position: absolute; top:543px; left:70px;
         }
         .rol{
-            position: absolute; top:565px; margin-left: 615px;
+            position: absolute; top:543px; left: 615px;
         }
         .cpf{
-            position: absolute; top:660px; margin-left: 70px;
+            position: absolute; top:640px; left: 70px;
         }
         .rg{
-            position: absolute; top:660px; margin-left: 340px;
+            position: absolute; top:640px; left: 340px;
         }
         .dt-nascimento{
-            position: absolute; top:660px; margin-left: 620px;
+            position: absolute; top:640px; left: 620px;
         }
         .categoria{
-            position: absolute; top:757px; margin-left: 70px;
+            position: absolute; top:737px; left: 70px;
         }
         .dt-ordenacao{
-            position: absolute; top:757px; margin-left:620px;
+            position: absolute; top:737px; left:620px;
         }        
         .dt-consagracao{
-            position: absolute; top:757px; margin-left: 346px;
+            position: absolute; top:737px; left: 346px;
         }
         .validade{
-            position: absolute; top:850px; margin-left: 130px; font-size: 20px;
+            position: absolute; top:850px; left: 130px; font-size: 20px;
         }
         .contato-sede{
-            position: absolute; top:850px; margin-left: 450px; font-size: 20px;
+            position: absolute; top:850px; left: 450px; font-size: 20px;
         }
         .regiao_bottom{
-            position: absolute; top:1030px; margin-left: 240px; font-size: 14px; color: #4361ee;
+            position: absolute; top:1030px; left: 240px; font-size: 14px; color: #4361ee;
         }
     </style>
 @endsection
@@ -85,20 +95,22 @@
             </div>
             @if($usuario['pessoa_id'])
             <div class="widget-content widget-content-area">
-                <div class="regiao_top">{{ mb_convert_case($usuario->nome_regiao, MB_CASE_TITLE, "UTF-8") }} Eclesiástica</div>
-                <img src="{{ $usuario->foto }}" class="foto" alt="">
-                <div class="rol">{{ $usuario->rol }}</div>
-                <div class="nome">{{ $usuario->nome }}</div>
-                <div class="cpf">{{ $usuario->cpf }}</div>
-                <div class="rg">{{ $usuario->identidade }}</div>
-                <div class="dt-nascimento">{{ formatDate($usuario->data_nascimento) }}</div>
-                <div class="categoria">{{ isset($usuario->categoria) ? mb_convert_case($usuario->categoria, MB_CASE_TITLE, "UTF-8") : '' }}</div>
-                <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
-                <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
-                <div class="validade">Validade: 31/10/2027</div>
-                <div class="contato-sede">Sede Administrativa: (21) 98456-0937</div>
-                <div class="regiao_bottom">{{ mb_convert_case($usuario->nome_regiao, MB_CASE_TITLE, "UTF-8") }} Eclesiástica</div>
-                <img src="{{ asset('theme/images/carteira-digital.png') }}" alt="">
+                <div class="carteira-wrapper">
+                    <div class="regiao_top">{{ mb_convert_case($usuario->nome_regiao, MB_CASE_TITLE, "UTF-8") }} Eclesiástica</div>
+                    <img src="{{ $usuario->foto }}" class="foto" alt="">
+                    <div class="rol">{{ $usuario->rol }}</div>
+                    <div class="nome">{{ $usuario->nome }}</div>
+                    <div class="cpf">{{ $usuario->cpf }}</div>
+                    <div class="rg">{{ $usuario->identidade }}</div>
+                    <div class="dt-nascimento">{{ formatDate($usuario->data_nascimento) }}</div>
+                    <div class="categoria">{{ isset($usuario->categoria) ? mb_convert_case($usuario->categoria, MB_CASE_TITLE, "UTF-8") : '' }}</div>
+                    <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
+                    <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
+                    <div class="validade">Validade: 31/10/2027</div>
+                    <div class="contato-sede">Sede Administrativa: (21) 98456-0937</div>
+                    <div class="regiao_bottom">{{ mb_convert_case($usuario->nome_regiao, MB_CASE_TITLE, "UTF-8") }} Eclesiástica</div>
+                    <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
+                </div>
             </div>
             @else
                 <div class="widget-content widget-content-area">
