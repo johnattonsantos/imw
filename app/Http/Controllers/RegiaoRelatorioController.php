@@ -104,7 +104,6 @@ class RegiaoRelatorioController extends Controller
                     'pp.telefone_preferencial as pastor_telefone'
                 )
                 ->where('pp.regiao_id', $regiaoId)
-                ->where('pp.categoria', 'pastor')
                 ->whereIn('pp.situacao_id', [1, 4, 8])
                 ->where('pd.parentesco', 'Cônjuge')
                 ->orderBy('distrito.nome')
