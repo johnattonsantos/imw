@@ -28,6 +28,7 @@ class UpdateMembroRecadastramentoService
     {
         $membroDestinoId = $data['membro_id']; // id vindo do GET/recadastramento
         $membroMigracao = MembresiaMembroRecadastramento::find($membroDestinoId);
+        $data['rol_atual'] = $this->resolveRolAtual($data, $membroMigracao);
         $dataMembro = $this->prepareMembroData($data, $vinculo, $membroMigracao);
         $dataContato = $this->prepareContatoData($data);
         $dataFamiliar = $this->prepareFamiliarData($data);
@@ -49,6 +50,18 @@ class UpdateMembroRecadastramentoService
             $this->handlePhotoUpload(null, $membroDestinoId, false);
         }
         $this->updateValidadoFlags($membroDestinoId, $membroDestinoId);
+    }
+
+    private function resolveRolAtual(array $data, ?MembresiaMembroRecadastramento $membroMigracao): int
+    {
+        if (isset($data['rol_atual']) && trim((string) $data['rol_atual']) !== '') {
+            return (int) $data['rol_atual'];
+        }
+
+        $igrejaId = $membroMigracao->igreja_id ?? self::fetchSessionIgrejaLocal()->id;
+        $maxRol = (int) MembresiaRolPermanente::where('igreja_id', $igrejaId)->max('numero_rol');
+
+        return $maxRol + 1;
     }
 
     private function handlePhotoUpload($photo, $membroId, $isNew = true)

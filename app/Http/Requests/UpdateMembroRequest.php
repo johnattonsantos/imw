@@ -20,6 +20,23 @@ class UpdateMembroRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation()
+    {
+        if (!$this->routeIs('recadastramento-membro.update')) {
+            return;
+        }
+
+        $rolAtual = $this->input('rol_atual');
+        if ($rolAtual === null) {
+            return;
+        }
+
+        $rolNormalizado = is_string($rolAtual) ? trim($rolAtual) : $rolAtual;
+        if ($rolNormalizado === '' || (is_numeric($rolNormalizado) && (int) $rolNormalizado === 0)) {
+            $this->merge(['rol_atual' => null]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -157,12 +174,19 @@ class UpdateMembroRequest extends FormRequest
             'profissao' => $isRecadastramento ? 'required|exists:membresia_profissoes,id' : 'nullable|string|max:100',
             'status' => $isRecadastramento ? 'required|in:A,I' : 'nullable|in:A,I',
             'uf' => 'sometimes|required',
-            'rol_atual' => [
-                'required',
-                'integer',
-                'min:1',
-                new UniqueRolIgrejaRule($membroIdRegraRol, false),
-            ],
+            'rol_atual' => $isRecadastramento
+                ? [
+                    'nullable',
+                    'integer',
+                    'min:1',
+                    new UniqueRolIgrejaRule($membroIdRegraRol, false),
+                ]
+                : [
+                    'required',
+                    'integer',
+                    'min:1',
+                    new UniqueRolIgrejaRule($membroIdRegraRol, false),
+                ],
             'cpf' => [
                 'required',
                 new ValidaCPF,

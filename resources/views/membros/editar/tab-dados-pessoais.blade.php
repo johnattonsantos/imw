@@ -418,7 +418,7 @@
               </div>
                 <div class="col-xl-3">
                         <label for="rol_atual">* Nº Rol</label>
-                        <input type="number" min="1" step="1" inputmode="numeric" class="form-control @error('rol_atual') is-invalid @enderror" id="rol_atual" name="rol_atual" value="{{ old('rol_atual', $pessoa->rol_atual) }}" required>
+                        <input type="number" min="1" step="1" inputmode="numeric" class="form-control @error('rol_atual') is-invalid @enderror" id="rol_atual" name="rol_atual" value="{{ old('rol_atual', $pessoa->rol_atual) }}" {{ request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update') ? '' : 'required' }}>
                     @error('rol_atual')
                         <span class="help-block text-danger">{{ $message }}</span>
                     @enderror

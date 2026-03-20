@@ -34,6 +34,10 @@ class UniqueRolIgrejaRule implements Rule
      */
     public function passes($attribute, $value)
     {
+        if ($value === null || $value === '') {
+            return true;
+        }
+
         $model = $this->useMigracao ? MembresiaRolPermanenteRecadastramento::class : MembresiaRolPermanente::class;
 
         $hasRolPermanente = (booL) $model::where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
