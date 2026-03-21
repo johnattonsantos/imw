@@ -94,6 +94,7 @@ class IgrejasPorClerigosService
             ->where('pp.situacao_id', 1)
             ->where('pf.titular', 1)
             ->where('igreja.regiao_id', $regiaoId)
+            ->where('pp.regiao_id', $regiaoId)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('distrito.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
             ->where('igreja.ativo', 1)
