@@ -51,6 +51,7 @@ class IgrejasPorClerigosService
             ->where('pp.situacao_id', 1)
             ->where('pf.titular', 1)
             ->where('igreja.regiao_id', $regiaoId)
+            ->where('pp.regiao_id', $regiaoId)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->whereNull('pp.deleted_at')
             ->whereNull('pn.deleted_at')
@@ -79,7 +80,7 @@ class IgrejasPorClerigosService
                     WHERE mr.igreja_id = igreja.id
                         AND mr.dt_recepcao <= pn.data_nomeacao
                         AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > pn.data_nomeacao)
-                        AND mr.deleted_at IS NULL
+                        AND mr.deleted_at IS NULL AND mr.lastrec = 1 AND mr.status = 'A'
                 ) as total_membros_inicio"),
                 DB::raw("(
                     SELECT COUNT(DISTINCT mr.membro_id)
@@ -87,12 +88,13 @@ class IgrejasPorClerigosService
                     WHERE mr.igreja_id = igreja.id
                         AND mr.dt_recepcao <= COALESCE(pn.data_termino, CURDATE())
                         AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > COALESCE(pn.data_termino, CURDATE()))
-                        AND mr.deleted_at IS NULL
+                        AND mr.deleted_at IS NULL AND mr.lastrec = 1 AND mr.status = 'A'
                 ) as total_membros_fim")
             )
             ->where('pp.situacao_id', 1)
             ->where('pf.titular', 1)
             ->where('igreja.regiao_id', $regiaoId)
+            ->where('pp.regiao_id', $regiaoId)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('distrito.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
             ->where('igreja.ativo', 1)
