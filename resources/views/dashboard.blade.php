@@ -288,11 +288,11 @@
 
     @php
         $regionChartConfigs = [
-            ['id' => 'regiao-evolucao', 'title' => 'Gráfico 1 - Evolução de Membros por Distrito', 'canvas' => 'regiaoEvolucaoDistritosChart'],
+            ['id' => 'regiao-evolucao', 'title' => 'Gráfico 1 - Evolução de Membros (Ativos + Inativos) por Distrito', 'canvas' => 'regiaoEvolucaoDistritosChart'],
             ['id' => 'regiao-es', 'title' => 'Gráfico 2 - Entradas x Saídas da Região', 'canvas' => 'regiaoEntradasSaidasChart'],
-            ['id' => 'regiao-top-distritos', 'title' => 'Gráfico 3 - Top 10 Distritos por Total de Membros', 'canvas' => 'regiaoTopDistritosChart'],
+            ['id' => 'regiao-top-distritos', 'title' => 'Gráfico 3 - Top 10 Distritos por Total de Membros (Ativos + Inativos)', 'canvas' => 'regiaoTopDistritosChart'],
             ['id' => 'regiao-vinculos', 'title' => 'Gráfico 4 - Distribuição Regional por Vínculo', 'canvas' => 'regiaoVinculosChart'],
-            ['id' => 'regiao-sexo', 'title' => 'Gráfico 5 - Novos Membros por Sexo', 'canvas' => 'regiaoSexoChart'],
+            ['id' => 'regiao-sexo', 'title' => 'Gráfico 5 - Membros (Ativos + Inativos) por Sexo', 'canvas' => 'regiaoSexoChart'],
             ['id' => 'regiao-status-rol', 'title' => 'Gráfico 6 - Situação do Rol Regional', 'canvas' => 'regiaoStatusRolChart'],
             ['id' => 'regiao-crescimento-acumulado', 'title' => 'Gráfico 7 - Crescimento Líquido Acumulado', 'canvas' => 'regiaoCrescimentoAcumuladoChart'],
             ['id' => 'regiao-crescimento-distritos', 'title' => 'Gráfico 8 - Ranking de Crescimento por Distrito', 'canvas' => 'regiaoCrescimentoDistritosChart'],
@@ -354,7 +354,7 @@
         <div class="card h-100" id="card-distrito-evolucao-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 1 - Evolução de Membros por Igreja (<span id="ano-distrito-evolucao-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">Gráfico 1 - Evolução de Membros (Ativos + Inativos) por Igreja (<span id="ano-distrito-evolucao-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-evolucao-select" class="form-control form-control-sm" style="width: 220px;">
                             <option value="">Todas igrejas</option>
@@ -419,7 +419,7 @@
         <div class="card h-100" id="card-distrito-top-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 3 - Top 10 Igrejas por Total de Membros (<span id="ano-distrito-top-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">Gráfico 3 - Top 10 Igrejas por Total de Membros (Ativos + Inativos) (<span id="ano-distrito-top-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-top-select" class="form-control form-control-sm" style="width: 220px;">
                             <option value="">Todas igrejas</option>
@@ -484,7 +484,7 @@
         <div class="card h-100" id="card-distrito-sexo-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 5 - Novos Membros por Sexo (<span id="ano-distrito-sexo-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">Gráfico 5 - Membros (Ativos + Inativos) por Sexo (<span id="ano-distrito-sexo-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-sexo-select" class="form-control form-control-sm" style="width: 220px;">
                             <option value="">Todas igrejas</option>
@@ -1230,159 +1230,119 @@
         });
     }
 
-    if (distritoEvolucaoCanvas) {
+    function optionsEixoYComZero() {
+        return { scales: { y: { beginAtZero: true } } };
+    }
+
+    function optionsEixoYComZeroEDatalabels() {
+        return {
+            scales: { y: { beginAtZero: true } },
+            plugins: { datalabels: { display: true, anchor: 'end', align: 'top', offset: 4 } }
+        };
+    }
+
+    function optionsHorizontalComZero() {
+        return { indexAxis: 'y', scales: { x: { beginAtZero: true } } };
+    }
+
+    function datasetBar(label, data, backgroundColor, borderColor) {
+        return { label, data, backgroundColor, borderColor, borderWidth: 1 };
+    }
+
+    function datasetCircular(label, data, backgroundColor, borderColor) {
+        return { label, data, backgroundColor, borderColor, borderWidth: 1 };
+    }
+
+    function renderDistritoEvolucaoChart() {
+        if (!distritoEvolucaoCanvas) return;
         distritoEvolucaoChart = new Chart(distritoEvolucaoCanvas.getContext('2d'), {
             type: 'line',
             data: {
                 labels: labelsMeses,
                 datasets: buildDistritoEvolucaoDatasets(distritoEvolucaoDatasets)
             },
-            options: {
-                scales: {
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    datalabels: {
-                        display: true,
-                        anchor: 'end',
-                        align: 'top',
-                        offset: 4
-                    }
-                }
-            }
+            options: optionsEixoYComZeroEDatalabels()
         });
     }
 
-    if (distritoEntradasSaidasCanvas) {
+    function renderDistritoEntradasSaidasChart() {
+        if (!distritoEntradasSaidasCanvas) return;
         distritoEntradasSaidasChart = new Chart(distritoEntradasSaidasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: labelsMeses,
                 datasets: [
-                    {
-                        label: 'Entradas',
-                        data: distritoEntradasPorMes,
-                        backgroundColor: 'rgba(40, 167, 69, 0.3)',
-                        borderColor: 'rgba(40, 167, 69, 1)',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Saídas',
-                        data: distritoSaidasPorMes,
-                        backgroundColor: 'rgba(220, 53, 69, 0.3)',
-                        borderColor: 'rgba(220, 53, 69, 1)',
-                        borderWidth: 1
-                    }
+                    datasetBar('Entradas', distritoEntradasPorMes, 'rgba(40, 167, 69, 0.3)', 'rgba(40, 167, 69, 1)'),
+                    datasetBar('Saídas', distritoSaidasPorMes, 'rgba(220, 53, 69, 0.3)', 'rgba(220, 53, 69, 1)')
                 ]
             },
-            options: {
-                scales: {
-                    y: { beginAtZero: true }
-                },
-                plugins: {
-                    datalabels: {
-                        display: true,
-                        anchor: 'end',
-                        align: 'top',
-                        offset: 4
-                    }
-                }
-            }
+            options: optionsEixoYComZeroEDatalabels()
         });
     }
 
-    if (distritoTopIgrejasCanvas) {
+    function renderDistritoTopIgrejasChart() {
+        if (!distritoTopIgrejasCanvas) return;
         distritoTopIgrejasChart = new Chart(distritoTopIgrejasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: distritoTopIgrejasLabels,
-                datasets: [{
-                    label: 'Membros',
-                    data: distritoTopIgrejasTotais,
-                    backgroundColor: 'rgba(23, 162, 184, 0.35)',
-                    borderColor: 'rgba(23, 162, 184, 1)',
-                    borderWidth: 1
-                }]
+                datasets: [datasetBar('Membros (Ativos + Inativos)', distritoTopIgrejasTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
             },
-            options: {
-                indexAxis: 'y',
-                scales: {
-                    x: { beginAtZero: true }
-                }
-            }
+            options: optionsHorizontalComZero()
         });
     }
 
-    if (distritoVinculosCanvas) {
+    function renderDistritoVinculosChart() {
+        if (!distritoVinculosCanvas) return;
         distritoVinculosChart = new Chart(distritoVinculosCanvas.getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: distritoVinculosLabels,
-                datasets: [{
-                    label: 'Cadastros',
-                    data: distritoVinculosTotais,
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.35)',
-                        'rgba(255, 193, 7, 0.35)',
-                        'rgba(40, 167, 69, 0.35)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 193, 7, 1)',
-                        'rgba(40, 167, 69, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                datasets: [datasetCircular(
+                    'Cadastros',
+                    distritoVinculosTotais,
+                    ['rgba(54, 162, 235, 0.35)', 'rgba(255, 193, 7, 0.35)', 'rgba(40, 167, 69, 0.35)'],
+                    ['rgba(54, 162, 235, 1)', 'rgba(255, 193, 7, 1)', 'rgba(40, 167, 69, 1)']
+                )]
             }
         });
     }
 
-    if (distritoSexoCanvas) {
+    function renderDistritoSexoChart() {
+        if (!distritoSexoCanvas) return;
         distritoSexoChart = new Chart(distritoSexoCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: distritoSexoLabels,
-                datasets: [{
-                    label: 'Membros',
-                    data: distritoSexoTotais,
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.35)',
-                        'rgba(255, 99, 132, 0.35)',
-                        'rgba(108, 117, 125, 0.35)'
-                    ],
-                    borderColor: [
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(108, 117, 125, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                datasets: [datasetCircular(
+                    'Membros (Ativos + Inativos)',
+                    distritoSexoTotais,
+                    ['rgba(54, 162, 235, 0.35)', 'rgba(255, 99, 132, 0.35)', 'rgba(108, 117, 125, 0.35)'],
+                    ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(108, 117, 125, 1)']
+                )]
             },
-            options: {
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
+            options: optionsEixoYComZero()
         });
     }
 
-    if (distritoStatusRolCanvas) {
+    function renderDistritoStatusRolChart() {
+        if (!distritoStatusRolCanvas) return;
         distritoStatusRolChart = new Chart(distritoStatusRolCanvas.getContext('2d'), {
             type: 'pie',
             data: {
                 labels: distritoStatusRolLabels,
-                datasets: [{
-                    label: 'Membros no Rol',
-                    data: distritoStatusRolTotais,
-                    backgroundColor: ['rgba(40, 167, 69, 0.35)', 'rgba(220, 53, 69, 0.35)'],
-                    borderColor: ['rgba(40, 167, 69, 1)', 'rgba(220, 53, 69, 1)'],
-                    borderWidth: 1
-                }]
+                datasets: [datasetCircular(
+                    'Membros no Rol',
+                    distritoStatusRolTotais,
+                    ['rgba(40, 167, 69, 0.35)', 'rgba(220, 53, 69, 0.35)'],
+                    ['rgba(40, 167, 69, 1)', 'rgba(220, 53, 69, 1)']
+                )]
             }
         });
     }
 
-    if (distritoCrescimentoAcumuladoCanvas) {
+    function renderDistritoCrescimentoAcumuladoChart() {
+        if (!distritoCrescimentoAcumuladoCanvas) return;
         distritoCrescimentoAcumuladoChart = new Chart(distritoCrescimentoAcumuladoCanvas.getContext('2d'), {
             type: 'line',
             data: {
@@ -1397,169 +1357,151 @@
                     borderWidth: 2
                 }]
             },
-            options: {
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
+            options: optionsEixoYComZero()
         });
     }
 
-    if (distritoCrescimentoIgrejasCanvas) {
+    function renderDistritoCrescimentoIgrejasChart() {
+        if (!distritoCrescimentoIgrejasCanvas) return;
         distritoCrescimentoIgrejasChart = new Chart(distritoCrescimentoIgrejasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: distritoCrescimentoIgrejasLabels,
-                datasets: [{
-                    label: 'Saldo',
-                    data: distritoCrescimentoIgrejasTotais,
-                    backgroundColor: 'rgba(0, 123, 255, 0.35)',
-                    borderColor: 'rgba(0, 123, 255, 1)',
-                    borderWidth: 1
-                }]
+                datasets: [datasetBar('Saldo', distritoCrescimentoIgrejasTotais, 'rgba(0, 123, 255, 0.35)', 'rgba(0, 123, 255, 1)')]
             },
-            options: {
-                indexAxis: 'y',
-                scales: {
-                    x: { beginAtZero: true }
-                }
-            }
+            options: optionsHorizontalComZero()
         });
     }
 
-    if (distritoEntradasIgrejasCanvas) {
+    function renderDistritoEntradasIgrejasChart() {
+        if (!distritoEntradasIgrejasCanvas) return;
         distritoEntradasIgrejasChart = new Chart(distritoEntradasIgrejasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: distritoEntradasIgrejasLabels,
-                datasets: [{
-                    label: 'Entradas',
-                    data: distritoEntradasIgrejasTotais,
-                    backgroundColor: 'rgba(25, 135, 84, 0.35)',
-                    borderColor: 'rgba(25, 135, 84, 1)',
-                    borderWidth: 1
-                }]
+                datasets: [datasetBar('Entradas', distritoEntradasIgrejasTotais, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)')]
             },
-            options: {
-                indexAxis: 'y',
-                scales: {
-                    x: { beginAtZero: true }
-                }
-            }
+            options: optionsHorizontalComZero()
         });
     }
 
-    if (distritoSaidasIgrejasCanvas) {
+    function renderDistritoSaidasIgrejasChart() {
+        if (!distritoSaidasIgrejasCanvas) return;
         distritoSaidasIgrejasChart = new Chart(distritoSaidasIgrejasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: distritoSaidasIgrejasLabels,
-                datasets: [{
-                    label: 'Saídas',
-                    data: distritoSaidasIgrejasTotais,
-                    backgroundColor: 'rgba(253, 126, 20, 0.35)',
-                    borderColor: 'rgba(253, 126, 20, 1)',
-                    borderWidth: 1
-                }]
+                datasets: [datasetBar('Saídas', distritoSaidasIgrejasTotais, 'rgba(253, 126, 20, 0.35)', 'rgba(253, 126, 20, 1)')]
             },
-            options: {
-                indexAxis: 'y',
-                scales: {
-                    x: { beginAtZero: true }
-                }
-            }
+            options: optionsHorizontalComZero()
         });
     }
 
-    if (regiaoEvolucaoDistritosCanvas) {
+    function inicializarGraficosDistritais() {
+        renderDistritoEvolucaoChart();
+        renderDistritoEntradasSaidasChart();
+        renderDistritoTopIgrejasChart();
+        renderDistritoVinculosChart();
+        renderDistritoSexoChart();
+        renderDistritoStatusRolChart();
+        renderDistritoCrescimentoAcumuladoChart();
+        renderDistritoCrescimentoIgrejasChart();
+        renderDistritoEntradasIgrejasChart();
+        renderDistritoSaidasIgrejasChart();
+    }
+
+    inicializarGraficosDistritais();
+
+    function renderRegiaoEvolucaoDistritosChart() {
+        if (!regiaoEvolucaoDistritosCanvas) return;
         regiaoEvolucaoDistritosChart = new Chart(regiaoEvolucaoDistritosCanvas.getContext('2d'), {
             type: 'line',
             data: {
                 labels: labelsMeses,
                 datasets: buildDistritoEvolucaoDatasets(regiaoEvolucaoDatasets)
             },
-            options: {
-                scales: { y: { beginAtZero: true } },
-                plugins: { datalabels: { display: true, anchor: 'end', align: 'top', offset: 4 } }
-            }
+            options: optionsEixoYComZeroEDatalabels()
         });
     }
 
-    if (regiaoEntradasSaidasCanvas) {
+    function renderRegiaoEntradasSaidasChart() {
+        if (!regiaoEntradasSaidasCanvas) return;
         regiaoEntradasSaidasChart = new Chart(regiaoEntradasSaidasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: labelsMeses,
                 datasets: [
-                    { label: 'Entradas', data: regiaoEntradasPorMes, backgroundColor: 'rgba(25, 135, 84, 0.35)', borderColor: 'rgba(25, 135, 84, 1)', borderWidth: 1 },
-                    { label: 'Saidas', data: regiaoSaidasPorMes, backgroundColor: 'rgba(220, 53, 69, 0.35)', borderColor: 'rgba(220, 53, 69, 1)', borderWidth: 1 }
+                    datasetBar('Entradas', regiaoEntradasPorMes, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)'),
+                    datasetBar('Saidas', regiaoSaidasPorMes, 'rgba(220, 53, 69, 0.35)', 'rgba(220, 53, 69, 1)')
                 ]
             },
-            options: { scales: { y: { beginAtZero: true } } }
+            options: optionsEixoYComZero()
         });
     }
 
-    if (regiaoTopDistritosCanvas) {
+    function renderRegiaoTopDistritosChart() {
+        if (!regiaoTopDistritosCanvas) return;
         regiaoTopDistritosChart = new Chart(regiaoTopDistritosCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: regiaoTopDistritosLabels,
-                datasets: [{ label: 'Membros', data: regiaoTopDistritosTotais, backgroundColor: 'rgba(23, 162, 184, 0.35)', borderColor: 'rgba(23, 162, 184, 1)', borderWidth: 1 }]
+                datasets: [datasetBar('Membros (Ativos + Inativos)', regiaoTopDistritosTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
             },
-            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+            options: optionsHorizontalComZero()
         });
     }
 
-    if (regiaoVinculosCanvas) {
+    function renderRegiaoVinculosChart() {
+        if (!regiaoVinculosCanvas) return;
         regiaoVinculosChart = new Chart(regiaoVinculosCanvas.getContext('2d'), {
             type: 'doughnut',
             data: {
                 labels: regiaoVinculosLabels,
-                datasets: [{
-                    label: 'Cadastros',
-                    data: regiaoVinculosTotais,
-                    backgroundColor: ['rgba(54, 162, 235, 0.35)', 'rgba(255, 193, 7, 0.35)', 'rgba(40, 167, 69, 0.35)'],
-                    borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 193, 7, 1)', 'rgba(40, 167, 69, 1)'],
-                    borderWidth: 1
-                }]
+                datasets: [datasetCircular(
+                    'Cadastros',
+                    regiaoVinculosTotais,
+                    ['rgba(54, 162, 235, 0.35)', 'rgba(255, 193, 7, 0.35)', 'rgba(40, 167, 69, 0.35)'],
+                    ['rgba(54, 162, 235, 1)', 'rgba(255, 193, 7, 1)', 'rgba(40, 167, 69, 1)']
+                )]
             }
         });
     }
 
-    if (regiaoSexoCanvas) {
+    function renderRegiaoSexoChart() {
+        if (!regiaoSexoCanvas) return;
         regiaoSexoChart = new Chart(regiaoSexoCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: regiaoSexoLabels,
-                datasets: [{
-                    label: 'Membros',
-                    data: regiaoSexoTotais,
-                    backgroundColor: ['rgba(54, 162, 235, 0.35)', 'rgba(255, 99, 132, 0.35)', 'rgba(108, 117, 125, 0.35)'],
-                    borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(108, 117, 125, 1)'],
-                    borderWidth: 1
-                }]
+                datasets: [datasetCircular(
+                    'Membros (Ativos + Inativos)',
+                    regiaoSexoTotais,
+                    ['rgba(54, 162, 235, 0.35)', 'rgba(255, 99, 132, 0.35)', 'rgba(108, 117, 125, 0.35)'],
+                    ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(108, 117, 125, 1)']
+                )]
             },
-            options: { scales: { y: { beginAtZero: true } } }
+            options: optionsEixoYComZero()
         });
     }
 
-    if (regiaoStatusRolCanvas) {
+    function renderRegiaoStatusRolChart() {
+        if (!regiaoStatusRolCanvas) return;
         regiaoStatusRolChart = new Chart(regiaoStatusRolCanvas.getContext('2d'), {
             type: 'pie',
             data: {
                 labels: regiaoStatusRolLabels,
-                datasets: [{
-                    label: 'Membros no Rol',
-                    data: regiaoStatusRolTotais,
-                    backgroundColor: ['rgba(40, 167, 69, 0.35)', 'rgba(220, 53, 69, 0.35)'],
-                    borderColor: ['rgba(40, 167, 69, 1)', 'rgba(220, 53, 69, 1)'],
-                    borderWidth: 1
-                }]
+                datasets: [datasetCircular(
+                    'Membros no Rol',
+                    regiaoStatusRolTotais,
+                    ['rgba(40, 167, 69, 0.35)', 'rgba(220, 53, 69, 0.35)'],
+                    ['rgba(40, 167, 69, 1)', 'rgba(220, 53, 69, 1)']
+                )]
             }
         });
     }
 
-    if (regiaoCrescimentoAcumuladoCanvas) {
+    function renderRegiaoCrescimentoAcumuladoChart() {
+        if (!regiaoCrescimentoAcumuladoCanvas) return;
         regiaoCrescimentoAcumuladoChart = new Chart(regiaoCrescimentoAcumuladoCanvas.getContext('2d'), {
             type: 'line',
             data: {
@@ -1574,45 +1516,56 @@
                     borderWidth: 2
                 }]
             },
-            options: {
-                scales: { y: { beginAtZero: true } },
-                plugins: { datalabels: { display: true, anchor: 'end', align: 'top', offset: 4 } }
-            }
+            options: optionsEixoYComZeroEDatalabels()
         });
     }
 
-    if (regiaoCrescimentoDistritosCanvas) {
+    function renderRegiaoCrescimentoDistritosChart() {
+        if (!regiaoCrescimentoDistritosCanvas) return;
         regiaoCrescimentoDistritosChart = new Chart(regiaoCrescimentoDistritosCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: regiaoCrescimentoDistritosLabels,
-                datasets: [{ label: 'Saldo', data: regiaoCrescimentoDistritosTotais, backgroundColor: 'rgba(0, 123, 255, 0.35)', borderColor: 'rgba(0, 123, 255, 1)', borderWidth: 1 }]
+                datasets: [datasetBar('Saldo', regiaoCrescimentoDistritosTotais, 'rgba(0, 123, 255, 0.35)', 'rgba(0, 123, 255, 1)')]
             },
-            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+            options: optionsHorizontalComZero()
         });
     }
 
-    if (regiaoEntradasIgrejasCanvas) {
+    function renderRegiaoEntradasIgrejasChart() {
+        if (!regiaoEntradasIgrejasCanvas) return;
         regiaoEntradasIgrejasChart = new Chart(regiaoEntradasIgrejasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: regiaoEntradasIgrejasLabels,
-                datasets: [{ label: 'Entradas', data: regiaoEntradasIgrejasTotais, backgroundColor: 'rgba(25, 135, 84, 0.35)', borderColor: 'rgba(25, 135, 84, 1)', borderWidth: 1 }]
+                datasets: [datasetBar('Entradas', regiaoEntradasIgrejasTotais, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)')]
             },
-            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+            options: optionsHorizontalComZero()
         });
     }
 
-    if (regiaoSaidasIgrejasCanvas) {
+    function renderRegiaoSaidasIgrejasChart() {
+        if (!regiaoSaidasIgrejasCanvas) return;
         regiaoSaidasIgrejasChart = new Chart(regiaoSaidasIgrejasCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: regiaoSaidasIgrejasLabels,
-                datasets: [{ label: 'Saidas', data: regiaoSaidasIgrejasTotais, backgroundColor: 'rgba(253, 126, 20, 0.35)', borderColor: 'rgba(253, 126, 20, 1)', borderWidth: 1 }]
+                datasets: [datasetBar('Saidas', regiaoSaidasIgrejasTotais, 'rgba(253, 126, 20, 0.35)', 'rgba(253, 126, 20, 1)')]
             },
-            options: { indexAxis: 'y', scales: { x: { beginAtZero: true } } }
+            options: optionsHorizontalComZero()
         });
     }
+
+    renderRegiaoEvolucaoDistritosChart();
+    renderRegiaoEntradasSaidasChart();
+    renderRegiaoTopDistritosChart();
+    renderRegiaoVinculosChart();
+    renderRegiaoSexoChart();
+    renderRegiaoStatusRolChart();
+    renderRegiaoCrescimentoAcumuladoChart();
+    renderRegiaoCrescimentoDistritosChart();
+    renderRegiaoEntradasIgrejasChart();
+    renderRegiaoSaidasIgrejasChart();
 
     function setLoading(id, isLoading) {
         const el = document.getElementById(id);
@@ -1992,16 +1945,26 @@
         }
     }
 
-    bindRegionalChartFilters('regiao_evolucao_distritos', 'regiao-evolucao');
-    bindRegionalChartFilters('regiao_entradas_saidas', 'regiao-es');
-    bindRegionalChartFilters('regiao_top_distritos', 'regiao-top-distritos');
-    bindRegionalChartFilters('regiao_vinculos', 'regiao-vinculos');
-    bindRegionalChartFilters('regiao_sexo_membros', 'regiao-sexo');
-    bindRegionalChartFilters('regiao_status_rol', 'regiao-status-rol');
-    bindRegionalChartFilters('regiao_crescimento_acumulado', 'regiao-crescimento-acumulado');
-    bindRegionalChartFilters('regiao_crescimento_distritos', 'regiao-crescimento-distritos');
-    bindRegionalChartFilters('regiao_entradas_igrejas', 'regiao-entradas-igrejas');
-    bindRegionalChartFilters('regiao_saidas_igrejas', 'regiao-saidas-igrejas');
+    const regionalChartBindings = [
+        { chart: 'regiao_evolucao_distritos', suffix: 'regiao-evolucao' },
+        { chart: 'regiao_entradas_saidas', suffix: 'regiao-es' },
+        { chart: 'regiao_top_distritos', suffix: 'regiao-top-distritos' },
+        { chart: 'regiao_vinculos', suffix: 'regiao-vinculos' },
+        { chart: 'regiao_sexo_membros', suffix: 'regiao-sexo' },
+        { chart: 'regiao_status_rol', suffix: 'regiao-status-rol' },
+        { chart: 'regiao_crescimento_acumulado', suffix: 'regiao-crescimento-acumulado' },
+        { chart: 'regiao_crescimento_distritos', suffix: 'regiao-crescimento-distritos' },
+        { chart: 'regiao_entradas_igrejas', suffix: 'regiao-entradas-igrejas' },
+        { chart: 'regiao_saidas_igrejas', suffix: 'regiao-saidas-igrejas' },
+    ];
+
+    function inicializarFiltrosGraficosRegionais() {
+        regionalChartBindings.forEach(function (binding) {
+            bindRegionalChartFilters(binding.chart, binding.suffix);
+        });
+    }
+
+    inicializarFiltrosGraficosRegionais();
 
     function abrirFullscreen(targetId) {
         const el = document.getElementById(targetId);
