@@ -35,7 +35,7 @@
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">
-                        {{ $telefoneContato ?? 'Sem informação de telefone' }}
+                        {{ $telefoneContato ? formatStr($telefoneContato, '## (##) #####-####') : 'Sem informação de telefone' }}
                     </span>
                     <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Telefone</span>
                 </p>

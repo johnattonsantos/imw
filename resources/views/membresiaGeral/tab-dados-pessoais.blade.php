@@ -31,7 +31,7 @@
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">
-                        {{ $membro->cpf ?? 'Sem informações' }}
+                        {{ $membro->cpf ? formatStr($membro->cpf, '###.###.###-##') : 'Sem informações' }}
                     </span>
                     <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">CPF</span>
                 </p>
