@@ -213,7 +213,7 @@
                                                             {{ $lancamento->nome }}
                                                         </td>
                                                         <td style="text-align: right; font-weight: bold;">
-                                                            R$ {{ number_format($lancamento->total, 2, ',', '.') }}
+                                                            R$ {{ number_format($somasPorNumeracao[$lancamento->numeracao], 2, ',', '.') }}
                                                         </td>
                                                     </tr>
                                                     @php $numerosJaExibidos[] = $lancamento->numeracao; @endphp
