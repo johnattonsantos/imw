@@ -309,20 +309,22 @@
                         <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                             <h6 class="card-title mb-0">{{ $config['title'] }} (<span id="ano-{{ $config['id'] }}-text">{{ $anoDistrito }}</span>)</h6>
                             <div class="d-flex" style="gap: 8px;">
-                                <select id="distrito-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
-                                    <option value="">Todos distritos</option>
-                                    @foreach($regiaoDistritos as $distrito)
-                                        <option value="{{ $distrito->id }}">{{ $distrito->nome }}</option>
-                                    @endforeach
-                                </select>
-                                <select id="igreja-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
-                                    <option value="">Todas igrejas</option>
-                                </select>
-                                <select id="ano-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 100px;">
-                                    @foreach($anosDisponiveis as $ano)
-                                        <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
-                                    @endforeach
-                                </select>
+                                <div style="display: none;">
+                                    <select id="distrito-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
+                                        <option value="">Todos distritos</option>
+                                        @foreach($regiaoDistritos as $distrito)
+                                            <option value="{{ $distrito->id }}">{{ $distrito->nome }}</option>
+                                        @endforeach
+                                    </select>
+                                    <select id="igreja-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
+                                        <option value="">Todas igrejas</option>
+                                    </select>
+                                    <select id="ano-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 100px;">
+                                        @foreach($anosDisponiveis as $ano)
+                                            <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-{{ $config['id'] }}-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
                             </div>
                         </div>
@@ -841,8 +843,22 @@
     function getChartFromCard(cardEl) {
         if (!cardEl) return null;
         const canvas = cardEl.querySelector('canvas');
-        if (!canvas || typeof Chart.getChart !== 'function') return null;
-        return Chart.getChart(canvas);
+        if (!canvas || typeof Chart === 'undefined') return null;
+
+        if (typeof Chart.getChart === 'function') {
+            const chart = Chart.getChart(canvas);
+            if (chart) return chart;
+        }
+
+        if (Chart.instances) {
+            const instances = Object.values(Chart.instances);
+            const chart = instances.find(function (instance) {
+                return instance && instance.canvas === canvas;
+            });
+            if (chart) return chart;
+        }
+
+        return null;
     }
 
     function exportChartImage(cardId) {

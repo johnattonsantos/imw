@@ -127,7 +127,7 @@ class HomeController extends Controller
                         $sub->where('mm.status', 'A')->where('mr.status', 'A');
                     })->orWhere('mm.status', 'I');
                 })
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->groupBy('ii.id', 'ii.nome')
                 ->orderByDesc('total')
                 ->limit(10)
@@ -155,7 +155,7 @@ class HomeController extends Controller
                             $sub->where('mm.status', 'A')->where('mr.status', 'A');
                         })->orWhere('mm.status', 'I');
                     })
-                    ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                    // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                     ->groupBy(DB::raw($this->membroReferenciaExpr('igreja')), DB::raw('MONTH(mm.created_at)'))
                     ->get();
 
@@ -207,7 +207,7 @@ class HomeController extends Controller
                     DB::raw("SUM(CASE WHEN mm.vinculo = 'V' THEN 1 ELSE 0 END) as visitantes")
                 )
                 ->where('mm.distrito_id', $igrejaId)
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->first();
 
             $distritoVinculosTotais = [
@@ -232,7 +232,7 @@ class HomeController extends Controller
                         $sub->where('mm.status', 'A')->where('mr.status', 'A');
                     })->orWhere('mm.status', 'I');
                 })
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->first();
 
             $distritoSexoTotais = [
@@ -342,7 +342,7 @@ class HomeController extends Controller
                 ->where('mr.status', 'A')
                 ->where('mr.lastrec', 1)
                 ->where('mr.regiao_id', $igrejaId)
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->groupBy('ii.id', 'ii.nome')
                 ->orderByDesc('total')
                 ->limit(10)
@@ -352,38 +352,29 @@ class HomeController extends Controller
             $regiaoTopDistritosTotais = $topDistritos->pluck('total')->map(fn ($v) => (int) $v)->values()->all();
 
             $regiaoSerie = array_fill(1, 12, 0);
-            $evolucaoRegiaoRows = DB::table('membresia_membros as mm')
-                ->join('membresia_rolpermanente as mr', function ($join) {
-                    $join->on('mr.membro_id', '=', 'mm.id')->where('mr.lastrec', 1);
-                })
-                ->select(
-                    DB::raw('MONTH(mm.created_at) as mes'),
-                    DB::raw('COUNT(mm.id) as total')
-                )
-                ->where('mm.vinculo', 'M')
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.regiao_id', $igrejaId)
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
-                ->groupBy(DB::raw('MONTH(mm.created_at)'))
-                ->get();
+            // $evolucaoRegiaoRows = DB::table('membresia_membros as mm')
+            //     ->join('membresia_rolpermanente as mr', function ($join) {
+            //         $join->on('mr.membro_id', '=', 'mm.id')->where('mr.lastrec', 1);
+            //     })
+            //     ->select(
+            //         DB::raw('MONTH(mm.created_at) as mes'),
+            //         DB::raw('COUNT(mm.id) as total')
+            //     )
+                // ->where('mm.vinculo', 'M')
+                // ->where('mm.status', 'A')
+                // ->where('mr.status', 'A')
+                // ->where('mr.regiao_id', $igrejaId)
+            //     // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+            //     ->groupBy(DB::raw('MONTH(mm.created_at)'))
+            //     ->get();
 
-            foreach ($evolucaoRegiaoRows as $row) {
-                $regiaoSerie[(int) $row->mes] = (int) $row->total;
-            }
-
-            $regiaoEvolucaoDatasets[] = [
-                'label' => 'Região',
-                'data' => $this->mapMonthlyValuesToEcclesiasticalOrder($regiaoSerie),
-            ];
+            // foreach ($evolucaoRegiaoRows as $row) {
+            //     $regiaoSerie[(int) $row->mes] = (int) $row->total;
+            // }
 
             $entradasRows = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->select(DB::raw('MONTH(mr.dt_recepcao) as mes'), DB::raw('COUNT(mr.id) as total'))
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->whereBetween('mr.dt_recepcao', $this->ecclesiasticalDateRange($anoDistrito))
                 ->groupBy(DB::raw('MONTH(mr.dt_recepcao)'))
                 ->pluck('total', 'mes')
@@ -393,12 +384,8 @@ class HomeController extends Controller
             }
 
             $saidasRows = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->select(DB::raw('MONTH(mr.dt_exclusao) as mes'), DB::raw('COUNT(mr.id) as total'))
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->whereNotNull('mr.dt_exclusao')
                 ->whereBetween('mr.dt_exclusao', $this->ecclesiasticalDateRange($anoDistrito))
                 ->groupBy(DB::raw('MONTH(mr.dt_exclusao)'))
@@ -407,6 +394,17 @@ class HomeController extends Controller
             foreach ($saidasRows as $mes => $total) {
                 $regiaoSaidasPorMes[(int) $mes] = (int) $total;
             }
+
+            foreach ($this->ecclesiasticalMonthOrder() as $mes) {
+                $entradas = (int) ($regiaoEntradasPorMes[$mes] ?? 0);
+                $saidas = (int) ($regiaoSaidasPorMes[$mes] ?? 0);
+                $regiaoSerie[$mes] = $entradas - $saidas;
+            }
+
+            $regiaoEvolucaoDatasets[] = [
+                'label' => 'Região',
+                'data' => $this->mapMonthlyValuesToEcclesiasticalOrder($regiaoSerie),
+            ];
 
             $membrosAtivos = DB::table('membresia_membros as mm')
                 ->join('membresia_rolpermanente as mr', function ($join) {
@@ -417,7 +415,7 @@ class HomeController extends Controller
                 ->where('mr.status', 'A')
                 ->where('mr.lastrec', 1)
                 ->where('mr.regiao_id', $igrejaId)
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->count();
 
             $vinculoAgg = DB::table('membresia_membros as mm')
@@ -426,7 +424,7 @@ class HomeController extends Controller
                     DB::raw("SUM(CASE WHEN mm.vinculo = 'V' THEN 1 ELSE 0 END) as visitantes")
                 )
                 ->where('mm.regiao_id', $igrejaId)
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->first();
             $regiaoVinculosTotais = [
                 (int) $membrosAtivos,
@@ -448,7 +446,7 @@ class HomeController extends Controller
                 ->where('mm.status', 'A')
                 ->where('mr.status', 'A')
                 ->where('mr.lastrec', 1)
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->first();
             $regiaoSexoTotais = [
                 (int) ($sexoAgg->masculino ?? 0),
@@ -470,7 +468,7 @@ class HomeController extends Controller
                 ->where('mr.status', 'A')
                 ->where('mr.lastrec', 1)
                 ->where('mr.regiao_id', $igrejaId)
-                ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
+                // ->whereBetween('mm.created_at', $this->ecclesiasticalDateRange($anoDistrito))
                 ->groupBy('mm.funcao_eclesiastica_id', 'mfe.descricao')
                 ->orderByDesc('total')
                 ->get();
@@ -489,16 +487,12 @@ class HomeController extends Controller
             }
 
             $rankingCrescimento = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mr.distrito_id')
                 ->select(
                     'ii.nome',
                     DB::raw($this->ecclesiasticalNetCountSql('mr.dt_recepcao', 'mr.dt_exclusao', $anoDistrito) . ' as total')
                 )
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->groupBy('ii.nome')
                 ->orderByDesc('total')
                 ->limit(10)
@@ -507,16 +501,12 @@ class HomeController extends Controller
             $regiaoCrescimentoDistritosTotais = $rankingCrescimento->pluck('total')->map(fn ($v) => (int) $v)->values()->all();
 
             $rankingEntradas = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mr.igreja_id')
                 ->select(
                     'ii.nome',
                     DB::raw($this->ecclesiasticalCountSql('mr.dt_recepcao', $anoDistrito) . ' as total')
                 )
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->groupBy('ii.nome')
                 ->orderByDesc('total')
                 ->limit(10)
@@ -525,16 +515,12 @@ class HomeController extends Controller
             $regiaoEntradasIgrejasTotais = $rankingEntradas->pluck('total')->map(fn ($v) => (int) $v)->values()->all();
 
             $rankingSaidas = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mr.igreja_id')
                 ->select(
                     'ii.nome',
                     DB::raw($this->ecclesiasticalCountSql('mr.dt_exclusao', $anoDistrito) . ' as total')
                 )
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'I')
-                ->where('mr.status', 'I')
-                ->where('mr.lastrec', 1)
                 ->groupBy('ii.nome')
                 ->orderByDesc('total')
                 ->limit(10)
@@ -1147,12 +1133,8 @@ class HomeController extends Controller
             $saidasPorMes = array_fill(1, 12, 0);
 
             $entradasRows = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->select(DB::raw('MONTH(mr.dt_recepcao) as mes'), DB::raw('COUNT(mr.id) as total'))
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->whereBetween('mr.dt_recepcao', $this->ecclesiasticalDateRange($ano))
                 ->when($distritoRegiaoId !== null, fn ($query) => $query->where('mr.distrito_id', $distritoRegiaoId))
                 ->when($igrejaRegiaoId !== null, fn ($query) => $query->where('mr.igreja_id', $igrejaRegiaoId))
@@ -1164,12 +1146,8 @@ class HomeController extends Controller
             }
 
             $saidasRows = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->select(DB::raw('MONTH(mr.dt_exclusao) as mes'), DB::raw('COUNT(mr.id) as total'))
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->whereNotNull('mr.dt_exclusao')
                 ->whereBetween('mr.dt_exclusao', $this->ecclesiasticalDateRange($ano))
                 ->when($distritoRegiaoId !== null, fn ($query) => $query->where('mr.distrito_id', $distritoRegiaoId))
@@ -1345,12 +1323,8 @@ class HomeController extends Controller
             $crescimentoAcumulado = array_fill(1, 12, 0);
 
             $entradasRows = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->select(DB::raw('MONTH(mr.dt_recepcao) as mes'), DB::raw('COUNT(mr.id) as total'))
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->whereBetween('mr.dt_recepcao', $this->ecclesiasticalDateRange($ano))
                 ->when($distritoRegiaoId !== null, fn ($query) => $query->where('mr.distrito_id', $distritoRegiaoId))
                 ->when($igrejaRegiaoId !== null, fn ($query) => $query->where('mr.igreja_id', $igrejaRegiaoId))
@@ -1362,12 +1336,8 @@ class HomeController extends Controller
             }
 
             $saidasRows = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->select(DB::raw('MONTH(mr.dt_exclusao) as mes'), DB::raw('COUNT(mr.id) as total'))
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->whereNotNull('mr.dt_exclusao')
                 ->whereBetween('mr.dt_exclusao', $this->ecclesiasticalDateRange($ano))
                 ->when($distritoRegiaoId !== null, fn ($query) => $query->where('mr.distrito_id', $distritoRegiaoId))
@@ -1398,16 +1368,14 @@ class HomeController extends Controller
 
         if ($chart === 'regiao_crescimento_distritos') {
             $rankingCrescimento = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mr.distrito_id')
                 ->select(
                     'ii.nome',
                     DB::raw($this->ecclesiasticalNetCountSql('mr.dt_recepcao', 'mr.dt_exclusao', $ano) . ' as total')
                 )
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
+                ->when($distritoRegiaoId !== null, fn ($query) => $query->where('mr.distrito_id', $distritoRegiaoId))
+                ->when($igrejaRegiaoId !== null, fn ($query) => $query->where('mr.igreja_id', $igrejaRegiaoId))
                 ->groupBy('ii.nome')
                 ->orderByDesc('total')
                 ->limit(10)
@@ -1426,16 +1394,12 @@ class HomeController extends Controller
 
         if ($chart === 'regiao_entradas_igrejas') {
             $rankingEntradas = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mr.igreja_id')
                 ->select(
                     'ii.nome',
                     DB::raw($this->ecclesiasticalCountSql('mr.dt_recepcao', $ano) . ' as total')
                 )
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'A')
-                ->where('mr.status', 'A')
-                ->where('mr.lastrec', 1)
                 ->when($distritoRegiaoId !== null, fn ($query) => $query->where('mr.distrito_id', $distritoRegiaoId))
                 ->when($igrejaRegiaoId !== null, fn ($query) => $query->where('mr.igreja_id', $igrejaRegiaoId))
                 ->groupBy('ii.nome')
@@ -1456,16 +1420,12 @@ class HomeController extends Controller
 
         if ($chart === 'regiao_saidas_igrejas') {
             $rankingSaidas = DB::table('membresia_rolpermanente as mr')
-                ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
                 ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mr.igreja_id')
                 ->select(
                     'ii.nome',
                     DB::raw($this->ecclesiasticalCountSql('mr.dt_exclusao', $ano) . ' as total')
                 )
                 ->where('mr.regiao_id', $igrejaId)
-                ->where('mm.status', 'I')
-                ->where('mr.status', 'I')
-                ->where('mr.lastrec', 1)
                 ->when($distritoRegiaoId !== null, fn ($query) => $query->where('mr.distrito_id', $distritoRegiaoId))
                 ->when($igrejaRegiaoId !== null, fn ($query) => $query->where('mr.igreja_id', $igrejaRegiaoId))
                 ->groupBy('ii.nome')
