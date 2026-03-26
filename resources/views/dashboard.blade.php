@@ -104,6 +104,23 @@
         align-items: center;
         justify-content: center;
     }
+    .regional-chart-filters {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: nowrap;
+    }
+    .regional-chart-filters .form-control {
+        width: 160px !important;
+    }
+    .regional-chart-filters .form-control[id^="ano-"] {
+        width: 100px !important;
+    }
+    @media (max-width: 1200px) {
+        .regional-chart-filters {
+            flex-wrap: wrap;
+        }
+    }
 </style>
 @endsection
 
@@ -303,13 +320,20 @@
 
     <div class="row flex-fill mt-2">
     @foreach($regionChartConfigs as $config)
+            @php
+                $showRegionalFilters = in_array($config['id'], [
+                    'regiao-evolucao',
+                    'regiao-es',
+                    'regiao-crescimento-acumulado',
+                ], true);
+            @endphp
             <div class="col-md-6 mt-4">
                 <div class="card h-100" id="card-{{ $config['id'] }}-chart">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
                             <h6 class="card-title mb-0">{{ $config['title'] }} (<span id="ano-{{ $config['id'] }}-text">{{ $anoDistrito }}</span>)</h6>
                             <div class="d-flex" style="gap: 8px;">
-                                <div style="display: none;">
+                                <div class="regional-chart-filters @if(!$showRegionalFilters) d-none @endif">
                                     <select id="distrito-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
                                         <option value="">Todos distritos</option>
                                         @foreach($regiaoDistritos as $distrito)
