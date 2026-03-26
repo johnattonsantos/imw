@@ -288,12 +288,12 @@
 
     @php
         $regionChartConfigs = [
-            ['id' => 'regiao-evolucao', 'title' => 'Gráfico 1 - Evolução de Membros (Ativos + Inativos) por Distrito', 'canvas' => 'regiaoEvolucaoDistritosChart'],
+            ['id' => 'regiao-evolucao', 'title' => 'Gráfico 1 - Evolução de Membros Ativos da Região', 'canvas' => 'regiaoEvolucaoDistritosChart'],
             ['id' => 'regiao-es', 'title' => 'Gráfico 2 - Entradas x Saídas da Região', 'canvas' => 'regiaoEntradasSaidasChart'],
-            ['id' => 'regiao-top-distritos', 'title' => 'Gráfico 3 - Top 10 Distritos por Total de Membros (Ativos + Inativos)', 'canvas' => 'regiaoTopDistritosChart'],
-            ['id' => 'regiao-vinculos', 'title' => 'Gráfico 4 - Distribuição Regional por Vínculo', 'canvas' => 'regiaoVinculosChart'],
-            ['id' => 'regiao-sexo', 'title' => 'Gráfico 5 - Membros (Ativos + Inativos) por Sexo', 'canvas' => 'regiaoSexoChart'],
-            ['id' => 'regiao-status-rol', 'title' => 'Gráfico 6 - Situação do Rol Regional', 'canvas' => 'regiaoStatusRolChart'],
+            ['id' => 'regiao-top-distritos', 'title' => 'Gráfico 3 - Top 10 Distritos por Total de Membros Ativos', 'canvas' => 'regiaoTopDistritosChart'],
+            ['id' => 'regiao-vinculos', 'title' => 'Gráfico 4 - Distribuição Regional por Vínculo Ativo', 'canvas' => 'regiaoVinculosChart'],
+            ['id' => 'regiao-sexo', 'title' => 'Gráfico 5 - Membros Ativos por Sexo', 'canvas' => 'regiaoSexoChart'],
+            ['id' => 'regiao-status-rol', 'title' => 'Gráfico 6 - Funções Eclesiásticas dos Membros', 'canvas' => 'regiaoStatusRolChart'],
             ['id' => 'regiao-crescimento-acumulado', 'title' => 'Gráfico 7 - Crescimento Líquido Acumulado', 'canvas' => 'regiaoCrescimentoAcumuladoChart'],
             ['id' => 'regiao-crescimento-distritos', 'title' => 'Gráfico 8 - Ranking de Crescimento por Distrito', 'canvas' => 'regiaoCrescimentoDistritosChart'],
             ['id' => 'regiao-entradas-igrejas', 'title' => 'Gráfico 9 - Ranking de Entradas por Igreja', 'canvas' => 'regiaoEntradasIgrejasChart'],
@@ -484,7 +484,7 @@
         <div class="card h-100" id="card-distrito-sexo-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 5 - Membros (Ativos + Inativos) por Sexo (<span id="ano-distrito-sexo-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">Gráfico 5 - Membros Ativos por Sexo (<span id="ano-distrito-sexo-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-sexo-select" class="form-control form-control-sm" style="width: 220px;">
                             <option value="">Todas igrejas</option>
@@ -515,7 +515,7 @@
         <div class="card h-100" id="card-distrito-status-rol-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 6 - Situação do Rol (<span id="ano-distrito-status-rol-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">Gráfico 6 - Funções Eclesiásticas dos Membros (<span id="ano-distrito-status-rol-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-status-rol-select" class="form-control form-control-sm" style="width: 220px;">
                             <option value="">Todas igrejas</option>
@@ -1001,7 +1001,7 @@
     const regiaoVinculosTotais = @json($regiaoVinculosTotais);
     const regiaoSexoLabels = ['Masculino', 'Feminino', 'Nao informado'];
     const regiaoSexoTotais = @json($regiaoSexoTotais);
-    const regiaoStatusRolLabels = ['Ativos', 'Inativos'];
+    const regiaoStatusRolLabels = @json($regiaoStatusRolLabels);
     const regiaoStatusRolTotais = @json($regiaoStatusRolTotais);
     const regiaoCrescimentoAcumulado = @json(array_values($regiaoCrescimentoAcumulado));
     const regiaoCrescimentoDistritosLabels = @json($regiaoCrescimentoDistritosLabels);
@@ -1237,7 +1237,7 @@
     function optionsEixoYComZeroEDatalabels() {
         return {
             scales: { y: { beginAtZero: true } },
-            plugins: { datalabels: { display: true, anchor: 'end', align: 'top', offset: 4 } }
+            plugins: { datalabels: { display: false } }
         };
     }
 
@@ -1251,6 +1251,18 @@
 
     function datasetCircular(label, data, backgroundColor, borderColor) {
         return { label, data, backgroundColor, borderColor, borderWidth: 1 };
+    }
+
+    function buildPieColors(total) {
+        const safeTotal = Math.max(1, Number(total) || 0);
+        const backgrounds = [];
+        const borders = [];
+        for (let i = 0; i < safeTotal; i++) {
+            const hue = Math.round((360 / safeTotal) * i);
+            backgrounds.push(`hsla(${hue}, 70%, 55%, 0.35)`);
+            borders.push(`hsla(${hue}, 70%, 45%, 1)`);
+        }
+        return { backgrounds, borders };
     }
 
     function renderDistritoEvolucaoChart() {
@@ -1445,7 +1457,7 @@
             type: 'bar',
             data: {
                 labels: regiaoTopDistritosLabels,
-                datasets: [datasetBar('Membros (Ativos + Inativos)', regiaoTopDistritosTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
+                datasets: [datasetBar('Membros Ativos', regiaoTopDistritosTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1486,15 +1498,16 @@
 
     function renderRegiaoStatusRolChart() {
         if (!regiaoStatusRolCanvas) return;
+        const pieColors = buildPieColors(regiaoStatusRolLabels.length);
         regiaoStatusRolChart = new Chart(regiaoStatusRolCanvas.getContext('2d'), {
             type: 'pie',
             data: {
                 labels: regiaoStatusRolLabels,
                 datasets: [datasetCircular(
-                    'Membros no Rol',
+                    'Funções Eclesiásticas',
                     regiaoStatusRolTotais,
-                    ['rgba(40, 167, 69, 0.35)', 'rgba(220, 53, 69, 0.35)'],
-                    ['rgba(40, 167, 69, 1)', 'rgba(220, 53, 69, 1)']
+                    pieColors.backgrounds,
+                    pieColors.borders
                 )]
             }
         });
@@ -1683,6 +1696,11 @@
                     ...(cfg.chartInstance.data.datasets[idx] || {}),
                     ...dataset,
                 }));
+                if (chart === 'regiao_status_rol' && cfg.chartInstance.data.datasets.length > 0) {
+                    const pieColors = buildPieColors((payload.labels || []).length);
+                    cfg.chartInstance.data.datasets[0].backgroundColor = pieColors.backgrounds;
+                    cfg.chartInstance.data.datasets[0].borderColor = pieColors.borders;
+                }
             }
             cfg.chartInstance.update();
 
