@@ -132,7 +132,7 @@
                                 $perfisInstituicao = $user->perfilUser;
                                 @endphp
 
-                                @foreach ($perfisInstituicao as $index => $perfilUser)
+                                @forelse ($perfisInstituicao as $index => $perfilUser)
                                 <tr>
                                     <td>
                                         <div class="form-group">
@@ -161,7 +161,32 @@
                                         <button type="button" class="btn btn-danger btn-rounded btn-remove"><i class="fas fa-trash-alt"></i></button>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @empty
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <select class="form-control" name="perfil_id[]">
+                                                <option value="">Selecione um perfil</option>
+                                                @foreach ($perfis as $perfil)
+                                                <option value="{{ $perfil->id }}">{{ $perfil->nome }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control instituicao-nome" name="instituicao_nome[]" readonly value="">
+                                            <input type="hidden" name="instituicao_id[]" value="">
+                                            <button type="button" class="btn btn-secondary abrirModalInstituicoes" data-bs-toggle="modal" data-bs-target="#modalInstituicoes">Selecionar
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-rounded btn-add"><i class="fas fa-plus"></i></button>
+                                        <button type="button" class="btn btn-danger btn-rounded btn-remove"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
