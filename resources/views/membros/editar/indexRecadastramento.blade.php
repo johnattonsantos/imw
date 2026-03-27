@@ -34,7 +34,7 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-    <form method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
       @csrf
     <div class="row">
       <div class="col-md-12">
@@ -152,6 +152,76 @@
           }
 
           $('form').on('submit', function (event) {
+              const form = this;
+
+              const invalidDadosPessoais = Array.from(form.querySelectorAll('#border-top-dados-pessoal [required]'))
+                  .filter(function (field) {
+                      return !field.disabled && !field.checkValidity();
+                  });
+
+              const abaContatoAtiva = $('#border-top-contato').hasClass('active') || $('#border-top-contato').hasClass('show');
+
+              if (invalidDadosPessoais.length > 0 && abaContatoAtiva) {
+                  event.preventDefault();
+
+                  $('#border-top-dados-pessoais').tab('show');
+
+                  const nomesCampos = invalidDadosPessoais.map(function (field) {
+                      const fieldId = field.id;
+                      if (!fieldId) return (field.name || 'Campo obrigatório').replace(/\[\]/g, '');
+
+                      const label = document.querySelector('label[for="' + fieldId + '"]');
+                      if (!label) return fieldId;
+
+                      return label.textContent.replace('*', '').trim();
+                  });
+
+                  const camposUnicos = [...new Set(nomesCampos)].join(', ');
+                  toastr.warning('Preencha os campos obrigatórios em Dados Pessoais: ' + camposUnicos);
+
+                  setTimeout(function () {
+                      invalidDadosPessoais[0].focus();
+                  }, 200);
+
+                  return;
+              }
+
+              const invalidContatos = Array.from(form.querySelectorAll('#border-top-contato [required]'))
+                  .filter(function (field) {
+                      return !field.disabled && !field.checkValidity();
+                  });
+
+              if (invalidContatos.length > 0) {
+                  event.preventDefault();
+
+                  $('#border-top-contatos').tab('show');
+
+                  const nomesCamposContato = invalidContatos.map(function (field) {
+                      const fieldId = field.id;
+                      if (!fieldId) return (field.name || 'Campo obrigatório').replace(/\[\]/g, '');
+
+                      const label = document.querySelector('label[for="' + fieldId + '"]');
+                      if (!label) return fieldId;
+
+                      return label.textContent.replace('*', '').trim();
+                  });
+
+                  const camposUnicosContato = [...new Set(nomesCamposContato)].join(', ');
+                  toastr.warning('Preencha os campos obrigatórios em Contatos: ' + camposUnicosContato);
+
+                  setTimeout(function () {
+                      invalidContatos[0].focus();
+                  }, 200);
+
+                  return;
+              }
+
+              if (!form.checkValidity()) {
+                  event.preventDefault();
+                  form.reportValidity();
+                  return;
+              }
+
               if (!validateFormacaoEclesiastica() || !validateMinisterialDates()) {
                   event.preventDefault();
                   toastr.warning('Por favor, corrija os erros de data antes de enviar.');
