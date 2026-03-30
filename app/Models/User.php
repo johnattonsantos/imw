@@ -32,6 +32,7 @@ class User extends Authenticatable implements Auditable
         'cpf',
         'telefone',
         'pessoa_id',
+        'regiao_id',
     ];
 
     /**
@@ -76,6 +77,11 @@ class User extends Authenticatable implements Auditable
     public function pessoa(): HasOne
     {
         return $this->hasOne(PessoasPessoa::class, 'id', 'pessoa_id');
+    }
+
+    public function regiao()
+    {
+        return $this->belongsTo(InstituicoesInstituicao::class, 'regiao_id');
     }
 
     public function perfis()

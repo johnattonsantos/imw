@@ -20,7 +20,13 @@ class PerfilRegraTableSeeder extends Seeder
        /*  $perfilAdminIgreja = Perfil::where('nome', 'Administrador - Igreja')->first();
         $perfilPastorIgreja = Perfil::where('nome', 'Pastor - Igreja')->first();
         $perfilTesoureiroIgreja = Perfil::where('nome', 'Tesoureiro - Igreja')->first(); */
-        $perfilAdministradordoSistema = Perfil::where('nome', 'Administrador do Sistema')->first();
+        $perfilAdministradordoSistema = Perfil::query()
+            ->get()
+            ->first(fn ($perfil) => Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_ADMINISTRADOR_SISTEMA));
+
+        $perfilCrie = Perfil::query()
+            ->get()
+            ->first(fn ($perfil) => Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_CRIE));
 
         $regras = Regra::all();
 
@@ -33,6 +39,25 @@ class PerfilRegraTableSeeder extends Seeder
                     'perfil_id' => $perfilAdministradordoSistema->id,
                     'regra_id' => $regra->id
                 ]);
+            }
+        }
+
+        if ($perfilCrie) {
+            $regrasCrie = Regra::whereIn('nome', [
+                'admin-index',
+                'usuarios-index',
+                'usuarios-cadastrar',
+                'usuarios-atualizar',
+                'usuarios-editar',
+                'usuarios-excluir',
+                'usuarios-pesquisar',
+            ])->get();
+
+            foreach ($regrasCrie as $regra) {
+                DB::table('perfil_regra')->updateOrInsert(
+                    ['perfil_id' => $perfilCrie->id, 'regra_id' => $regra->id],
+                    []
+                );
             }
         }
 
