@@ -4,7 +4,7 @@
 <x-breadcrumb :breadcrumbs="[
     ['text' => 'Home', 'url' => '/', 'active' => false],
     ['text' => 'Relatórios', 'url' => '#', 'active' => false],
-    ['text' => 'Relatório Membros por Ministério', 'url' => '#', 'active' => true]
+    ['text' => 'Relatório Membros por Função Ministerial', 'url' => '#', 'active' => true]
 ]"></x-breadcrumb>
 @endsection
 
@@ -25,7 +25,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Membros por Ministério</h4>
+              <h4>Membros por Função Ministerial</h4>
           </div>
       </div>
   </div>
@@ -98,7 +98,7 @@
           <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4 style="text-transform: uppercase">RELATÓRIO MEMBROS POR MINISTÉRIO - {{ $membroEclesiastico->nome }} - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}</h4>
+                    <h4 style="text-transform: uppercase">RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - {{ $membroEclesiastico->nome }} - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}</h4>
                 </div>
             </div>
           </div>
@@ -147,7 +147,7 @@
           <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4 style="text-transform: uppercase">RELATÓRIO MEMBROS POR MINISTÉRIO - TODOS - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}</h4>
+                    <h4 style="text-transform: uppercase">RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - TODOS - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}</h4>
                 </div>
             </div>
           </div>
@@ -237,14 +237,14 @@
               className: 'btn btn-primary btn-rounded',
               text: '<i class="fas fa-file-excel"></i> Excel',
               titleAttr: 'Excel',
-              title: "RELATÓRIO MEMBROS POR MINISTÉRIO - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}"
+              title: "RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}"
             },
             {
               extend: 'pdf',
               className: 'btn btn-primary btn-rounded',
               text: '<i class="fas fa-file-pdf"></i> PDF',
               titleAttr: 'PDF',
-              title: "RELATÓRIO MEMBROS POR MINISTÉRIO - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}",
+              title: "RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}",
               pageSize: 'A4',
                 exportOptions: {
                     columns: ':visible',
@@ -257,7 +257,7 @@
               className: 'btn btn-primary btn-rounded',
               text: '<i class="fas fa-print"></i> Imprimir',
               titleAttr: 'Imprimir',
-              title: "RELATÓRIO MEMBROS POR MINISTÉRIO - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}",
+              title: "RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}",
               customize: function ( win ) {
                 $(win.document.body)
                   .css( 'font-size', '14pt' )

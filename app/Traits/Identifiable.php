@@ -19,6 +19,7 @@ use App\Models\MembresiaRolPermanente;
 use App\Models\MembresiaSituacao;
 use App\Models\PessoasPessoa;
 use App\Models\PessoaStatus;
+use App\Models\MembresiaTipoAtuacao;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -257,6 +258,13 @@ trait Identifiable
     public static function fetchInstituicao(int|null $instituicaoId)
     {
         return InstituicoesInstituicao::where('id', $instituicaoId)->first();
+    }
+    
+     public static function fetchFuncaoMinisterial()
+    {
+        $data = MembresiaTipoAtuacao::get();
+           
+        return $data;
     }
 
 }

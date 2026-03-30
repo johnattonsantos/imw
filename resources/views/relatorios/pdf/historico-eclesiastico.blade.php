@@ -52,7 +52,7 @@
     @if($membro_unico)
         @isset($historicoEclesiastico)
     
-            <h2>MEMBROS POR MINISTÉRIO - {{ $membroEclesiastico->nome }}</h2>
+            <h2>MEMBROS POR FUNÇÃO MINISTERIAL - {{ $membroEclesiastico->nome }}</h2>
 
             <table>
                 <thead>
@@ -87,7 +87,7 @@
         @endisset
     @else
         @isset($todos_membros)
-        <h2>MEMBROS POR MINISTÉRIO - TODOS MEMBROS</h2>
+        <h2>MEMBROS POR FUNÇÃO MINISTERIAL - TODOS MEMBROS</h2>
 
             <table>
                 <thead>

@@ -159,9 +159,14 @@
                                  <a href="{{ route('relatorio.aniversariantes') }}">Aniversariantes</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/membros-por-ministerios') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-historico-eclesiastico'))
+                                 <a href="{{ route('relatorio.membros-por-ministerios') }}">Membros por Ministérios</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('secretaria/relatorio/historico-eclesiastico') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-historico-eclesiastico'))
-                                 <a href="{{ route('relatorio.historico-eclesiastico') }}">Membros por Ministério</a>
+                                 <a href="{{ route('relatorio.historico-eclesiastico') }}">Membros por Função Ministerial</a>
                              @endif
                          </li>
                          <li {!! Request::is('secretaria/relatorio/membros-disciplinados') ? 'class="active"' : '' !!}>
@@ -433,8 +438,8 @@
                          </li>
                          <li {!! Request::is('distrito/relatorio/membrosministerio') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-membros-ministerio'))
-                                 <a href="{{ route('distrito.relatorio.membrosministerio') }}">Membros por
-                                     Ministério</a>
+                                <a href="{{ route('distrito.relatorio.membrosministerio') }}">Membros por
+                                    Ministério</a>
                              @endif
                          </li>
                          <li {!! Request::is('distrito/relatorio/quantidademembros') ? 'class="active"' : '' !!}>
@@ -601,8 +606,8 @@
                          </li>
                          <li {!! Request::is('regiao/relatorio/membrosministerio') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
-                                 <a href="{{ route('regiao.relatorio.membrosministerio') }}">Membros por
-                                     Ministério</a>
+                                <a href="{{ route('regiao.relatorio.membrosministerio') }}">Membros por
+                                    Ministério</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/relatorio/quantidademembros') ? 'class="active"' : '' !!}>

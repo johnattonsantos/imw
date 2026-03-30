@@ -518,6 +518,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('secretaria/relatorio')->name('relatorio.')->controller(RelatorioController::class)->group(function () {
             Route::get('/membresia', 'membresia')->name('membresia')->middleware('seguranca:relatorio-membresia');
             Route::get('/aniversariantes', 'aniversariantes')->name('aniversariantes')->middleware('seguranca:relatorio-aniversariantes');
+            Route::get('/membros-por-ministerios', 'membrosPorMinisterios')->name('membros-por-ministerios')->middleware('seguranca:relatorio-historico-eclesiastico');
             Route::get('/historico-eclesiastico', 'historicoEclesiastico')->name('historico-eclesiastico')->middleware('seguranca:relatorio-historico-eclesiastico');
             Route::get('/membros-disciplinados', 'membrosDisciplinados')->name('membros-disciplinados')->middleware('seguranca:relatorio-membro-disciplinado');
             Route::get('/funcao-eclesiastica', 'funcaoEclesiastica')->name('funcao-eclesiastica')->middleware('seguranca:relatorio-funcao-eclesiastica');

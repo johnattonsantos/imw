@@ -7,6 +7,9 @@ use App\Services\ServiceRelatorio\IdentificaDadosRelatorioFuncoesEclesiasticasSe
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioHistoricoEclesiasticoService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembresiaService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembrosDisciplinadosService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembrosPorMinisterioService;
+use App\Models\MembresiaMembro;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\PDF;
 
@@ -85,6 +88,24 @@ class RelatorioController extends Controller
         } catch (\Exception $e) {
             dd($e);
             return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membros disciplinados');
+        }
+    }
+
+    public function membrosPorMinisterios(Request $request)
+    {
+        try {
+            $data = app(IdentificaDadosRelatorioMembrosPorMinisterioService::class)->execute($request->all());      
+            $ministerioSelecionado = $data['ministerioSelecionado'];
+            return view('relatorios.membros-por-ministerios', [
+                'ministerios' => $data['ministerios'],
+                'ministerioSelecionado' => $ministerioSelecionado,
+                'ministerioNome' => $data['ministerioNome'],
+                'integrantes' => $data['integrantes'],
+                'quantidadeIntegrantes' => $data['quantidadeIntegrantes'],
+            ]);
+        } catch (\Exception $e) { 
+            dd($e);
+            return redirect()->back()->with('error', 'Não foi possível abrir a página de Membros por Ministérios.');
         }
     }
 
