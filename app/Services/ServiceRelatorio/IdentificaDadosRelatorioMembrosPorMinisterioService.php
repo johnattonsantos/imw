@@ -16,8 +16,8 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
         
        $ministerios = [
                 'todos' => 'Todos os Ministérios',
-                'kids' => 'Kids (até 11 anos)',
-                'conexao' => 'Conexão (até 23 anos)',
+                'kids' => 'Kid (até 9 anos)',
+                'conexao' => 'Conexão (até 13 anos)',
                 'fire' => 'Fire (até 17 anos)',
                 'move' => 'Move (até 30 anos)',
                 'mulheres' => 'Mulheres (todas as idades)',
@@ -48,11 +48,11 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                     break;
                 case 'kids':
                     $query->whereNotNull('mm.data_nascimento')
-                        ->whereRaw("$idadeExpr <= 11");
+                        ->whereRaw("$idadeExpr <= 9");
                     break;
                 case 'conexao':
                     $query->whereNotNull('mm.data_nascimento')
-                        ->whereRaw("$idadeExpr <= 23");
+                        ->whereRaw("$idadeExpr <= 13");
                     break;
                 case 'fire':
                     $query->whereNotNull('mm.data_nascimento')
