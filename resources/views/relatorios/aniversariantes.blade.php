@@ -122,9 +122,6 @@
             <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
               <x-bx-search /> Buscar 
             </button>
-            <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="Gerar Relatório PDF" class="btn btn-secondary btn ml-4">
-              <x-bx-file /> Relatório
-            </button>
           </div>
         </div>
       </form>
@@ -200,10 +197,6 @@
     $('#filter_form').removeAttr('target');
   })
   
-  $('#btn_relatorio').click(function () {
-    $('#filter_form').attr('target', '_blank');
-  })
-
   new DataTable('#aniversariantes', {
     layout: {
         //top1: 'searchBuilder',

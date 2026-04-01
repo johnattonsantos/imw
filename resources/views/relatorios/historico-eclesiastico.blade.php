@@ -32,17 +32,16 @@
     <div class="widget-content widget-content-area">
       <form class="form-vertical" id="filter_form">
         
-        {{-- Congregação --}}
+        {{-- Função Ministerial --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Membro:</label>
+            <label class="control-label">Função Ministerial:</label>
           </div>
           <div class="col-lg-6">
-            <select class="form-control select2 @error('membro_id') is-invalid @enderror" data-bs-toggle="select2" name="membro_id" id="membro_id">              
-              <!-- <option value="" {{ old('membro_id') == '' ? 'selected' : '' }} hidden disabled>selecione</option> -->
+            <select class="form-control select2 @error('funcao_ministerial_id') is-invalid @enderror" data-bs-toggle="select2" name="funcao_ministerial_id" id="funcao_ministerial_id">
               <option value="todos" {{ $select == 'todos' ? 'selected' : '' }} >TODOS</option>
-              @foreach ($membros as $membro)
-                <option value="{{ $membro->id }}" {{ $select == $membro->id  ? 'selected' : '' }} >{{ $membro->nome }}</option>
+              @foreach ($funcoes as $funcao)
+                <option value="{{ $funcao->id }}" {{ (string) $select === (string) $funcao->id ? 'selected' : '' }} >{{ $funcao->descricao }}</option>
               @endforeach
             </select>
           </div>
@@ -79,9 +78,6 @@
             <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
               <x-bx-search /> Buscar 
             </button>
-            <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="Gerar Relatório PDF" class="btn btn-secondary btn ml-4">
-              <x-bx-file /> Relatório
-            </button>
           </div>
         </div>
       </form>
@@ -91,14 +87,13 @@
 
 <!-- TABELA -->
 
-@if($membro_unico)
-  @isset($historicoEclesiastico)
+@isset($historicoEclesiastico)
     <div class="col-lg-12 col-12 layout-spacing">
       <div class="statbox widget box box-shadow">
           <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4 style="text-transform: uppercase">RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - {{ $membroEclesiastico->nome }} - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}</h4>
+                    <h4 style="text-transform: uppercase">RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - {{ $funcaoMinisterial }} - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}</h4>
                 </div>
             </div>
           </div>
@@ -120,17 +115,23 @@
                       <tbody>
                         @forelse ($historicoEclesiastico as $historico)
                           <tr>
-                              <td>{{ $membroEclesiastico->rol_atual }}</td>
-                              <td>{{ $membroEclesiastico->nome }}</td>
-                              <td>{{ formatStr($membroEclesiastico->telefone, '## (##) #####-####') }}</td>
-                              <td>{{ $historico->ministerio->descricao }}</td>
-                              <td>{{ $historico->tipoAtuacao->descricao }}</td>
+                              <td>{{ $historico->membro->rol_atual ?? '-' }}</td>
+                              <td>{{ $historico->membro->nome ?? '-' }}</td>
+                              <td>{{ formatStr($historico->membro->telefone ?? '', '## (##) #####-####') }}</td>
+                              <td>{{ $historico->ministerio->descricao ?? '-' }}</td>
+                              <td>{{ $historico->tipoAtuacao->descricao ?? '-' }}</td>
                               <td>{{ optional($historico->data_entrada)->format('d/m/Y') }}</td>
                               <td>{{ optional($historico->data_saida)->format('d/m/Y') }}</td>
                           </tr>
                         @empty
                           <tr>
-                              <td colspan="6" style="text-align: center">Não existem registros para este membro</td>
+                              <td>-</td>
+                              <td>Não existem registros para esta função ministerial</td>
+                              <td>-</td>
+                              <td>-</td>
+                              <td>-</td>
+                              <td>-</td>
+                              <td>-</td>
                           </tr>
                         @endforelse
                       </tbody>
@@ -139,59 +140,7 @@
           </div>
       </div>
     </div>
-  @endisset
-@else
-@isset($todos_membros)
-  <div class="col-lg-12 col-12 layout-spacing">
-      <div class="statbox widget box box-shadow">
-          <div class="widget-header">
-            <div class="row">
-                <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4 style="text-transform: uppercase">RELATÓRIO MEMBROS POR FUNÇÃO MINISTERIAL - TODOS - {{ session()->get('session_perfil')->instituicoes->igrejaLocal->nome }}</h4>
-                </div>
-            </div>
-          </div>
-          <div class="widget-content widget-content-area">
-
-              <div class="table-responsive">
-                  <table class="table table-bordered table-striped table-hover mb-4" id="membros-por-ministerio">
-                      <thead>
-                          <tr>
-                              <th>ROL</th>
-                              <th>NOME</th>
-                              <th>CELULAR</th>
-                              <th>MINISTÉRIO</th>
-                              <th>FUNÇÃO</th>
-                              <th>NOMEAÇÃO</th>
-                              <th>EXONERAÇÃO</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                        @forelse ($todos_membros as $membroEclesiastico)
-                          @foreach($membroEclesiastico['historicoEclesiastico'] as $historico)
-                            <tr>
-                                <td>{{ $membroEclesiastico['membro']->rol_atual }}</td>
-                                <td>{{ $membroEclesiastico['membro']->nome }}</td>
-                                <td>{{ formatStr($membroEclesiastico['membro']->telefone, '## (##) #####-####') }}</td>
-                                <td>{{ $historico->ministerio->descricao }}</td>
-                                <td>{{ $historico->tipoAtuacao->descricao }}</td>
-                                <td>{{ optional($historico->data_entrada)->format('d/m/Y') }}</td>
-                                <td>{{ optional($historico->data_saida)->format('d/m/Y') }}</td>
-                            </tr>
-                          @endforeach
-                        @empty
-                          <tr>
-                              <td colspan="6" style="text-align: center">Não existem registros para este membro</td>
-                          </tr>
-                        @endforelse
-                      </tbody>
-                  </table>
-              </div>
-          </div>
-      </div>
-    </div>
-  @endisset
-@endif
+@endisset
 @endsection
 
 @section('extras-scripts')
@@ -216,7 +165,7 @@
     $('#filter_form').attr('target', '_blank');
   })
 
-  $('#membro_id').change(function () {
+  $('#funcao_ministerial_id').change(function () {
     if($(this).val()) {
       $('#btn_buscar').removeAttr('disabled')
       $('#btn_relatorio').removeAttr('disabled')

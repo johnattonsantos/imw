@@ -37,4 +37,9 @@ class MembresiaFuncaoMinisterial extends Model implements Auditable
     {
         return $this->belongsTo(MembresiaTipoAtuacao::class, 'tipoatuacao_id');
     }
+
+    public function membro()
+    {
+        return $this->belongsTo(MembresiaMembro::class, 'membro_id');
+    }
 }
