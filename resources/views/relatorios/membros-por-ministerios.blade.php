@@ -30,7 +30,6 @@
       <form class="form-vertical" method="GET" action="{{ route('relatorio.membros-por-ministerios') }}">
         @php
           $vinculosSelecionados = $vinculosSelecionados ?? ['nao_congregado', 'congregado'];
-          $nomeacaoAtiva = $nomeacaoAtiva ?? false;
         @endphp
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -42,22 +41,6 @@
                 <option value="{{ $key }}" {{ $ministerioSelecionado === $key ? 'selected' : '' }}>{{ $label }}</option>
               @endforeach
             </select>
-          </div>
-        </div>
-
-        <div class="form-group row mb-4">
-          <div class="col-lg-2 text-right">
-            <label class="control-label">Nomeação:</label>
-          </div>
-          <div class="col-lg-6">
-            <div class="form-check form-check-inline">
-              <div class="n-chk">
-                <label class="new-control new-checkbox checkbox-outline-success">
-                  <input type="checkbox" name="nomeacao_ativa" value="1" class="new-control-input" {{ $nomeacaoAtiva ? 'checked' : '' }}>
-                  <span class="new-control-indicator"></span>Nomeação ativa
-                </label>
-              </div>
-            </div>
           </div>
         </div>
 

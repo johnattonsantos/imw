@@ -2,7 +2,6 @@
 
 namespace App\Services\ServiceRelatorio;
 
-use App\Models\MembresiaFuncaoMinisterial;
 use App\Models\MembresiaMembro;
 use App\Traits\Identifiable;
 use DB;
@@ -27,7 +26,6 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
             if (!array_key_exists($ministerioSelecionado, $ministerios)) {
                 $ministerioSelecionado = 'todos';
             }
-            $nomeacaoAtiva = !empty($request['nomeacao_ativa']);
             $vinculosSelecionados = collect($request['vinculo'] ?? [
                 'nao_congregado',
                 'congregado',
@@ -63,16 +61,6 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
             } else {
                 // Nenhum vínculo marcado: resultado vazio.
                 $query->whereRaw('1 = 0');
-            }
-
-            if ($nomeacaoAtiva) {
-                $query->whereExists(function ($sub) {
-                    $sub->select(DB::raw(1))
-                        ->from('membresia_funcoesministeriais as mfm')
-                        ->whereColumn('mfm.membro_id', 'mm.id')
-                        ->whereNull('mfm.data_saida')
-                        ->whereNull('mfm.deleted_at');
-                });
             }
 
             switch ($ministerioSelecionado) {
@@ -116,7 +104,6 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                 'ministerioSelecionado' => $ministerioSelecionado,
                 'ministerioNome' => $ministerioNome,
                 'quantidadeIntegrantes' => $quantidadeIntegrantes,
-                'nomeacaoAtiva' => $nomeacaoAtiva,
                 'vinculosSelecionados' => $vinculosSelecionados,
             ];
     }
