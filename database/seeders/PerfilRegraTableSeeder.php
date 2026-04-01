@@ -45,6 +45,7 @@ class PerfilRegraTableSeeder extends Seeder
         if ($perfilCrie) {
             $regrasCrie = Regra::whereIn('nome', [
                 'admin-index',
+                'menu-usuarios-instituicao',
                 'usuarios-index',
                 'usuarios-cadastrar',
                 'usuarios-atualizar',
