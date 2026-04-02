@@ -26,22 +26,7 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
             if (!array_key_exists($ministerioSelecionado, $ministerios)) {
                 $ministerioSelecionado = 'todos';
             }
-            $vinculosSelecionados = collect($request['vinculo'] ?? [
-                'nao_congregado',
-                'congregado',
-            ])->filter()->values()->all();
-
-            $mapVinculos = [
-                'nao_congregado' => MembresiaMembro::VINCULO_MEMBRO,
-                'congregado' => MembresiaMembro::VINCULO_CONGREGADO,
-            ];
-
-            $vinculosDb = collect($vinculosSelecionados)
-                ->map(fn($item) => $mapVinculos[$item] ?? null)
-                ->filter()
-                ->unique()
-                ->values()
-                ->all();
+            $incluirCongregados = !empty($request['incluir_congregados']);
 
             $idadeExpr = "TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE())";
             $igrejaId = (int) (data_get(session('session_perfil'), 'instituicoes.igrejaLocal.id')
@@ -56,11 +41,13 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                 ->where('mm.igreja_id', $igrejaId)
                 ->where('mm.status', 'A');
 
-            if (!empty($vinculosDb)) {
-                $query->whereIn('mm.vinculo', $vinculosDb);
+            if ($incluirCongregados) {
+                $query->whereIn('mm.vinculo', [
+                    MembresiaMembro::VINCULO_MEMBRO,
+                    MembresiaMembro::VINCULO_CONGREGADO,
+                ]);
             } else {
-                // Nenhum vínculo marcado: resultado vazio.
-                $query->whereRaw('1 = 0');
+                $query->where('mm.vinculo', MembresiaMembro::VINCULO_MEMBRO);
             }
 
             switch ($ministerioSelecionado) {
@@ -104,7 +91,7 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                 'ministerioSelecionado' => $ministerioSelecionado,
                 'ministerioNome' => $ministerioNome,
                 'quantidadeIntegrantes' => $quantidadeIntegrantes,
-                'vinculosSelecionados' => $vinculosSelecionados,
+                'incluirCongregados' => $incluirCongregados,
             ];
     }
 

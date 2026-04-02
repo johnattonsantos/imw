@@ -32,7 +32,6 @@ class CalculaImpostoDeRendaService
             ->where('declarar_em_irpf', 1)
             ->count();
 
-
         return $this->irCalculator->calculate($prebenda->ano, $prebenda->valor, $qtdDependentes);
     }
 }

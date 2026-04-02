@@ -29,7 +29,7 @@
     <div class="widget-content widget-content-area">
       <form class="form-vertical" method="GET" action="{{ route('relatorio.membros-por-ministerios') }}">
         @php
-          $vinculosSelecionados = $vinculosSelecionados ?? ['nao_congregado', 'congregado'];
+          $incluirCongregados = $incluirCongregados ?? false;
         @endphp
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -52,16 +52,8 @@
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox checkbox-outline-success">
-                  <input type="checkbox" name="vinculo[]" value="congregado" class="new-control-input" {{ in_array('congregado', $vinculosSelecionados, true) ? 'checked' : '' }}>
-                  <span class="new-control-indicator"></span>Congregado
-                </label>
-              </div>
-            </div>
-            <div class="form-check form-check-inline">
-              <div class="n-chk">
-                <label class="new-control new-checkbox checkbox-outline-success">
-                  <input type="checkbox" name="vinculo[]" value="nao_congregado" class="new-control-input" {{ in_array('nao_congregado', $vinculosSelecionados, true) ? 'checked' : '' }}>
-                  <span class="new-control-indicator"></span>Não congregado
+                  <input type="checkbox" name="incluir_congregados" value="1" class="new-control-input" {{ $incluirCongregados ? 'checked' : '' }}>
+                  <span class="new-control-indicator"></span>Incluir Congregados
                 </label>
               </div>
             </div>
