@@ -3,7 +3,6 @@
 namespace App\Services\ServicesUsuarios;
 
 use App\Models\InstituicoesInstituicao;
-use App\Models\Perfil;
 use App\Models\PerfilUser;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -19,23 +18,7 @@ class SalvarUsuarioService
         }
 
         $regioesSelecionadas = $this->resolveRegionIdsByInstitutions($instituicoes);
-        $isCrie = $this->isCrieProfile();
-        $regiaoSessao = $this->resolveCurrentRegionId();
-
-        if ($isCrie) {
-            if ($regiaoSessao <= 0) {
-                throw new \Exception('Região da sessão não identificada.');
-            }
-            foreach ($regioesSelecionadas as $regiaoId) {
-                if ($regiaoId !== $regiaoSessao) {
-                    throw new \Exception('Perfil CRIE só pode gerenciar instituições da própria região.');
-                }
-            }
-        }
-
-        $regiaoUsuario = $isCrie
-            ? $regiaoSessao
-            : (count($regioesSelecionadas) === 1 ? (int) $regioesSelecionadas[0] : null);
+        $regiaoUsuario = count($regioesSelecionadas) === 1 ? (int) $regioesSelecionadas[0] : null;
 
         $user = User::create([
             'name' => $data['name'],
@@ -54,23 +37,6 @@ class SalvarUsuarioService
                 'instituicao_id' => $data['instituicao_id'][$key],
             ]);
         }
-    }
-
-    private function isCrieProfile(): bool
-    {
-        $perfilNome = (string) optional(session('session_perfil'))->perfil_nome;
-        return Perfil::correspondeCodigo($perfilNome, Perfil::CODIGO_CRIE);
-    }
-
-    private function resolveCurrentRegionId(): int
-    {
-        $instituicaoId = (int) optional(session('session_perfil'))->instituicao_id;
-        if ($instituicaoId <= 0) {
-            return 0;
-        }
-
-        $regiaoId = (int) InstituicoesInstituicao::where('id', $instituicaoId)->value('regiao_id');
-        return $regiaoId > 0 ? $regiaoId : $instituicaoId;
     }
 
     private function resolveRegionIdsByInstitutions(array $instituicoes): array

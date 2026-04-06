@@ -20,7 +20,6 @@ class PerfilsTableSeeder extends Seeder
             ['nome' => 'Administrador', 'nivel' => 'I'],
             ['nome' => 'Administrador Distrito', 'nivel' => 'D'],
             ['nome' => 'Administrador Região', 'nivel' => 'R'],
-            ['nome' => Perfil::CODIGO_CRIE, 'nivel' => 'R'],
             ['nome' => 'Secretario', 'nivel' => 'I'],
             ['nome' => 'Tesoureiro', 'nivel' => 'I'],
             ['nome' => Perfil::CODIGO_ADMINISTRADOR_SISTEMA, 'nivel' => 'S'],
