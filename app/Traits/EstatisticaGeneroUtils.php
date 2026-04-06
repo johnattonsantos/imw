@@ -24,7 +24,7 @@ trait EstatisticaGeneroUtils
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataInicial)
                 ->where(function ($query) use ($dataInicial) {
-                    $query->where('mr.dt_exclusao', '<=', $dataInicial)
+                    $query->where('mr.dt_exclusao', '>', $dataInicial)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->selectRaw('COUNT(*)');
@@ -39,7 +39,7 @@ trait EstatisticaGeneroUtils
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataFinal)
                 ->where(function ($query) use ($dataFinal) {
-                    $query->where('mr.dt_exclusao', '<=', $dataFinal)
+                    $query->where('mr.dt_exclusao', '>', $dataFinal)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->selectRaw('COUNT(*)');
@@ -54,7 +54,7 @@ trait EstatisticaGeneroUtils
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataInicial)
                 ->where(function ($query) use ($dataInicial) {
-                    $query->where('mr.dt_exclusao', '<=', $dataInicial)
+                    $query->where('mr.dt_exclusao', '>', $dataInicial)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'M')
@@ -70,7 +70,7 @@ trait EstatisticaGeneroUtils
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataFinal)
                 ->where(function ($query) use ($dataFinal) {
-                    $query->where('mr.dt_exclusao', '<=', $dataFinal)
+                    $query->where('mr.dt_exclusao', '>', $dataFinal)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'M')
@@ -86,7 +86,7 @@ trait EstatisticaGeneroUtils
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataInicial)
                 ->where(function ($query) use ($dataInicial) {
-                    $query->where('mr.dt_exclusao', '<=', $dataInicial)
+                    $query->where('mr.dt_exclusao', '>', $dataInicial)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'F')
@@ -102,7 +102,7 @@ trait EstatisticaGeneroUtils
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataFinal)
                 ->where(function ($query) use ($dataFinal) {
-                    $query->where('mr.dt_exclusao', '<=', $dataFinal)
+                    $query->where('mr.dt_exclusao', '>', $dataFinal)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'F')
