@@ -13,6 +13,34 @@ $(document).ready(function () {
     $('#cpf').mask('000.000.000-00');
     $('#cep').mask('00000-000');
 
+    function limparCampoInvalidoSeVazio($campo) {
+        if (!$campo || !$campo.length) {
+            return;
+        }
+
+        var id = $campo.attr('id');
+        var valor = ($campo.val() || '').toString();
+
+        if (['telefone_preferencial', 'telefone_alternativo', 'telefone_whatsapp', 'cpf', 'cep'].includes(id)) {
+            var apenasDigitos = valor.replace(/\D/g, '');
+            if (apenasDigitos.length === 0) {
+                $campo.val('');
+                valor = '';
+            }
+        }
+
+        if (valor.trim() === '') {
+            $campo.removeClass('is-invalid');
+            if (typeof $campo[0].setCustomValidity === 'function') {
+                $campo[0].setCustomValidity('');
+            }
+        }
+    }
+
+    $('body').on('input change search', 'input, select, textarea', function () {
+        limparCampoInvalidoSeVazio($(this));
+    });
+
     // Adicionar e remover linhas na tabela de Ministério
     // Função para adicionar linha de ministério
     $('body').on('click', '.adicionar-linha-ministerial', function () {

@@ -125,10 +125,30 @@
         cursor: pointer;
     }
 
-img{
+        img{
     width: 140px;
     vertical-align: middle;
     border-style: none 
+}
+
+.field-clear-wrapper {
+    position: relative;
+}
+
+.field-clear-invalid {
+    position: absolute;
+    right: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: transparent;
+    color: #e7515a;
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 0;
+    cursor: pointer;
+    display: none;
+    z-index: 4;
 }
     </style>
 </head>
@@ -186,6 +206,109 @@ img{
 
         <!-- END GLOBAL MANDATORY SCRIPTS -->
         @yield('extras-scripts')
+        <script>
+            (function() {
+                function limparValorDoCampo($campo) {
+                    if (!$campo || !$campo.length) return;
+
+                    const tagName = (($campo.prop('tagName') || '').toLowerCase());
+                    if (tagName === 'select') {
+                        $campo.val('');
+                    } else {
+                        $campo.val('');
+                    }
+
+                    $campo.removeClass('is-invalid');
+                    if (typeof $campo[0].setCustomValidity === 'function') {
+                        $campo[0].setCustomValidity('');
+                    }
+
+                    $campo.trigger('input').trigger('change').focus();
+                }
+
+                function atualizarVisibilidadeBotao($campo) {
+                    if (!$campo || !$campo.length) return;
+                    const $wrapper = $campo.parent('.field-clear-wrapper');
+                    if (!$wrapper.length) return;
+
+                    const $botao = $wrapper.find('.field-clear-invalid');
+                    const mostrar = $campo.hasClass('is-invalid');
+                    $botao.toggle(mostrar);
+
+                    if (mostrar) {
+                        $campo.css('padding-right', '2.3rem');
+                    } else {
+                        $campo.css('padding-right', '');
+                    }
+                }
+
+                function bindCampo($campo) {
+                    if (!$campo || !$campo.length) return;
+                    const tipo = (($campo.attr('type') || '').toLowerCase());
+                    if (tipo === 'hidden' || $campo.prop('disabled')) return;
+
+                    if ($campo.closest('.input-group').length) return;
+
+                    if (!$campo.parent().hasClass('field-clear-wrapper')) {
+                        $campo.wrap('<div class="field-clear-wrapper"></div>');
+                    }
+
+                    const $wrapper = $campo.parent('.field-clear-wrapper');
+                    if (!$wrapper.find('.field-clear-invalid').length) {
+                        const $botao = $('<button type="button" class="field-clear-invalid" title="Limpar campo" aria-label="Limpar campo">&times;</button>');
+                        $botao.on('click', function() {
+                            limparValorDoCampo($campo);
+                            atualizarVisibilidadeBotao($campo);
+                        });
+                        $wrapper.append($botao);
+                    }
+
+                    $campo.off('input.fieldclearglobal change.fieldclearglobal')
+                        .on('input.fieldclearglobal change.fieldclearglobal', function() {
+                            atualizarVisibilidadeBotao($(this));
+                        });
+
+                    atualizarVisibilidadeBotao($campo);
+                }
+
+                function inicializarCamposComErro() {
+                    $('input.form-control, textarea.form-control, select.form-control, select.custom-select').each(function() {
+                        bindCampo($(this));
+                    });
+                }
+
+                $(document).ready(function() {
+                    inicializarCamposComErro();
+
+                    const observer = new MutationObserver(function(mutations) {
+                        let precisaRebind = false;
+                        for (const mutation of mutations) {
+                            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                                const $target = $(mutation.target);
+                                if ($target.is('input.form-control, textarea.form-control, select.form-control, select.custom-select')) {
+                                    bindCampo($target);
+                                }
+                            }
+
+                            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                                precisaRebind = true;
+                            }
+                        }
+
+                        if (precisaRebind) {
+                            inicializarCamposComErro();
+                        }
+                    });
+
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true,
+                        attributes: true,
+                        attributeFilter: ['class']
+                    });
+                });
+            })();
+        </script>
         {{--  <script>
             $(document).ready(function() {
                 // Restaurar o estado do menu e submenu após a recarga
