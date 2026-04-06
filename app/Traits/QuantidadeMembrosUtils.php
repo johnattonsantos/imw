@@ -15,12 +15,12 @@ trait QuantidadeMembrosUtils
 			->select('ii.id', 'ii.nome', 'dist.nome as distrito')
 			->selectRaw("
 				COUNT(CASE
-					WHEN mm.vinculo='M' and mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao >= '{$dataInicial}') THEN mm.id
+					WHEN mm.vinculo='M' and mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
 					when mm.vinculo='C' and mm.status='A' then mm.id
 					ELSE NULL
 				END) AS total_ate_datainicial,
 				COUNT(CASE
-					WHEN mm.vinculo='M' and mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao >= '{$dataFinal}') THEN mm.id
+					WHEN mm.vinculo='M' and mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
 					when mm.vinculo='C' and mm.status='A' then mm.id
 					ELSE NULL
 				END) AS total_ate_datafinal
