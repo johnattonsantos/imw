@@ -18,13 +18,13 @@ trait EstatisticaGeneroUtils
         ->selectSub(function ($query) use ($dataInicial, $vinculoCondition) {
             $query->from('membresia_membros as mm')
                 ->join('membresia_rolpermanente as mr', 'mr.membro_id', '=', 'mm.id')
-                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
+ //               ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
                 ->where('mm.status', 'A')
                 ->whereIn('mm.vinculo', $vinculoCondition)
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataInicial)
                 ->where(function ($query) use ($dataInicial) {
-                    $query->where('mr.dt_exclusao', '<=', $dataInicial)
+                    $query->where('mr.dt_exclusao', '>', $dataInicial)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->selectRaw('COUNT(*)');
@@ -33,13 +33,13 @@ trait EstatisticaGeneroUtils
         ->selectSub(function ($query) use ($dataFinal, $vinculoCondition) {
             $query->from('membresia_membros as mm')
                 ->join('membresia_rolpermanente as mr', 'mr.membro_id', '=', 'mm.id')
-                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
+ //               ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
                 ->where('mm.status', 'A')
                 ->whereIn('mm.vinculo', $vinculoCondition)
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataFinal)
                 ->where(function ($query) use ($dataFinal) {
-                    $query->where('mr.dt_exclusao', '<=', $dataFinal)
+                    $query->where('mr.dt_exclusao', '>', $dataFinal)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->selectRaw('COUNT(*)');
@@ -48,13 +48,13 @@ trait EstatisticaGeneroUtils
         ->selectSub(function ($query) use ($dataInicial, $vinculoCondition) {
             $query->from('membresia_membros as mm')
                 ->join('membresia_rolpermanente as mr', 'mr.membro_id', '=', 'mm.id')
-                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
+//                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
                 ->where('mm.status', 'A')
                 ->whereIn('mm.vinculo', $vinculoCondition)
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataInicial)
                 ->where(function ($query) use ($dataInicial) {
-                    $query->where('mr.dt_exclusao', '<=', $dataInicial)
+                    $query->where('mr.dt_exclusao', '>', $dataInicial)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'M')
@@ -64,13 +64,13 @@ trait EstatisticaGeneroUtils
         ->selectSub(function ($query) use ($dataFinal, $vinculoCondition) {
             $query->from('membresia_membros as mm')
                 ->join('membresia_rolpermanente as mr', 'mr.membro_id', '=', 'mm.id')
-                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
+//                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
                 ->where('mm.status', 'A')
                 ->whereIn('mm.vinculo', $vinculoCondition)
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataFinal)
                 ->where(function ($query) use ($dataFinal) {
-                    $query->where('mr.dt_exclusao', '<=', $dataFinal)
+                    $query->where('mr.dt_exclusao', '>', $dataFinal)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'M')
@@ -80,13 +80,13 @@ trait EstatisticaGeneroUtils
         ->selectSub(function ($query) use ($dataInicial, $vinculoCondition) {
             $query->from('membresia_membros as mm')
                 ->join('membresia_rolpermanente as mr', 'mr.membro_id', '=', 'mm.id')
-                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
+//                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
                 ->where('mm.status', 'A')
                 ->whereIn('mm.vinculo', $vinculoCondition)
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataInicial)
                 ->where(function ($query) use ($dataInicial) {
-                    $query->where('mr.dt_exclusao', '<=', $dataInicial)
+                    $query->where('mr.dt_exclusao', '>', $dataInicial)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'F')
@@ -96,13 +96,13 @@ trait EstatisticaGeneroUtils
         ->selectSub(function ($query) use ($dataFinal, $vinculoCondition) {
             $query->from('membresia_membros as mm')
                 ->join('membresia_rolpermanente as mr', 'mr.membro_id', '=', 'mm.id')
-                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
+//                ->whereColumn('mr.distrito_id', 'ii.instituicao_pai_id')
                 ->where('mm.status', 'A')
                 ->whereIn('mm.vinculo', $vinculoCondition)
                 ->whereColumn('mr.igreja_id', 'ii.id')
                 ->where('mr.dt_recepcao', '<=', $dataFinal)
                 ->where(function ($query) use ($dataFinal) {
-                    $query->where('mr.dt_exclusao', '<=', $dataFinal)
+                    $query->where('mr.dt_exclusao', '>', $dataFinal)
                         ->orWhereNull('mr.dt_exclusao');
                 })
                 ->where('mm.sexo', 'F')

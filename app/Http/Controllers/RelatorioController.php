@@ -11,7 +11,7 @@ use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembrosPorMinisterioSe
 use App\Models\MembresiaMembro;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\PDF;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class RelatorioController extends Controller
 {
@@ -102,6 +102,7 @@ class RelatorioController extends Controller
                 'ministerioNome' => $data['ministerioNome'],
                 'integrantes' => $data['integrantes'],
                 'quantidadeIntegrantes' => $data['quantidadeIntegrantes'],
+                'incluirCongregados' => $data['incluirCongregados'],
             ]);
         } catch (\Exception $e) { 
             dd($e);

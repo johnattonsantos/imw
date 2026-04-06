@@ -35,9 +35,10 @@
               <div class="col-xl-3">
                 <label for="sexo">* Sexo</label>
                 <select class="form-control" id="sexo" name="sexo" required>
+                  @php $sexoSelecionado = old('sexo', $pessoa->sexo); @endphp
                   <option value="">Selecione</option>
-                  <option value="M" {{ $pessoa->sexo == 'M' ? 'selected' : '' }}>Masculino</option>
-                  <option value="F" {{ $pessoa->sexo == 'F' ? 'selected' : '' }}>Feminino</option>
+                  <option value="M" {{ $sexoSelecionado == 'M' ? 'selected' : '' }}>Masculino</option>
+                  <option value="F" {{ $sexoSelecionado == 'F' ? 'selected' : '' }}>Feminino</option>
                 </select>
                 @error('sexo')
                 <span class="help-block text-danger">{{ $message }}</span>

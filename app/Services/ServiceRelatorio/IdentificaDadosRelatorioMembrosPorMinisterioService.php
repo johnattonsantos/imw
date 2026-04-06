@@ -2,7 +2,6 @@
 
 namespace App\Services\ServiceRelatorio;
 
-use App\Models\MembresiaFuncaoMinisterial;
 use App\Models\MembresiaMembro;
 use App\Traits\Identifiable;
 use DB;
@@ -13,21 +12,21 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
 
     public function execute(array $request = [])
     {
-        
-       $ministerios = [
+        $ministerios = [
                 'todos' => 'Todos os Ministérios',
-                'kids' => 'Kids (até 11 anos)',
-                'conexao' => 'Conexão (até 23 anos)',
+                'kids' => 'Kid (até 9 anos)',
+                'conexao' => 'Conexão (até 13 anos)',
                 'fire' => 'Fire (até 17 anos)',
                 'move' => 'Move (até 30 anos)',
                 'mulheres' => 'Mulheres (todas as idades)',
                 'homens' => 'Homens (todas as idades)',
                 '60+' => '60+ (acima de 60 anos)',
             ];
-            $ministerioSelecionado = (string) isset($request['ministerio'])?$request['ministerio']:'todos' ;
+            $ministerioSelecionado = (string) (isset($request['ministerio']) ? $request['ministerio'] : 'todos');
             if (!array_key_exists($ministerioSelecionado, $ministerios)) {
                 $ministerioSelecionado = 'todos';
             }
+            $incluirCongregados = !empty($request['incluir_congregados']);
 
             $idadeExpr = "TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE())";
             $igrejaId = (int) (data_get(session('session_perfil'), 'instituicoes.igrejaLocal.id')
@@ -40,19 +39,27 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                     DB::raw("COALESCE(NULLIF(mc.telefone_preferencial, ''), NULLIF(mc.telefone_whatsapp, ''), '-') as contato")
                 )
                 ->where('mm.igreja_id', $igrejaId)
-                ->where('mm.vinculo', MembresiaMembro::VINCULO_MEMBRO)
                 ->where('mm.status', 'A');
+
+            if ($incluirCongregados) {
+                $query->whereIn('mm.vinculo', [
+                    MembresiaMembro::VINCULO_MEMBRO,
+                    MembresiaMembro::VINCULO_CONGREGADO,
+                ]);
+            } else {
+                $query->where('mm.vinculo', MembresiaMembro::VINCULO_MEMBRO);
+            }
 
             switch ($ministerioSelecionado) {
                 case 'todos':
                     break;
                 case 'kids':
                     $query->whereNotNull('mm.data_nascimento')
-                        ->whereRaw("$idadeExpr <= 11");
+                        ->whereRaw("$idadeExpr <= 9");
                     break;
                 case 'conexao':
                     $query->whereNotNull('mm.data_nascimento')
-                        ->whereRaw("$idadeExpr <= 23");
+                        ->whereRaw("$idadeExpr <= 13");
                     break;
                 case 'fire':
                     $query->whereNotNull('mm.data_nascimento')
@@ -77,7 +84,15 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
             $integrantes = $query->orderBy('mm.nome')->get();  
             $ministerioNome = $ministerios[$ministerioSelecionado];
             $quantidadeIntegrantes = $integrantes->count();
-        return ['integrantes'=>$integrantes,'ministerios'=>$ministerios,'ministerioSelecionado'=>$ministerioSelecionado,'ministerioNome'=>$ministerioNome,'quantidadeIntegrantes'=>$quantidadeIntegrantes];
+
+            return [
+                'integrantes' => $integrantes,
+                'ministerios' => $ministerios,
+                'ministerioSelecionado' => $ministerioSelecionado,
+                'ministerioNome' => $ministerioNome,
+                'quantidadeIntegrantes' => $quantidadeIntegrantes,
+                'incluirCongregados' => $incluirCongregados,
+            ];
     }
 
 }

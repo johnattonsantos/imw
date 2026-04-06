@@ -28,6 +28,9 @@
     </div>
     <div class="widget-content widget-content-area">
       <form class="form-vertical" method="GET" action="{{ route('relatorio.membros-por-ministerios') }}">
+        @php
+          $incluirCongregados = $incluirCongregados ?? false;
+        @endphp
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
             <label class="control-label">Ministério:</label>
@@ -38,6 +41,22 @@
                 <option value="{{ $key }}" {{ $ministerioSelecionado === $key ? 'selected' : '' }}>{{ $label }}</option>
               @endforeach
             </select>
+          </div>
+        </div>
+
+        <div class="form-group row mb-4">
+          <div class="col-lg-2 text-right">
+            <label class="control-label">Vínculo:</label>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-check form-check-inline">
+              <div class="n-chk">
+                <label class="new-control new-checkbox checkbox-outline-success">
+                  <input type="checkbox" name="incluir_congregados" value="1" class="new-control-input" {{ $incluirCongregados ? 'checked' : '' }}>
+                  <span class="new-control-indicator"></span>Incluir Congregados
+                </label>
+              </div>
+            </div>
           </div>
         </div>
 

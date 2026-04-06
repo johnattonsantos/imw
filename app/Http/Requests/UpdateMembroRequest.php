@@ -172,7 +172,35 @@ class UpdateMembroRequest extends FormRequest
             'nacionalidade' => 'required',
             'naturalidade' => 'required',
             'profissao' => $isRecadastramento ? 'required|exists:membresia_profissoes,id' : 'nullable|string|max:100',
-            'status' => $isRecadastramento ? 'required|in:A,I' : 'nullable|in:A,I',
+            'status' => $isRecadastramento
+                ? [
+                    'required',
+                    'in:A,I',
+                    function ($attribute, $value, $fail) use ($membroId) {
+                        if ($value !== 'A') {
+                            return;
+                        }
+
+                        $dtExclusaoInformada = !empty($this->input('dt_exclusao'));
+                        $modoExclusaoInformado = !empty($this->input('modo_exclusao_id'));
+
+                        $possuiDadosExclusaoNoRequest = $dtExclusaoInformada && $modoExclusaoInformado;
+
+                        $membroIdValidacao = $membroId ?: $this->route('id');
+
+                        $possuiDadosExclusaoNoMigracao = DB::table('membresia_rolpermanente_migracao')
+                            ->where('membro_id', $membroIdValidacao)
+                            ->where('lastrec', 1)
+                            ->whereNotNull('dt_exclusao')
+                            ->whereNotNull('modo_exclusao_id')
+                            ->exists();
+
+                        if ($possuiDadosExclusaoNoRequest || $possuiDadosExclusaoNoMigracao) {
+                            $fail('É necessário remover Data de Exclusão e Modo de Exclusão antes de validar como ativo, para fazer isso escolho o status inativo');
+                        }
+                    },
+                ]
+                : 'nullable|in:A,I',
             'uf' => 'sometimes|required',
             'rol_atual' => $isRecadastramento
                 ? [
