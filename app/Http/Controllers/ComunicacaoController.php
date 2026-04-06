@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Exports\ComunicacaoExport;
 use App\Models\CategoriaComunicacao;
 use App\Models\Comunicacao;
+use App\Models\ComunicacaoLeituraIgreja;
+use App\Models\InstituicoesInstituicao;
+use App\Models\InstituicoesTipoInstituicao;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Filesystem\FilesystemAdapter;
@@ -25,15 +28,34 @@ class ComunicacaoController extends Controller
         $comunicacoes = $this->buildQuery($request)
             ->latest('created_at')
             ->paginate(15);
-            //->withQueryString();
-           // dd($comunicacoes);
+
+        $comunicacoesNaoLidasIds = [];
+        $igrejaLocalId = $this->igrejaLocalId();
+        if ($igrejaLocalId > 0) {
+            $idsPagina = $comunicacoes->getCollection()->pluck('id');
+            if ($idsPagina->isNotEmpty()) {
+                $lidasIds = ComunicacaoLeituraIgreja::query()
+                    ->where('igreja_id', $igrejaLocalId)
+                    ->whereIn('comunicacao_id', $idsPagina)
+                    ->pluck('comunicacao_id')
+                    ->all();
+
+                $comunicacoesNaoLidasIds = array_values(array_diff($idsPagina->all(), $lidasIds));
+            }
+        }
 
         $categorias = $this->categorias();
 
         $arquivoAccept = $this->arquivoAcceptAttribute();
         $arquivoFormatosTexto = $this->arquivoFormatosTexto();
 
-        return view('comunicacao.index', compact('comunicacoes', 'categorias', 'arquivoAccept', 'arquivoFormatosTexto'));
+        return view('comunicacao.index', compact(
+            'comunicacoes',
+            'categorias',
+            'arquivoAccept',
+            'arquivoFormatosTexto',
+            'comunicacoesNaoLidasIds'
+        ));
     }
 
     public function create()
@@ -100,6 +122,7 @@ class ComunicacaoController extends Controller
     public function show(Comunicacao $comunicacao)
     {
         $this->ensureSameInstituicao($comunicacao);
+        $this->markAsReadForIgrejaLocal($comunicacao);
 
         if (request()->ajax() || request()->expectsJson()) {
             return response()->json([
@@ -165,6 +188,11 @@ class ComunicacaoController extends Controller
             'arquivo' => $path,
         ]);
 
+        // Ao editar um comunicado regional, ele volta a ser "não lido" para as igrejas.
+        ComunicacaoLeituraIgreja::query()
+            ->where('comunicacao_id', $comunicacao->id)
+            ->delete();
+
         if ($request->ajax() || $request->expectsJson()) {
             return response()->json([
                 'message' => 'Comunicacao atualizada com sucesso.',
@@ -197,6 +225,7 @@ class ComunicacaoController extends Controller
     public function download(Comunicacao $comunicacao)
     {
         $this->ensureSameInstituicao($comunicacao);
+        $this->markAsReadForIgrejaLocal($comunicacao);
 
         abort_if(!$comunicacao->arquivo, 404);
 
@@ -206,6 +235,7 @@ class ComunicacaoController extends Controller
     public function visualizar(Comunicacao $comunicacao)
     {
         $this->ensureSameInstituicao($comunicacao);
+        $this->markAsReadForIgrejaLocal($comunicacao);
 
         abort_if(!$comunicacao->arquivo, 404);
         $disk = $this->storageDisk();
@@ -321,11 +351,93 @@ class ComunicacaoController extends Controller
 
     private function instituicaoId(): int
     {
-        // $perfil = session('session_perfil');
-        // $instituicaoId = (int) (optional($perfil)->instituicao_id ?? data_get($perfil, 'instituicoes.regiao.id', 0));
-        // abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
-        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
-        return $instituicaoId;
+        $sessionPerfil = session('session_perfil');
+
+        $regiaoId = (int) data_get($sessionPerfil, 'instituicoes.regiao.id', 0);
+        if ($regiaoId > 0) {
+            return $regiaoId;
+        }
+
+        $instituicaoId = (int) data_get($sessionPerfil, 'instituicao_id', 0);
+        abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
+
+        $regiaoId = $this->resolveRegiaoByInstituicaoId($instituicaoId);
+        abort_if($regiaoId <= 0, 403, 'Perfil sem escopo de regiao para comunicacao.');
+
+        return $regiaoId;
+    }
+
+    private function resolveRegiaoByInstituicaoId(int $instituicaoId): int
+    {
+        $currentId = $instituicaoId;
+        $maxDepth = 10;
+
+        while ($currentId > 0 && $maxDepth-- > 0) {
+            $instituicao = InstituicoesInstituicao::query()
+                ->select(['id', 'tipo_instituicao_id', 'instituicao_pai_id', 'regiao_id'])
+                ->find($currentId);
+
+            if (!$instituicao) {
+                return 0;
+            }
+
+            if ((int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::REGIAO) {
+                return (int) $instituicao->id;
+            }
+
+            if (!empty($instituicao->regiao_id)) {
+                return (int) $instituicao->regiao_id;
+            }
+
+            $currentId = (int) ($instituicao->instituicao_pai_id ?? 0);
+        }
+
+        return 0;
+    }
+
+    private function igrejaLocalId(): int
+    {
+        $sessionPerfil = session('session_perfil');
+        $igrejaId = (int) data_get($sessionPerfil, 'instituicoes.igrejaLocal.id', 0);
+        if ($igrejaId > 0) {
+            return $igrejaId;
+        }
+
+        $instituicaoId = (int) data_get($sessionPerfil, 'instituicao_id', 0);
+        if ($instituicaoId <= 0) {
+            return 0;
+        }
+
+        $instituicao = InstituicoesInstituicao::query()
+            ->select(['id', 'tipo_instituicao_id'])
+            ->find($instituicaoId);
+
+        if (!$instituicao) {
+            return 0;
+        }
+
+        return (int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::IGREJA_LOCAL
+            ? (int) $instituicao->id
+            : 0;
+    }
+
+    private function markAsReadForIgrejaLocal(Comunicacao $comunicacao): void
+    {
+        $igrejaId = $this->igrejaLocalId();
+        if ($igrejaId <= 0) {
+            return;
+        }
+
+        ComunicacaoLeituraIgreja::query()->updateOrCreate(
+            [
+                'comunicacao_id' => $comunicacao->id,
+                'igreja_id' => $igrejaId,
+            ],
+            [
+                'user_id' => auth()->id(),
+                'lido_em' => now(),
+            ]
+        );
     }
 
     private function ensureSameInstituicao(Comunicacao $comunicacao): void

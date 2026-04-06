@@ -3,6 +3,40 @@
          background-color: inherit !important;
          color: inherit !important;
      }
+
+     .comunicacao-badge {
+         display: inline-flex;
+         align-items: center;
+         justify-content: center;
+         min-width: 18px;
+         height: 18px;
+         padding: 0 5px;
+         margin-left: 6px;
+         border-radius: 9999px;
+         background: #ff4d4f;
+         color: #fff;
+         font-size: 11px;
+         font-weight: 700;
+         line-height: 1;
+         box-shadow: 0 0 0 rgba(255, 77, 79, 0.7);
+         animation: comunicacaoPulse 1.4s infinite;
+         vertical-align: middle;
+     }
+
+     @keyframes comunicacaoPulse {
+         0% {
+             transform: scale(0.95);
+             box-shadow: 0 0 0 0 rgba(255, 77, 79, 0.7);
+         }
+         70% {
+             transform: scale(1);
+             box-shadow: 0 0 0 10px rgba(255, 77, 79, 0);
+         }
+         100% {
+             transform: scale(0.95);
+             box-shadow: 0 0 0 0 rgba(255, 77, 79, 0);
+         }
+     }
  </style>
  <!--  BEGIN SIDEBAR  -->
  <div class="sidebar-wrapper sidebar-theme" style="overflow-y: scroll; scrollbar-width: thin; ">
@@ -60,9 +94,14 @@
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                  stroke-linejoin="round" class="feather feather-message-square">
-                                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                              </svg>
                              <span>Comunicação</span>
+                             @if (!empty($baseParams->quantidadeNovasComunicacoes))
+                                 <span class="comunicacao-badge" title="Novas comunicações">
+                                     {{ (int) $baseParams->quantidadeNovasComunicacoes > 99 ? '99+' : (int) $baseParams->quantidadeNovasComunicacoes }}
+                                 </span>
+                             @endif
                          </div>
                      </a>
                  </li>

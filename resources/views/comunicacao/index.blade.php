@@ -11,6 +11,22 @@
 <link href="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('theme/plugins/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('theme/assets/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
+<style>
+    .comunicacao-item-novo {
+        background: #fff7f7;
+    }
+    .badge-novo-comunicacao {
+        display: inline-block;
+        margin-left: 8px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #ff4d4f;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        vertical-align: middle;
+    }
+</style>
 @endsection
 
 @section('extras-scripts')
@@ -67,9 +83,17 @@
                     </thead>
                     <tbody>
                         @forelse ($comunicacoes as $comunicacao)
-                            <tr id="row-comunicacao-{{ $comunicacao->id }}">
+                            @php
+                                $isNovo = in_array($comunicacao->id, $comunicacoesNaoLidasIds ?? [], true);
+                            @endphp
+                            <tr id="row-comunicacao-{{ $comunicacao->id }}" class="{{ $isNovo ? 'comunicacao-item-novo' : '' }}">
                                 <td>{{ optional($comunicacao->categoria)->nome ?: '-' }}</td>
-                                <td>{{ $comunicacao->titulo }}</td>
+                                <td>
+                                    {{ $comunicacao->titulo }}
+                                    @if ($isNovo)
+                                        <span class="badge-novo-comunicacao">Novo</span>
+                                    @endif
+                                </td>
                                 @php
                                     $comentarioTexto = html_entity_decode(strip_tags((string) $comunicacao->comentario), ENT_QUOTES | ENT_HTML5, 'UTF-8');
                                     $comentarioTexto = preg_replace('/\s+/', ' ', trim($comentarioTexto));
@@ -98,7 +122,7 @@
                                                 $colorClass = 'text-warning';
                                             }
                                         @endphp
-                                        <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="Ver arquivo">
+                                        <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="Ver arquivo" class="btn-visualizar-arquivo" data-id="{{ $comunicacao->id }}">
                                             <i class="fas {{ $iconClass }} {{ $colorClass }} fa-lg"></i>
                                         </a>
                                     @else
@@ -367,6 +391,47 @@
             return '<a href="' + url + '" target="_blank" title="Ver arquivo"><i class="fas ' + meta.iconClass + ' ' + meta.colorClass + ' fa-lg"></i></a>';
         }
 
+        function decrementMenuComunicacaoBadge() {
+            const badge = document.querySelector('.comunicacao-badge');
+            if (!badge) {
+                return;
+            }
+
+            const currentText = (badge.textContent || '').trim();
+            if (!currentText || currentText.endsWith('+')) {
+                return;
+            }
+
+            const currentValue = parseInt(currentText, 10);
+            if (Number.isNaN(currentValue)) {
+                return;
+            }
+
+            const nextValue = currentValue - 1;
+            if (nextValue <= 0) {
+                badge.remove();
+                return;
+            }
+
+            badge.textContent = String(nextValue);
+        }
+
+        function markComunicacaoLidaNoFront(id) {
+            const row = document.getElementById('row-comunicacao-' + id);
+            if (!row) {
+                return;
+            }
+
+            const badgeNovo = row.querySelector('.badge-novo-comunicacao');
+            if (!badgeNovo) {
+                return;
+            }
+
+            badgeNovo.remove();
+            row.classList.remove('comunicacao-item-novo');
+            decrementMenuComunicacaoBadge();
+        }
+
         function showValidationErrors(xhr) {
             if (xhr.status !== 422 || !xhr.responseJSON || !xhr.responseJSON.errors) {
                 const fallbackMessage = (xhr.responseJSON && xhr.responseJSON.message)
@@ -448,6 +513,7 @@
             const id = $(this).data('id');
 
             loadComunicacao(id, function(data) {
+                markComunicacaoLidaNoFront(id);
                 $('#show-categoria').text(data.categoria_nome || '-');
                 $('#show-titulo').text(data.titulo || '');
                 $('#show-comentario').html(data.comentario_html || '');
@@ -461,6 +527,13 @@
 
                 $('#modalComunicacaoShow').modal('show');
             });
+        });
+
+        $(document).on('click', '.btn-visualizar-arquivo', function() {
+            const id = $(this).data('id');
+            if (id) {
+                markComunicacaoLidaNoFront(id);
+            }
         });
 
         $(document).on('click', '.btn-delete', function() {
