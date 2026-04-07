@@ -51,11 +51,12 @@
               <div class="col-xl-3">
                 <label for="estado_civil">* Estado Civíl</label>
                 <select class="form-control @error('estado_civil') is-invalid @enderror" id="estado_civil" name="estado_civil" required>
+                  @php $estadoCivilSelecionado = old('estado_civil', $pessoa->estado_civil); @endphp
                   <option value="">Selecione</option>
-                  <option value="S" {{ $pessoa->estado_civil == 'S' ? 'selected' : '' }}>Solteiro</option>
-                  <option value="C" {{ $pessoa->estado_civil == 'C' ? 'selected' : '' }}>Casado</option>
-                  <option value="D" {{ $pessoa->estado_civil == 'D' ? 'selected' : '' }}>Divorciado</option>
-                  <option value="V" {{ $pessoa->estado_civil == 'V' ? 'selected' : '' }}>Viúvo</option>
+                  <option value="S" {{ $estadoCivilSelecionado == 'S' ? 'selected' : '' }}>Solteiro</option>
+                  <option value="C" {{ $estadoCivilSelecionado == 'C' ? 'selected' : '' }}>Casado</option>
+                  <option value="D" {{ $estadoCivilSelecionado == 'D' ? 'selected' : '' }}>Divorciado</option>
+                  <option value="V" {{ $estadoCivilSelecionado == 'V' ? 'selected' : '' }}>Viúvo</option>
                 </select>
                 @error('estado_civil')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -645,15 +646,11 @@
         function toggleExclusaoFieldsByStatus() {
           const status = $('#status').val();
           const isInativo = status === 'I';
-          const hasDtExclusao = ($('#dt_exclusao').val() || '').trim() !== '';
-          const hasModoExclusao = ($('#modo_exclusao_id').val() || '').trim() !== '';
-          const hasAnyExclusaoFilled = hasDtExclusao || hasModoExclusao;
-          const shouldEnableFields = isInativo || hasAnyExclusaoFilled;
 
           $('#dt_exclusao').prop('required', isInativo);
           $('#modo_exclusao_id').prop('required', isInativo);
-          $('#dt_exclusao').prop('disabled', !shouldEnableFields);
-          $('#modo_exclusao_id').prop('disabled', !shouldEnableFields);
+          $('#dt_exclusao').prop('disabled', false);
+          $('#modo_exclusao_id').prop('disabled', false);
         }
 
         toggleExclusaoFieldsByStatus();
