@@ -24,6 +24,10 @@ class PerfilRegraTableSeeder extends Seeder
             ->get()
             ->first(fn ($perfil) => Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_ADMINISTRADOR_SISTEMA));
 
+        $perfilCrie = Perfil::query()
+            ->get()
+            ->first(fn ($perfil) => Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_CRIE));
+
         $regras = Regra::all();
 
 
@@ -31,10 +35,30 @@ class PerfilRegraTableSeeder extends Seeder
 
             foreach ($regras as $regra) {
                 // Insere o relacionamento na tabela pivot
-                DB::table('perfil_regra')->insert([
-                    'perfil_id' => $perfilAdministradordoSistema->id,
-                    'regra_id' => $regra->id
-                ]);
+                DB::table('perfil_regra')->updateOrInsert(
+                    ['perfil_id' => $perfilAdministradordoSistema->id, 'regra_id' => $regra->id],
+                    []
+                );
+            }
+        }
+
+        if ($perfilCrie) {
+            $regrasCrie = Regra::whereIn('nome', [
+                'admin-index',
+                'menu-usuarios-instituicao',
+                'usuarios-index',
+                'usuarios-cadastrar',
+                'usuarios-atualizar',
+                'usuarios-editar',
+                'usuarios-excluir',
+                'usuarios-pesquisar',
+            ])->get();
+
+            foreach ($regrasCrie as $regra) {
+                DB::table('perfil_regra')->updateOrInsert(
+                    ['perfil_id' => $perfilCrie->id, 'regra_id' => $regra->id],
+                    []
+                );
             }
         }
 

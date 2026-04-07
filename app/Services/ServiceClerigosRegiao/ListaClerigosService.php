@@ -3,14 +3,15 @@
 namespace App\Services\ServiceClerigosRegiao;
 
 use App\Models\PessoasPessoa;
+use App\Traits\RegionalScope;
 
 class ListaClerigosService
 {
+    use RegionalScope;
+
     public function execute($searchTerm = null)
     {
-
-
-        $regiao_id = (int) session()->get('session_perfil')->instituicao_id;
+        $regiao_id = $this->sessionRegiaoId();
         $clerigos = PessoasPessoa::query()->withTrashed()->where('regiao_id', $regiao_id)
             ->when($searchTerm, function ($query, $searchTerm) {
                 $query->where('nome', 'like', "%{$searchTerm}%");
@@ -22,7 +23,7 @@ class ListaClerigosService
 
     public function totalClerigo()
     {
-        $regiao_id = (int) session()->get('session_perfil')->instituicao_id;
+        $regiao_id = $this->sessionRegiaoId();
         $clerigos = PessoasPessoa::query()->withTrashed()->where('regiao_id', $regiao_id)
             ->orderBy('nome', 'asc')
             ->get();

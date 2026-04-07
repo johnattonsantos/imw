@@ -11,6 +11,7 @@ use App\Services\ServiceFinanceiroRelatorios\MovimentoDiarioService;
 use App\Services\ServiceFinanceiroRelatorios\LivroRazaoService;
 use App\Services\ServiceFinanceiroRelatorios\MovimentoBancarioService;
 use App\Traits\Identifiable;
+use App\Traits\RegionalScope;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
@@ -18,6 +19,8 @@ use Illuminate\Http\Request;
 
 class FinanceiroRelatorioController extends Controller
 {
+    use RegionalScope;
+
     public function balancetePdf(Request $request)
     {
         $dataInicial = $request->input('dt_inicial');
@@ -113,8 +116,18 @@ class FinanceiroRelatorioController extends Controller
         }else{
             $caixaId = null;
         }
-        $instituicaoId = $request->input('instituicao_id');
+        $instituicaoId = $request->input('instituicao_id', 'all');
         $regiao = Identifiable::fetchtSessionRegiao();
+
+        if ($instituicaoId !== 'all') {
+            $instituicaoIdInt = (int) $instituicaoId;
+            if ($instituicaoIdInt <= 0 || !$this->instituicaoPertenceRegiao($instituicaoIdInt, (int) $regiao->id)) {
+                $instituicaoId = 'all';
+            } else {
+                $instituicaoId = $instituicaoIdInt;
+            }
+        }
+
         $data = app(BalanceteRegiaoService::class)->execute($dataInicial, $dataFinal, $caixaId, $regiao, $instituicaoId);
         return view('financeiro.relatorios.balancete-regiao', $data);
     }

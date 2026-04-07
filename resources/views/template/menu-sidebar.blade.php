@@ -1204,10 +1204,12 @@
 
                              // Recupera o nível do perfil baseado no perfil_id
                              $perfilUsuario = \App\Models\Perfil::where('id', $perfilID)->first();
+                             $isAdminSistema = $perfilUsuario && \App\Models\Perfil::correspondeCodigo($perfilUsuario->nome, \App\Models\Perfil::CODIGO_ADMINISTRADOR_SISTEMA);
+                             $isCrie = $perfilUsuario && \App\Models\Perfil::correspondeCodigo($perfilUsuario->nome, \App\Models\Perfil::CODIGO_CRIE);
 
                              // Verifica o nível do perfil
                              $hrefRoute =
-                                 $perfilUsuario && $perfilUsuario->nivel === 'S'
+                                 ($isAdminSistema || $isCrie)
                                      ? route('admin.index')
                                      : route('usuarios.index');
                          @endphp
@@ -1215,6 +1217,12 @@
                          <li  {!! Request::is('seguranca/users', 'seguranca/users/*') ? 'class="active"' : '' !!}>
                              <a href="{{ $hrefRoute }}"> Gerenciar usuários</a>
                          </li>
+
+                         @if ($isAdminSistema)
+                             <li {!! Request::is('admin/modulo-geral') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('admin.modulo-geral') }}"> Módulo geral</a>
+                             </li>
+                         @endif
 
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('auditoria'))
                              <li {!! Request::is('auditorias*') ? 'class="active"' : '' !!}>

@@ -3,6 +3,7 @@
 namespace App\Services\ServicesUsuarios;
 
 use App\Models\InstituicoesInstituicao;
+use App\Models\Perfil;
 use App\Models\PerfilUser;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -18,7 +19,23 @@ class AdminEditarUsuarioService
         }
 
         $regioesSelecionadas = $this->resolveRegionIdsByInstitutions($instituicoes);
-        $regiaoUsuario = count($regioesSelecionadas) === 1 ? (int) $regioesSelecionadas[0] : null;
+        $isCrie = $this->isCrieProfile();
+        $regiaoSessao = $this->resolveCurrentRegionId();
+
+        if ($isCrie) {
+            if (!$this->canManageUserInCurrentRegion($user->id, $regiaoSessao, (int) $user->regiao_id)) {
+                throw new \Exception('Perfil CRIE não pode editar usuários de outra região.');
+            }
+            foreach ($regioesSelecionadas as $regiaoId) {
+                if ($regiaoId !== $regiaoSessao) {
+                    throw new \Exception('Perfil CRIE só pode vincular instituições da própria região.');
+                }
+            }
+        }
+
+        $regiaoUsuario = $isCrie
+            ? $regiaoSessao
+            : (count($regioesSelecionadas) === 1 ? (int) $regioesSelecionadas[0] : null);
 
         $user->update([
             'name' => $data['name'],
@@ -46,6 +63,23 @@ class AdminEditarUsuarioService
         }
     }
 
+    private function isCrieProfile(): bool
+    {
+        $perfilNome = (string) optional(session('session_perfil'))->perfil_nome;
+        return Perfil::correspondeCodigo($perfilNome, Perfil::CODIGO_CRIE);
+    }
+
+    private function resolveCurrentRegionId(): int
+    {
+        $instituicaoId = (int) optional(session('session_perfil'))->instituicao_id;
+        if ($instituicaoId <= 0) {
+            return 0;
+        }
+
+        $regiaoId = (int) InstituicoesInstituicao::where('id', $instituicaoId)->value('regiao_id');
+        return $regiaoId > 0 ? $regiaoId : $instituicaoId;
+    }
+
     private function resolveRegionIdsByInstitutions(array $instituicoes): array
     {
         $regioes = [];
@@ -61,5 +95,23 @@ class AdminEditarUsuarioService
         }
 
         return array_values(array_unique($regioes));
+    }
+
+    private function canManageUserInCurrentRegion(int $userId, int $regiaoSessao, int $regiaoUsuario): bool
+    {
+        if ($regiaoSessao <= 0) {
+            return false;
+        }
+
+        if ($regiaoUsuario === $regiaoSessao) {
+            return true;
+        }
+
+        return PerfilUser::where('user_id', $userId)
+            ->whereHas('instituicao', function ($query) use ($regiaoSessao) {
+                $query->where('instituicoes_instituicoes.id', $regiaoSessao)
+                    ->orWhere('instituicoes_instituicoes.regiao_id', $regiaoSessao);
+            })
+            ->exists();
     }
 }

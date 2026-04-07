@@ -3,21 +3,33 @@
 namespace App\Services\ServiceInstituicaoRegiao;
 
 use App\Models\InstituicoesInstituicao;
+use App\Traits\RegionalScope;
 use Carbon\Carbon;
 
 class UpdateRegiaoService
 {
+    use RegionalScope;
+
     public function execute($request, $id)
     {
-        $instituicao = InstituicoesInstituicao::findOrFail($id);
+        $regiaoId = $this->sessionRegiaoId();
+        $instituicao = InstituicoesInstituicao::where('id', $id)
+            ->where('regiao_id', $regiaoId)
+            ->firstOrFail();
         $dataAbertura = Carbon::parse($request->input('data_abertura'))->format('Y-m-d');
         $cep = str_replace('.', '', $request->input('cep'));
+        $instituicaoPaiId = (int) $request->input('instituicao_pai_id');
+
+        if ($instituicaoPaiId > 0 && !$this->instituicaoPertenceRegiao($instituicaoPaiId, $regiaoId)) {
+            throw new \InvalidArgumentException('Instituição pai fora da região do perfil.');
+        }
+
         $instituicao->update(
             [
                 'nome' => $request->input('nome'),
                 'tipo_instituicao_id' => $request->input('tipo_instituicao_id'),
-                'instituicao_pai_id' => $request->input('instituicao_pai_id'),
-                'regiao_id' => $request->input('regiao_id'),
+                'instituicao_pai_id' => $instituicaoPaiId,
+                'regiao_id' => $regiaoId,
                 'bairro' => $request->input('bairro'),
                 'cep' => $cep,
                 'cidade' => $request->input('cidade'),

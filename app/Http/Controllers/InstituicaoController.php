@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InstituicoesInstituicao;
+use App\Models\Perfil;
 use Illuminate\Http\Request;
 
 class InstituicaoController extends Controller
@@ -17,6 +18,13 @@ class InstituicaoController extends Controller
             ->where('instituicoes_instituicoes.ativo', 1)
             ->orderBy('instituicoes_instituicoes.nome', 'asc');
 
+        if ($this->isCrieProfile()) {
+            $regiaoId = $this->resolveCurrentRegionId();
+            $query->where(function ($subquery) use ($regiaoId) {
+                $subquery->where('instituicoes_instituicoes.id', $regiaoId)
+                    ->orWhere('instituicoes_instituicoes.regiao_id', $regiaoId);
+            });
+        }
 
         $instituicoes = $query->paginate(10);
         return response()->json($instituicoes);
@@ -34,4 +42,20 @@ class InstituicaoController extends Controller
         return response()->json($instituicoes);
     }
 
+    private function isCrieProfile(): bool
+    {
+        $perfilNome = (string) optional(session('session_perfil'))->perfil_nome;
+        return Perfil::correspondeCodigo($perfilNome, Perfil::CODIGO_CRIE);
+    }
+
+    private function resolveCurrentRegionId(): int
+    {
+        $instituicaoId = (int) optional(session('session_perfil'))->instituicao_id;
+        if ($instituicaoId <= 0) {
+            return 0;
+        }
+
+        $regiaoId = (int) InstituicoesInstituicao::where('id', $instituicaoId)->value('regiao_id');
+        return $regiaoId > 0 ? $regiaoId : $instituicaoId;
+    }
 }

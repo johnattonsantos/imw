@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'seguranca' => \App\Http\Middleware\CheckAccessControl::class,
         'user-clerigo' => \App\Http\Middleware\CheckUserClerigo::class,
+        'crie.regiao' => \App\Http\Middleware\CheckCrieRegionalScope::class,
     ];
 }

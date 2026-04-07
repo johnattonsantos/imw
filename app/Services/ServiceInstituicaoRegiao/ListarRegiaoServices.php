@@ -3,11 +3,16 @@
 namespace App\Services\ServiceInstituicaoRegiao;
 
 use App\Models\InstituicoesInstituicao;
+use App\Traits\RegionalScope;
 
 class ListarRegiaoServices
 {
+    use RegionalScope;
+
     public function execute($parameters = null, $tipoInstituicaoId)
     {
+        $regiaoId = $this->sessionRegiaoId();
+
         return InstituicoesInstituicao::withTrashed()
             ->when(isset($parameters['search']) && !empty($parameters['search']), function ($query) use ($parameters) {
                 $searchTerm = $parameters['search'];
@@ -18,7 +23,7 @@ class ListarRegiaoServices
                         ->orWhere('telefone', 'like', "%$searchTerm%");
                 });
             })
-            ->where('regiao_id', session()->get('session_perfil')->instituicao_id)
+            ->where('regiao_id', $regiaoId)
             ->when($tipoInstituicaoId, function ($query) use ($tipoInstituicaoId) {
                 $query->where('tipo_instituicao_id', $tipoInstituicaoId);
             })

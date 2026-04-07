@@ -39,6 +39,15 @@
             </svg>
             <span class="ml-2">INCLUIR USUÁRIO</span>
         </a>
+        @php
+            $perfilNomeSessao = (string) optional(session('session_perfil'))->perfil_nome;
+            $isAdminSistema = \App\Models\Perfil::correspondeCodigo($perfilNomeSessao, \App\Models\Perfil::CODIGO_ADMINISTRADOR_SISTEMA);
+        @endphp
+        @if ($isAdminSistema)
+            <a href="{{ route('admin.modulo-geral') }}" class="btn btn-dark position-relative mt-3 mb-3 ml-2">
+                <span class="ml-1">MÓDULO GERAL</span>
+            </a>
+        @endif
     </div>
     <!-- TABELA -->
     <div class="col-lg-12 col-12 layout-spacing">

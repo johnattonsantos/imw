@@ -18,6 +18,7 @@ class Perfil extends Model implements Auditable
     const NIVEL_SISTEMA = 'S';
 
     const CODIGO_ADMINISTRADOR_SISTEMA = 'administrador_sistema';
+    const CODIGO_CRIE = 'crie';
 
 
     protected $fillable = ['nome', 'nivel'];
@@ -35,6 +36,12 @@ class Perfil extends Model implements Auditable
             return [
                 'administrador_sistema',
                 'administrador do sistema',
+            ];
+        }
+
+        if ($codigo === self::CODIGO_CRIE) {
+            return [
+                'crie',
             ];
         }
 

@@ -10,12 +10,14 @@ use App\Services\ServiceIgrejas\GetEstatisticaAnoEclesiasticoTodosService;
 use App\Services\ServiceIgrejas\LivroRazaoService;
 use App\Services\ServiceIgrejas\MovimentoDiarioService;
 use App\Traits\LocationUtils;
+use App\Traits\RegionalScope;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
 
 class IgrejasRegiaoController extends Controller
 {
     use LocationUtils;
+    use RegionalScope;
 
     public function index()
     {
@@ -33,6 +35,9 @@ class IgrejasRegiaoController extends Controller
     public function estatisticaAnoEclesiastico(Request $request, InstituicoesInstituicao $igreja)
     {
         try {
+            if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+                return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+            }
             $data = app(GetEstatisticaAnoEclesiasticoService::class)->execute($igreja, $request->input('ano'));
             return view('igrejas-regiao.estatistica-ano-eclesiastico', $data);
         } catch (\Exception $e) {
@@ -44,6 +49,9 @@ class IgrejasRegiaoController extends Controller
     public function estatisticaAnoEclesiasticoTodos(Request $request, InstituicoesInstituicao $igreja)
     {
         try {
+            if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+                return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+            }
             $data = app(GetEstatisticaAnoEclesiasticoTodosService::class)->execute($igreja, $request->input('ano'));
             return view('igrejas-regiao.estatistica-ano-eclesiastico', $data);
         } catch (\Exception $e) {
@@ -54,6 +62,10 @@ class IgrejasRegiaoController extends Controller
 
     public function balancete(Request $request, InstituicoesInstituicao $igreja)
     {
+        if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+            return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+        }
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -64,6 +76,10 @@ class IgrejasRegiaoController extends Controller
 
     public function balancetePdf(Request $request, InstituicoesInstituicao $igreja)
     {
+        if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+            return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+        }
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -75,6 +91,10 @@ class IgrejasRegiaoController extends Controller
 
     public function movimentoDiario(Request $request, InstituicoesInstituicao $igreja)
     {
+        if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+            return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+        }
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -85,6 +105,10 @@ class IgrejasRegiaoController extends Controller
 
     public function movimentoDiarioPdf(Request $request, InstituicoesInstituicao $igreja)
     {
+        if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+            return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+        }
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -96,6 +120,10 @@ class IgrejasRegiaoController extends Controller
 
     public function livrorazao(Request $request, InstituicoesInstituicao $igreja)
     {
+        if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+            return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+        }
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
 
@@ -106,6 +134,10 @@ class IgrejasRegiaoController extends Controller
 
     public function livrorazaoPdf(Request $request, InstituicoesInstituicao $igreja)
     {
+        if (!$this->instituicaoPertenceRegiao((int) $igreja->id, $this->sessionRegiaoId())) {
+            return redirect()->back()->with('error', 'Igreja fora da região do perfil.');
+        }
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
 

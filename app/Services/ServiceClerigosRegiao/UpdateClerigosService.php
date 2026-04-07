@@ -3,15 +3,20 @@
 namespace App\Services\ServiceClerigosRegiao;
 
 use App\Models\PessoasPessoa;
+use App\Traits\RegionalScope;
 //use Intervention\Image\Facades\Image;
 use Ramsey\Uuid\Uuid;
 
 class UpdateClerigosService
 {
+    use RegionalScope;
+
     public function execute($request, $id)
     {
-        $clerigo = PessoasPessoa::findOrFail($id);
-        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
+        $instituicaoId = $this->sessionRegiaoId();
+        $clerigo = PessoasPessoa::where('id', $id)
+            ->where('regiao_id', $instituicaoId)
+            ->firstOrFail();
 
         if ($request->file('image')) {
             $photo = $request->file('image');  

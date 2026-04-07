@@ -28,9 +28,9 @@ trait TotalClerigosUtils
         $results = DB::table('pessoas_funcaoministerial as pf')
             ->select(DB::raw('COUNT(*) as total'), 'pf.funcao')
             ->leftJoin('pessoas_nomeacoes as pn', 'pf.id', '=', 'pn.funcao_ministerial_id')
-            ->leftJoin('pessoas_pessoas as pp', function ($join) {
+            ->leftJoin('pessoas_pessoas as pp', function ($join) use ($regiaoId) {
                 $join->on('pp.id', '=', 'pn.pessoa_id')
-                    ->where('pp.regiao_id', '=', 23);
+                    ->where('pp.regiao_id', '=', $regiaoId);
             })
             ->whereNull('pn.deleted_at')
             ->where('pp.regiao_id', '=', $regiaoId)

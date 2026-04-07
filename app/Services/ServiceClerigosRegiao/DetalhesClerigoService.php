@@ -3,18 +3,23 @@
 namespace App\Services\ServiceClerigosRegiao;
 
 use App\Models\PessoasPessoa;
+use App\Traits\RegionalScope;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class DetalhesClerigoService
 {
+    use RegionalScope;
+
     public function execute($id)
     {
         // Busca o clerigo pelo ID
         $clerigo = PessoasPessoa::select('pessoas_pessoas.*', 'pessoas_status.descricao as situacao', 'formacoes.nivel as formacao')
             ->Leftjoin('pessoas_status', 'pessoas_status.id','pessoas_pessoas.situacao_id')
             ->Leftjoin('formacoes', 'formacoes.id','pessoas_pessoas.formacao_id')
-            ->findOrFail($id);
+            ->where('pessoas_pessoas.id', $id)
+            ->where('pessoas_pessoas.regiao_id', $this->sessionRegiaoId())
+            ->firstOrFail();
         if ($clerigo->foto) {
             $disk = Storage::disk('s3');
             $clerigo->foto = $disk->temporaryUrl($clerigo->foto, Carbon::now()->addMinutes(15));

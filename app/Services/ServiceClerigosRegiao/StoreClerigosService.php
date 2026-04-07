@@ -4,11 +4,14 @@ namespace App\Services\ServiceClerigosRegiao;
 
 use App\Models\PessoaNomeacao;
 use App\Models\PessoasPessoa;
+use App\Traits\RegionalScope;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 class StoreClerigosService
 {
+    use RegionalScope;
+
     public function execute($request)
     {
         if ($request->file('image')) {
@@ -25,7 +28,7 @@ class StoreClerigosService
         }else{
             $filePath = '';
         }
-        $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
+        $instituicaoId = $this->sessionRegiaoId();
         PessoasPessoa::create([
             'nome' => $request['nome'],
             'identidade' => $request['identidade'],
@@ -36,7 +39,7 @@ class StoreClerigosService
             'cpf' => $request['cpf'],
             'endereco' => $request['endereco'],
             'numero' => $request['numero'],
-            'regiao_id' =>   $data['regiao_id'] = $instituicaoId,
+            'regiao_id' => $instituicaoId,
             'complemento' => $request['complemento'],
             'bairro' => $request['bairro'],
             'cidade' => $request['cidade'],

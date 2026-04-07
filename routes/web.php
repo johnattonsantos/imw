@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ModuloGeralController;
 use App\Http\Controllers\ClerigosRegiaoController;
 use App\Http\Controllers\CongregacoesController;
 use App\Http\Controllers\CongregadosController;
@@ -75,6 +76,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('index')->middleware(['seguranca:admin-index']);
+            Route::get('/modulo-geral', [ModuloGeralController::class, 'index'])->name('modulo-geral')->middleware(['seguranca:admin-index']);
+            Route::get('/modulo-geral/export/xlsx', [ModuloGeralController::class, 'exportXlsx'])->name('modulo-geral.export.xlsx')->middleware(['seguranca:admin-index']);
+            Route::get('/modulo-geral/export/pdf', [ModuloGeralController::class, 'exportPdf'])->name('modulo-geral.export.pdf')->middleware(['seguranca:admin-index']);
             Route::get('/novo', [AdminController::class, 'novo'])->name('novo')->middleware(['seguranca:usuarios-cadastrar']);
             Route::post('/update/{id}', [AdminController::class, 'update'])->name('update')->middleware(['seguranca:usuarios-atualizar']);
             Route::post('/store', [AdminController::class, 'store'])->name('store')->middleware(['seguranca:usuarios-cadastrar']);
@@ -299,7 +303,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/carta-pastoral/visualizar-pdf/{id}', [GceuController::class, 'cartaPastoralPdfDistrito'])->name('carta-pastoral.pdf');
         });
 
-        Route::prefix('regiao/relatorio')->name('regiao.')->group(function () {
+        Route::prefix('regiao/relatorio')->name('regiao.')->middleware('crie.regiao')->group(function () {
             Route::get('/lancamentodasigrejas', [RegiaoRelatorioController::class, 'lancamentodasigrejas'])->name('relatorio.lancamentodasigrejas')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/lancamentodasigrejas/pdf', [RegiaoRelatorioController::class, 'lancamentodasigrejasPdf'])->name('relatorio.lancamentodasigrejas-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
 
@@ -348,7 +352,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Relatórios Região Clérigos
-        Route::prefix('regiao/relatorio')->name('regiao.')->controller(RegiaoRelatorioController::class)->group(function () {
+        Route::prefix('regiao/relatorio')->name('regiao.')->controller(RegiaoRelatorioController::class)->middleware('crie.regiao')->group(function () {
             Route::get('/clerigos-aniversariantes', 'clerigoAniversariante')->name('relatorio.clerigosaniversariantes')->middleware('seguranca:relatorio-clerigos-aniversariantes');
             Route::get('/clerigos-esposas', 'clerigoEsposa')->name('relatorio.clerigosesposas')->middleware('seguranca:relatorio-clerigos-esposas');
             Route::get('/clerigos-dados', 'clerigoDados')->name('relatorio.clerigosdados')->middleware('seguranca:relatorio-clerigos-dados');
@@ -359,7 +363,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Relatórios Região Igreja
-        Route::prefix('regiao/relatorio')->name('regiao.')->controller(RegiaoRelatorioController::class)->group(function () {
+        Route::prefix('regiao/relatorio')->name('regiao.')->controller(RegiaoRelatorioController::class)->middleware('crie.regiao')->group(function () {
             Route::get('/congregacoes-por-igrejas', 'CongregacaoPorIgreja')->name('relatorio.congregacaoporigreja')->middleware('seguranca:regiao-relatorio-congregacoes-igrejas');
             Route::get('/cnpj-igrejas', 'cnpjIgreja')->name('cnpj.igreja')->middleware('seguranca:regiao-relatorio-cnpj-igreja');
             Route::get('/contato-igrejas', 'ContatoIgreja')->name('contato.igreja')->middleware('seguranca:regiao-relatorio-contato-igreja');
@@ -369,7 +373,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/clerigo-por-igreja', 'clerigoPorIgreja')->name('relatorio.clerigo.por.igreja')->middleware('seguranca:regiao-relatorio-congregacoes-igrejas');
         });
 
-        Route::prefix('regiao/estatistica')->name('regiao.')->group(function () {
+        Route::prefix('regiao/estatistica')->name('regiao.')->middleware('crie.regiao')->group(function () {
         //Estatitisca de Membros
             Route::get('/relatorio/estatistica-membros-evolucao', [RegiaoEstatisticasController::class, 'estatisticaEvolucao'])->name('estatistica.evolucao')->middleware(['seguranca:regiao-menu-estatistica']);
             //Estatitisca de Membros
@@ -453,7 +457,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         // Crud GCEU
-        Route::prefix('gceu')->name('gceu.')->group(function () {
+        Route::prefix('gceu')->name('gceu.')->middleware('crie.regiao')->group(function () {
             Route::get('/lista', [GceuController::class, 'index'])->name('index')->middleware(['seguranca:gceu-lista']);
             Route::get('/lista/teste', [GceuController::class, 'index'])->name('index.teste')->middleware(['seguranca:gceu-lista-teste']);
             Route::get('list', [GceuController::class, 'list'])->name('list')->middleware(['seguranca:gceu-lista']);
@@ -527,7 +531,7 @@ Route::middleware(['auth'])->group(function () {
         // Segurança
         Route::get('/selecionarPerfil', [HomeController::class, 'selecionarPerfil'])->withoutMiddleware([VerificaPerfil::class])->name('selecionarPerfil');
 
-        Route::prefix('igrejas-regiao')->name('igrejas.regiao.')->controller(IgrejasRegiaoController::class)->middleware(['seguranca:menu-instituicoes'])->group(
+        Route::prefix('igrejas-regiao')->name('igrejas.regiao.')->controller(IgrejasRegiaoController::class)->middleware(['seguranca:menu-instituicoes', 'crie.regiao'])->group(
             function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/list', 'list')->name('list');
@@ -542,7 +546,7 @@ Route::middleware(['auth'])->group(function () {
         );
 
         //Clérigos
-        Route::prefix('clerigos')->name('clerigos.')->controller(ClerigosRegiaoController::class)->group(function () {
+        Route::prefix('clerigos')->name('clerigos.')->controller(ClerigosRegiaoController::class)->middleware('crie.regiao')->group(function () {
             Route::middleware(['seguranca:menu-instituicoes'])->group(function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/novo', 'novo')->name('novo');
@@ -556,7 +560,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/buscar-por-cpf/{cpf}', 'findByCpf')->name('findByCpf');
         });
 
-        Route::prefix('clerigos/nomeacoes')->name('clerigos.nomeacoes.')->controller(NomeacoesClerigosController::class)->middleware(['seguranca:menu-instituicoes'])->group(function () {
+        Route::prefix('clerigos/nomeacoes')->name('clerigos.nomeacoes.')->controller(NomeacoesClerigosController::class)->middleware(['seguranca:menu-instituicoes', 'crie.regiao'])->group(function () {
             Route::get('/{id}', 'index')->name('index');
             Route::get('/{pessoa}/novo', 'novo')->name('novo');
             Route::post('/{id}/novo', 'store')->name('store');
@@ -605,7 +609,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         //Instituicoes
-        Route::prefix('instituicoes-regiao')->name('instituicoes-regiao.')->middleware(['seguranca:menu-instituicoes'])->controller(InstituicaoRegiaoDistritosController::class)->group(function () {
+        Route::prefix('instituicoes-regiao')->name('instituicoes-regiao.')->middleware(['seguranca:menu-instituicoes', 'crie.regiao'])->controller(InstituicaoRegiaoDistritosController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/novo', 'novo')->name('novo');
             Route::delete('/deletar/{id}', 'deletar')->name('deletar');
@@ -629,7 +633,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
          // Contabilidade
-        Route::prefix('contabilidade')->name('contabilidade.')->controller(ContabilidadeController::class)->group(function () {
+        Route::prefix('contabilidade')->name('contabilidade.')->controller(ContabilidadeController::class)->middleware('crie.regiao')->group(function () {
             Route::get('/irrf', 'irrf')->name('irrf')->middleware('seguranca:contabilidade-irrf');
             Route::get('/financeiro/balancete', [FinanceiroRelatorioController::class, 'balanceteRegiao'])->name('relatorio-balancete')->middleware(['seguranca:contabilidade-irrf']);
         });

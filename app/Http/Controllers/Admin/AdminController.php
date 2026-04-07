@@ -13,6 +13,9 @@ use App\Services\ServicesUsuarios\AdminEditarUsuarioService;
 use App\Services\ServicesUsuarios\AdminListUsuariosService;
 use App\Services\ServicesUsuarios\AdminNovoUsuarioService;
 use App\Services\ServicesUsuarios\SalvarUsuarioService;
+use App\Models\InstituicoesInstituicao;
+use App\Models\Perfil;
+use App\Models\PerfilUser;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -52,6 +55,9 @@ class AdminController extends Controller
     {
         try {
             $user = User::findOrFail($id);
+            if ($this->isCrieProfile() && !$this->canManageUserInCurrentRegion($user)) {
+                return redirect()->route('admin.index')->with('error', 'Você não pode editar usuários de outra região.');
+            }
             $perfis = app(AdminNovoUsuarioService::class)->execute();
             return view('admin.editar', compact('user', 'perfis', 'id'));
         } catch (\Exception $e) {
@@ -62,6 +68,11 @@ class AdminController extends Controller
     public function update(UpdateUsuarioRequest $request, $id)
     {
         try {
+            $user = User::findOrFail($id);
+            if ($this->isCrieProfile() && !$this->canManageUserInCurrentRegion($user)) {
+                return redirect()->route('admin.index')->with('error', 'Você não pode atualizar usuários de outra região.');
+            }
+
             DB::beginTransaction();
             app(AdminEditarUsuarioService::class)->execute($request->all(), $id);
             DB::commit();
@@ -75,6 +86,11 @@ class AdminController extends Controller
     public function deletar($id)
     {
         try {
+            $user = User::findOrFail($id);
+            if ($this->isCrieProfile() && !$this->canManageUserInCurrentRegion($user)) {
+                return redirect()->route('admin.index')->with('error', 'Você não pode excluir usuários de outra região.');
+            }
+
             DB::beginTransaction();
             app(AdminDeletarUsuarioService::class)->execute($id);
             DB::commit();
@@ -85,4 +101,39 @@ class AdminController extends Controller
         }
     }
 
+    private function isCrieProfile(): bool
+    {
+        $perfilNome = (string) optional(session('session_perfil'))->perfil_nome;
+        return Perfil::correspondeCodigo($perfilNome, Perfil::CODIGO_CRIE);
+    }
+
+    private function canManageUserInCurrentRegion(User $user): bool
+    {
+        $regiaoId = $this->resolveCurrentRegionId();
+        if ($regiaoId <= 0) {
+            return false;
+        }
+
+        if ((int) $user->regiao_id === $regiaoId) {
+            return true;
+        }
+
+        return PerfilUser::where('user_id', $user->id)
+            ->whereHas('instituicao', function ($query) use ($regiaoId) {
+                $query->where('instituicoes_instituicoes.id', $regiaoId)
+                    ->orWhere('instituicoes_instituicoes.regiao_id', $regiaoId);
+            })
+            ->exists();
+    }
+
+    private function resolveCurrentRegionId(): int
+    {
+        $instituicaoId = (int) optional(session('session_perfil'))->instituicao_id;
+        if ($instituicaoId <= 0) {
+            return 0;
+        }
+
+        $regiaoId = (int) InstituicoesInstituicao::where('id', $instituicaoId)->value('regiao_id');
+        return $regiaoId > 0 ? $regiaoId : $instituicaoId;
+    }
 }

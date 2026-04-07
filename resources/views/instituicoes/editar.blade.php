@@ -70,7 +70,11 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <input type="hidden" name="regiao_id" id="regiao_id" value="23">
+                @php
+                    $regiaoSessaoId = optional(optional(optional(session('session_perfil'))->instituicoes)->regiao)->id
+                        ?? optional(session('session_perfil'))->instituicao_id;
+                @endphp
+                <input type="hidden" name="regiao_id" id="regiao_id" value="{{ old('regiao_id', $regiaoSessaoId) }}">
             </div>
 
             <div class="row">

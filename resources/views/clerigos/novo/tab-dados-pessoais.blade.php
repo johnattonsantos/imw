@@ -31,7 +31,11 @@
             <!-- Conteúdo do formulário -->
             <div class="col-xl-9">
                 <div class="form-group @error('nome') has-error @enderror">
-                    <input type="hidden" id="regiao_id" value="23">
+                    @php
+                        $regiaoSessaoId = optional(optional(optional(session('session_perfil'))->instituicoes)->regiao)->id
+                            ?? optional(session('session_perfil'))->instituicao_id;
+                    @endphp
+                    <input type="hidden" id="regiao_id" value="{{ old('regiao_id', $regiaoSessaoId) }}">
                     <div class="row mb-4">
                         <div class="col-xl-6">
                             <label for="nome">* Nome</label>

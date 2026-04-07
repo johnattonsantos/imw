@@ -44,7 +44,11 @@
                     <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
             </div>
-            <input type="hidden" name="regiao_id" value="23">
+            @php
+                $regiaoSessaoId = optional(optional(optional(session('session_perfil'))->instituicoes)->regiao)->id
+                    ?? optional(session('session_perfil'))->instituicao_id;
+            @endphp
+            <input type="hidden" name="regiao_id" value="{{ old('regiao_id', $regiaoSessaoId) }}">
         </div>
     </blockquote>
 </div>

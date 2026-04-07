@@ -8,6 +8,7 @@ use App\Http\Requests\StoreGCeuRequest;
 use App\Http\Requests\UpdateGCeuCartaPastoralRequest;
 use App\Http\Requests\UpdateGCeuRequest;
 use App\Models\GCeu;
+use App\Models\GCeuCartaPastoral;
 use App\Models\MembresiaMembro;
 use App\Models\PessoasPessoa;
 use App\Services\ServiceGCeu\CartaPastoralGCeuDistritoService;
@@ -66,6 +67,10 @@ class GceuController extends Controller
 
     public function editar($id)
     {
+        if (!$this->gceuPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.index')->with('error', 'GCEU fora do escopo da instituição logada.');
+        }
+
         $gceu = app(EditarGCeuService::class)->findOne($id);
         $congregacoes = Identifiable::fetchCongregacoes();
         if (!$gceu) {
@@ -76,6 +81,10 @@ class GceuController extends Controller
 
     public function update(UpdateGCeuRequest $request, $id)
     {
+        if (!$this->gceuPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.index')->with('error', 'GCEU fora do escopo da instituição logada.');
+        }
+
         try {
             DB::beginTransaction();
             app(EditarGCeuService::class)->execute($id, $request->all());
@@ -90,6 +99,10 @@ class GceuController extends Controller
 
     public function deletar($id)
     {
+        if (!$this->gceuPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.index')->with('error', 'GCEU fora do escopo da instituição logada.');
+        }
+
         $congregacoes = Identifiable::fetchCongregacoes();
         try {
             $existe = GCeu::join('gceu_membros', 'gceu_membros.gceu_cadastro_id','gceu_cadastros.id')->where('gceu_cadastros.id',$id)->first();
@@ -128,6 +141,10 @@ class GceuController extends Controller
 
     public function visualizarHtml($id)
     {
+        if (!$this->gceuPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.index')->with('error', 'GCEU fora do escopo da instituição logada.');
+        }
+
         $gceu = app(VisualizarGCeuService::class)->findOne($id);
         if (!$gceu) {
             return redirect()->route('gceu.index')->with('error', 'GCEU não encontrado.');
@@ -179,6 +196,10 @@ class GceuController extends Controller
     
     public function cartaPastoralEditar($id)
     {
+        if (!$this->cartaPastoralPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo da instituição logada.');
+        }
+
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $data['pastores'] = PessoasPessoa::select('pessoas_pessoas.id', 'pessoas_pessoas.nome')
                 ->join('pessoas_nomeacoes', 'pessoas_nomeacoes.pessoa_id', 'pessoas_pessoas.id')
@@ -193,6 +214,10 @@ class GceuController extends Controller
 
     public function cartaPastoralUpdate(UpdateGCeuCartaPastoralRequest $request, $id)
     {
+        if (!$this->cartaPastoralPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo da instituição logada.');
+        }
+
         try {
             DB::beginTransaction();
             app(EditarGCeuCartaPastoralService::class)->execute($id, $request->all());
@@ -207,6 +232,10 @@ class GceuController extends Controller
 
     public function cartaPastoralDeletar($id)
     {
+        if (!$this->cartaPastoralPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo da instituição logada.');
+        }
+
         try {
             app(DeletarGCeuCartaPastoralService::class)->execute($id);
             return redirect()->route('gceu.carta-pastoral')->with('success', 'Carta pastoral deletada com sucesso.');
@@ -298,6 +327,10 @@ class GceuController extends Controller
 
     public function cartaPastoralVisualizarHtml($id)
     {
+        if (!$this->cartaPastoralPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo da instituição logada.');
+        }
+
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
             return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
@@ -307,6 +340,10 @@ class GceuController extends Controller
 
     public function cartaPastoralPdf($id)
     {
+        if (!$this->cartaPastoralPertenceIgreja((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo da instituição logada.');
+        }
+
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
             return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
@@ -417,6 +454,10 @@ class GceuController extends Controller
 
     public function cartaPastoralVisualizarHtmlDistrito($id)
     {
+        if (!$this->cartaPastoralPertenceDistrito((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo do distrito logado.');
+        }
+
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
             return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
@@ -426,6 +467,10 @@ class GceuController extends Controller
 
     public function cartaPastoralPdfDistrito($id)
     {
+        if (!$this->cartaPastoralPertenceDistrito((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo do distrito logado.');
+        }
+
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
             return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
@@ -494,6 +539,10 @@ class GceuController extends Controller
 
     public function cartaPastoralVisualizarHtmlRegiao($id)
     {
+        if (!$this->cartaPastoralPertenceRegiao((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo da região logada.');
+        }
+
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
             return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
@@ -503,6 +552,10 @@ class GceuController extends Controller
 
     public function cartaPastoralPdfRegiao($id)
     {
+        if (!$this->cartaPastoralPertenceRegiao((int) $id)) {
+            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral fora do escopo da região logada.');
+        }
+
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
             return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
@@ -543,5 +596,58 @@ class GceuController extends Controller
             return redirect()->route('gceu.index')->with('error', 'Relatório de Aniversariantes não encontrado.');
         }
         return view('gceu.relatorio-regiao.aniversariantes', $data);
+    }
+
+    private function gceuPertenceIgreja(int $gceuId): bool
+    {
+        $igrejaId = (int) optional(Identifiable::fetchSessionIgrejaLocal())->id;
+        if ($gceuId <= 0 || $igrejaId <= 0) {
+            return false;
+        }
+
+        return GCeu::where('id', $gceuId)
+            ->where('instituicao_id', $igrejaId)
+            ->exists();
+    }
+
+    private function cartaPastoralPertenceIgreja(int $cartaPastoralId): bool
+    {
+        $igrejaId = (int) optional(Identifiable::fetchSessionIgrejaLocal())->id;
+        if ($cartaPastoralId <= 0 || $igrejaId <= 0) {
+            return false;
+        }
+
+        return GCeuCartaPastoral::where('id', $cartaPastoralId)
+            ->where('instituicao_id', $igrejaId)
+            ->exists();
+    }
+
+    private function cartaPastoralPertenceDistrito(int $cartaPastoralId): bool
+    {
+        $distritoId = (int) optional(Identifiable::fetchtSessionDistrito())->id;
+        if ($cartaPastoralId <= 0 || $distritoId <= 0) {
+            return false;
+        }
+
+        return DB::table('gceu_cartas_pastorais as carta')
+            ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'carta.instituicao_id')
+            ->where('carta.id', $cartaPastoralId)
+            ->where('igreja.instituicao_pai_id', $distritoId)
+            ->exists();
+    }
+
+    private function cartaPastoralPertenceRegiao(int $cartaPastoralId): bool
+    {
+        $regiaoId = (int) optional(Identifiable::fetchtSessionRegiao())->id;
+        if ($cartaPastoralId <= 0 || $regiaoId <= 0) {
+            return false;
+        }
+
+        return DB::table('gceu_cartas_pastorais as carta')
+            ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'carta.instituicao_id')
+            ->join('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'igreja.instituicao_pai_id')
+            ->where('carta.id', $cartaPastoralId)
+            ->where('distrito.instituicao_pai_id', $regiaoId)
+            ->exists();
     }
 }
