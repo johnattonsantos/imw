@@ -603,15 +603,19 @@
         function toggleExclusaoFieldsByStatus() {
           const status = $('#status').val();
           const isInativo = status === 'I';
+          const hasDtExclusao = ($('#dt_exclusao').val() || '').trim() !== '';
+          const hasModoExclusao = ($('#modo_exclusao_id').val() || '').trim() !== '';
+          const hasAnyExclusaoFilled = hasDtExclusao || hasModoExclusao;
+          const shouldEnableFields = isInativo || hasAnyExclusaoFilled;
 
           $('#dt_exclusao').prop('required', isInativo);
           $('#modo_exclusao_id').prop('required', isInativo);
-          $('#dt_exclusao').prop('disabled', !isInativo);
-          $('#modo_exclusao_id').prop('disabled', !isInativo);
+          $('#dt_exclusao').prop('disabled', !shouldEnableFields);
+          $('#modo_exclusao_id').prop('disabled', !shouldEnableFields);
         }
 
         toggleExclusaoFieldsByStatus();
-        $('#status').on('change', toggleExclusaoFieldsByStatus);
+        $('#status, #dt_exclusao, #modo_exclusao_id').on('change input', toggleExclusaoFieldsByStatus);
       }
     });
 </script>

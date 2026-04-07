@@ -184,19 +184,21 @@ class UpdateMembroRequest extends FormRequest
                         $dtExclusaoInformada = !empty($this->input('dt_exclusao'));
                         $modoExclusaoInformado = !empty($this->input('modo_exclusao_id'));
 
-                        $possuiDadosExclusaoNoRequest = $dtExclusaoInformada && $modoExclusaoInformado;
+                        $possuiDadosExclusaoNoRequest = $dtExclusaoInformada || $modoExclusaoInformado;
 
                         $membroIdValidacao = $membroId ?: $this->route('id');
 
                         $possuiDadosExclusaoNoMigracao = DB::table('membresia_rolpermanente_migracao')
                             ->where('membro_id', $membroIdValidacao)
                             ->where('lastrec', 1)
-                            ->whereNotNull('dt_exclusao')
-                            ->whereNotNull('modo_exclusao_id')
+                            ->where(function ($query) {
+                                $query->whereNotNull('dt_exclusao')
+                                    ->orWhereNotNull('modo_exclusao_id');
+                            })
                             ->exists();
 
                         if ($possuiDadosExclusaoNoRequest || $possuiDadosExclusaoNoMigracao) {
-                            $fail('É necessário remover Data de Exclusão e Modo de Exclusão antes de validar como ativo, para fazer isso escolho o status inativo');
+                            $fail('Com status Ativo, é necessário limpar Data de Exclusão e Modo de Exclusão. Se precisar manter essas informações, altere o status para Inativo.');
                         }
                     },
                 ]
