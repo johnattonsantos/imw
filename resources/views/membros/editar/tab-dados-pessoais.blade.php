@@ -600,6 +600,48 @@
 
     $(document).ready(function () {
       if ($('#status').length) {
+        const exclusaoCache = {
+          dt_exclusao: ($('#dt_exclusao').val() || '').trim(),
+          modo_exclusao_id: ($('#modo_exclusao_id').val() || '').trim(),
+        };
+        let previousStatus = $('#status').val();
+
+        function rememberExclusaoValues() {
+          const dtExclusao = ($('#dt_exclusao').val() || '').trim();
+          const modoExclusao = ($('#modo_exclusao_id').val() || '').trim();
+
+          if (dtExclusao !== '') {
+            exclusaoCache.dt_exclusao = dtExclusao;
+          }
+          if (modoExclusao !== '') {
+            exclusaoCache.modo_exclusao_id = modoExclusao;
+          }
+        }
+
+        function handleStatusTransition() {
+          const status = $('#status').val();
+          if (status === previousStatus) {
+            return;
+          }
+
+          if (status === 'A') {
+            rememberExclusaoValues();
+            $('#dt_exclusao').val('');
+            $('#modo_exclusao_id').val('');
+          }
+
+          if (status === 'I') {
+            if ((($('#dt_exclusao').val() || '').trim() === '') && exclusaoCache.dt_exclusao !== '') {
+              $('#dt_exclusao').val(exclusaoCache.dt_exclusao);
+            }
+            if ((($('#modo_exclusao_id').val() || '').trim() === '') && exclusaoCache.modo_exclusao_id !== '') {
+              $('#modo_exclusao_id').val(exclusaoCache.modo_exclusao_id);
+            }
+          }
+
+          previousStatus = status;
+        }
+
         function toggleExclusaoFieldsByStatus() {
           const status = $('#status').val();
           const isInativo = status === 'I';
@@ -615,7 +657,15 @@
         }
 
         toggleExclusaoFieldsByStatus();
-        $('#status, #dt_exclusao, #modo_exclusao_id').on('change input', toggleExclusaoFieldsByStatus);
+        $('#status').on('change', function () {
+          handleStatusTransition();
+          toggleExclusaoFieldsByStatus();
+        });
+
+        $('#dt_exclusao, #modo_exclusao_id').on('change input', function () {
+          rememberExclusaoValues();
+          toggleExclusaoFieldsByStatus();
+        });
       }
     });
 </script>
