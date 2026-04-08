@@ -145,9 +145,12 @@ class RegiaoRelatorioController extends Controller
         return $pdf->stream('relatorio_estatisticagenero.pdf' . date('YmdHis'));
     }
 
-    public function estatisticasGceu()
+    public function estatisticasGceu(Request $request)
     {
-        $data = app(EstatisticasGceuService::class)->execute();
+        $data = app(EstatisticasGceuService::class)->execute(
+            $request->input('distrito_id'),
+            $request->input('igreja_id')
+        );
 
         return view('regiao.relatorios.estatisticas-gceu', $data);
     }

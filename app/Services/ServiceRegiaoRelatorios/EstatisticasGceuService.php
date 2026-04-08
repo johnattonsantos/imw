@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class EstatisticasGceuService
 {
-    public function execute(): array
+    public function execute($distritoId = null, $igrejaId = null): array
     {
         $regiao = Identifiable::fetchtSessionRegiao();
 
@@ -35,6 +35,12 @@ class EstatisticasGceuService
             })
             ->where('distrito.instituicao_pai_id', $regiao->id)
             ->where('distrito.tipo_instituicao_id', 2)
+            ->when(!empty($distritoId), function ($query) use ($distritoId) {
+                $query->where('distrito.id', $distritoId);
+            })
+            ->when(!empty($igrejaId), function ($query) use ($igrejaId) {
+                $query->where('igreja.id', $igrejaId);
+            })
             ->select(
                 'distrito.nome as distrito',
                 'igreja.nome as igreja',
@@ -45,8 +51,24 @@ class EstatisticasGceuService
             ->orderBy('igreja.nome')
             ->get();
 
+        $igrejas = DB::table('instituicoes_instituicoes as igreja')
+            ->join('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'igreja.instituicao_pai_id')
+            ->select('igreja.id', 'igreja.nome')
+            ->where('distrito.instituicao_pai_id', $regiao->id)
+            ->where('distrito.tipo_instituicao_id', 2)
+            ->where('igreja.tipo_instituicao_id', 1)
+            ->when(!empty($distritoId), function ($query) use ($distritoId) {
+                $query->where('distrito.id', $distritoId);
+            })
+            ->orderBy('igreja.nome')
+            ->get();
+
         return [
             'dados' => $dados,
+            'distritos' => Identifiable::fetchDistritosByRegiao($regiao->id),
+            'igrejas' => $igrejas,
+            'distrito_id' => $distritoId,
+            'igreja_id' => $igrejaId,
             'totais' => [
                 'qtd_gceus' => (int) $dados->sum('qtd_gceus'),
                 'qtd_membros_gceu' => (int) $dados->sum('qtd_membros_gceu'),
