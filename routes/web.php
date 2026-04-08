@@ -276,6 +276,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/relatorio/estatisticagenero', [DistritoRelatorioController::class, 'estatisticagenero'])->name('relatorio.estatisticagenero')->middleware(['seguranca:distrito-menu-relatorio']);
             Route::post('/relatorio/estatisticagenero/pdf', [DistritoRelatorioController::class, 'estatisticageneroPdf'])->name('relatorio.estatisticagenero-pdf')->middleware(['seguranca:distrito-menu-relatorio']);
+            Route::get('/relatorio/estatisticas-gceu', [DistritoRelatorioController::class, 'estatisticasGceu'])->name('relatorio.estatisticas.gceu')->middleware(['seguranca:distrito-menu-relatorio']);
 
             Route::get('/congregacoes-por-igrejas', [DistritoRelatorioController::class, 'CongregacaoPorIgreja'])->name('relatorio.congregacaoporigreja')->middleware('seguranca:distrito-relatorio-congregacoes-igrejas');
 
@@ -328,6 +329,7 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/estatisticagenero', [RegiaoRelatorioController::class, 'estatisticagenero'])->name('relatorio.estatisticagenero')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/estatisticagenero/pdf', [RegiaoRelatorioController::class, 'estatisticageneroPdf'])->name('relatorio.estatisticagenero-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/estatisticas-gceu', [RegiaoRelatorioController::class, 'estatisticasGceu'])->name('relatorio.estatisticas.gceu')->middleware(['seguranca:regiao-menu-relatorio']);
             
             Route::get('/irrf', [ContabilidadeController::class,'irrf'])->name('relatorio.irrf')->middleware('seguranca:regiao-menu-relatorio');
 

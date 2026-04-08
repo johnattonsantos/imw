@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ServiceDistritoRelatorios\AspirantesIgrejasService;
 use App\Services\ServiceDistritoRelatorios\EstatisticaGeneroService;
+use App\Services\ServiceDistritoRelatorios\EstatisticasGceuService;
 use App\Services\ServiceDistritoRelatorios\IgrejasService;
 use App\Services\ServiceDistritoRelatorios\LancamentoIgrejasService;
 use App\Services\ServiceDistritoRelatorios\LivroRazaoGeralService;
@@ -80,6 +81,13 @@ class DistritoRelatorioController extends Controller
             ->setPaper('a4', 'landscape');
 
         return $pdf->stream('relatorio_estatisticagenero.pdf' . date('YmdHis'));
+    }
+
+    public function estatisticasGceu()
+    {
+        $data = app(EstatisticasGceuService::class)->execute();
+
+        return view('distrito.relatorios.estatisticas-gceu', $data);
     }
 
 

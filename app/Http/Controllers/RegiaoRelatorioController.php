@@ -11,6 +11,7 @@ use App\Services\ServiceRegiaoRelatorios\EstatisticaEscolaridadeService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaEstadoCivilService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroPorcentagemService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroService;
+use App\Services\ServiceRegiaoRelatorios\EstatisticasGceuService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaTotalMembrosService;
 use App\Services\ServiceRegiaoRelatorios\LancamentoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\LivroRazaoGeralService;
@@ -143,6 +144,14 @@ class RegiaoRelatorioController extends Controller
 
         return $pdf->stream('relatorio_estatisticagenero.pdf' . date('YmdHis'));
     }
+
+    public function estatisticasGceu()
+    {
+        $data = app(EstatisticasGceuService::class)->execute();
+
+        return view('regiao.relatorios.estatisticas-gceu', $data);
+    }
+
     //Escorlaridade
     public function estatisticaescolaridade(Request $request)
     {

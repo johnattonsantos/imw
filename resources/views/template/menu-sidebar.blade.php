@@ -493,6 +493,16 @@
                                      Gênero</a>
                              @endif
                          </li>
+                         <li class="submenu-fixo mt-3 mb-3">
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio'))
+                                 <span>Estatísticas</span>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/estatisticas-gceu') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio'))
+                                 <a href="{{ route('distrito.relatorio.estatisticas.gceu') }}">Estatísticas GCEU</a>
+                             @endif
+                         </li>
 
                          <li {!! Request::is('distrito/apirantes-por-igrejas') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-aspirantes-igrejas'))
@@ -768,7 +778,7 @@
 
              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                  <li class="menu">
-                     <a href="#estatistica-regiao" data-toggle="collapse" aria-expanded="{{Request::is('regiao/estatistica/*') ? 'true' : 'false' }}"
+                    <a href="#estatistica-regiao" data-toggle="collapse" aria-expanded="{{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu')) ? 'true' : 'false' }}"
                          class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -790,7 +800,7 @@
                              </svg>
                          </div>
                      </a>
-                     <ul class="collapse submenu list-unstyled {{ Request::is('regiao/estatistica/*') ? 'collapse show' : '' }}" id="estatistica-regiao"
+                    <ul class="collapse submenu list-unstyled {{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu')) ? 'collapse show' : '' }}" id="estatistica-regiao"
                          data-parent="#estatistica-regiao">
                          <li class="submenu-fixo mt-3 mb-3">
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-membros-evolucao'))
@@ -832,6 +842,11 @@
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-quantidade-membros'))
                                  <a href="{{ route('regiao.relatorio.estatisticatotalmembros') }}">Quantidade de
                                      Membros</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('regiao/relatorio/estatisticas-gceu') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
+                                 <a href="{{ route('regiao.relatorio.estatisticas.gceu') }}">Estatísticas GCEU</a>
                              @endif
                          </li>
 
