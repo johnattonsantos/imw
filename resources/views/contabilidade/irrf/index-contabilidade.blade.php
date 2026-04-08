@@ -81,15 +81,21 @@
             </thead>
             <tbody>
                 @forelse($prebendas as $item)
-                <tr>
-                    <td>{{ $item['prebanda']->nome }}</td>
-                    <td>{{ formatStr($item['prebanda']->cpf, '###.###.###-##') }}</td>
-                    <td>R$ {{ number_format($item['prebanda']->valor_prebendas, 2, ',', '.') }}</td>
-                    <td>{{ $item['prebanda']->n_dependentes }}</td>
-                    <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}</td>
-                </tr>
+                    <tr>
+                        <td>{{ $item['prebanda']->nome }}</td>
+                        <td>{{ formatStr($item['prebanda']->cpf, '###.###.###-##') }}</td>
+                        <td>
+                            @if($item['prebanda']->valor_prebendas)
+                                R$ {{ number_format($item['prebanda']->valor_prebendas, 2, ',', '.') }}
+                            @else
+                                Não informado
+                            @endif
+                        </td>
+                        <td>{{ $item['prebanda']->n_dependentes }}</td>
+                        <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}</td>
+                    </tr>
                 @empty
                 <tr>
                     <td colspan="8">
@@ -214,24 +220,8 @@
                         doc.content[0].layout = objLayout;
                     },
                     pageSize: 'LEGAL'
-                },
-                {
-                  extend: 'print',
-                  className: 'btn btn-primary btn-rounded',
-                  text: '<i class="fas fa-print"></i> Imprimir',
-                  titleAttr: 'Imprimir',
-                  title: "{{ $titulo }}",
-                  customize: function ( win ) {
-                      $(win.document.body)
-                      .css( 'font-size', '14pt' )
-                      .find( 'h1' )
-                              .css( 'text-align', 'center' ).css( 'font-size', '18pt' ).css( 'font-weight', 'bold');
-
-                      $(win.document.body).find('table')
-                      .addClass('compact')
-                      .css('font-size', 'inherit');
-                  }
-                }]
+                }
+                ]
             },
             topEnd: 'search',
             bottomStart: 'info',
