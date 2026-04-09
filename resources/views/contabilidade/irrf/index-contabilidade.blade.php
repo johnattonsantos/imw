@@ -94,7 +94,13 @@
                         <td>{{ $item['prebanda']->n_dependentes }}</td>
                         <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
                         <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
-                        <td>R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}</td>
+                        <td>
+                             @if($item['prebanda']->valor_prebendas)
+                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
+                            @else
+                                ISENTO
+                            @endif
+                        </td>
                     </tr>
                 @empty
                 <tr>
