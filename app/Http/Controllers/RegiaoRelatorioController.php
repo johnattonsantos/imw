@@ -12,6 +12,7 @@ use App\Services\ServiceRegiaoRelatorios\EstatisticaEstadoCivilService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroPorcentagemService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticasGceuService;
+use App\Services\ServiceRegiaoRelatorios\AspirantesIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaTotalMembrosService;
 use App\Services\ServiceRegiaoRelatorios\LancamentoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\LivroRazaoGeralService;
@@ -403,7 +404,13 @@ class RegiaoRelatorioController extends Controller
     public function CongregacaoPorIgreja(Request $request){
         $data = app(Igrejas::class)->execute($request->all());
         return view('regiao.relatorios.igreja.congregacoes-por-igreja', $data);
-    }   
+    }
+
+    public function AspirantePorIgreja(Request $request)
+    {
+        $data = app(AspirantesIgrejasService::class)->execute($request->all());
+        return view('regiao.relatorios.igreja.aspirantes', $data);
+    }
 
     public function cnpjIgreja(Request $request)
     {
