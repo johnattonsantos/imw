@@ -204,6 +204,61 @@
         <script src="{{ asset('theme/plugins/blockui/jquery.blockUI.min.js') }}"></script>
         <script src="{{ asset('theme/plugins/blockui/custom-blockui.js') }}"></script>
 
+        <script>
+            (function() {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                const sessionExpiredMessage = 'Sua sessão expirou (erro 419). A página será atualizada para você tentar novamente.';
+                let handlingSessionExpired = false;
+
+                function notifyAndReload() {
+                    if (handlingSessionExpired) return;
+                    handlingSessionExpired = true;
+
+                    if (window.toastr && typeof window.toastr.error === 'function') {
+                        window.toastr.error(sessionExpiredMessage);
+                    } else if (typeof window.swal === 'function') {
+                        window.swal('Sessão expirada', sessionExpiredMessage, 'warning');
+                    } else {
+                        window.alert(sessionExpiredMessage);
+                    }
+
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1200);
+                }
+
+                if (window.jQuery && csrfToken) {
+                    window.jQuery.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    window.jQuery(document).ajaxError(function(event, jqXHR) {
+                        if (jqXHR && Number(jqXHR.status) === 419) {
+                            notifyAndReload();
+                        }
+                    });
+                }
+
+                if (window.axios && window.axios.interceptors) {
+                    window.axios.interceptors.response.use(
+                        function(response) {
+                            return response;
+                        },
+                        function(error) {
+                            const status = Number(error?.response?.status || 0);
+                            if (status === 419) {
+                                notifyAndReload();
+                            }
+                            return Promise.reject(error);
+                        }
+                    );
+                }
+            })();
+        </script>
+
         <!-- END GLOBAL MANDATORY SCRIPTS -->
         @yield('extras-scripts')
         <script>
