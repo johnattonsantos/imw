@@ -22,8 +22,8 @@ class IdentificaDadosTransferenciaPorExclusaoService
     private function fetchIgrejas()
     {
         // Subconsulta para obter IDs
-        $subQuery = InstituicoesInstituicao::select('id')
-            ->where('instituicao_pai_id', 23);
+        $subQuery = InstituicoesInstituicao::select('id');
+ //           ->where('instituicao_pai_id', 23);
 
         // Consulta principal
         return InstituicoesInstituicao::query()
@@ -33,7 +33,10 @@ class IdentificaDadosTransferenciaPorExclusaoService
             ->where('instituicoes_instituicoes.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('instituicoes_instituicoes.id', '<>', Identifiable::fetchSessionIgrejaLocal()->id)
             ->select('instituicoes_instituicoes.*')
-            ->with('instituicaoPai:id,nome')
+            ->with([
+                'instituicaoPai:id,nome,instituicao_pai_id',
+                'instituicaoPai.instituicaoPai:id,nome'
+            ])
             ->orderBy('distrito.nome', 'asc')
             ->orderBy('instituicoes_instituicoes.nome', 'asc')
             ->get();
