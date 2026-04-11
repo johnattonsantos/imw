@@ -95,7 +95,7 @@
                         <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
                         <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
                         <td>
-                            @if($item['prebanda']->valor_prebendas > 0)
+                            @if($item['prebanda']->valor_prebendas > 5000)
                                 R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
                             @else
                                 ISENTO
