@@ -19,7 +19,12 @@ class GetBaseParamsService
         try {
             $sessionInstituicoes = session()->get('session_perfil')->instituicoes;
     
-            return NotificacaoTransferencia::where('igreja_destino_id', $sessionInstituicoes->igrejaLocal->id)
+            return NotificacaoTransferencia::with([
+                    'regiaoOrigem:id,nome',
+                    'distritoOrigem:id,nome',
+                    'igrejaOrigem:id,nome'
+            ])
+                ->where('igreja_destino_id', $sessionInstituicoes->igrejaLocal->id)
                 ->whereNull('dt_aceite')
                 ->whereNull('dt_rejeicao')
                 ->get();
