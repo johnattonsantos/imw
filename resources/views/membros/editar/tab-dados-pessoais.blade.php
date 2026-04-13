@@ -445,8 +445,8 @@
 
             <div class="row mb-4">
               <div class="col-xl-3">
-                <label for="cpf">* CPF</label>
-                <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf" name="cpf" value="{{ old('cpf', $pessoa->cpf) }}" maxlength="100" required>
+                <label for="cpf" id="cpf-label">* CPF</label>
+                <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf" name="cpf" value="{{ old('cpf', $pessoa->cpf) }}" maxlength="100" {{ (!request()->routeIs('recadastramento-membro.editar') && !request()->routeIs('recadastramento-membro.update')) || old('status', $pessoa->status) === 'A' ? 'required' : '' }}>
                 @error('cpf')
                 <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
@@ -653,10 +653,19 @@
           $('#modo_exclusao_id').prop('disabled', false);
         }
 
+        function toggleCpfRequirementByStatus() {
+          const status = $('#status').val();
+          const cpfRequired = status === 'A';
+          $('#cpf').prop('required', cpfRequired);
+          $('#cpf-label').text(cpfRequired ? '* CPF' : 'CPF');
+        }
+
         toggleExclusaoFieldsByStatus();
+        toggleCpfRequirementByStatus();
         $('#status').on('change', function () {
           handleStatusTransition();
           toggleExclusaoFieldsByStatus();
+          toggleCpfRequirementByStatus();
         });
 
         $('#dt_exclusao, #modo_exclusao_id').on('change input', function () {

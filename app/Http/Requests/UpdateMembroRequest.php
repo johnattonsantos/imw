@@ -204,9 +204,13 @@ class UpdateMembroRequest extends FormRequest
                     new UniqueRolIgrejaRule($membroIdRegraRol, false),
                 ],
             'cpf' => [
-                'required',
+                $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
                 function ($attribute, $value, $fail) use ($membroId) {
+                    if (empty($value)) {
+                        return;
+                    }
+
                     // Remove todos os caracteres que não são números
                     $cpf = preg_replace('/[^0-9]/', '', $value);
 
@@ -271,6 +275,7 @@ class UpdateMembroRequest extends FormRequest
             'modo_recepcao_id.required' => 'O modo de recepção é obrigatório.',
             'dt_exclusao.required_if' => 'Para status Inativo, a data de exclusão é obrigatória.',
             'modo_exclusao_id.required_if' => 'Para status Inativo, o modo de exclusão é obrigatório.',
+            'cpf.required_if' => 'O CPF é obrigatório quando o status estiver Ativo.',
             'telefone_preferencial.required' => 'O campo Telefone é obrigatório.',
             'cep.required' => 'O campo CEP é obrigatório.',
             'endereco.required' => 'O campo Endereço é obrigatório.',
