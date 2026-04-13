@@ -62,6 +62,13 @@
                             <div class="col-4">
                                 <input type="text" name="search" id="searchInput" class="form-control" placeholder="Pesquisar...">
                             </div>
+                            <div class="col-2">
+                                <select name="ativo" id="ativo" class="form-control">
+                                    <option value="" {{ request('ativo') === null || request('ativo') === '' ? 'selected' : '' }}>Todos</option>
+                                    <option value="1" {{ request('ativo') === '1' ? 'selected' : '' }}>Ativo</option>
+                                    <option value="0" {{ request('ativo') === '0' ? 'selected' : '' }}>Inativo</option>
+                                </select>
+                            </div>
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary btn-rounded">
                                     Pesquisar
@@ -97,6 +104,7 @@
                                             <th>E-MAIL</th>
                                             <th>TELEFONE</th>
                                             <th>CIDADE</th>
+                                            <th>STATUS</th>
                                             <th width="310px"></th>
                                         </tr>
                                     </thead>
@@ -181,6 +189,13 @@
                                                 {{ mb_strtoupper($instituicao->cidade ?? '') }}
                                                 @endif
                                             </td>
+                                            <td>
+                                                @if ((int) $instituicao->ativo === 1)
+                                                    <span class="badge badge-success">Ativo</span>
+                                                @else
+                                                    <span class="badge badge-danger">Inativo</span>
+                                                @endif
+                                            </td>
 
 
                                             <td class="table-action">
@@ -231,38 +246,27 @@
                                                 </a>
                                                 @endif
                                                 
-                                                <form
-                                                    action="{{ route($instituicao->deleted_at ? 'instituicoes-regiao.ativar' : 'instituicoes-regiao.deletar', [$instituicao->id, 'search' => request('search')]) }}"
-                                                    method="POST" style="display: inline-block;"
-                                                    id="form_{{ $instituicao->deleted_at ? 'ativar' : 'delete' }}_instituicao_{{ $index }}">
-                                                    @csrf
-                                                    @if ($instituicao->deleted_at)
-                                                    @method('PUT') {{-- Para restaurar o registro --}}
-                                                    <button type="button" title="Ativar"
-                                                        class="btn btn-sm btn-success mr-1 btn-rounded btn-confirm-ativar"
-                                                        data-form-ativar-id="form_ativar_instituicao_{{ $index }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                            class="feather feather-refresh-cw">
-                                                            <polyline points="23 4 23 10 17 10"></polyline>
-                                                            <polyline points="1 20 1 14 7 14"></polyline>
-                                                            <path d="M3.51 9a9 9 0 0 1 13.36-5.36L23 10m-2 6a9 9 0 0 1-13.36 5.36L1 14"></path>
-                                                        </svg>
-                                                    </button>
-                                                    @else
-                                                    @method('DELETE')
-                                                    <button type="button" title="Inativar"
-                                                        class="btn btn-sm btn-danger btn-rounded btn-confirm-delete"
-                                                        data-form-delete-id="form_delete_instituicao_{{ $index }}">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                            class="feather feather-slash">
-                                                            <circle cx="12" cy="12" r="10"></circle>
-                                                            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
-                                                        </svg>
-                                                    </button>
-                                                    @endif
-                                                </form>
+                                                @if ((int) $instituicao->ativo === 0 || $instituicao->deleted_at)
+                                                    <form
+                                                        action="{{ route('instituicoes-regiao.ativar', [$instituicao->id, 'search' => request('search')]) }}"
+                                                        method="POST" style="display: inline-block;"
+                                                        id="form_ativar_instituicao_{{ $index }}">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <button type="button" title="Ativar"
+                                                            class="btn btn-sm btn-success mr-1 btn-rounded btn-confirm-ativar"
+                                                            data-form-ativar-id="form_ativar_instituicao_{{ $index }}">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                                class="feather feather-refresh-cw">
+                                                                <polyline points="23 4 23 10 17 10"></polyline>
+                                                                <polyline points="1 20 1 14 7 14"></polyline>
+                                                                <path d="M3.51 9a9 9 0 0 1 13.36-5.36L23 10m-2 6a9 9 0 0 1-13.36 5.36L1 14"></path>
+                                                            </svg>
+                                                        </button>
+                                                    </form>
+                                                @endif
 
 
                                             </td>
@@ -305,29 +309,6 @@
 </div>
 
 <script>
-    // Confirmação para apagar (deletar) a instituição
-    $('.btn-confirm-delete').on('click', function() {
-        const formId = $(this).data('form-delete-id');
-        const params = new URLSearchParams(window.location.search); // Captura os parâmetros da URL
-        const filtro = params.toString(); // Converte os parâmetros em uma string
-        const form = document.getElementById(formId);
-        form.action = form.action + (filtro ? '?' + filtro : ''); // Adiciona os parâmetros à ação do formulário
-        swal({
-            title: 'Deseja realmente inativar esta instituição?',
-            type: 'error',
-            showCancelButton: true,
-            confirmButtonText: "Inativar",
-            confirmButtonColor: "#d33",
-            cancelButtonText: "Cancelar",
-            cancelButtonColor: "#3085d6",
-            padding: '2em'
-        }).then(function(result) {
-            if (result.value) {
-                form.submit();
-            }
-        });
-    });
-
     // Confirmação para ativar a instituição
     $('.btn-confirm-ativar').on('click', function() {
         const formId = $(this).data('form-ativar-id');
