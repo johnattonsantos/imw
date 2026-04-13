@@ -97,6 +97,8 @@
                         <td>
                             @if($item['prebanda']->valor_prebendas > 5000)
                                 R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
+                            @elseif($item['prebanda']->valor_prebendas == 0)
+                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
                             @else
                                 ISENTO
                             @endif
