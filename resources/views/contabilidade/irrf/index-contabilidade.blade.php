@@ -80,7 +80,31 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $totalPrebendas = 0.0;
+                    $totalDependentes = 0;
+                    $totalBaseCalculos = 0.0;
+                    $totalRedutor = 0.0;
+                    $totalIrrfCalculado = 0.0;
+                    $possuiRegistros = false;
+                @endphp
                 @forelse($prebendas as $item)
+                    @php
+                        $possuiRegistros = true;
+                        $valorPrebenda = (float) ($item['prebanda']->valor_prebendas ?? 0);
+                        $dependentes = (int) ($item['prebanda']->n_dependentes ?? 0);
+                        $valorBase = (float) ($item['imposto']->valorBase ?? 0);
+                        $valorRedutor = (float) ($item['imposto']->valorRedutor ?? 0);
+                        $valorIrrf = ((float) ($item['prebanda']->valor_prebendas ?? 0) > 5000 || (float) ($item['prebanda']->valor_prebendas ?? 0) == 0)
+                            ? (float) ($item['imposto']->valorImposto ?? 0)
+                            : 0.0;
+
+                        $totalPrebendas += $valorPrebenda;
+                        $totalDependentes += $dependentes;
+                        $totalBaseCalculos += $valorBase;
+                        $totalRedutor += $valorRedutor;
+                        $totalIrrfCalculado += $valorIrrf;
+                    @endphp
                     <tr>
                         <td>{{ $item['prebanda']->nome }}</td>
                         <td>{{ formatStr($item['prebanda']->cpf, '###.###.###-##') }}</td>
@@ -106,12 +130,24 @@
                     </tr>
                 @empty
                 <tr>
-                    <td colspan="8">
+                    <td colspan="7">
                         Não possui dados
                     </td>
                 </tr>
                 @endforelse
             </tbody>
+            <tfoot>
+                @if($possuiRegistros)
+                    <tr style="font-weight: 700; background: #f8f9fa;">
+                        <th colspan="2">TOTAL</th>
+                        <th>R$ {{ number_format($totalPrebendas, 2, ',', '.') }}</th>
+                        <th>{{ $totalDependentes }}</th>
+                        <th>R$ {{ number_format($totalBaseCalculos, 2, ',', '.') }}</th>
+                        <th>R$ {{ number_format($totalRedutor, 2, ',', '.') }}</th>
+                        <th>R$ {{ number_format($totalIrrfCalculado, 2, ',', '.') }}</th>
+                    </tr>
+                @endif
+            </tfoot>
           </table>            
         </div>
       </div>
@@ -166,6 +202,7 @@
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                     titleAttr: 'PDF',
                     title: `{{ $titulo }}`,
+                    orientation: 'landscape',
                     customize: function (doc) {
                         doc.content.splice(0,1);
                         var now = new Date();
