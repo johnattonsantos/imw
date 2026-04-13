@@ -75,6 +75,7 @@
                     <input class="form-control @error('data_abertura') is-invalid @enderror" type="date"
                         id="data_abertura" name="data_abertura"
                         value="{{ old('data_abertura', \Carbon\Carbon::parse($instituicao['data_abertura'])->format('Y-m-d')) }}"
+                        min="1967-01-05"
                         max="{{ date('Y-m-d') }}">
                     @error('data_abertura')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -262,6 +263,16 @@
                 reverse: true
             })
 
+            function validarDataAbertura() {
+                const minDate = '1967-01-05';
+                const valor = $('#data_abertura').val();
+                if (valor && valor < minDate) {
+                    $('#data_abertura')[0].setCustomValidity('A data de abertura não pode ser anterior a 05/01/1967.');
+                } else {
+                    $('#data_abertura')[0].setCustomValidity('');
+                }
+            }
+
             function toggleDataEncerramento() {
                 const inativo = $('#ativo').val() === '0';
                 $('#data_encerramento').prop('disabled', !inativo);
@@ -270,7 +281,9 @@
                 }
             }
 
+            $('#data_abertura').on('change blur', validarDataAbertura);
             $('#ativo').on('change', toggleDataEncerramento);
+            validarDataAbertura();
             toggleDataEncerramento();
         })
     </script>
