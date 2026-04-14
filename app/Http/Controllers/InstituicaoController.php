@@ -18,7 +18,7 @@ class InstituicaoController extends Controller
             ->where('instituicoes_instituicoes.ativo', 1)
             ->orderBy('instituicoes_instituicoes.nome', 'asc');
 
-        if ($this->isCrieProfile()) {
+        if ($this->isCrieProfile() || $this->isRegionalAdminProfile()) {
             $regiaoId = $this->resolveCurrentRegionId();
             $query->where(function ($subquery) use ($regiaoId) {
                 $subquery->where('instituicoes_instituicoes.id', $regiaoId)
@@ -46,6 +46,25 @@ class InstituicaoController extends Controller
     {
         $perfilNome = (string) optional(session('session_perfil'))->perfil_nome;
         return Perfil::correspondeCodigo($perfilNome, Perfil::CODIGO_CRIE);
+    }
+
+    private function isRegionalAdminProfile(): bool
+    {
+        $perfilId = (int) optional(session('session_perfil'))->perfil_id;
+        if ($perfilId <= 0) {
+            return false;
+        }
+
+        $perfil = Perfil::find($perfilId);
+        if (!$perfil) {
+            return false;
+        }
+
+        $nomeNormalizado = Perfil::normalizarNome($perfil->nome);
+        return $perfil->nivel === Perfil::NIVEL_REGIAO
+            && str_contains($nomeNormalizado, 'administrador')
+            && !Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_CRIE)
+            && !Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_ADMINISTRADOR_SISTEMA);
     }
 
     private function resolveCurrentRegionId(): int

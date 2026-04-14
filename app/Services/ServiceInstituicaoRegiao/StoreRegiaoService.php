@@ -5,7 +5,7 @@ namespace App\Services\ServiceInstituicaoRegiao;
 use App\Models\InstituicoesInstituicao;
 use App\Traits\RegionalScope;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class StoreRegiaoService
 {
@@ -22,26 +22,33 @@ class StoreRegiaoService
             throw new \InvalidArgumentException('Instituição pai fora da região do perfil.');
         }
 
-        InstituicoesInstituicao::create(
-            [
-                'nome' => $request->input('nome'),
-                'tipo_instituicao_id' => $request->input('tipo_instituicao_id'),
-                'instituicao_pai_id' => $instituicaoPaiId,
-                'regiao_id' => $regiaoId,
-                'bairro' => $request->input('bairro'),
-                'cep' => $cep,
-                'cidade' => $request->input('cidade'),
-                'cnpj' => $request->input('cnpj'),
-                'complemento' => $request->input('complemento'),
-                'data_abertura' => $dataAbertura,
-                'numero' => $request->input('numero'),
-                'pais' => $request->input('pais'),
-                'uf' => $request->input('uf'),
-                'endereco' => $request->input('endereco'),
-                'telefone' => $request->input('telefone'),
-                'ddd' => $request->input('ddd'),
-                'inss' => 0
-            ]
-        );
+        $payload = [
+            'nome' => $request->input('nome'),
+            'tipo_instituicao_id' => $request->input('tipo_instituicao_id'),
+            'instituicao_pai_id' => $instituicaoPaiId,
+            'regiao_id' => $regiaoId,
+            'bairro' => $request->input('bairro'),
+            'cep' => $cep,
+            'cidade' => $request->input('cidade'),
+            'cnpj' => $request->input('cnpj'),
+            'complemento' => $request->input('complemento'),
+            'data_abertura' => $dataAbertura,
+            'numero' => $request->input('numero'),
+            'pais' => $request->input('pais'),
+            'uf' => $request->input('uf'),
+            'endereco' => $request->input('endereco'),
+            'telefone' => $request->input('telefone'),
+            'ddd' => $request->input('ddd'),
+            'ativo' => (int) $request->boolean('ativo'),
+            'inss' => 0,
+        ];
+
+        if (Schema::hasColumn('instituicoes_instituicoes', 'data_encerramento')) {
+            $payload['data_encerramento'] = ((int) $payload['ativo'] === 0 && $request->filled('data_encerramento'))
+                ? Carbon::parse($request->input('data_encerramento'))->format('Y-m-d')
+                : null;
+        }
+
+        InstituicoesInstituicao::create($payload);
     }
 }

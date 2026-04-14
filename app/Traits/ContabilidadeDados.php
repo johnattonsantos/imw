@@ -38,7 +38,7 @@ trait ContabilidadeDados
         SUM(CASE WHEN (fl.plano_conta_id=41) THEN fl.valor ELSE 0 END) AS retido,
         SUM(CASE WHEN (fl.plano_conta_id=220) THEN fl.valor ELSE 0 END) AS repasse
         from pessoas_pessoas pp 
-        left join pessoas_prebendas pp2 on pp.id=pp2.pessoa_id 
+        left join pessoas_prebendas pp2 on pp.id=pp2.pessoa_id AND pp2.ano = {$ano}
         left join financeiro_lancamentos fl on pp.id=fl.clerigo_id and year(fl.data_movimento)={$ano} and month(fl.data_movimento) = {$mes} and conciliado=1
         where pp.id in 
             (select pessoa_id 
@@ -48,7 +48,7 @@ trait ContabilidadeDados
             where pn.instituicao_id=ii.id
             and ii.instituicao_pai_id=ii2.id
             and ii2.instituicao_pai_id=$instituicaoId
-            and pn.data_termino is null) AND pp2.ano = {$ano}
+            and pn.data_termino is null) 
         group by pp.nome, pp.cpf, pp2.valor, pp.id, pp2.id
         ORDER BY `pp2`.`valor` DESC");
         return $prebendas;
@@ -65,7 +65,7 @@ trait ContabilidadeDados
         SUM(CASE WHEN (fl.plano_conta_id=41) THEN fl.valor ELSE 0 END) AS retido,
         SUM(CASE WHEN (fl.plano_conta_id=220) THEN fl.valor ELSE 0 END) AS repasse
         from pessoas_pessoas pp 
-        left join pessoas_prebendas pp2 on pp.id=pp2.pessoa_id 
+        left join pessoas_prebendas pp2 on pp.id=pp2.pessoa_id AND pp2.ano = {$ano}
         left join financeiro_lancamentos fl on pp.id=fl.clerigo_id and year(fl.data_movimento)={$ano} and month(fl.data_movimento) = {$mes} and conciliado=1
         where pp.id in 
             (select pessoa_id 
@@ -76,7 +76,7 @@ trait ContabilidadeDados
             /*where pn.instituicao_id in(2225,2587)*/
             and ii.instituicao_pai_id=ii2.id
             and ii2.instituicao_pai_id=$instituicaoId
-            and pn.data_termino is null) AND fl.conciliado = 1 AND pp2.ano = {$ano}
+            and pn.data_termino is null) AND fl.conciliado = 1 
         group by pp.nome, pp.cpf, pp2.valor, pp.id, pp2.id
         ORDER BY `pp2`.`valor` DESC");
         return $prebendas;

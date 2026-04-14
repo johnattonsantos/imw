@@ -10,12 +10,16 @@ class IdentificaPerfilService
 {
     public function execute($instituicaoId, $instituicaoNome, $perfilId, $perfilNome)
     {
+        $instituicaoNome = $instituicaoNome ?: 'Acesso Global';
+
         return (object) [
             'instituicao_id'   => $instituicaoId,
             'instituicao_nome' => $instituicaoNome,
             'perfil_id'        => $perfilId,
             'perfil_nome'      => $perfilNome,
-            'instituicoes'     => $this->fetchSessionIstituicoes(new SessionInstituicoesDto(), $instituicaoId)
+            'instituicoes'     => $instituicaoId
+                ? $this->fetchSessionIstituicoes(new SessionInstituicoesDto(), $instituicaoId)
+                : new SessionInstituicoesDto()
         ];
     }
 

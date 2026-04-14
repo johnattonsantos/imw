@@ -33,12 +33,13 @@ class IrrfServices
                         'qtdeDependentes' => 0,
                         'valorDedutivel' => 0,
                         'valorBase' => 0,
+                        'valorRedutor' => 0,
                         'impostoSemDeducao' => 0,
-                        'valorImposto' => 0
+                        'valorImposto' => 0,
+                        'progressao' => []
                     ];
                 }
                 $prebendas[] = ['prebanda' => $item, 'imposto' => $impostoCalculado];
-
             }
             $data['prebendas'] = (object) $prebendas;
 

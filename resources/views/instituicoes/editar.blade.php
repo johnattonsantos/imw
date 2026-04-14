@@ -38,6 +38,16 @@
             <h4>Dados da Instituição</h4>
         </div>
 
+        @if ($errors->any())
+            <div class="alert alert-danger mt-3">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form class="py-2 px-3" method="POST"
             action="{{ route('instituicoes-regiao.update', ['id' => $instituicao['id']]) }}">
             @csrf
@@ -65,8 +75,21 @@
                     <input class="form-control @error('data_abertura') is-invalid @enderror" type="date"
                         id="data_abertura" name="data_abertura"
                         value="{{ old('data_abertura', \Carbon\Carbon::parse($instituicao['data_abertura'])->format('Y-m-d')) }}"
+                        min="1967-01-05"
                         max="{{ date('Y-m-d') }}">
                     @error('data_abertura')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="col-md-3 form-group">
+                    <label for="ativo"><span>*</span> Status</label>
+                    <select class="form-control @error('ativo') is-invalid @enderror" id="ativo" name="ativo">
+                        <option value="1" {{ old('ativo', $instituicao['ativo']) == '1' ? 'selected' : '' }}>
+                            Ativo</option>
+                        <option value="0" {{ old('ativo', $instituicao['ativo']) == '0' ? 'selected' : '' }}>
+                            Inativo</option>
+                    </select>
+                    @error('ativo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
@@ -75,6 +98,19 @@
                         ?? optional(session('session_perfil'))->instituicao_id;
                 @endphp
                 <input type="hidden" name="regiao_id" id="regiao_id" value="{{ old('regiao_id', $regiaoSessaoId) }}">
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 form-group">
+                    <label for="data_encerramento">Data de Encerramento</label>
+                    <input class="form-control @error('data_encerramento') is-invalid @enderror" type="date"
+                        id="data_encerramento" name="data_encerramento"
+                        value="{{ old('data_encerramento', optional($instituicao->data_encerramento)->format('Y-m-d')) }}"
+                        min="2023-01-01" max="{{ date('Y-m-d') }}">
+                    @error('data_encerramento')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <div class="row">
@@ -230,6 +266,29 @@
             $('#cnpj').mask('00.000.000/0000-00', {
                 reverse: true
             })
+
+            function validarDataAbertura() {
+                const minDate = '1967-01-05';
+                const valor = $('#data_abertura').val();
+                if (valor && valor < minDate) {
+                    $('#data_abertura')[0].setCustomValidity('A data de abertura não pode ser anterior a 05/01/1967.');
+                } else {
+                    $('#data_abertura')[0].setCustomValidity('');
+                }
+            }
+
+            function toggleDataEncerramento() {
+                const inativo = $('#ativo').val() === '0';
+                $('#data_encerramento').prop('disabled', !inativo);
+                if (!inativo) {
+                    $('#data_encerramento').val('');
+                }
+            }
+
+            $('#data_abertura').on('change blur', validarDataAbertura);
+            $('#ativo').on('change', toggleDataEncerramento);
+            validarDataAbertura();
+            toggleDataEncerramento();
         })
     </script>
     <script src="{{ asset('theme/plugins/fullcalendar/moment.min.js') }}"></script>

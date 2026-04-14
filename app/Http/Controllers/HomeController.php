@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\InstituicoesInstituicao;
 use App\Models\FinanceiroPlanoConta;
+use App\Models\Perfil;
 use App\Models\PerfilUser;
 use App\Services\ServicePerfil\IdentificaPerfilService;
 use Carbon\Carbon;
@@ -17,6 +18,12 @@ class HomeController extends Controller
     public function dashboard(Request $request)
     {
         $igrejaId = session()->get('session_perfil')->instituicao_id;
+        $perfilNomeSessao = (string) optional(session('session_perfil'))->perfil_nome;
+
+        if (Perfil::correspondeCodigo($perfilNomeSessao, Perfil::CODIGO_ADMINISTRADOR_SISTEMA) && empty($igrejaId)) {
+            return redirect()->route('admin.index');
+        }
+
         $instituicao = InstituicoesInstituicao::where('id', $igrejaId)->first();
         $anoAtual = (int) Carbon::now()->year;
         $sanitizeAno = fn ($value) => $this->sanitizeAno($value, $anoAtual);
@@ -1471,11 +1478,11 @@ class HomeController extends Controller
 
         // Consultar as Instituicoes dos Usuários Autenticados
         $perfils = PerfilUser::where('user_id', $userID)
-            ->join('instituicoes_instituicoes', 'instituicoes_instituicoes.id', '=', 'perfil_user.instituicao_id')
+            ->leftJoin('instituicoes_instituicoes', 'instituicoes_instituicoes.id', '=', 'perfil_user.instituicao_id')
             ->join('perfils', 'perfils.id', '=', 'perfil_user.perfil_id')
             ->select(
                 'instituicoes_instituicoes.id as instituicao_id',
-                'instituicoes_instituicoes.nome as instituicao_nome',
+                DB::raw("COALESCE(instituicoes_instituicoes.nome, 'Acesso Global') as instituicao_nome"),
                 'perfils.id as perfil_id',
                 'perfils.nome as perfil_nome'
             )
@@ -1486,11 +1493,11 @@ class HomeController extends Controller
 
     public function postPerfil(Request $request)
     {
-        if ($request->has('instituicao_id')) {
+        if ($request->filled('perfil_id')) {
 
             $perfil = app(IdentificaPerfilService::class)->execute(
                 $request->instituicao_id,
-                $request->instituicao_nome,
+                $request->instituicao_nome ?: 'Acesso Global',
                 $request->perfil_id,
                 $request->perfil_nome,
             );

@@ -69,7 +69,7 @@
                          {{ $lastName }}</b><br>
                      @if (session('session_perfil'))
                          <span style="font-size: 12px ;">{{ session('session_perfil')->perfil_nome }}</span> <br>
-                         <span style="font-size: 12px ;">{{ session('session_perfil')->instituicao_nome }}</span> <br>
+                         <span style="font-size: 12px ;">{{ session('session_perfil')->instituicao_nome ?? 'Acesso Global' }}</span> <br>
                      @endif
 
                  </div>
@@ -493,10 +493,20 @@
                                      Gênero</a>
                              @endif
                          </li>
+                         <li class="submenu-fixo mt-3 mb-3">
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio'))
+                                 <span>Estatísticas</span>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/estatisticas-gceu') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-estatistica-gceu'))
+                                 <a href="{{ route('distrito.relatorio.estatisticas.gceu') }}">Estatísticas GCEU</a>
+                             @endif
+                         </li>
 
                          <li {!! Request::is('distrito/apirantes-por-igrejas') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-aspirantes-igrejas'))
-                                 <a href="{{ route('distrito.relatorio.apirateporigreja') }}">Aspirantes por Igreja</a>
+                                 <a href="{{ route('distrito.relatorio.apirateporigreja') }}">Aspirantes por Igrejas</a>
                              @endif
                          </li>
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-clerigos-aniversariantes'))
@@ -768,7 +778,7 @@
 
              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                  <li class="menu">
-                     <a href="#estatistica-regiao" data-toggle="collapse" aria-expanded="{{Request::is('regiao/estatistica/*') ? 'true' : 'false' }}"
+                    <a href="#estatistica-regiao" data-toggle="collapse" aria-expanded="{{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu') || Request::is('regiao/relatorio/aspirantes-por-igrejas')) ? 'true' : 'false' }}"
                          class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -790,7 +800,7 @@
                              </svg>
                          </div>
                      </a>
-                     <ul class="collapse submenu list-unstyled {{ Request::is('regiao/estatistica/*') ? 'collapse show' : '' }}" id="estatistica-regiao"
+                    <ul class="collapse submenu list-unstyled {{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu') || Request::is('regiao/relatorio/aspirantes-por-igrejas')) ? 'collapse show' : '' }}" id="estatistica-regiao"
                          data-parent="#estatistica-regiao">
                          <li class="submenu-fixo mt-3 mb-3">
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-membros-evolucao'))
@@ -832,6 +842,21 @@
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-quantidade-membros'))
                                  <a href="{{ route('regiao.relatorio.estatisticatotalmembros') }}">Quantidade de
                                      Membros</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('regiao/relatorio/estatisticas-gceu') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-gceu'))
+                                 <a href="{{ route('regiao.relatorio.estatisticas.gceu') }}">Estatísticas GCEU</a>
+                             @endif
+                         </li>
+                         <li class="submenu-fixo mt-3 mb-3">
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
+                                 <span>Igrejas</span>
+                             @endif
+                         </li>
+                         <li {!! Request::is('regiao/relatorio/aspirantes-por-igrejas') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-aspirantes-igrejas'))
+                                 <a href="{{ route('regiao.relatorio.aspiranteporigreja') }}">Aspirantes por Igrejas</a>
                              @endif
                          </li>
 

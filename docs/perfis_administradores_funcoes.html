@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IMW - Funções dos Perfis Administrativos</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; margin: 26px; color: #222; }
+    h1 { font-size: 22px; margin: 0 0 8px; }
+    p { margin: 0 0 14px; }
+    .muted { color: #666; font-size: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border: 1px solid #d9d9d9; padding: 9px; vertical-align: top; font-size: 13px; }
+    th { background: #f6f6f6; text-align: left; }
+    ul { margin: 0; padding-left: 18px; }
+    li { margin: 4px 0; }
+    .note { margin-top: 12px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <h1>Funções dos Perfis Administrativos</h1>
+  <p class="muted">Sistema IMW - referência de acesso</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Perfil</th>
+        <th>Função</th>
+        <th>Escopo</th>
+        <th>Restrições principais</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><b>administrador_sistema</b></td>
+        <td>Administração global do sistema</td>
+        <td>Todas as regiões</td>
+        <td>
+          <ul>
+            <li>Acesso global</li>
+            <li>Gerencia usuários e perfis de qualquer região</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><b>Administrador da Região</b></td>
+        <td>Administração regional</td>
+        <td>Somente a própria região (região, distritos, igrejas, GCEU e demais instituições da região)</td>
+        <td>
+          <ul>
+            <li>Não pode criar/atribuir perfil <b>crie</b></li>
+            <li>Não pode criar/atribuir perfil <b>Administrador da Região</b></li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><b>crie</b></td>
+        <td>Gestão de usuários e instituições da própria região</td>
+        <td>Somente a própria região</td>
+        <td>
+          <ul>
+            <li>Não pode criar/atribuir perfil <b>crie</b></li>
+            <li>Pode criar perfil <b>Administrador da Região</b> na região logada</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td><b>Administrador (local)</b></td>
+        <td>Administração da instituição local</td>
+        <td>Instituição vinculada</td>
+        <td>
+          <ul>
+            <li>Não possui escopo global</li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note"><b>Observação:</b> o escopo sempre respeita as regras e vínculos configurados no perfil selecionado na sessão.</p>
+</body>
+</html>

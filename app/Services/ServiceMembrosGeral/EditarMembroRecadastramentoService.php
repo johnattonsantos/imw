@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 
 class EditarMembroRecadastramentoService
@@ -30,10 +31,8 @@ class EditarMembroRecadastramentoService
             ->firstOr(function () {
                 throw new MembroNotFoundException('Registro não encontrado', 404);
             });
-        // Gerar URL temporária para a foto se estiver presente e o bucket for privado
         if ($pessoa->foto) {
-            $disk = Storage::disk('s3');
-            $pessoa->foto = $disk->temporaryUrl($pessoa->foto, Carbon::now()->addMinutes(15));
+            $pessoa->foto = $this->resolveFotoUrl((string) $pessoa->foto);
         }
         
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
@@ -66,6 +65,10 @@ class EditarMembroRecadastramentoService
 
     private function fetchProfissoesAtivas()
     {
+        if (!Schema::hasTable('membresia_profissoes')) {
+            return collect();
+        }
+
         $query = DB::table('membresia_profissoes');
 
         if (Schema::hasColumn('membresia_profissoes', 'ativo')) {
@@ -84,5 +87,22 @@ class EditarMembroRecadastramentoService
                 ?? (string) $profissao->id
             ));
         })->values();
+    }
+
+    private function resolveFotoUrl(string $foto): string
+    {
+        if (Str::startsWith($foto, ['http://', 'https://'])) {
+            return $foto;
+        }
+
+        try {
+            return Storage::disk('s3')->temporaryUrl($foto, Carbon::now()->addMinutes(15));
+        } catch (\Throwable $e) {
+            try {
+                return Storage::disk('s3')->url($foto);
+            } catch (\Throwable $e) {
+                return $foto;
+            }
+        }
     }
 }

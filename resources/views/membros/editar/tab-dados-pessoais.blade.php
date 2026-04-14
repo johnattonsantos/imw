@@ -51,11 +51,12 @@
               <div class="col-xl-3">
                 <label for="estado_civil">* Estado Civíl</label>
                 <select class="form-control @error('estado_civil') is-invalid @enderror" id="estado_civil" name="estado_civil" required>
+                  @php $estadoCivilSelecionado = old('estado_civil', $pessoa->estado_civil); @endphp
                   <option value="">Selecione</option>
-                  <option value="S" {{ $pessoa->estado_civil == 'S' ? 'selected' : '' }}>Solteiro</option>
-                  <option value="C" {{ $pessoa->estado_civil == 'C' ? 'selected' : '' }}>Casado</option>
-                  <option value="D" {{ $pessoa->estado_civil == 'D' ? 'selected' : '' }}>Divorciado</option>
-                  <option value="V" {{ $pessoa->estado_civil == 'V' ? 'selected' : '' }}>Viúvo</option>
+                  <option value="S" {{ $estadoCivilSelecionado == 'S' ? 'selected' : '' }}>Solteiro</option>
+                  <option value="C" {{ $estadoCivilSelecionado == 'C' ? 'selected' : '' }}>Casado</option>
+                  <option value="D" {{ $estadoCivilSelecionado == 'D' ? 'selected' : '' }}>Divorciado</option>
+                  <option value="V" {{ $estadoCivilSelecionado == 'V' ? 'selected' : '' }}>Viúvo</option>
                 </select>
                 @error('estado_civil')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -444,8 +445,8 @@
 
             <div class="row mb-4">
               <div class="col-xl-3">
-                <label for="cpf">* CPF</label>
-                <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf" name="cpf" value="{{ old('cpf', $pessoa->cpf) }}" maxlength="100" required>
+                <label for="cpf" id="cpf-label">* CPF</label>
+                <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf" name="cpf" value="{{ old('cpf', $pessoa->cpf) }}" maxlength="100" {{ (!request()->routeIs('recadastramento-membro.editar') && !request()->routeIs('recadastramento-membro.update')) || old('status', $pessoa->status) === 'A' ? 'required' : '' }}>
                 @error('cpf')
                 <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
@@ -600,18 +601,77 @@
 
     $(document).ready(function () {
       if ($('#status').length) {
+        const exclusaoCache = {
+          dt_exclusao: ($('#dt_exclusao').val() || '').trim(),
+          modo_exclusao_id: ($('#modo_exclusao_id').val() || '').trim(),
+        };
+        let previousStatus = $('#status').val();
+
+        function rememberExclusaoValues() {
+          const dtExclusao = ($('#dt_exclusao').val() || '').trim();
+          const modoExclusao = ($('#modo_exclusao_id').val() || '').trim();
+
+          if (dtExclusao !== '') {
+            exclusaoCache.dt_exclusao = dtExclusao;
+          }
+          if (modoExclusao !== '') {
+            exclusaoCache.modo_exclusao_id = modoExclusao;
+          }
+        }
+
+        function handleStatusTransition() {
+          const status = $('#status').val();
+          if (status === previousStatus) {
+            return;
+          }
+
+          if (status === 'A') {
+            rememberExclusaoValues();
+            $('#dt_exclusao').val('');
+            $('#modo_exclusao_id').val('');
+          }
+
+          if (status === 'I') {
+            if ((($('#dt_exclusao').val() || '').trim() === '') && exclusaoCache.dt_exclusao !== '') {
+              $('#dt_exclusao').val(exclusaoCache.dt_exclusao);
+            }
+            if ((($('#modo_exclusao_id').val() || '').trim() === '') && exclusaoCache.modo_exclusao_id !== '') {
+              $('#modo_exclusao_id').val(exclusaoCache.modo_exclusao_id);
+            }
+          }
+
+          previousStatus = status;
+        }
+
         function toggleExclusaoFieldsByStatus() {
           const status = $('#status').val();
           const isInativo = status === 'I';
 
           $('#dt_exclusao').prop('required', isInativo);
           $('#modo_exclusao_id').prop('required', isInativo);
-          $('#dt_exclusao').prop('disabled', !isInativo);
-          $('#modo_exclusao_id').prop('disabled', !isInativo);
+          $('#dt_exclusao').prop('disabled', false);
+          $('#modo_exclusao_id').prop('disabled', false);
+        }
+
+        function toggleCpfRequirementByStatus() {
+          const status = $('#status').val();
+          const cpfRequired = status === 'A';
+          $('#cpf').prop('required', cpfRequired);
+          $('#cpf-label').text(cpfRequired ? '* CPF' : 'CPF');
         }
 
         toggleExclusaoFieldsByStatus();
-        $('#status').on('change', toggleExclusaoFieldsByStatus);
+        toggleCpfRequirementByStatus();
+        $('#status').on('change', function () {
+          handleStatusTransition();
+          toggleExclusaoFieldsByStatus();
+          toggleCpfRequirementByStatus();
+        });
+
+        $('#dt_exclusao, #modo_exclusao_id').on('change input', function () {
+          rememberExclusaoValues();
+          toggleExclusaoFieldsByStatus();
+        });
       }
     });
 </script>

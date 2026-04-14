@@ -4,6 +4,7 @@ namespace App\Services\ServiceInstituicaoRegiao;
 
 use App\Models\InstituicoesInstituicao;
 use App\Traits\RegionalScope;
+use Illuminate\Support\Facades\Schema;
 
 class AtivarRegiaoService
 {
@@ -15,6 +16,16 @@ class AtivarRegiaoService
             ->where('id', $id)
             ->where('regiao_id', $this->sessionRegiaoId())
             ->firstOrFail();
-        $instituicao->restore(); // Restaurar o soft delete
+
+        $payload = ['ativo' => 1];
+        if (Schema::hasColumn('instituicoes_instituicoes', 'data_encerramento')) {
+            $payload['data_encerramento'] = null;
+        }
+
+        $instituicao->update($payload);
+
+        if ($instituicao->trashed()) {
+            $instituicao->restore();
+        }
     }
 }

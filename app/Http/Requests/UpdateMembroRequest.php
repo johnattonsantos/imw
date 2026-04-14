@@ -183,20 +183,8 @@ class UpdateMembroRequest extends FormRequest
 
                         $dtExclusaoInformada = !empty($this->input('dt_exclusao'));
                         $modoExclusaoInformado = !empty($this->input('modo_exclusao_id'));
-
-                        $possuiDadosExclusaoNoRequest = $dtExclusaoInformada && $modoExclusaoInformado;
-
-                        $membroIdValidacao = $membroId ?: $this->route('id');
-
-                        $possuiDadosExclusaoNoMigracao = DB::table('membresia_rolpermanente_migracao')
-                            ->where('membro_id', $membroIdValidacao)
-                            ->where('lastrec', 1)
-                            ->whereNotNull('dt_exclusao')
-                            ->whereNotNull('modo_exclusao_id')
-                            ->exists();
-
-                        if ($possuiDadosExclusaoNoRequest || $possuiDadosExclusaoNoMigracao) {
-                            $fail('É necessário remover Data de Exclusão e Modo de Exclusão antes de validar como ativo, para fazer isso escolho o status inativo');
+                        if ($dtExclusaoInformada || $modoExclusaoInformado) {
+                            $fail('Com status Ativo, é necessário limpar Data de Exclusão e Modo de Exclusão. Se precisar manter essas informações, altere o status para Inativo.');
                         }
                     },
                 ]
@@ -216,9 +204,13 @@ class UpdateMembroRequest extends FormRequest
                     new UniqueRolIgrejaRule($membroIdRegraRol, false),
                 ],
             'cpf' => [
-                'required',
+                $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
                 function ($attribute, $value, $fail) use ($membroId) {
+                    if (empty($value)) {
+                        return;
+                    }
+
                     // Remove todos os caracteres que não são números
                     $cpf = preg_replace('/[^0-9]/', '', $value);
 
@@ -283,6 +275,7 @@ class UpdateMembroRequest extends FormRequest
             'modo_recepcao_id.required' => 'O modo de recepção é obrigatório.',
             'dt_exclusao.required_if' => 'Para status Inativo, a data de exclusão é obrigatória.',
             'modo_exclusao_id.required_if' => 'Para status Inativo, o modo de exclusão é obrigatório.',
+            'cpf.required_if' => 'O CPF é obrigatório quando o status estiver Ativo.',
             'telefone_preferencial.required' => 'O campo Telefone é obrigatório.',
             'cep.required' => 'O campo CEP é obrigatório.',
             'endereco.required' => 'O campo Endereço é obrigatório.',

@@ -78,7 +78,7 @@
           <select id="igreja_id" name="igreja_id" class="form-control @error('igreja_id') is-invalid @enderror">
             <option value="" {{ old('igreja_id') == '' ? 'selected' : '' }}>Selecione</option>
             @foreach ($igrejas as $igreja)
-            <option value="{{ $igreja->id }}" {{ old('igreja_id') == $igreja->id ? 'selected' : '' }}>{{ $igreja->instituicaoPai->nome ?? 'Sem distrito' }} - {{ $igreja->nome }}</option>
+            <option value="{{ $igreja->id }}" {{ old('igreja_id') == $igreja->id ? 'selected' : '' }}>{{ $igreja->instituicaoPai->instituicaoPai->nome ?? 'Sem Região' }} - {{ $igreja->instituicaoPai->nome ?? 'Sem distrito' }} - {{ $igreja->nome }}</option>
             @endforeach
           </select>
           @error('igreja_id')

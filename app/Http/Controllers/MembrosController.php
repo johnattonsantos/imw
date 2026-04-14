@@ -101,6 +101,7 @@ class MembrosController extends Controller
         } catch(MembroNotFoundException $e) {
             return redirect()->route('membro.index')->with('error', 'Registro não encontrado.');
         } catch(\Exception $e) {
+            report($e);
             return redirect()->route('membro.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
         }
     }
@@ -128,6 +129,7 @@ class MembrosController extends Controller
         } catch(MembroNotFoundException $e) {
             return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', 'Registro não encontrado.');
         } catch(\Exception $e) {
+            report($e);
             return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
         }
     }
@@ -193,8 +195,6 @@ class MembrosController extends Controller
             $data = app(StoreReceberNovoMembroService::class)->execute($request->all(), $id);
             if($data == 'idade'){
                 return redirect()->back()->with('error', 'Não pode ser membro, pois a idade desse congregado é menor que 11 anos');
-            }elseif($data == 'batismo'){
-                return redirect()->back()->with('error', 'Para prosseguir com o recebimento de novo membro, edite a data do batismo no cadastro desse congregado');
             }else{
                 return redirect()->route('membro.editar', ['id' => $id])->with('success', 'Novo membro recebido com sucesso!');
             }

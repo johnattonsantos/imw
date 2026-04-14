@@ -55,9 +55,25 @@ class AdminController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            if ($this->isCrieProfile() && !$this->canManageUserInCurrentRegion($user)) {
+            if ($this->hasRegionalScopeProfile() && !$this->canManageUserInCurrentRegion($user)) {
                 return redirect()->route('admin.index')->with('error', 'Você não pode editar usuários de outra região.');
             }
+
+            if ($this->hasRegionalScopeProfile()) {
+                $regiaoId = $this->resolveCurrentRegionId();
+                $perfilUsers = PerfilUser::with(['perfil', 'instituicao'])
+                    ->where('user_id', $user->id)
+                    ->whereHas('instituicao', function ($query) use ($regiaoId) {
+                        $query->where('instituicoes_instituicoes.id', $regiaoId)
+                            ->orWhere('instituicoes_instituicoes.regiao_id', $regiaoId);
+                    })
+                    ->get();
+
+                $user->setRelation('perfilUser', $perfilUsers);
+            } else {
+                $user->load(['perfilUser.perfil', 'perfilUser.instituicao']);
+            }
+
             $perfis = app(AdminNovoUsuarioService::class)->execute();
             return view('admin.editar', compact('user', 'perfis', 'id'));
         } catch (\Exception $e) {
@@ -69,7 +85,7 @@ class AdminController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            if ($this->isCrieProfile() && !$this->canManageUserInCurrentRegion($user)) {
+            if ($this->hasRegionalScopeProfile() && !$this->canManageUserInCurrentRegion($user)) {
                 return redirect()->route('admin.index')->with('error', 'Você não pode atualizar usuários de outra região.');
             }
 
@@ -87,7 +103,7 @@ class AdminController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            if ($this->isCrieProfile() && !$this->canManageUserInCurrentRegion($user)) {
+            if ($this->hasRegionalScopeProfile() && !$this->canManageUserInCurrentRegion($user)) {
                 return redirect()->route('admin.index')->with('error', 'Você não pode excluir usuários de outra região.');
             }
 
@@ -105,6 +121,30 @@ class AdminController extends Controller
     {
         $perfilNome = (string) optional(session('session_perfil'))->perfil_nome;
         return Perfil::correspondeCodigo($perfilNome, Perfil::CODIGO_CRIE);
+    }
+
+    private function hasRegionalScopeProfile(): bool
+    {
+        return $this->isCrieProfile() || $this->isRegionalAdminProfile();
+    }
+
+    private function isRegionalAdminProfile(): bool
+    {
+        $perfilId = (int) optional(session('session_perfil'))->perfil_id;
+        if ($perfilId <= 0) {
+            return false;
+        }
+
+        $perfil = Perfil::find($perfilId);
+        if (!$perfil) {
+            return false;
+        }
+
+        $nomeNormalizado = Perfil::normalizarNome($perfil->nome);
+        return $perfil->nivel === Perfil::NIVEL_REGIAO
+            && str_contains($nomeNormalizado, 'administrador')
+            && !Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_CRIE)
+            && !Perfil::correspondeCodigo($perfil->nome, Perfil::CODIGO_ADMINISTRADOR_SISTEMA);
     }
 
     private function canManageUserInCurrentRegion(User $user): bool

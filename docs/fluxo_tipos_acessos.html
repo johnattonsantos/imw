@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IMW - Tipos de Acesso e Fluxo</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; color: #222; margin: 24px; font-size: 12px; }
+    h1 { font-size: 22px; margin: 0 0 10px 0; }
+    h2 { font-size: 16px; margin: 18px 0 8px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+    p, li { line-height: 1.45; }
+    .muted { color: #666; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+    .row { display: flex; gap: 10px; }
+    .col { flex: 1; }
+    .flow { margin-top: 8px; }
+    .box {
+      border: 1px solid #444;
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin: 0 auto;
+      width: 90%;
+      text-align: center;
+      background: #fafafa;
+      font-weight: 600;
+    }
+    .arrow {
+      text-align: center;
+      font-size: 16px;
+      margin: 3px 0;
+      color: #444;
+    }
+    .decision {
+      border: 1px dashed #555;
+      background: #fffef0;
+      font-weight: 600;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd; padding: 7px; vertical-align: top; }
+    th { background: #f5f5f5; text-align: left; }
+    code { background: #f2f2f2; padding: 1px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>IMW - Tipos de Acesso e Fluxo</h1>
+  <p class="muted">Gerado em 14/04/2026 com base na implementação atual do projeto.</p>
+
+  <h2>1) Tipos de Acesso (atuais)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Perfil / Nível</th>
+        <th>Como funciona no código</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Acesso Global</td>
+        <td><code>administrador_sistema</code> (nível <code>S</code>)</td>
+        <td>Recebe todas as regras do sistema (seed de <code>perfil_regra</code>) e não sofre bloqueio regional do middleware <code>crie.regiao</code>.</td>
+      </tr>
+      <tr>
+        <td>Acesso Regional (restrito)</td>
+        <td><code>crie</code> (nível <code>R</code>)</td>
+        <td>Tem regras específicas de usuários/admin e passa por validação de região no middleware <code>CheckCrieRegionalScope</code> (região do usuário logado deve bater com a região da sessão).</td>
+      </tr>
+      <tr>
+        <td>Acesso por instituição/perfil da sessão</td>
+        <td>Perfis locais/distritais/regionais (ex.: Administrador, Secretário, Tesoureiro, Pastor)</td>
+        <td>As rotas usam <code>seguranca:regra</code>; a autorização verifica a regra no perfil selecionado na sessão (<code>session_perfil</code>) e na instituição selecionada.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2) Fluxo de Controle de Acesso</h2>
+  <div class="flow">
+    <div class="box">Usuário acessa rota protegida</div>
+    <div class="arrow">↓</div>
+    <div class="box decision">Está autenticado?</div>
+    <div class="arrow">↓ (sim) / não → Login</div>
+    <div class="box">Middleware <code>VerificaPerfil</code></div>
+    <div class="arrow">↓</div>
+    <div class="box decision">Já existe <code>session_perfil</code>?</div>
+    <div class="arrow">↓ (sim)</div>
+    <div class="box">Segue fluxo da rota</div>
+    <div class="arrow">↓</div>
+    <div class="box decision">Rota exige <code>seguranca:regra</code>?</div>
+    <div class="arrow">↓ (sim)</div>
+    <div class="box">Middleware <code>CheckAccessControl</code> chama <code>hasPerfilRegra()</code></div>
+    <div class="arrow">↓</div>
+    <div class="box decision">Perfil da sessão possui a regra?</div>
+    <div class="arrow">↓ (não) → 403 Acesso não autorizado</div>
+    <div class="box">Autorizado por regra</div>
+    <div class="arrow">↓</div>
+    <div class="box decision">Rota exige <code>crie.regiao</code>?</div>
+    <div class="arrow">↓ (sim)</div>
+    <div class="box decision">Perfil selecionado é <code>crie</code>?</div>
+    <div class="arrow">↓ (sim)</div>
+    <div class="box decision">Região do usuário = região da sessão?</div>
+    <div class="arrow">↓ (não) → Dashboard com erro de escopo regional</div>
+    <div class="box">Controller/Service executa ação</div>
+  </div>
+
+  <h2>3) Regras centrais de negócio (Admin x CRIE)</h2>
+  <div class="card">
+    <ul>
+      <li><strong>Administrador do Sistema:</strong> pode gerenciar usuários de qualquer região.</li>
+      <li><strong>CRIE:</strong> pode gerenciar apenas usuários/instituições da própria região.</li>
+      <li>No cadastro/edição, o sistema valida instituições selecionadas contra a região da sessão quando o perfil é CRIE.</li>
+      <li>Na listagem administrativa, usuários já são filtrados para a região do CRIE.</li>
+    </ul>
+  </div>
+
+  <h2>4) Referências de implementação</h2>
+  <ul>
+    <li><code>app/Models/Perfil.php</code></li>
+    <li><code>app/Http/Middleware/VerificaPerfil.php</code></li>
+    <li><code>app/Http/Middleware/CheckAccessControl.php</code></li>
+    <li><code>app/Http/Middleware/CheckCrieRegionalScope.php</code></li>
+    <li><code>app/Http/Controllers/Admin/AdminController.php</code></li>
+    <li><code>app/Services/ServicesUsuarios/AdminListUsuariosService.php</code></li>
+    <li><code>app/Services/ServicesUsuarios/SalvarUsuarioService.php</code></li>
+    <li><code>app/Services/ServicesUsuarios/AdminEditarUsuarioService.php</code></li>
+    <li><code>database/seeders/PerfilsTableSeeder.php</code></li>
+    <li><code>database/seeders/PerfilRegraTableSeeder.php</code></li>
+  </ul>
+</body>
+</html>

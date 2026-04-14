@@ -82,26 +82,84 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $totalPrebendas = 0.0;
+                    $totalDependentes = 0;
+                    $totalBaseCalculos = 0.0;
+                    $totalRedutor = 0.0;
+                    $totalIrrfCalculado = 0.0;
+                    $totalRetido = 0.0;
+                    $totalRepassado = 0.0;
+                    $possuiRegistros = false;
+                @endphp
                 @forelse($prebendas as $item)
-                <tr>
-                    <td>{{ $item['prebanda']->nome }}</td>
-                    <td>{{ formatStr($item['prebanda']->cpf, '###.###.###-##') }}</td>
-                    <td>R$ {{ number_format($item['prebanda']->valor_prebendas, 2, ',', '.') }}</td>
-                    <td>{{ $item['prebanda']->n_dependentes }}</td>
-                    <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($item['prebanda']->retido, 2, ',', '.') }}</td>
-                    <td>R$ {{ number_format($item['prebanda']->repasse, 2, ',', '.') }}</td>
-                </tr>
+                    @php
+                        $possuiRegistros = true;
+                        $valorPrebenda = (float) ($item['prebanda']->valor_prebendas ?? 0);
+                        $dependentes = (int) ($item['prebanda']->n_dependentes ?? 0);
+                        $valorBase = (float) ($item['imposto']->valorBase ?? 0);
+                        $valorRedutor = (float) ($item['imposto']->valorRedutor ?? 0);
+                        $valorIrrf = ((float) ($item['prebanda']->valor_prebendas ?? 0) > 5000 || (float) ($item['prebanda']->valor_prebendas ?? 0) == 0)
+                            ? (float) ($item['imposto']->valorImposto ?? 0)
+                            : 0.0;
+                        $valorRetido = (float) ($item['prebanda']->retido ?? 0);
+                        $valorRepassado = (float) ($item['prebanda']->repasse ?? 0);
+
+                        $totalPrebendas += $valorPrebenda;
+                        $totalDependentes += $dependentes;
+                        $totalBaseCalculos += $valorBase;
+                        $totalRedutor += $valorRedutor;
+                        $totalIrrfCalculado += $valorIrrf;
+                        $totalRetido += $valorRetido;
+                        $totalRepassado += $valorRepassado;
+                    @endphp
+                    <tr>
+                        <td>{{ $item['prebanda']->nome }}</td>
+                        <td>{{ formatStr($item['prebanda']->cpf, '###.###.###-##') }}</td>
+                        <td>
+                            @if($item['prebanda']->valor_prebendas)
+                                R$ {{ number_format($item['prebanda']->valor_prebendas, 2, ',', '.') }}
+                            @else
+                                Não informado
+                            @endif
+                        </td>
+                        <td>{{ $item['prebanda']->n_dependentes }}</td>
+                        <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
+                        <td>
+                            @if($item['prebanda']->valor_prebendas > 5000)
+                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
+                            @elseif($item['prebanda']->valor_prebendas == 0)
+                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
+                            @else
+                                ISENTO
+                            @endif
+                        </td>
+                        <td>R$ {{ number_format($item['prebanda']->retido, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($item['prebanda']->repasse, 2, ',', '.') }}</td>
+                    </tr>
                 @empty
                 <tr>
-                    <td colspan="8">
+                    <td colspan="9">
                         Não possui dados
                     </td>
                 </tr>
                 @endforelse
             </tbody>
+            <tfoot>
+                @if($possuiRegistros)
+                    <tr style="font-weight: 700; background: #f8f9fa;">
+                        <th colspan="2">TOTAL</th>
+                        <th>R$ {{ number_format($totalPrebendas, 2, ',', '.') }}</th>
+                        <th>{{ $totalDependentes }}</th>
+                        <th>R$ {{ number_format($totalBaseCalculos, 2, ',', '.') }}</th>
+                        <th>R$ {{ number_format($totalRedutor, 2, ',', '.') }}</th>
+                        <th>R$ {{ number_format($totalIrrfCalculado, 2, ',', '.') }}</th>
+                        <th>R$ {{ number_format($totalRetido, 2, ',', '.') }}</th>
+                        <th>R$ {{ number_format($totalRepassado, 2, ',', '.') }}</th>
+                    </tr>
+                @endif
+            </tfoot>
           </table>            
         </div>
       </div>
@@ -156,6 +214,7 @@
                     text: '<i class="fas fa-file-pdf"></i> PDF',
                     titleAttr: 'PDF',
                     title: `{{ $titulo }}`,
+                    orientation: 'landscape',
                     customize: function (doc) {
                         doc.content.splice(0,1);
                         var now = new Date();
@@ -219,23 +278,24 @@
                     },
                     pageSize: 'LEGAL'
                 },
-                {
-                  extend: 'print',
-                  className: 'btn btn-primary btn-rounded',
-                  text: '<i class="fas fa-print"></i> Imprimir',
-                  titleAttr: 'Imprimir',
-                  title: "{{ $titulo }}",
-                  customize: function ( win ) {
-                      $(win.document.body)
-                      .css( 'font-size', '14pt' )
-                      .find( 'h1' )
-                              .css( 'text-align', 'center' ).css( 'font-size', '18pt' ).css( 'font-weight', 'bold');
+                // {
+                //   extend: 'print',
+                //   className: 'btn btn-primary btn-rounded',
+                //   text: '<i class="fas fa-print"></i> Imprimir',
+                //   titleAttr: 'Imprimir',
+                //   title: "{{ $titulo }}",
+                //   customize: function ( win ) {
+                //       $(win.document.body)
+                //       .css( 'font-size', '14pt' )
+                //       .find( 'h1' )
+                //               .css( 'text-align', 'center' ).css( 'font-size', '18pt' ).css( 'font-weight', 'bold');
 
-                      $(win.document.body).find('table')
-                      .addClass('compact')
-                      .css('font-size', 'inherit');
-                  }
-                }]
+                //       $(win.document.body).find('table')
+                //       .addClass('compact')
+                //       .css('font-size', 'inherit');
+                //   }
+                // }
+            ]
             },
             topEnd: 'search',
             bottomStart: 'info',

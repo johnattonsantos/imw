@@ -27,6 +27,7 @@ class InstituicoesInstituicao extends Model implements Auditable
         'cnpj',
         'complemento',
         'data_abertura',
+        'data_encerramento',
         'ddd',
         'email',
         'endereco',
@@ -40,6 +41,11 @@ class InstituicoesInstituicao extends Model implements Auditable
         'pastor',
         'tesoureiro',
         'regiao_id'
+    ];
+
+    protected $casts = [
+        'data_abertura' => 'date',
+        'data_encerramento' => 'date',
     ];
 
     public function users()

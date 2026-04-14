@@ -1,0 +1,1 @@
+ALTER TABLE `instituicoes_instituicoes` ADD `data_encerramento` DATE NULL AFTER `data_abertura`;

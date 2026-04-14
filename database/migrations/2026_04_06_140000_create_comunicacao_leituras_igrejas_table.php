@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('comunicacao_leituras_igrejas')) {
+            return;
+        }
+
         Schema::create('comunicacao_leituras_igrejas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('comunicacao_id')
@@ -32,4 +36,3 @@ return new class extends Migration
         Schema::dropIfExists('comunicacao_leituras_igrejas');
     }
 };
-

@@ -100,14 +100,19 @@ class User extends Authenticatable implements Auditable
     {
         $sessionId = session()->get('session_perfil')->instituicao_id;
         $perfilId = session()->get('session_perfil')->perfil_id;
+        $perfilNome = (string) optional(session('session_perfil'))->perfil_nome;
 
-        return $this->perfis()
-                    ->where('instituicao_id', $sessionId)
-                    ->where('perfil_id', $perfilId)
-                    ->whereHas('regras', function ($query) use ($regraNome) {
-                        $query->where('nome', $regraNome);
-                    })
-                    ->exists();
+        $query = $this->perfis()
+            ->where('perfil_id', $perfilId)
+            ->whereHas('regras', function ($query) use ($regraNome) {
+                $query->where('nome', $regraNome);
+            });
+
+        if (!Perfil::correspondeCodigo($perfilNome, Perfil::CODIGO_ADMINISTRADOR_SISTEMA)) {
+            $query->where('instituicao_id', $sessionId);
+        }
+
+        return $query->exists();
     }
 
 }

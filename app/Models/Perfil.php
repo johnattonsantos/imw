@@ -26,8 +26,12 @@ class Perfil extends Model implements Auditable
     public static function correspondeCodigo(?string $nomePerfil, string $codigo): bool
     {
         $normalizado = self::normalizarNome($nomePerfil);
+        $aliasesNormalizados = array_map(
+            fn (string $alias): string => self::normalizarNome($alias),
+            self::aliasesPorCodigo($codigo)
+        );
 
-        return in_array($normalizado, self::aliasesPorCodigo($codigo), true);
+        return in_array($normalizado, $aliasesNormalizados, true);
     }
 
     public static function aliasesPorCodigo(string $codigo): array

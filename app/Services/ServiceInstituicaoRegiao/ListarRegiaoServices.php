@@ -23,6 +23,9 @@ class ListarRegiaoServices
                         ->orWhere('telefone', 'like', "%$searchTerm%");
                 });
             })
+            ->when(isset($parameters['ativo']) && $parameters['ativo'] !== '', function ($query) use ($parameters) {
+                $query->where('ativo', (int) $parameters['ativo']);
+            })
             ->where('regiao_id', $regiaoId)
             ->when($tipoInstituicaoId, function ($query) use ($tipoInstituicaoId) {
                 $query->where('tipo_instituicao_id', $tipoInstituicaoId);

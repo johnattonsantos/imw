@@ -22,6 +22,7 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
                 'validado_migracao' => DB::table('membresia_migracao')
                     ->select('validado')
                     ->whereColumn('membresia_migracao.id', 'vw_rol_membros_recadastro.membro_id')
+                    ->whereNull('membresia_migracao.deleted_at')
                     ->limit(1),
             ])
             ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
@@ -32,6 +33,7 @@ class RolMembroRecadastramentoDatatable extends AbstractDatatable
                 $query->selectRaw('1')
                     ->from('membresia_migracao')
                     ->whereColumn('membresia_migracao.id', 'vw_rol_membros_recadastro.membro_id')
+                    ->whereNull('membresia_migracao.deleted_at')
                     ->where('membresia_migracao.validado', 0);
             });
     }

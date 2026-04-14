@@ -23,6 +23,7 @@ use App\Services\ServiceNomeacoes\StoreNomeacoesClerigos;
 use App\Traits\LocationUtils;
 use App\Traits\RegionalScope;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class InstituicaoRegiaoDistritosController extends Controller
 {
@@ -33,7 +34,11 @@ class InstituicaoRegiaoDistritosController extends Controller
     {
         $tipoInstituicaoId = $request->get('tipo_instituicao_id');
         $searchTerm = $request->input('search');
-        $parameters = ['search' => $searchTerm]; // Montando um array para os parâmetros
+        $ativo = $request->input('ativo');
+        $parameters = [
+            'search' => $searchTerm,
+            'ativo' => $ativo,
+        ];
         $instituicoes = app(ListarRegiaoServices::class)->execute($parameters, $tipoInstituicaoId);
 
         return view('instituicoes.index', compact('instituicoes'));
@@ -98,10 +103,18 @@ class InstituicaoRegiaoDistritosController extends Controller
     {
         try {
             app(UpdateRegiaoService::class)->execute($request, $id);
-            return redirect()->route('instituicoes-regiao.index')->with('success', 'Instituição editado com sucesso!');
+        } catch (ValidationException $e) {
+            $primeiraMensagem = collect($e->errors())->flatten()->first() ?? 'Não foi possível inativar a instituição.';
+            return redirect()
+                ->back()
+                ->withInput()
+                ->withErrors($e->errors())
+                ->with('error', $primeiraMensagem);
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Não foi possível editar instituição fora da região do perfil.');
         }
+
+        return redirect()->route('instituicoes-regiao.index')->with('success', 'Instituição editado com sucesso!');
     }
 
 
