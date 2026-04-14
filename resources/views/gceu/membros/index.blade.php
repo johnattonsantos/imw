@@ -16,6 +16,7 @@
     <link href="https://cdn.datatables.net/searchbuilder/1.8.2/css/searchBuilder.dataTables.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.datatables.net/datetime/1.5.5/css/dataTables.dateTime.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.datatables.net/buttons/3.2.3/css/buttons.dataTables.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
     <style>
         .swal2-popup .swal2-styled.swal2-cancel {
@@ -198,7 +199,16 @@
 
 @section('extras-scripts')
 <script src="{{ asset('membros/js/editar.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/i18n/pt-BR.js"></script>
 <script>
+    $.fn.select2.defaults.set("language", "pt-BR");
+    $('#membro_id').select2({
+        width: '100%',
+        placeholder: 'Selecione',
+        allowClear: true
+    });
+
     $('form').on('submit', function (event) {
         if (!validateFormacaoEclesiastica() || !validateMinisterialDates()) {
             event.preventDefault();
