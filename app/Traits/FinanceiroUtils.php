@@ -167,6 +167,9 @@ trait FinanceiroUtils
                     $prebendasAll = ContabilidadeDados::fetchPrebandasCotaOrcamentaria($dados);                
                     foreach($prebendasAll as $item){
                         $prebenda = PessoasPrebenda::where('id', $item->id)->first();
+                        if (!$prebenda) {
+                            continue;
+                        }
                         $irCalculator =  new ImpostoDeRendaSimplificadoCalculator();
                         $impostoCalculado = (new CalculaImpostoDeRendaService($irCalculator))->execute($prebenda);
                         $somaImposto += $impostoCalculado->valorImposto;
@@ -196,6 +199,9 @@ trait FinanceiroUtils
                             $prebendasAll = ContabilidadeDados::fetchPrebandasCotaOrcamentaria($dados);     
                             foreach($prebendasAll as $item){
                                 $prebenda = PessoasPrebenda::where('id', $item->id)->first();
+                                if (!$prebenda) {
+                                    continue;
+                                }
                                 $irCalculator =  new ImpostoDeRendaSimplificadoCalculator();
                                 $impostoCalculado = (new CalculaImpostoDeRendaService($irCalculator))->execute($prebenda);
                                 $somaImposto += $impostoCalculado->valorImposto;
@@ -239,6 +245,9 @@ trait FinanceiroUtils
                                 $prebendasAll = ContabilidadeDados::fetchPrebandasCotaOrcamentaria($dados);                
                                 foreach($prebendasAll as $item){
                                     $prebenda = PessoasPrebenda::where('id', $item->id)->first();
+                                    if (!$prebenda) {
+                                        continue;
+                                    }
                                     $irCalculator =  new ImpostoDeRendaSimplificadoCalculator();
                                     $impostoCalculado = (new CalculaImpostoDeRendaService($irCalculator))->execute($prebenda);
                                     $somaImposto += $impostoCalculado->valorImposto;
