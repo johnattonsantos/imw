@@ -25,7 +25,7 @@
     </div>
 
     <div class="widget-content widget-content-area">
-      <form class="form-vertical" method="POST" action="{{ route('membro.receber_novo.store', ['id' => $pessoa->id]) }}" enctype="multipart/form-data">
+      <form id="membro-receber-novo-form" class="form-vertical" method="POST" action="{{ route('membro.receber_novo.store', ['id' => $pessoa->id]) }}" enctype="multipart/form-data">
         @csrf
           <input type="hidden" name="cpf" value="{{ $pessoa->cpf }}">
 
@@ -130,4 +130,33 @@
 @endsection
 @section('extras-scripts')
     <script src="{{ asset('membros/js/editar.js') }}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('membro-receber-novo-form');
+        if (!form) {
+          return;
+        }
+
+        form.addEventListener('submit', function (event) {
+          if (form.dataset.submitting === '1') {
+            event.preventDefault();
+            return;
+          }
+
+          form.dataset.submitting = '1';
+
+          const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+          submitButtons.forEach(function (button) {
+            button.disabled = true;
+            if (button.tagName === 'BUTTON') {
+              button.dataset.originalText = button.dataset.originalText || button.innerHTML;
+              button.innerHTML = 'Processando...';
+            } else {
+              button.dataset.originalText = button.dataset.originalText || button.value;
+              button.value = 'Processando...';
+            }
+          });
+        });
+      });
+    </script>
 @endsection

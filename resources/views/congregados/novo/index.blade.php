@@ -21,7 +21,7 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-  <form method="POST" action="{{ route('congregado.store') }}" enctype="multipart/form-data">
+  <form id="congregado-novo-form" method="POST" action="{{ route('congregado.store') }}" enctype="multipart/form-data">
     @csrf
     <div class="row">
       <div class="col-md-12">
@@ -94,5 +94,34 @@
 @endsection
 @section('extras-scripts')
     <script src="{{ asset('congregados/js/editar.js') }}"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('congregado-novo-form');
+        if (!form) {
+          return;
+        }
+
+        form.addEventListener('submit', function (event) {
+          if (form.dataset.submitting === '1') {
+            event.preventDefault();
+            return;
+          }
+
+          form.dataset.submitting = '1';
+
+          const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+          submitButtons.forEach(function (button) {
+            button.disabled = true;
+            if (button.tagName === 'BUTTON') {
+              button.dataset.originalText = button.dataset.originalText || button.innerHTML;
+              button.innerHTML = 'Processando...';
+            } else {
+              button.dataset.originalText = button.dataset.originalText || button.value;
+              button.value = 'Processando...';
+            }
+          });
+        });
+      });
+    </script>
     @stack('tab-scripts')
 @endsection

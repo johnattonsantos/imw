@@ -21,7 +21,7 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-  <form method="POST" action="{{ route('congregado.update') }}" enctype="multipart/form-data">
+  <form id="congregado-editar-form" method="POST" action="{{ route('congregado.update') }}" enctype="multipart/form-data">
     @csrf
     <div class="row">
       <div class="col-md-12">
@@ -95,6 +95,29 @@
     <script src="{{ asset('congregados/js/editar.js') }}"></script>
     <script>
         $(document).ready(function(){
+            const form = document.getElementById('congregado-editar-form');
+            if (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.dataset.submitting === '1') {
+                        event.preventDefault();
+                        return;
+                    }
+
+                    form.dataset.submitting = '1';
+                    const submitButtons = form.querySelectorAll('button[type="submit"], input[type="submit"]');
+                    submitButtons.forEach(function (button) {
+                        button.disabled = true;
+                        if (button.tagName === 'BUTTON') {
+                            button.dataset.originalText = button.dataset.originalText || button.innerHTML;
+                            button.innerHTML = 'Processando...';
+                        } else {
+                            button.dataset.originalText = button.dataset.originalText || button.value;
+                            button.value = 'Processando...';
+                        }
+                    });
+                });
+            }
+
             $('#cep').blur(function(){
                 var cep = $(this).val().replace(/\D/g, '');
                 if(cep.length != 8){

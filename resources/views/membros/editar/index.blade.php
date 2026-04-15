@@ -34,7 +34,7 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-    <form method="POST" action="{{ route('membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data">
+    <form id="membro-editar-form" method="POST" action="{{ route('membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data">
       @csrf
     <div class="row">
       <div class="col-md-12">
@@ -197,11 +197,32 @@
               return valid;
           }
 
-          $('form').on('submit', function (event) {
+          $('#membro-editar-form').on('submit', function (event) {
               if (!validateFormacaoEclesiastica() || !validateMinisterialDates()) {
                   event.preventDefault();
                   toastr.warning('Por favor, corrija os erros de data antes de enviar.');
+                  return;
               }
+
+              const $form = $(this);
+              if ($form.data('submitting')) {
+                  event.preventDefault();
+                  return;
+              }
+
+              $form.data('submitting', true);
+              const $submitButtons = $form.find('button[type="submit"], input[type="submit"]');
+              $submitButtons.each(function () {
+                  const $button = $(this);
+                  $button.prop('disabled', true);
+                  if (this.tagName === 'BUTTON') {
+                      $button.data('original-text', $button.data('original-text') || $button.html());
+                      $button.html('Processando...');
+                  } else {
+                      $button.data('original-text', $button.data('original-text') || $button.val());
+                      $button.val('Processando...');
+                  }
+              });
           });
 
           // Funcionalidade de preenchimento automático de endereço pelo CEP
