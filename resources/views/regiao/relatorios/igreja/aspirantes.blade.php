@@ -79,7 +79,6 @@
                 <tr>
                     <th>DISTRITO</th>
                     <th>IGREJA</th>
-                    <th>IGREJA DE ORIGEM</th>
                     <th>NOME</th>
                     <th>SEXO</th>
                     <th>ESTADO CIVIL</th>
@@ -94,7 +93,6 @@
                   <tr>
                       <td>{{ $membro->distrito_nome }}</td>
                       <td>{{ $membro->igreja_nome }}</td>
-                      <td>{{ $membro->igreja_origem }}</td>
                       <td>{{ $membro->membro_nome }}</td>
                       <td>{{ $membro->sexo }}</td>
                       <td>{{ $membro->estado_civil }}</td>

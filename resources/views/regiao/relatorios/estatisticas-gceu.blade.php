@@ -205,7 +205,27 @@
                 bottomEnd: 'paging'
             },
             language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json'
+                decimal: ',',
+                thousands: '.',
+                processing: 'Processando...',
+                loadingRecords: 'Carregando...',
+                lengthMenu: 'Exibir _MENU_ resultados por página',
+                zeroRecords: 'Nenhum registro encontrado',
+                emptyTable: 'Nenhum registro encontrado',
+                info: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
+                infoEmpty: 'Mostrando 0 até 0 de 0 registros',
+                infoFiltered: '(filtrado de _MAX_ registros no total)',
+                search: 'Pesquisar',
+                paginate: {
+                    first: 'Primeira',
+                    previous: 'Anterior',
+                    next: 'Próxima',
+                    last: 'Última'
+                },
+                aria: {
+                    sortAscending: ': ativar para ordenar a coluna de forma crescente',
+                    sortDescending: ': ativar para ordenar a coluna de forma decrescente'
+                }
             }
         });
     </script>

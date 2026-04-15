@@ -59,8 +59,7 @@ class AspirantesIgrejasService
                               ELSE '' END as contato"),
                 DB::raw("CASE WHEN mc.email_preferencial IS NOT NULL AND mc.email_preferencial <> '' THEN mc.email_preferencial
                               WHEN mc.email_alternativo IS NOT NULL AND mc.email_alternativo <> '' THEN mc.email_alternativo
-                              ELSE '' END as email"),
-                DB::raw("CASE WHEN mm.igreja_host IS NOT NULL AND mm.igreja_host <> '' THEN mm.igreja_host ELSE igreja.nome END as igreja_origem")
+                              ELSE '' END as email")
             )
             ->where('distrito.instituicao_pai_id', $regiaoId)
             ->where('distrito.tipo_instituicao_id', 2)
