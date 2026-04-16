@@ -15,14 +15,10 @@ trait EstatisticaTotalMembrosUtils
         if ($regiaoId != "all") {
             $result = DB::table('instituicoes_instituicoes as ii')
                 ->leftJoin('membresia_membros as mm', 'mm.distrito_id', '=', 'ii.id')
-                ->leftJoin('membresia_rolpermanente as mr', function ($join) {
-                    $join->on('mr.membro_id', '=', 'mm.id')
-                        ->whereNull('mr.dt_exclusao');
-                })
                 ->select(
                     'ii.id as distrito_id',
                     'ii.nome as instituicao',
-                    DB::raw('COALESCE(COUNT(mm.id), 0) as total')
+                    DB::raw('COALESCE(COUNT(DISTINCT mm.id), 0) as total')
                 )
                 ->where(['ii.regiao_id' => $regiaoId, 'ii.tipo_instituicao_id' => 2, 'ii.ativo' => 1, 'mm.status' => 'A', 'mm.vinculo' => 'M'])
                 ->groupBy('ii.id', 'ii.nome')
@@ -34,16 +30,16 @@ trait EstatisticaTotalMembrosUtils
         } else {
             $result = DB::table('instituicoes_instituicoes as ii')
                 ->leftJoin('membresia_membros as mm', 'mm.distrito_id', '=', 'ii.id')
-                ->leftJoin('membresia_rolpermanente as mr', function ($join) {
-                    $join->on('mr.membro_id', '=', 'mm.id')
-                        ->whereNull('mr.dt_exclusao');
-                })
                 ->leftJoin('instituicoes_instituicoes as ii_nome', 'ii.regiao_id', '=', 'ii_nome.id')
                 ->select(
                     'ii.regiao_id',
                     'ii_nome.nome as instituicao',
-                    DB::raw('COALESCE(COUNT(mm.id), 0) as total')
+                    DB::raw('COALESCE(COUNT(DISTINCT mm.id), 0) as total')
                 )
+                ->where('ii.tipo_instituicao_id', 2)
+                ->where('ii.ativo', 1)
+                ->where('mm.status', 'A')
+                ->where('mm.vinculo', 'M')
                 ->groupBy('ii.regiao_id', 'ii_nome.nome')
                 ->orderByDesc('total')
                 ->get();
