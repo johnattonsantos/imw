@@ -1,13 +1,14 @@
 <?php
 namespace App\Services\ServiceEstatisticas;
 
+use App\Traits\Identifiable;
 use Illuminate\Support\Facades\DB;
 
 class TotalMembresiaServices
 {
     public function execute($tipo)
     {
-        $regiao_id = auth()->user()->pessoa->regiao_id;
+        $regiao_id = Identifiable::fetchtSessionRegiao()->id;
 
         if ($tipo == 'igreja') {
             // Consulta para igrejas agrupadas por distrito
@@ -24,8 +25,10 @@ class TotalMembresiaServices
                         ->from('instituicoes_instituicoes as ii')
                         ->where('ii.regiao_id', $regiao_id)
                         ->where('ii.tipo_instituicao_id', 2)
-                        ->whereNull('ii.deleted_at');
+                        ->whereNull('ii.deleted_at')
+                        ->whereNull('ii.data_encerramento');
                 })
+                ->whereNull('iipai.data_encerramento')
                 ->select(
                     'iipai.id as distrito_id',
                     'iipai.nome as distrito_nome',
@@ -49,6 +52,7 @@ class TotalMembresiaServices
                 ->where('ii.regiao_id', $regiao_id)
                 ->where('ii.tipo_instituicao_id', 2)
                 ->whereNull('ii.deleted_at')
+                ->whereNull('ii.data_encerramento')
                 ->select(
                     'ii.id as distrito_id',
                     'ii.nome as distrito_nome',
