@@ -35,10 +35,63 @@
 <script src="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.js') }}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const distritoSelect = document.getElementById('distrito_id');
+        const igrejaSelect = document.getElementById('igreja_id');
+
+        const carregarIgrejasPorDistrito = function(distritoId) {
+            if (!igrejaSelect) {
+                return;
+            }
+
+            if (!distritoId || distritoId === 'all') {
+                igrejaSelect.innerHTML = '<option value="all">Selecione um distrito</option>';
+                igrejaSelect.value = 'all';
+                igrejaSelect.disabled = true;
+                return;
+            }
+
+            igrejaSelect.disabled = false;
+            igrejaSelect.innerHTML = '<option value="all">Carregando...</option>';
+
+            fetch(`/instituicoes/igrejasByDistrito/${distritoId}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha ao carregar igrejas');
+                }
+                return response.json();
+            })
+            .then(igrejas => {
+                let options = '<option value="all">Todas</option>';
+                igrejas.forEach(igreja => {
+                    options += `<option value="${igreja.id}">${igreja.nome}</option>`;
+                });
+                igrejaSelect.innerHTML = options;
+                igrejaSelect.value = 'all';
+            })
+            .catch(() => {
+                igrejaSelect.innerHTML = '<option value="all">Todas</option>';
+                igrejaSelect.value = 'all';
+            });
+        };
+
+        if (distritoSelect) {
+            distritoSelect.addEventListener('change', function() {
+                carregarIgrejasPorDistrito(this.value);
+            });
+        }
+
         document.querySelectorAll('.toggle-icon').forEach(function(icon) {
             icon.addEventListener('click', function() {
                 let target = this.dataset.target;
                 let rows = document.querySelectorAll(`.child-row[data-parent="${target}"]`);
+                if (!rows.length) {
+                    return;
+                }
 
                 let isHidden = rows[0].style.display === 'none' || rows[0].style.display === '';
 
@@ -91,44 +144,65 @@
         <div class="widget-content widget-content-area">
             <!-- 🔹 Formulário de Pesquisa -->
             <form class="form-vertical" id="filter_form" method="GET">
-                <div class="form-group row mb-4">
-                    <div class="col-lg-2 text-right">
-                        <label class="control-label">* Ano Inicial:</label>
-                    </div>
-                    <div class="col-lg-3">
-                        @php
-                        $anoAtual = intval(date('Y')); // Garante que seja um número inteiro
-                        $anoInicio = $anoAtual - 10;
-                        @endphp
+                @php
+                $anoAtual = intval(date('Y')); // Garante que seja um número inteiro
+                $anoInicio = $anoAtual - 10;
+                @endphp
 
+                <div class="form-group row mb-4">
+                    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+                        <label class="control-label">* Ano Inicial:</label>
                         <select class="form-control" id="anoinicio" name="anoinicio" required>
                             @for ($ano = $anoInicio; $ano <= $anoAtual; $ano++)
                                 <option value="{{ $ano }}" {{ request()->input('anoinicio') == $ano ? 'selected' : '' }}>
-                                {{ $ano }}
+                                    {{ $ano }}
                                 </option>
-                                @endfor
+                            @endfor
                         </select>
                     </div>
-                </div>
 
-                <div class="form-group row mb-4">
-                    <div class="col-lg-2 text-right">
+                    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
                         <label class="control-label">* Ano Final:</label>
-                    </div>
-                    <div class="col-lg-3">
                         <select class="form-control" id="anofinal" name="anofinal" required>
                             @for ($ano = date('Y') - 10; $ano <= date('Y'); $ano++)
                                 <option value="{{ $ano }}" {{ request()->input('anofinal') == $ano ? 'selected' : '' }}>
-                                {{ $ano }}
+                                    {{ $ano }}
                                 </option>
-                                @endfor
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
+                        <label class="control-label">Distrito:</label>
+                        <select class="form-control" id="distrito_id" name="distrito_id">
+                            <option value="all" {{ (string) $distritoId === 'all' ? 'selected' : '' }}>Todos</option>
+                            @foreach($distritos as $distrito)
+                                <option value="{{ $distrito->id }}" {{ (string) $distritoId === (string) $distrito->id ? 'selected' : '' }}>
+                                    {{ $distrito->nome }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <label class="control-label">Igreja:</label>
+                        <select class="form-control" id="igreja_id" name="igreja_id" {{ (string) $distritoId === 'all' ? 'disabled' : '' }}>
+                            @if((string) $distritoId === 'all')
+                                <option value="all">Selecione um distrito</option>
+                            @else
+                                <option value="all">Todas</option>
+                            @endif
+                            @foreach($igrejas as $igreja)
+                                <option value="{{ $igreja->id }}" {{ (string) $igrejaId === (string) $igreja->id ? 'selected' : '' }}>
+                                    {{ $igreja->nome }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group row mb-4">
-                    <div class="col-lg-2"></div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-12">
                         <button id="btn_buscar" type="submit" class="btn btn-primary">
                             <x-bx-search /> Buscar
                         </button>

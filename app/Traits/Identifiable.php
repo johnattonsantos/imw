@@ -223,6 +223,8 @@ trait Identifiable
     {
         return InstituicoesInstituicao::where('instituicao_pai_id', $regiaoId)
             ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->whereNull('data_encerramento')
+            ->orderBy('nome')
             ->get();
     }
 
@@ -230,6 +232,8 @@ trait Identifiable
     {
         return InstituicoesInstituicao::where('instituicao_pai_id', $distritoId)
             ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->whereNull('data_encerramento')
+            ->orderBy('nome')
             ->get();
     }
 

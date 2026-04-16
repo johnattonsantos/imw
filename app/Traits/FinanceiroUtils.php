@@ -180,7 +180,12 @@ trait FinanceiroUtils
             return $cotas;
         }else if($tipo == 'distrito'){
             $distritoId = $dados['instituicao_id'] ? $dados['instituicao_id'] : '';
-            $instituicoes = InstituicoesInstituicao::select('instituicoes_instituicoes.*','instituicoes_tiposinstituicao.nome as tipo_instituicao')->where('instituicao_pai_id', $distritoId)->join('instituicoes_tiposinstituicao','instituicoes_tiposinstituicao.id', 'instituicoes_instituicoes.tipo_instituicao_id')->get();
+            $instituicoes = InstituicoesInstituicao::select('instituicoes_instituicoes.*','instituicoes_tiposinstituicao.nome as tipo_instituicao')
+                ->where('instituicao_pai_id', $distritoId)
+                ->where('instituicoes_instituicoes.tipo_instituicao_id', 1)
+                ->whereNull('instituicoes_instituicoes.data_encerramento')
+                ->join('instituicoes_tiposinstituicao','instituicoes_tiposinstituicao.id', 'instituicoes_instituicoes.tipo_instituicao_id')
+                ->get();
             foreach($instituicoes as $instituicao){
                 $instituicao_id = $instituicao->id;
                 $dados['instituicao_id'] = $instituicao_id;
@@ -220,13 +225,19 @@ trait FinanceiroUtils
             $regiaoId = $dados['instituicao_id'] ? $dados['instituicao_id'] : '';
             $instituicoesDistritos = InstituicoesInstituicao::select('instituicoes_instituicoes.*','instituicoes_tiposinstituicao.nome as tipo_instituicao')
                 ->where(['instituicao_pai_id' => $regiaoId, 'tipo_instituicao_id' => 2])
+                ->whereNull('instituicoes_instituicoes.data_encerramento')
                 ->join('instituicoes_tiposinstituicao','instituicoes_tiposinstituicao.id', 'instituicoes_instituicoes.tipo_instituicao_id')
                 ->when(request()->input('distrito_id'), function ($query) {
                     $query->where('instituicoes_instituicoes.id',request()->input('distrito_id'));
                 }) 
                 ->get();
             foreach($instituicoesDistritos as $distrito){
-                $instituicoes = InstituicoesInstituicao::select('instituicoes_instituicoes.*','instituicoes_tiposinstituicao.nome as tipo_instituicao')->where('instituicao_pai_id', $distrito->id)->join('instituicoes_tiposinstituicao','instituicoes_tiposinstituicao.id', 'instituicoes_instituicoes.tipo_instituicao_id')->get();
+                $instituicoes = InstituicoesInstituicao::select('instituicoes_instituicoes.*','instituicoes_tiposinstituicao.nome as tipo_instituicao')
+                    ->where('instituicao_pai_id', $distrito->id)
+                    ->where('instituicoes_instituicoes.tipo_instituicao_id', 1)
+                    ->whereNull('instituicoes_instituicoes.data_encerramento')
+                    ->join('instituicoes_tiposinstituicao','instituicoes_tiposinstituicao.id', 'instituicoes_instituicoes.tipo_instituicao_id')
+                    ->get();
                 foreach($instituicoes as $instituicao){
                     $instituicao_id = $instituicao->id;
                     $dados['instituicao_id'] = $instituicao_id;

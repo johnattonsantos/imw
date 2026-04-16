@@ -41,11 +41,17 @@ class RegiaoEstatisticasController extends Controller
     public function estatisticaEvolucao(Request $request)
     {
         // Capturar os anos do request
-        $anoinicio = request('anoinicio', date('Y') - 4);
-        $anofinal = request('anofinal', date('Y'));
+        $anoinicio = (int) $request->input('anoinicio', date('Y') - 4);
+        $anofinal = (int) $request->input('anofinal', date('Y'));
+        $distritoId = $request->input('distrito_id', 'all');
+        $igrejaId = $request->input('igreja_id', 'all');
         //$regiao_id = auth()->user()->pessoa->regiao_id;
         $regiao = Identifiable::fetchtSessionRegiao();
         $regiao_id = $regiao->id;
+        $distritos = Identifiable::fetchDistritosByRegiao($regiao_id);
+        $igrejas = (is_numeric($distritoId) && (int) $distritoId > 0)
+            ? Identifiable::fetchIgrejasByDistrito((int) $distritoId)
+            : collect();
         // ===========================
         // 🔹 Criar colunas de contagem de membros por ano
         // ===========================
@@ -78,7 +84,7 @@ class RegiaoEstatisticasController extends Controller
         // ===========================
         // 🔹 Buscar os PAIS (instituições na região do usuário)
         // ===========================
-        $instituicoes_pais = DB::select("
+        $sqlPais = "
             SELECT
                 inst.id,
                 inst.nome AS instituicao,
@@ -87,8 +93,16 @@ class RegiaoEstatisticasController extends Controller
                 (SELECT COUNT(*) FROM membresia_rolpermanente WHERE distrito_id = inst.id and dt_exclusao is null and lastrec = 1) AS total_membros
             FROM instituicoes_instituicoes inst
             WHERE inst.instituicao_pai_id = ?
-            ORDER BY inst.nome
-        ", [$regiao_id]);
+            AND inst.tipo_instituicao_id = 2
+            AND inst.data_encerramento IS NULL
+        ";
+        $bindingsPais = [$regiao_id];
+        if (is_numeric($distritoId) && (int) $distritoId > 0) {
+            $sqlPais .= " AND inst.id = ? ";
+            $bindingsPais[] = (int) $distritoId;
+        }
+        $sqlPais .= " ORDER BY inst.nome ";
+        $instituicoes_pais = DB::select($sqlPais, $bindingsPais);
 
         // 🔹 PEGAR IDS DOS PAIS ENCONTRADOS PARA BUSCAR FILHOS
         $ids_pais = array_column($instituicoes_pais, 'id');
@@ -97,7 +111,7 @@ class RegiaoEstatisticasController extends Controller
         // 🔹 Buscar os FILHOS (instituições que pertencem aos pais encontrados)
         // ===========================
         if (!empty($ids_pais)) {
-            $instituicoes_filhos = DB::select("
+            $sqlFilhos = "
                 SELECT
                     inst.id,
                     inst.nome AS instituicao,
@@ -106,13 +120,30 @@ class RegiaoEstatisticasController extends Controller
                     (SELECT COUNT(*) FROM membresia_rolpermanente WHERE igreja_id = inst.id and dt_exclusao is null and lastrec = 1) AS total_membros
                 FROM instituicoes_instituicoes inst
                 WHERE inst.instituicao_pai_id IN (" . implode(',', $ids_pais) . ")
-                ORDER BY inst.nome
-            ");
+                AND inst.tipo_instituicao_id = 1
+                AND inst.data_encerramento IS NULL
+            ";
+            $bindingsFilhos = [];
+            if (is_numeric($igrejaId) && (int) $igrejaId > 0) {
+                $sqlFilhos .= " AND inst.id = ? ";
+                $bindingsFilhos[] = (int) $igrejaId;
+            }
+            $sqlFilhos .= " ORDER BY inst.nome ";
+            $instituicoes_filhos = DB::select($sqlFilhos, $bindingsFilhos);
         } else {
             $instituicoes_filhos = [];
         }
 
-        return view('regiao.estatisticas.evolucao', compact('instituicoes_pais', 'instituicoes_filhos', 'anoinicio', 'anofinal'));
+        return view('regiao.estatisticas.evolucao', compact(
+            'instituicoes_pais',
+            'instituicoes_filhos',
+            'anoinicio',
+            'anofinal',
+            'distritos',
+            'igrejas',
+            'distritoId',
+            'igrejaId'
+        ));
     }
 
 

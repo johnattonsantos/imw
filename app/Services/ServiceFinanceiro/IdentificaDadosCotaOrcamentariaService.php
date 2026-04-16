@@ -22,6 +22,7 @@ class IdentificaDadosCotaOrcamentariaService
                 $join->on('regiao.id', '=', 'distrito.instituicao_pai_id');
             })
             ->where(['regiao.id' => $regiaoId, 'distrito.tipo_instituicao_id' => 2])
+            ->whereNull('distrito.data_encerramento')
             ->orderBy('distrito.nome')
             ->get();
         return [
