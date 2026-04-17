@@ -9,10 +9,13 @@
 @endsection
 
 @section('extras-css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="{{ asset('theme/assets/css/elements/alert.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('theme/assets/css/forms/theme-checkbox-radio.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.css') }}"
         rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.datatables.net/buttons/3.2.3/css/buttons.dataTables.css" rel="stylesheet" type="text/css" />
 @endsection
 
 @include('extras.alerts')
@@ -62,20 +65,8 @@
                                 title="Buscar dados do Relatório" class="btn btn-primary btn">
                                 <x-bx-search /> Buscar
                             </button>
-                            <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                                <i class="fa fa-file-pdf"></i> Relatório
-                            </button>
                         </div>
                     </div>
-                </form>
-
-                <form id="report_form" action="{{ url('regiao/relatorio/estatisticaestadocivil/pdf') }}" method="POST"
-                    target="_blank" style="display: none;">
-                    @csrf
-                    <input type="hidden" name="data_inicial" id="report_data_inicial">
-                    <input type="hidden" name="data_final" id="report_data_final">
-
-
                 </form>
             </div>
         </div>
@@ -93,7 +84,8 @@
                                     <h6 class="mt-3 text-uppercase">10+ Igrejas que Batizaram -
                                         {{ $regiao->nome }}</h6>
                                     <div class="table-responsive">
-                                        <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                                        <table class="table table-striped display nowrap" id="igrejas-mais-batismo"
+                                            style="font-size: 90%; margin-top: 15px; width: 100%;">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th style="text-align: left;">Distrito</th>
@@ -124,55 +116,152 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i
-                                    class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
-                        </div>
-                    </div>
                     <!-- Fim do Conteúdo -->
                 </div>
             </div>
         </div>
     @endif
+@endsection
 
 @section('extras-scripts')
-    <script src="{{ asset('theme/assets/js/planilha/papaparse.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/planilha/FileSaver.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/planilha/xlsx.full.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/planilha/planilha.js') }}"></script>
     <script src="{{ asset('theme/assets/js/pages/movimentocaixa.js') }}"></script>
     <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
+    <script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.selectpicker').selectpicker();
-
-            $('#btn_relatorio').on('click', function(event) {
-                var data_inicial = $('#data_inicial').val();
-                var data_final = $('#data_final').val();
-
-
-                if (!data_inicial && !data_final) {
-                    event.preventDefault();
-                    alert('Por favor, preencha todos os campos.');
-                } else {
-                    $('#report_data_final').val(data_final);
-                    $('#report_data_inicial').val(data_inicial);
-                    $('#report_form').submit();
-                }
-            });
 
             $('#filter_form').submit(function(event) {
                 var data_inicial = $('#data_inicial').val();
                 var data_final = $('#data_final').val();
 
-
-                if (!data_inicial && !data_final) {
+                if (!data_inicial || !data_final) {
                     event.preventDefault();
                     alert('Por favor, preencha todos os campos.');
                 }
             });
+
+            if ($('#igrejas-mais-batismo').length) {
+                new DataTable('#igrejas-mais-batismo', {
+                    scrollX: true,
+                    layout: {
+                        topStart: {
+                            buttons: [
+                                'pageLength',
+                                {
+                                    extend: 'excel',
+                                    className: 'btn btn-primary btn-rounded',
+                                    text: '<i class="fas fa-file-excel"></i> Excel',
+                                    titleAttr: 'Excel',
+                                    title: 'IMW - 10+ IGREJAS QUE BATIZARAM'
+                                },
+                                {
+                                    extend: 'pdfHtml5',
+                                    className: 'btn btn-primary btn-rounded',
+                                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                                    titleAttr: 'PDF',
+                                    title: 'IMW - 10+ IGREJAS QUE BATIZARAM',
+                                    customize: function(doc) {
+                                        doc.content.splice(0, 1);
+                                        doc.pageMargins = [20, 50, 20, 30];
+                                        doc.defaultStyle.fontSize = 8;
+                                        doc.styles.tableHeader.fontSize = 8;
+
+                                        const hoje = new Date();
+                                        const dataFormatada = hoje.toLocaleDateString('pt-BR');
+                                        const horaFormatada = hoje.toLocaleTimeString('pt-BR');
+                                        const dataHoraFormatada = `${dataFormatada} ${horaFormatada}`;
+
+                                        doc.header = function() {
+                                            return {
+                                                columns: [{
+                                                    alignment: 'center',
+                                                    italics: false,
+                                                    text: 'IMW - 10+ IGREJAS QUE BATIZARAM',
+                                                    fontSize: 14
+                                                }],
+                                                margin: [20, 20, 0, 0]
+                                            };
+                                        };
+
+                                        var numColumns = doc.content[0].table.body[0].length;
+                                        doc.content[0].table.widths = Array(numColumns).fill('*');
+
+                                        doc.footer = function(page, pages) {
+                                            return {
+                                                columns: [{
+                                                        alignment: 'left',
+                                                        text: ['Criado em: ', {
+                                                            text: dataHoraFormatada
+                                                        }]
+                                                    },
+                                                    {
+                                                        alignment: 'right',
+                                                        text: ['Página ', {
+                                                            text: page.toString()
+                                                        }, ' de ', {
+                                                            text: pages.toString()
+                                                        }]
+                                                    }
+                                                ],
+                                                margin: 20
+                                            };
+                                        };
+
+                                        var objLayout = {};
+                                        objLayout.hLineWidth = function() {
+                                            return .5;
+                                        };
+                                        objLayout.vLineWidth = function() {
+                                            return .5;
+                                        };
+                                        objLayout.hLineColor = function() {
+                                            return '#aaa';
+                                        };
+                                        objLayout.vLineColor = function() {
+                                            return '#aaa';
+                                        };
+                                        objLayout.paddingLeft = function() {
+                                            return 4;
+                                        };
+                                        objLayout.paddingRight = function() {
+                                            return 4;
+                                        };
+                                        doc.content[0].layout = objLayout;
+                                    },
+                                    pageSize: 'LEGAL'
+                                }
+                            ]
+                        },
+                        topEnd: 'search',
+                        bottomStart: 'info',
+                        bottomEnd: 'paging'
+                    },
+                    language: {
+                        emptyTable: 'Nenhum registro encontrado',
+                        info: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
+                        infoEmpty: 'Mostrando 0 até 0 de 0 registros',
+                        infoFiltered: '(filtrado de _MAX_ registros no total)',
+                        lengthMenu: 'Mostrar _MENU_ registros',
+                        loadingRecords: 'Carregando...',
+                        processing: 'Processando...',
+                        search: 'Pesquisar:',
+                        zeroRecords: 'Nenhum registro encontrado',
+                        paginate: {
+                            first: 'Primeiro',
+                            last: 'Último',
+                            next: 'Próximo',
+                            previous: 'Anterior'
+                        }
+                    }
+                });
+            }
         });
     </script>
-@endsection
 @endsection

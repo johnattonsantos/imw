@@ -278,6 +278,17 @@
                         @endif
                         @endforeach
                         @endforeach
+                        @php
+                        $totalMembrosRegiao = collect($instituicoes_pais)->sum(function ($instituicao) {
+                            return (int) ($instituicao->total_membros ?? 0);
+                        });
+                        @endphp
+                        <tr style="font-weight: bold; background-color: #dee2e6;">
+                            <td>Total de Membros da Região</td>
+                            <td colspan="{{ count(range($anoinicio, $anofinal)) + 2 }}" style="text-align: center;">
+                                {{ $totalMembrosRegiao }}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>

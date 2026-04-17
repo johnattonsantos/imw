@@ -20,7 +20,7 @@ class DezDisitritosMaisReceberamMembrosService
         $regiao = Identifiable::fetchtSessionRegiao();
 
         return [
-            'lancamentos' => TotalizacaoRegiaoUtils::fetchDezDistritoCresceramMembros($dataFinal, $dataInicial),
+            'lancamentos' => TotalizacaoRegiaoUtils::fetchDezDistritoCresceramMembros($dataFinal, $dataInicial, $regiao->id),
             'distritos'   => Identifiable::fetchDistritosByRegiao($regiao->id),
             'regiao'      => $regiao
         ];
