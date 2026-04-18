@@ -221,7 +221,7 @@ trait TotalizacaoRegiaoUtils
 
         return $totalPorcentagem;
     }
-    public static function fetchDezIgrejaMembros($dataFinal, $dataInicial)
+    public static function fetchDezIgrejaMembros($dataFinal, $dataInicial, $regiaoId)
     {
 
         $instituicoes = DB::table('instituicoes_instituicoes as ii')
@@ -231,9 +231,11 @@ trait TotalizacaoRegiaoUtils
                     ->where('mm.status', 'A')
                     ->whereBetween('mm.created_at', [$dataInicial, $dataFinal]);
             })
+            ->where('ii.regiao_id', $regiaoId)
             ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('ii.ativo', 1)
-            ->groupBy('mm.igreja_id', 'ii.nome')
+            ->whereNull('ii.data_encerramento')
+            ->groupBy('ii.id', 'ii.nome')
             ->orderByDesc('total')
             ->limit(10)
             ->get();
@@ -246,18 +248,20 @@ trait TotalizacaoRegiaoUtils
 
         return $totalPorcentagem;
     }
-    public static function fetchDezIgrejaCresceramMembros($dataFinal, $dataInicial)
+    public static function fetchDezIgrejaCresceramMembros($dataFinal, $dataInicial, $regiaoId)
     {
 
 
         $instituicoes =  DB::table('instituicoes_instituicoes as ii')->selectRaw('COUNT(*) as total, ii.nome')
             ->from('instituicoes_instituicoes as ii')
             ->leftJoin('membresia_membros as mm', 'mm.igreja_id', '=', 'ii.id')
+            ->where('ii.regiao_id', $regiaoId)
             ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('mm.status', 'A')
             ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
             ->whereBetween('mm.created_at', [$dataInicial, $dataFinal])
-            ->groupBy('mm.igreja_id', 'ii.nome')
+            ->groupBy('ii.id', 'ii.nome')
             ->orderByDesc('total')
             ->limit(10)
             ->get();

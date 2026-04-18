@@ -50,17 +50,13 @@ class RegiaoEstatisticasController extends Controller
         $regiao_id = $regiao->id;
         $distritos = Identifiable::fetchDistritosByRegiao($regiao_id)
             ->filter(function ($instituicao) {
-                return is_null($instituicao->data_abertura)
-                    || is_null($instituicao->deleted_at)
-                    || (int) ($instituicao->ativo ?? 0) === 1;
+                return (int) ($instituicao->ativo ?? 0) === 1;
             })
             ->values();
         $igrejas = (is_numeric($distritoId) && (int) $distritoId > 0)
             ? Identifiable::fetchIgrejasByDistrito((int) $distritoId)
                 ->filter(function ($instituicao) {
-                    return is_null($instituicao->data_abertura)
-                        || is_null($instituicao->deleted_at)
-                        || (int) ($instituicao->ativo ?? 0) === 1;
+                    return (int) ($instituicao->ativo ?? 0) === 1;
                 })
                 ->values()
             : collect();
@@ -107,7 +103,7 @@ class RegiaoEstatisticasController extends Controller
             WHERE inst.instituicao_pai_id = ?
             AND inst.tipo_instituicao_id = 2
             AND inst.data_encerramento IS NULL
-            AND (inst.data_abertura IS NULL OR inst.deleted_at IS NULL OR inst.ativo = 1)
+            AND inst.ativo = 1
         ";
         $bindingsPais = [$regiao_id];
         if (is_numeric($distritoId) && (int) $distritoId > 0) {
@@ -135,7 +131,7 @@ class RegiaoEstatisticasController extends Controller
                 WHERE inst.instituicao_pai_id IN (" . implode(',', $ids_pais) . ")
                 AND inst.tipo_instituicao_id = 1
                 AND inst.data_encerramento IS NULL
-                AND (inst.data_abertura IS NULL OR inst.deleted_at IS NULL OR inst.ativo = 1)
+                AND inst.ativo = 1
             ";
             $bindingsFilhos = [];
             if (is_numeric($igrejaId) && (int) $igrejaId > 0) {
