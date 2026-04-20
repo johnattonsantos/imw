@@ -84,6 +84,10 @@
                                     <h6 class="mt-3 text-uppercase">10+ Distritos em Números de Membros -
                                         {{ $regiao->nome }}</h6>
                                     <div class="table-responsive">
+                                        @php
+                                            $totalQuantidade = $lancamentos->sum('total');
+                                            $totalPercentual = $lancamentos->sum('percentual');
+                                        @endphp
                                         <table class="table table-striped display nowrap" id="distritos-mais-membros"
                                             style="font-size: 90%; margin-top: 15px; width: 100%;">
                                             <thead class="thead-dark">
@@ -105,9 +109,11 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th style="text-align: left;">Total Geral</th>
-                                                    <th style="text-align: center;">{{ $lancamentos->sum('total') }}</th>
-                                                    <th style="text-align: center;">100%</th>
+                                                    <th style="text-align: left;">Total de Membros (10 maiores distritos)</th>
+                                                    <th style="text-align: center;">{{ $totalQuantidade }}</th>
+                                                    <th style="text-align: center;">
+                                                        {{ number_format($totalPercentual, 2, ',', '.') }}%
+                                                    </th>
                                                 </tr>
                                             </tfoot>
                                         </table>

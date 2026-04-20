@@ -154,18 +154,17 @@ trait TotalizacaoRegiaoUtils
     }
     public static function fetchDezDistritoCresceramMembros($dataFinal, $dataInicial, $regiaoId)
     {
-
-
         $instituicoes = DB::table('instituicoes_instituicoes as ii')
-            ->selectRaw('COUNT(DISTINCT mm.id) as total, ii.nome')
-            ->leftJoin('membresia_membros as mm', 'mm.distrito_id', '=', 'ii.id')
+            ->leftJoin('membresia_rolpermanente as mr', function ($join) use ($dataInicial, $dataFinal) {
+                $join->on('mr.distrito_id', '=', 'ii.id')
+                    ->whereIn('mr.modo_recepcao_id', [1, 2, 3]) // Batismo, Adesão, Reconciliação
+                    ->whereBetween('mr.dt_recepcao', [$dataInicial, $dataFinal]);
+            })
+            ->selectRaw('COUNT(DISTINCT mr.membro_id) as total, ii.nome')
             ->where('ii.regiao_id', $regiaoId)
             ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
-            ->where('mm.status', 'A')
-            ->where('mm.vinculo', 'M')
             ->where('ii.ativo', 1)
             ->whereNull('ii.data_encerramento')
-            ->whereBetween('mm.created_at', [$dataInicial, $dataFinal])
             ->groupBy('ii.id', 'ii.nome')
             ->orderByDesc('total')
             ->limit(10)
@@ -250,17 +249,17 @@ trait TotalizacaoRegiaoUtils
     }
     public static function fetchDezIgrejaCresceramMembros($dataFinal, $dataInicial, $regiaoId)
     {
-
-
-        $instituicoes =  DB::table('instituicoes_instituicoes as ii')->selectRaw('COUNT(*) as total, ii.nome')
-            ->from('instituicoes_instituicoes as ii')
-            ->leftJoin('membresia_membros as mm', 'mm.igreja_id', '=', 'ii.id')
+        $instituicoes = DB::table('instituicoes_instituicoes as ii')
+            ->leftJoin('membresia_rolpermanente as mr', function ($join) use ($dataInicial, $dataFinal) {
+                $join->on('mr.igreja_id', '=', 'ii.id')
+                    ->whereIn('mr.modo_recepcao_id', [1, 2, 3]) // Batismo, Adesão, Reconciliação
+                    ->whereBetween('mr.dt_recepcao', [$dataInicial, $dataFinal]);
+            })
+            ->selectRaw('COUNT(DISTINCT mr.membro_id) as total, ii.nome')
             ->where('ii.regiao_id', $regiaoId)
             ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
-            ->where('mm.status', 'A')
             ->where('ii.ativo', 1)
             ->whereNull('ii.data_encerramento')
-            ->whereBetween('mm.created_at', [$dataInicial, $dataFinal])
             ->groupBy('ii.id', 'ii.nome')
             ->orderByDesc('total')
             ->limit(10)

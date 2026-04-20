@@ -279,15 +279,17 @@
                         @endforeach
                         @endforeach
                         @php
-                        $totalMembrosRegiao = collect($instituicoes_pais)->sum(function ($instituicao) {
-                            return (int) ($instituicao->total_membros ?? 0);
-                        });
+                        $percentualTotalColunas = $totalAnoInicialPais > 0
+                            ? round(($totalEvolucaoPais / $totalAnoInicialPais) * 100, 2)
+                            : ($totalAnoFinalPais > 0 ? 100 * $totalAnoFinalPais : 0);
                         @endphp
-                        <tr style="font-weight: bold; background-color: #dee2e6;">
+                        <tr style="font-weight: bold; background-color: #e9ecef;">
                             <td>Total de Membros da Região</td>
-                            <td colspan="{{ count(range($anoinicio, $anofinal)) + 2 }}" style="text-align: center;">
-                                {{ $totalMembrosRegiao }}
-                            </td>
+                            @foreach (range($anoinicio, $anofinal) as $ano)
+                            <td>{{ $totaisPais[$ano] ?? 0 }}</td>
+                            @endforeach
+                            <td>{{ $totalEvolucaoPais }}</td>
+                            <td>{{ number_format($percentualTotalColunas, 2, ',', '.') }}%</td>
                         </tr>
                     </tbody>
                 </table>
