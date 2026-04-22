@@ -26,16 +26,17 @@
 @section('content')
     <div class="container-fluid d-flex justify-content-end">
         <span class="badge badge-info position-relative mt-3 mb-3 ml-2">
-            <span>ROL ATUAL: {{ $countAtual }}</span>
+            <span>ATIVOS: {{ $countAtivos }}</span>
         </span>
 
         <span class="badge badge-danger position-relative mt-3 mb-3 ml-2">
-            <span>ROL PERMANENTE: {{ $countPermanente }}</span>
+            <span>INATIVOS: {{ $countInativos }}</span>
         </span>
 
         <span class="badge badge-warning position-relative mt-3 mb-3 ml-2">
-            <span>ERROS DE CADASTRO: {{ $countHasErrors }}</span>
+            <span>TOTAL: {{ $countTotal }}</span>
         </span>
+
     </div>
     <!-- TABELA -->
     <div class="col-lg-12 col-12 layout-spacing">

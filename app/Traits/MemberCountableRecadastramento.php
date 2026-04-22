@@ -8,7 +8,7 @@ trait MemberCountableRecadastramento
 {
     use Identifiable;
 
-    public static function countRolAtual($vinculo)
+    public static function countAtivos($vinculo)
     {
         return MembresiaMembroRecadastramento::where('vinculo', $vinculo)
             ->when($vinculo == 'M', function ($query) {
@@ -20,8 +20,19 @@ trait MemberCountableRecadastramento
             ->withTrashed()
             ->count();
     }
-    
-    public static function countRolPermanente($vinculo)
+    public static function countInativos($vinculo)
+    {
+        return MembresiaMembroRecadastramento::where('vinculo', $vinculo)
+            ->when($vinculo == 'M', function ($query) {
+                $query->whereRelation('rolAtualSessionIgreja', 'status', 'I');
+            }, function ($query) {
+                $query->where('status', 'I');
+            })
+            ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
+            ->withTrashed()
+            ->count();
+    }    
+    public static function countTotal($vinculo)
     {
         return MembresiaMembroRecadastramento::with('rolAtualSessionIgreja')
             ->where('vinculo', $vinculo)
