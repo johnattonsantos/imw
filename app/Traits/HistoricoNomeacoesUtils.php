@@ -34,12 +34,8 @@ trait HistoricoNomeacoesUtils
                 ->leftJoin('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
                 ->leftJoin('instituicoes_instituicoes as ii_pai', 'ii.instituicao_pai_id', '=', 'ii_pai.id')
                 ->where(['pp.status_id' => 1, 'pp.regiao_id' => $instituicaoId])
-                ->when(request()->get('situacao'), function ($query) {
-                    $query->where('pf.titular', request()->get('situacao'));
-                })
-                ->when(request()->get('ativo'), function ($query) {
-                    $query->whereNull('pn.data_termino');
-                })
+                ->where('pf.titular', 1)
+                ->whereNull('pn.data_termino')
                 ->orderBy('pp.nome')
                 ->orderByDesc('pn.data_nomeacao')
                 ->get()
@@ -68,13 +64,13 @@ trait HistoricoNomeacoesUtils
                 })
                 ->leftJoin('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
                 ->leftJoin('instituicoes_instituicoes as ii_pai', 'ii.instituicao_pai_id', '=', 'ii_pai.id')
-                ->where(['ii.ativo' => 1, 'ii.regiao_id' => $instituicaoId])
-                ->when(request()->get('situacao'), function ($query) {
-                    $query->where('pf.titular', request()->get('situacao'));
-                })
-                ->when(request()->get('ativo'), function ($query) {
-                    $query->whereNull('pn.data_termino');
-                })                
+                ->where([
+                    'ii.ativo' => 1,
+                    'ii.regiao_id' => $instituicaoId,
+                    'pp.status_id' => 1,
+                ])
+                ->where('pf.titular', 1)
+                ->whereNull('pn.data_termino')
                 ->orderBy('ii_pai.nome') // Ordena pelo nome da igreja
                 ->orderBy('ii.nome') // Ordena pelo nome da igreja
                 ->orderByDesc('pn.data_nomeacao') // Ordena por data de nomeação (mais recente primeiro)
