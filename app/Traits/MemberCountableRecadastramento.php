@@ -17,6 +17,7 @@ trait MemberCountableRecadastramento
                 $query->where('status', 'A');
             })
             ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
+            ->where('validado', 0)
             ->withTrashed()
             ->count();
     }
@@ -29,6 +30,7 @@ trait MemberCountableRecadastramento
                 $query->where('status', 'I');
             })
             ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
+            ->where('validado', 0)
             ->withTrashed()
             ->count();
     }    
@@ -38,6 +40,7 @@ trait MemberCountableRecadastramento
             ->where('vinculo', $vinculo)
             ->has('rolAtualSessionIgreja')
             ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
+            ->where('validado', 0)
             ->withTrashed()
             ->count();
     }
