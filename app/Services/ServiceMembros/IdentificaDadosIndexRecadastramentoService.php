@@ -13,9 +13,9 @@ class IdentificaDadosIndexRecadastramentoService
     public function execute()
     {
         return [
-            'countAtual'      => MemberCountableRecadastramento::countRolAtual(MembresiaMembroRecadastramento::VINCULO_MEMBRO),
-            'countPermanente' => MemberCountableRecadastramento::countRolPermanente(MembresiaMembroRecadastramento::VINCULO_MEMBRO),
-            'countHasErrors'  => MemberCountableRecadastramento::countHasErrors(MembresiaMembroRecadastramento::VINCULO_MEMBRO)
+            'countAtivos'      => MemberCountableRecadastramento::countAtivos(MembresiaMembroRecadastramento::VINCULO_MEMBRO),
+            'countInativos' => MemberCountableRecadastramento::countInativos(MembresiaMembroRecadastramento::VINCULO_MEMBRO),
+            'countTotal'  => MemberCountableRecadastramento::countTotal(MembresiaMembroRecadastramento::VINCULO_MEMBRO)
         ];
     }
 }
