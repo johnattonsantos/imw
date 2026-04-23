@@ -18,6 +18,8 @@ class GCeuRelatorioRegiaoFuncoesService
                 'igreja.nome as igreja_nome',
                 'gceu.*',
                 'membresia_membros.nome as lider', 
+                'membresia_membros.novo_convertido',
+                'membresia_membros.created_at as data_cadastro',
                 'membresia_contatos.telefone_preferencial',
                 'gceu_funcoes.funcao',
                 DB::raw("CASE membresia_membros.vinculo

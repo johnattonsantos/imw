@@ -94,6 +94,8 @@
                             <th>#</th>
                             <th>MEMBRO</th>
                             <th>TIPO</th>
+                            <th>NOVO CONVERTIDO</th>
+                            <th>DATA CADASTRO</th>
                             <th>CONTATO</th>
                             <th>FUNÇÃO</th>
                             <th>GCEU</th>
@@ -108,6 +110,8 @@
                             <td>{{ $key += 1 }}</td>
                             <td>{{ $item->lider }}</td>
                             <td>{{ $item->tipo }}</td>
+                            <td>{{ in_array(strtoupper((string) ($item->novo_convertido ?? '')), ['1', 'S', 'SIM', 'Y', 'TRUE'], true) ? 'Sim' : 'Não' }}</td>
+                            <td>{{ !empty($item->data_cadastro) ? \Carbon\Carbon::parse($item->data_cadastro)->format('d/m/Y') : '-' }}</td>
                             <td>{{ formatStr($item->telefone_preferencial, '## (##) #####-####') }}</td>
                             <td>{{ $item->funcao }}</td>
                             <td>{{ $item->nome }}</td>
@@ -121,7 +125,7 @@
                     <tfoot>
                       <tr>
                           <td>{{ $key }}</td>
-                          <td colspan="8"></td>
+                          <td colspan="10"></td>
                         </tr>
                     </tfoot>
                     @endif

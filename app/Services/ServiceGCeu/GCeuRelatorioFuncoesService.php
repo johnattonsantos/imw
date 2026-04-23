@@ -10,7 +10,13 @@ class GCeuRelatorioFuncoesService
 {
     public function getList($igrejaId, $funcaoId, $gceuId, $tipo = null)
     {
-        $dados =  GCeu::select('gceu_cadastros.*', 'gceu_funcoes.funcao', 'membresia_membros.nome as lider', 'membresia_contatos.telefone_preferencial',
+        $dados =  GCeu::select(
+        'gceu_cadastros.*',
+        'gceu_funcoes.funcao',
+        'membresia_membros.nome as lider',
+        'membresia_membros.novo_convertido',
+        'membresia_membros.created_at as data_cadastro',
+        'membresia_contatos.telefone_preferencial',
         DB::raw("CASE membresia_membros.vinculo
                     WHEN 'M' THEN 'Membro'
                     WHEN 'C' THEN 'Congregado'
