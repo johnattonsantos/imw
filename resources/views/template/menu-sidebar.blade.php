@@ -1123,6 +1123,11 @@
                                  <a href="{{ route('gceu.diario') }}">Diário</a>
                              @endif
                          </li>
+                         <li {!! Request::is('gceu/reuniao-pessoas*') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-diario'))
+                                <a href="{{ route('gceu.reuniao-pessoas') }}">Cadastro Reunião</a>
+                            @endif
+                         </li>
                          <li class="submenu-fixo mt-3 mb-3">
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-igreja-relatorios'))
                                 <span>Relatórios</span>
@@ -1141,6 +1146,11 @@
                          <li {!! Request::is('gceu/relatorio-diario*') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-relatorio-diario'))
                                 <a href="{{ route('gceu.diario-relatorio') }}">Diário</a>
+                            @endif
+                         </li>
+                         <li {!! Request::is('gceu/relatorio-reuniao-pessoas*') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-relatorio-diario'))
+                                <a href="{{ route('gceu.relatorio.reuniao-pessoas') }}">Visitantes/Convertidos</a>
                             @endif
                          </li>
                          <li {!! Request::is('gceu/relatorio-funcoes*') ? 'class="active"' : '' !!}>

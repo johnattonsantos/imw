@@ -8,6 +8,7 @@ use App\Http\Requests\StoreGCeuRequest;
 use App\Http\Requests\UpdateGCeuCartaPastoralRequest;
 use App\Http\Requests\UpdateGCeuRequest;
 use App\Models\GCeu;
+use App\Models\GCeuReuniaoPessoa;
 use App\Models\MembresiaMembro;
 use App\Models\PessoasPessoa;
 use App\Services\ServiceGCeu\CartaPastoralGCeuDistritoService;
@@ -146,6 +147,218 @@ class GceuController extends Controller
             return redirect()->route('gceu.index')->with('error', 'Carta pastoral não encontrada.');
         }
         return view('gceu.membros.index', $data);
+    }
+
+    public function reuniaoPessoas(Request $request)
+    {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+        $gceus = GCeu::where([
+            'instituicao_id' => $igrejaId,
+            'status' => GCeu::STATUS_ATIVO,
+        ])->orderBy('nome', 'asc')->get();
+
+        $gceuId = $request->input('filtro_gceu_id');
+        $tipo = $request->input('filtro_tipo');
+        $dataReuniao = $request->input('filtro_data_reuniao');
+
+        $registros = GCeuReuniaoPessoa::query()
+            ->select('gceu_reuniao_pessoas.*', 'gceu_cadastros.nome as gceu_nome')
+            ->join('gceu_cadastros', 'gceu_cadastros.id', '=', 'gceu_reuniao_pessoas.gceu_cadastro_id')
+            ->where('gceu_reuniao_pessoas.instituicao_id', $igrejaId)
+            ->when($gceuId, function ($query) use ($gceuId) {
+                $query->where('gceu_reuniao_pessoas.gceu_cadastro_id', $gceuId);
+            })
+            ->when(in_array($tipo, ['V', 'N'], true), function ($query) use ($tipo) {
+                $query->where('gceu_reuniao_pessoas.tipo', $tipo);
+            })
+            ->when($dataReuniao, function ($query) use ($dataReuniao) {
+                $query->whereDate('gceu_reuniao_pessoas.data_reuniao', $dataReuniao);
+            })
+            ->orderByDesc('gceu_reuniao_pessoas.data_reuniao')
+            ->orderByDesc('gceu_reuniao_pessoas.created_at')
+            ->get();
+
+        return view('gceu.reuniao-pessoas.index', [
+            'igreja' => Identifiable::fetchSessionIgrejaLocal()->nome,
+            'gceus' => $gceus,
+            'registros' => $registros,
+        ]);
+    }
+
+    public function storeReuniaoPessoas(Request $request)
+    {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+
+        $payload = $request->validate([
+            'gceu_cadastro_id' => ['required', 'integer'],
+            'nome' => ['required', 'string', 'max:150'],
+            'contato' => ['nullable', 'string', 'max:20'],
+            'tipo' => ['required', 'in:V,N'],
+            'data_reuniao' => ['required', 'date'],
+        ]);
+
+        $gceu = GCeu::where('id', $payload['gceu_cadastro_id'])
+            ->where('instituicao_id', $igrejaId)
+            ->where('status', GCeu::STATUS_ATIVO)
+            ->first();
+
+        if (!$gceu) {
+            return back()->withInput()->with('error', 'GCEU inválido para a igreja logada.');
+        }
+
+        GCeuReuniaoPessoa::create([
+            'gceu_cadastro_id' => $payload['gceu_cadastro_id'],
+            'instituicao_id' => $igrejaId,
+            'nome' => trim($payload['nome']),
+            'contato' => !empty($payload['contato']) ? trim($payload['contato']) : null,
+            'tipo' => $payload['tipo'],
+            'data_reuniao' => $payload['data_reuniao'],
+        ]);
+
+        return redirect()->route('gceu.reuniao-pessoas')->with('success', 'Pessoa da reunião cadastrada com sucesso.');
+    }
+
+    public function marcarNovoConvertidoReuniaoPessoa($id)
+    {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+
+        $registro = GCeuReuniaoPessoa::where('id', $id)
+            ->where('instituicao_id', $igrejaId)
+            ->first();
+
+        if (!$registro) {
+            return back()->with('error', 'Registro não encontrado para a igreja logada.');
+        }
+
+        $registro->update(['tipo' => GCeuReuniaoPessoa::TIPO_NOVO_CONVERTIDO]);
+
+        return back()->with('success', 'Registro atualizado para Novo Convertido.');
+    }
+
+    public function deletarReuniaoPessoa($id)
+    {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+
+        $registro = GCeuReuniaoPessoa::where('id', $id)
+            ->where('instituicao_id', $igrejaId)
+            ->first();
+
+        if (!$registro) {
+            return back()->with('error', 'Registro não encontrado para a igreja logada.');
+        }
+
+        $registro->delete();
+        return back()->with('success', 'Registro removido com sucesso.');
+    }
+
+    public function relatorioReuniaoPessoas(Request $request)
+    {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+
+        $gceus = GCeu::where([
+            'instituicao_id' => $igrejaId,
+            'status' => GCeu::STATUS_ATIVO,
+        ])->orderBy('nome', 'asc')->get();
+
+        $gceuId = $request->input('gceu_id');
+        $tipo = $request->input('tipo');
+        $dataInicial = $request->input('data_inicial');
+        $dataFinal = $request->input('data_final');
+
+        $novoConvertidoExpr = "UPPER(COALESCE(mm.novo_convertido, '')) IN ('1','S','SIM','Y','TRUE')";
+
+        $membresiaQuery = DB::table('gceu_membros as gm')
+            ->join('gceu_cadastros as gc', 'gc.id', '=', 'gm.gceu_cadastro_id')
+            ->join('membresia_membros as mm', 'mm.id', '=', 'gm.membro_id')
+            ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
+            ->where('gc.instituicao_id', $igrejaId)
+            ->where('gc.status', GCeu::STATUS_ATIVO)
+            ->when($gceuId, function ($query) use ($gceuId) {
+                $query->where('gm.gceu_cadastro_id', $gceuId);
+            })
+            ->when($dataInicial, function ($query) use ($dataInicial) {
+                $query->whereDate('gm.created_at', '>=', $dataInicial);
+            })
+            ->when($dataFinal, function ($query) use ($dataFinal) {
+                $query->whereDate('gm.created_at', '<=', $dataFinal);
+            })
+            ->when($tipo === 'C', function ($query) {
+                $query->where('mm.vinculo', 'C');
+            })
+            ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
+                $query->where('mm.vinculo', 'V')->whereRaw("NOT ($novoConvertidoExpr)");
+            })
+            ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
+                $query->whereRaw($novoConvertidoExpr);
+            })
+            ->when(!in_array($tipo, ['C', 'V', 'N'], true), function ($query) use ($novoConvertidoExpr) {
+                $query->where(function ($sub) use ($novoConvertidoExpr) {
+                    $sub->whereIn('mm.vinculo', ['C', 'V'])
+                        ->orWhereRaw($novoConvertidoExpr);
+                });
+            })
+            ->select([
+                DB::raw("'Membresia' as origem"),
+                'gc.nome as gceu_nome',
+                'mm.nome as nome',
+                DB::raw("CASE
+                    WHEN mc.telefone_preferencial IS NOT NULL AND mc.telefone_preferencial <> '' THEN mc.telefone_preferencial
+                    WHEN mc.telefone_alternativo IS NOT NULL AND mc.telefone_alternativo <> '' THEN mc.telefone_alternativo
+                    ELSE mc.telefone_whatsapp
+                END as contato"),
+                DB::raw("CASE
+                    WHEN $novoConvertidoExpr THEN 'Novo Convertido'
+                    WHEN mm.vinculo = 'C' THEN 'Congregado'
+                    WHEN mm.vinculo = 'V' THEN 'Visitante'
+                    ELSE 'Não informado'
+                END as tipo"),
+                DB::raw('DATE(gm.created_at) as data_reuniao'),
+                DB::raw('gm.created_at as data_cadastro'),
+            ]);
+
+        $reuniaoQuery = DB::table('gceu_reuniao_pessoas as grp')
+            ->join('gceu_cadastros as gc', 'gc.id', '=', 'grp.gceu_cadastro_id')
+            ->where('grp.instituicao_id', $igrejaId)
+            ->when($gceuId, function ($query) use ($gceuId) {
+                $query->where('grp.gceu_cadastro_id', $gceuId);
+            })
+            ->when($dataInicial, function ($query) use ($dataInicial) {
+                $query->whereDate('grp.data_reuniao', '>=', $dataInicial);
+            })
+            ->when($dataFinal, function ($query) use ($dataFinal) {
+                $query->whereDate('grp.data_reuniao', '<=', $dataFinal);
+            })
+            ->when(in_array($tipo, ['V', 'N'], true), function ($query) use ($tipo) {
+                $query->where('grp.tipo', $tipo);
+            })
+            ->when($tipo === 'C', function ($query) {
+                $query->whereRaw('1 = 0');
+            })
+            ->select([
+                DB::raw("'Reunião' as origem"),
+                'gc.nome as gceu_nome',
+                'grp.nome as nome',
+                'grp.contato as contato',
+                DB::raw("CASE
+                    WHEN grp.tipo = 'N' THEN 'Novo Convertido'
+                    ELSE 'Visitante'
+                END as tipo"),
+                'grp.data_reuniao as data_reuniao',
+                'grp.created_at as data_cadastro',
+            ]);
+
+        $dados = DB::query()
+            ->fromSub($membresiaQuery->unionAll($reuniaoQuery), 'itens')
+            ->orderByDesc('data_reuniao')
+            ->orderByDesc('data_cadastro')
+            ->get();
+
+        return view('gceu.relatorio-igreja.reuniao-pessoas', [
+            'igreja' => Identifiable::fetchSessionIgrejaLocal()->nome,
+            'gceus' => $gceus,
+            'dados' => $dados,
+            'titulo' => 'Relatório de Visitantes, Congregados e Novos Convertidos por Reunião de GCEU',
+        ]);
     }
 
     public function updateMembro(Request $request, $id)
@@ -354,7 +567,7 @@ class GceuController extends Controller
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $tipo = request()->tipo;
-        if (!in_array($tipo, ['M', 'C', 'V'], true)) {
+        if (!in_array($tipo, ['M', 'C', 'V', 'N'], true)) {
             $tipo = null;
         }
         $funcao = app(GCeuRelatorioFuncoesService::class)->getFuncao(request()->funcao_id);
@@ -445,7 +658,7 @@ class GceuController extends Controller
 
         $distritoId = Identifiable::fetchtSessionDistrito()->id;
         $tipo = request()->tipo;
-        if (!in_array($tipo, ['M', 'C', 'V'], true)) {
+        if (!in_array($tipo, ['M', 'C', 'V', 'N'], true)) {
             $tipo = null;
         }
         $funcao = app(GCeuRelatorioDistritoFuncoesService::class)->getFuncao(request()->funcao_id);
@@ -526,7 +739,7 @@ class GceuController extends Controller
 
         $regiaoId = Identifiable::fetchtSessionRegiao()->id;
         $tipo = request()->tipo;
-        if (!in_array($tipo, ['M', 'C', 'V'], true)) {
+        if (!in_array($tipo, ['M', 'C', 'V', 'N'], true)) {
             $tipo = null;
         }
         $funcao = app(GCeuRelatorioRegiaoFuncoesService::class)->getFuncao(request()->funcao_id);

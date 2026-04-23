@@ -61,6 +61,7 @@
               <option value="M" {{ request()->tipo == 'M' ? 'selected' : '' }}>Membro</option>
               <option value="C" {{ request()->tipo == 'C' ? 'selected' : '' }}>Congregado</option>
               <option value="V" {{ request()->tipo == 'V' ? 'selected' : '' }}>Visitante</option>
+              <option value="N" {{ request()->tipo == 'N' ? 'selected' : '' }}>Novo Convertido</option>
             </select>
           </div>
           <div class="col-lg-4">
