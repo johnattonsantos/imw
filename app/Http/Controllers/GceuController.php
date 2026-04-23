@@ -353,8 +353,12 @@ class GceuController extends Controller
     public function gceuRelatorioFuncoes()
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+        $tipo = request()->tipo;
+        if (!in_array($tipo, ['M', 'C', 'V'], true)) {
+            $tipo = null;
+        }
         $funcao = app(GCeuRelatorioFuncoesService::class)->getFuncao(request()->funcao_id);
-        $data = app(GCeuRelatorioFuncoesService::class)->getList($igrejaId, request()->funcao_id, request()->gceu_id);
+        $data = app(GCeuRelatorioFuncoesService::class)->getList($igrejaId, request()->funcao_id, request()->gceu_id, $tipo);
         $data['igreja'] = Identifiable::fetchSessionIgrejaLocal()->nome;
         if($funcao == null){
             $data['titulo'] =  "Relatório de todas as funções do GCEU da Igreja: ".$data['igreja'];
@@ -440,8 +444,12 @@ class GceuController extends Controller
     {
 
         $distritoId = Identifiable::fetchtSessionDistrito()->id;
+        $tipo = request()->tipo;
+        if (!in_array($tipo, ['M', 'C', 'V'], true)) {
+            $tipo = null;
+        }
         $funcao = app(GCeuRelatorioDistritoFuncoesService::class)->getFuncao(request()->funcao_id);
-        $data = app(GCeuRelatorioDistritoFuncoesService::class)->getList($distritoId, request()->funcao_id, request()->gceu_id);
+        $data = app(GCeuRelatorioDistritoFuncoesService::class)->getList($distritoId, request()->funcao_id, request()->gceu_id, $tipo);
         
         $data['igreja'] = Identifiable::fetchtSessionDistrito()->nome;
         if($funcao == null){
@@ -517,8 +525,19 @@ class GceuController extends Controller
     {
 
         $regiaoId = Identifiable::fetchtSessionRegiao()->id;
+        $tipo = request()->tipo;
+        if (!in_array($tipo, ['M', 'C', 'V'], true)) {
+            $tipo = null;
+        }
         $funcao = app(GCeuRelatorioRegiaoFuncoesService::class)->getFuncao(request()->funcao_id);
-        $data = app(GCeuRelatorioRegiaoFuncoesService::class)->getList($regiaoId, request()->distrito_id, request()->igreja_id, request()->funcao_id, request()->gceu_id);
+        $data = app(GCeuRelatorioRegiaoFuncoesService::class)->getList(
+            $regiaoId,
+            request()->distrito_id,
+            request()->igreja_id,
+            request()->funcao_id,
+            request()->gceu_id,
+            $tipo
+        );
         
         $data['igreja'] = Identifiable::fetchtSessionRegiao()->nome;
         if($funcao == null){

@@ -8,9 +8,15 @@ use Illuminate\Support\Facades\DB;
 
 class GCeuRelatorioFuncoesService
 {
-    public function getList($igrejaId, $funcaoId, $gceuId)
+    public function getList($igrejaId, $funcaoId, $gceuId, $tipo = null)
     {
         $dados =  GCeu::select('gceu_cadastros.*', 'gceu_funcoes.funcao', 'membresia_membros.nome as lider', 'membresia_contatos.telefone_preferencial',
+        DB::raw("CASE membresia_membros.vinculo
+                    WHEN 'M' THEN 'Membro'
+                    WHEN 'C' THEN 'Congregado'
+                    WHEN 'V' THEN 'Visitante'
+                    ELSE 'Não informado'
+                 END as tipo"),
         DB::raw("(SELECT membresia_membros.nome FROM gceu_membros JOIN membresia_membros ON membresia_membros.id = gceu_membros.membro_id WHERE gceu_funcao_id = 7 AND gceu_membros.gceu_cadastro_id = gceu_cadastros.id AND membresia_membros.status = 'A' limit 1) anfitriao"),
             DB::raw("(SELECT CASE WHEN telefone_preferencial IS NOT NULL AND telefone_preferencial <> '' THEN telefone_preferencial
                               WHEN telefone_alternativo IS NOT NULL AND telefone_alternativo <> '' THEN telefone_alternativo
@@ -26,6 +32,9 @@ class GCeuRelatorioFuncoesService
                 })
                 ->when($gceuId, function ($query) use ($gceuId) {
                     $query->where('gceu_cadastros.id', $gceuId);
+                })
+                ->when($tipo, function ($query) use ($tipo) {
+                    $query->where('membresia_membros.vinculo', $tipo);
                 })
                 ->get();
         $funcoes = GCeuFuncoes::get();

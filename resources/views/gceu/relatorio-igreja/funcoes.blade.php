@@ -45,7 +45,7 @@
         
         {{-- Congregação --}}
         <div class="form-group row mb-4">
-          <div class="col-lg-4">
+          <div class="col-lg-3">
             <label class="control-label">Função:</label>
             <select id="funcao_id" name="funcao_id" class="form-control @error('funcao_id') is-invalid @enderror" >
               <option value="" {{ request()->funcao_id == '' ? 'selected' : '' }}>TODAS</option>
@@ -54,7 +54,16 @@
               @endforeach
             </select>
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-3">
+            <label class="control-label">Tipo:</label>
+            <select id="tipo" name="tipo" class="form-control">
+              <option value="" {{ request()->tipo == '' ? 'selected' : '' }}>TODOS</option>
+              <option value="M" {{ request()->tipo == 'M' ? 'selected' : '' }}>Membro</option>
+              <option value="C" {{ request()->tipo == 'C' ? 'selected' : '' }}>Congregado</option>
+              <option value="V" {{ request()->tipo == 'V' ? 'selected' : '' }}>Visitante</option>
+            </select>
+          </div>
+          <div class="col-lg-4">
             <label class="control-label">GCEU:</label>
             <select id="gceu_id" name="gceu_id" class="form-control @error('gceu_id') is-invalid @enderror" >
               <option value="" {{ request()->gceu_id == '' ? 'selected' : '' }}>TODOS</option>
@@ -84,6 +93,7 @@
                         <tr>
                             <th>#</th>
                             <th>MEMBRO</th>
+                            <th>TIPO</th>
                             <th>CONTATO</th>
                             <th>FUNÇÃO</th>
                             <th>GCEU</th>
@@ -97,6 +107,7 @@
                           <tr>
                             <td>{{ $key += 1 }}</td>
                             <td>{{ $item->lider }}</td>
+                            <td>{{ $item->tipo }}</td>
                             <td>{{ formatStr($item->telefone_preferencial, '## (##) #####-####') }}</td>
                             <td>{{ $item->funcao }}</td>
                             <td>{{ $item->nome }}</td>
@@ -110,7 +121,7 @@
                     <tfoot>
                       <tr>
                           <td>{{ $key }}</td>
-                          <td colspan="7"></td>
+                          <td colspan="8"></td>
                         </tr>
                     </tfoot>
                     @endif
@@ -162,6 +173,8 @@
               className: 'btn btn-primary btn-rounded',
               text: '<i class="fas fa-file-pdf"></i> PDF',
               titleAttr: 'PDF',
+              pageSize: 'LETTER',
+              orientation: 'landscape',
               title: "{{ $titulo }}",
 
               customize: function (doc) {

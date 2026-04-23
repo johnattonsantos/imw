@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class GCeuRelatorioDistritoFuncoesService
 {
-    public function getList($distritoId, $funcaoId, $gceuId)
+    public function getList($distritoId, $funcaoId, $gceuId, $tipo = null)
     {
         $dados = DB::table('instituicoes_instituicoes as igreja')
             ->select(
@@ -19,7 +19,13 @@ class GCeuRelatorioDistritoFuncoesService
                 'gceu.*',
                 'membresia_membros.nome as lider', 
                 'membresia_contatos.telefone_preferencial',
-                'gceu_funcoes.funcao'
+                'gceu_funcoes.funcao',
+                DB::raw("CASE membresia_membros.vinculo
+                            WHEN 'M' THEN 'Membro'
+                            WHEN 'C' THEN 'Congregado'
+                            WHEN 'V' THEN 'Visitante'
+                            ELSE 'Não informado'
+                        END as tipo")
             )->join('instituicoes_instituicoes as distrito', function ($join) {
                 $join->on('distrito.id', '=', 'igreja.instituicao_pai_id');
             })
@@ -39,6 +45,9 @@ class GCeuRelatorioDistritoFuncoesService
             })
             ->when($gceuId, function ($query) use ($gceuId) {
                 $query->where('gceu.id', $gceuId);
+            })
+            ->when($tipo, function ($query) use ($tipo) {
+                $query->where('membresia_membros.vinculo', $tipo);
             })
             ->orderBy('distrito.nome')
             ->orderBy('igreja.id')

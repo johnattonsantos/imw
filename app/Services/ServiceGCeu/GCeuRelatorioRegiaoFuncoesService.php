@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class GCeuRelatorioRegiaoFuncoesService
 {
-    public function getList($regiaoId, $distritoId, $igrejaId, $funcaoId, $gceuId)
+    public function getList($regiaoId, $distritoId, $igrejaId, $funcaoId, $gceuId, $tipo = null)
     {
         $dados = DB::table('instituicoes_instituicoes as igreja')
             ->select(
@@ -19,7 +19,13 @@ class GCeuRelatorioRegiaoFuncoesService
                 'gceu.*',
                 'membresia_membros.nome as lider', 
                 'membresia_contatos.telefone_preferencial',
-                'gceu_funcoes.funcao'
+                'gceu_funcoes.funcao',
+                DB::raw("CASE membresia_membros.vinculo
+                            WHEN 'M' THEN 'Membro'
+                            WHEN 'C' THEN 'Congregado'
+                            WHEN 'V' THEN 'Visitante'
+                            ELSE 'Não informado'
+                        END as tipo")
             )->join('instituicoes_instituicoes as distrito', function ($join) {
                 $join->on('distrito.id', '=', 'igreja.instituicao_pai_id');
             })->join('instituicoes_instituicoes as regiao', function ($join) {
@@ -38,6 +44,9 @@ class GCeuRelatorioRegiaoFuncoesService
             })
             ->when($gceuId, function ($query) use ($gceuId) {
                 $query->where('gceu.id', $gceuId);
+            })
+            ->when($tipo, function ($query) use ($tipo) {
+                $query->where('membresia_membros.vinculo', $tipo);
             })
             ->when(request()->get('distrito_id'), function ($query) {
                 $query->where('distrito.id', request()->get('distrito_id'));
