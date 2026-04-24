@@ -117,9 +117,8 @@
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="reuniao-pessoas-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>GCEU ID</th>
-                            <th>INSTITUIÇÃO ID</th>
+                            <th>Nº</th>
+                            <th>Instituição</th>
                             <th>GCEU</th>
                             <th>Data Reunião</th>
                             <th>Nome</th>
@@ -134,9 +133,8 @@
                     <tbody>
                         @foreach($registros as $registro)
                             <tr>
-                                <td>{{ $registro->id }}</td>
-                                <td>{{ $registro->gceu_cadastro_id }}</td>
-                                <td>{{ $registro->instituicao_id }}</td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $registro->instituicao_nome ?? '-' }}</td>
                                 <td>{{ $registro->gceu_nome }}</td>
                                 <td>{{ !empty($registro->data_reuniao) ? \Carbon\Carbon::parse($registro->data_reuniao)->format('d/m/Y') : '-' }}</td>
                                 <td>{{ $registro->nome }}</td>
@@ -200,7 +198,7 @@
               text: '<i class="fas fa-file-excel"></i> Excel',
               title: 'Cadastro de Visitantes e Novos Convertidos por Reunião - {{ $igreja }}',
               exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10]
+                columns: [0,1,2,3,4,5,6,7,8,9]
               }
             },
             {
@@ -211,7 +209,7 @@
               orientation: 'landscape',
               title: 'Cadastro de Visitantes e Novos Convertidos por Reunião - {{ $igreja }}',
               exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10]
+                columns: [0,1,2,3,4,5,6,7,8,9]
               }
             }
           ]

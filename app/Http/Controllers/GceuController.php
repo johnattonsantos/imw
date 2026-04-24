@@ -165,11 +165,13 @@ class GceuController extends Controller
 
         $registros = DB::table('membresia_membros')
             ->join('gceu_cadastros', 'gceu_cadastros.id', '=', 'membresia_membros.gceu_id')
+            ->leftJoin('instituicoes_instituicoes', 'instituicoes_instituicoes.id', '=', 'membresia_membros.igreja_id')
             ->leftJoin('membresia_contatos', 'membresia_contatos.membro_id', '=', 'membresia_membros.id')
             ->select([
                 'membresia_membros.id',
                 'membresia_membros.gceu_id as gceu_cadastro_id',
                 'membresia_membros.igreja_id as instituicao_id',
+                'instituicoes_instituicoes.nome as instituicao_nome',
                 'membresia_membros.nome',
                 DB::raw("$dataReferenciaExpr as data_reuniao"),
                 'membresia_membros.created_at',
