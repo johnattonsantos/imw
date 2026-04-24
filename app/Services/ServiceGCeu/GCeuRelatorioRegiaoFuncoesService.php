@@ -96,13 +96,17 @@ class GCeuRelatorioRegiaoFuncoesService
                     'igreja.id as id_igreja',
                     'igreja.nome as igreja_nome',
                     'gceu.*',
-                    'grp.nome as lider',
-                    DB::raw("CASE WHEN grp.tipo = 'N' THEN 'S' ELSE 'N' END as novo_convertido"),
-                    'grp.created_at as data_cadastro',
-                    'grp.contato as telefone_preferencial',
+                    'mm.nome as lider',
+                    'mm.novo_convertido',
+                    'mm.created_at as data_cadastro',
+                    DB::raw("CASE
+                        WHEN mc.telefone_preferencial IS NOT NULL AND mc.telefone_preferencial <> '' THEN mc.telefone_preferencial
+                        WHEN mc.telefone_alternativo IS NOT NULL AND mc.telefone_alternativo <> '' THEN mc.telefone_alternativo
+                        ELSE mc.telefone_whatsapp
+                    END as telefone_preferencial"),
                     DB::raw("'Cadastro da Reunião' as funcao"),
                     DB::raw("CASE
-                        WHEN grp.tipo = 'N' THEN 'Novo Convertido'
+                        WHEN $novoConvertidoExpr THEN 'Novo Convertido'
                         ELSE 'Visitante'
                     END as tipo"),
                     DB::raw("(SELECT membresia_membros.nome
@@ -132,8 +136,17 @@ class GCeuRelatorioRegiaoFuncoesService
                 ->join('gceu_cadastros as gceu', function ($join) {
                     $join->on('gceu.instituicao_id', '=', 'igreja.id');
                 })
-                ->join('gceu_reuniao_pessoas as grp', 'grp.gceu_cadastro_id', '=', 'gceu.id')
+                ->join('membresia_membros as mm', 'mm.gceu_id', '=', 'gceu.id')
+                ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
                 ->where(['regiao.id' => $regiaoId, 'gceu.status' => 'A'])
+                ->where(function ($query) use ($novoConvertidoExpr) {
+                    $query->where('mm.vinculo', 'V')
+                        ->orWhere(function ($sub) use ($novoConvertidoExpr) {
+                            $sub->where('mm.vinculo', 'C')
+                                ->whereRaw($novoConvertidoExpr);
+                        });
+                })
+                ->whereColumn('mm.igreja_id', 'igreja.id')
                 ->when($distritoId, function ($query) use ($distritoId) {
                     $query->where('distrito.id', $distritoId);
                 })
@@ -143,11 +156,11 @@ class GCeuRelatorioRegiaoFuncoesService
                 ->when($gceuId, function ($query) use ($gceuId) {
                     $query->where('gceu.id', $gceuId);
                 })
-                ->when($tipo === 'V', function ($query) {
-                    $query->where('grp.tipo', 'V');
+                ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
+                    $query->whereRaw("NOT ($novoConvertidoExpr)");
                 })
-                ->when($tipo === 'N', function ($query) {
-                    $query->where('grp.tipo', 'N');
+                ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
+                    $query->whereRaw($novoConvertidoExpr);
                 })
                 ->get();
         }

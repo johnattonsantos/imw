@@ -17,6 +17,7 @@
 
 @section('content')
 @include('extras.alerts')
+@include('extras.alerts-error-all')
 
 <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
@@ -58,11 +59,25 @@
                     </div>
                     <div class="col-lg-2">
                         <label class="control-label">* Tipo</label>
-                        <select name="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
+                        <select id="tipo" name="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
                             <option value="V" {{ old('tipo', 'V') === 'V' ? 'selected' : '' }}>Visitante</option>
                             <option value="N" {{ old('tipo') === 'N' ? 'selected' : '' }}>Novo Convertido</option>
                         </select>
                         @error('tipo')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+                <div class="form-group row mb-4" id="cpf-container" style="{{ old('tipo', 'V') === 'N' ? '' : 'display:none;' }}">
+                    <div class="col-lg-3">
+                        <label class="control-label">* CPF (Novo Convertido)</label>
+                        <input
+                            type="text"
+                            id="cpf"
+                            name="cpf"
+                            class="form-control @error('cpf') is-invalid @enderror"
+                            value="{{ old('cpf') }}"
+                            maxlength="14"
+                            placeholder="000.000.000-00">
+                        @error('cpf')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
                 <div class="form-group">
@@ -122,6 +137,7 @@
                             <th>GCEU</th>
                             <th>Data Reunião</th>
                             <th>Nome</th>
+                            <th>CPF</th>
                             <th>Contato</th>
                             <th>Tipo</th>
                             <th>Criado Em</th>
@@ -137,8 +153,9 @@
                                 <td>{{ $registro->gceu_cadastro_id }}</td>
                                 <td>{{ $registro->instituicao_id }}</td>
                                 <td>{{ $registro->gceu_nome }}</td>
-                                <td>{{ \Carbon\Carbon::parse($registro->data_reuniao)->format('d/m/Y') }}</td>
+                                <td>{{ !empty($registro->data_reuniao) ? \Carbon\Carbon::parse($registro->data_reuniao)->format('d/m/Y') : '-' }}</td>
                                 <td>{{ $registro->nome }}</td>
+                                <td>{{ !empty($registro->cpf) ? formatStr($registro->cpf, '###.###.###-##') : '-' }}</td>
                                 <td>{{ !empty($registro->contato) ? formatStr($registro->contato, '(##) #####-####') : '-' }}</td>
                                 <td>
                                     @if($registro->tipo === 'N')
@@ -151,16 +168,18 @@
                                 <td>{{ !empty($registro->updated_at) ? \Carbon\Carbon::parse($registro->updated_at)->format('d/m/Y H:i:s') : '-' }}</td>
                                 <td>{{ !empty($registro->deleted_at) ? \Carbon\Carbon::parse($registro->deleted_at)->format('d/m/Y H:i:s') : '-' }}</td>
                                 <td style="white-space: nowrap;">
-                                    @if($registro->tipo === 'V')
+                                    @if(empty($registro->deleted_at) && $registro->tipo === 'V')
                                         <form action="{{ route('gceu.reuniao-pessoas.converter', ['id' => $registro->id]) }}" method="POST" class="d-inline">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-success">Virar Novo Convertido</button>
                                         </form>
                                     @endif
-                                    <form action="{{ route('gceu.reuniao-pessoas.deletar', ['id' => $registro->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Deseja remover este registro?');">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
-                                    </form>
+                                    @if(empty($registro->deleted_at))
+                                        <form action="{{ route('gceu.reuniao-pessoas.deletar', ['id' => $registro->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Deseja remover este registro?');">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -197,7 +216,7 @@
               text: '<i class="fas fa-file-excel"></i> Excel',
               title: 'Cadastro de Visitantes e Novos Convertidos por Reunião - {{ $igreja }}',
               exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10]
+                columns: [0,1,2,3,4,5,6,7,8,9,10,11]
               }
             },
             {
@@ -208,7 +227,7 @@
               orientation: 'landscape',
               title: 'Cadastro de Visitantes e Novos Convertidos por Reunião - {{ $igreja }}',
               exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10]
+                columns: [0,1,2,3,4,5,6,7,8,9,10,11]
               }
             }
           ]
@@ -234,5 +253,32 @@
         }
       }
     });
+
+    function toggleCpfField() {
+      const tipo = $('#tipo').val();
+      const cpfContainer = $('#cpf-container');
+      const cpfInput = $('#cpf');
+      if (tipo === 'N') {
+        cpfContainer.show();
+        cpfInput.prop('required', true);
+      } else {
+        cpfContainer.hide();
+        cpfInput.prop('required', false).val('');
+      }
+    }
+
+    function mascaraCpf(valor) {
+      return valor
+        .replace(/\D/g, '')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d)/, '$1.$2')
+        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    }
+
+    $('#tipo').on('change', toggleCpfField);
+    $('#cpf').on('input', function () {
+      this.value = mascaraCpf(this.value).substring(0, 14);
+    });
+    toggleCpfField();
 </script>
 @endsection

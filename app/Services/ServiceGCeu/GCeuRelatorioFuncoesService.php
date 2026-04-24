@@ -72,17 +72,22 @@ class GCeuRelatorioFuncoesService
         $dadosReuniao = collect();
         $deveIncluirReuniao = empty($funcaoId) && (!$tipo || in_array($tipo, ['V', 'N'], true));
         if ($deveIncluirReuniao) {
-            $dadosReuniao = DB::table('gceu_reuniao_pessoas as grp')
-                ->join('gceu_cadastros as gc', 'gc.id', '=', 'grp.gceu_cadastro_id')
+            $dadosReuniao = DB::table('membresia_membros as mm')
+                ->join('gceu_cadastros as gc', 'gc.id', '=', 'mm.gceu_id')
+                ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
                 ->select(
                     'gc.*',
                     DB::raw("'Cadastro da Reunião' as funcao"),
-                    'grp.nome as lider',
-                    DB::raw("CASE WHEN grp.tipo = 'N' THEN 'S' ELSE 'N' END as novo_convertido"),
-                    'grp.created_at as data_cadastro',
-                    'grp.contato as telefone_preferencial',
+                    'mm.nome as lider',
+                    'mm.novo_convertido',
+                    'mm.created_at as data_cadastro',
                     DB::raw("CASE
-                        WHEN grp.tipo = 'N' THEN 'Novo Convertido'
+                        WHEN mc.telefone_preferencial IS NOT NULL AND mc.telefone_preferencial <> '' THEN mc.telefone_preferencial
+                        WHEN mc.telefone_alternativo IS NOT NULL AND mc.telefone_alternativo <> '' THEN mc.telefone_alternativo
+                        ELSE mc.telefone_whatsapp
+                    END as telefone_preferencial"),
+                    DB::raw("CASE
+                        WHEN $novoConvertidoExpr THEN 'Novo Convertido'
                         ELSE 'Visitante'
                     END as tipo"),
                     DB::raw("(SELECT membresia_membros.nome
@@ -102,20 +107,28 @@ class GCeuRelatorioFuncoesService
                         JOIN membresia_contatos ON membresia_contatos.membro_id = membresia_membros.id
                         WHERE gceu_funcao_id = 7
                             AND gceu_membros.gceu_cadastro_id = gc.id
-                            AND membresia_membros.status = 'A'
+                        AND membresia_membros.status = 'A'
                         LIMIT 1) as contato")
                 )
-                ->where('grp.instituicao_id', $igrejaId)
+                ->where('mm.igreja_id', $igrejaId)
+                ->where(function ($query) use ($novoConvertidoExpr) {
+                    $query->where('mm.vinculo', 'V')
+                        ->orWhere(function ($sub) use ($novoConvertidoExpr) {
+                            $sub->where('mm.vinculo', 'C')
+                                ->whereRaw($novoConvertidoExpr);
+                        });
+                })
+                ->whereNotNull('mm.gceu_id')
                 ->where('gc.instituicao_id', $igrejaId)
                 ->where('gc.status', 'A')
                 ->when($gceuId, function ($query) use ($gceuId) {
-                    $query->where('grp.gceu_cadastro_id', $gceuId);
+                    $query->where('mm.gceu_id', $gceuId);
                 })
-                ->when($tipo === 'V', function ($query) {
-                    $query->where('grp.tipo', 'V');
+                ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
+                    $query->whereRaw("NOT ($novoConvertidoExpr)");
                 })
-                ->when($tipo === 'N', function ($query) {
-                    $query->where('grp.tipo', 'N');
+                ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
+                    $query->whereRaw($novoConvertidoExpr);
                 })
                 ->get();
         }

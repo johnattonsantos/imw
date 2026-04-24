@@ -8,9 +8,10 @@ use App\Http\Requests\StoreGCeuRequest;
 use App\Http\Requests\UpdateGCeuCartaPastoralRequest;
 use App\Http\Requests\UpdateGCeuRequest;
 use App\Models\GCeu;
-use App\Models\GCeuReuniaoPessoa;
+use App\Models\MembresiaContato;
 use App\Models\MembresiaMembro;
 use App\Models\PessoasPessoa;
+use App\Rules\ValidaCPF;
 use App\Services\ServiceGCeu\CartaPastoralGCeuDistritoService;
 use App\Services\ServiceGCeu\CartaPastoralGCeuRegiaoService;
 use App\Services\ServiceGCeu\CartaPastoralGCeuService;
@@ -160,22 +161,56 @@ class GceuController extends Controller
         $gceuId = $request->input('filtro_gceu_id');
         $tipo = $request->input('filtro_tipo');
         $dataReuniao = $request->input('filtro_data_reuniao');
+        $novoConvertidoExpr = "UPPER(COALESCE(membresia_membros.novo_convertido, 'N')) IN ('1','S','SIM','Y','TRUE')";
+        $dataReferenciaExpr = "COALESCE(membresia_membros.data_conversao, DATE(membresia_membros.created_at))";
 
-        $registros = GCeuReuniaoPessoa::query()
-            ->select('gceu_reuniao_pessoas.*', 'gceu_cadastros.nome as gceu_nome')
-            ->join('gceu_cadastros', 'gceu_cadastros.id', '=', 'gceu_reuniao_pessoas.gceu_cadastro_id')
-            ->where('gceu_reuniao_pessoas.instituicao_id', $igrejaId)
-            ->when($gceuId, function ($query) use ($gceuId) {
-                $query->where('gceu_reuniao_pessoas.gceu_cadastro_id', $gceuId);
+        $registros = DB::table('membresia_membros')
+            ->join('gceu_cadastros', 'gceu_cadastros.id', '=', 'membresia_membros.gceu_id')
+            ->leftJoin('membresia_contatos', 'membresia_contatos.membro_id', '=', 'membresia_membros.id')
+            ->select([
+                'membresia_membros.id',
+                'membresia_membros.gceu_id as gceu_cadastro_id',
+                'membresia_membros.igreja_id as instituicao_id',
+                'membresia_membros.nome',
+                'membresia_membros.cpf',
+                DB::raw("$dataReferenciaExpr as data_reuniao"),
+                'membresia_membros.created_at',
+                'membresia_membros.updated_at',
+                'membresia_membros.deleted_at',
+                'gceu_cadastros.nome as gceu_nome',
+                DB::raw("CASE
+                    WHEN membresia_contatos.telefone_preferencial IS NOT NULL AND membresia_contatos.telefone_preferencial <> '' THEN membresia_contatos.telefone_preferencial
+                    WHEN membresia_contatos.telefone_alternativo IS NOT NULL AND membresia_contatos.telefone_alternativo <> '' THEN membresia_contatos.telefone_alternativo
+                    ELSE membresia_contatos.telefone_whatsapp
+                END as contato"),
+                DB::raw("CASE
+                    WHEN $novoConvertidoExpr THEN 'N'
+                    ELSE 'V'
+                END as tipo"),
+            ])
+            ->where('membresia_membros.igreja_id', $igrejaId)
+            ->where(function ($query) use ($novoConvertidoExpr) {
+                $query->where('membresia_membros.vinculo', MembresiaMembro::VINCULO_VISITANTE)
+                    ->orWhere(function ($sub) use ($novoConvertidoExpr) {
+                        $sub->where('membresia_membros.vinculo', MembresiaMembro::VINCULO_CONGREGADO)
+                            ->whereRaw($novoConvertidoExpr);
+                    });
             })
-            ->when(in_array($tipo, ['V', 'N'], true), function ($query) use ($tipo) {
-                $query->where('gceu_reuniao_pessoas.tipo', $tipo);
+            ->whereNotNull('membresia_membros.gceu_id')
+            ->when($gceuId, function ($query) use ($gceuId) {
+                $query->where('membresia_membros.gceu_id', $gceuId);
+            })
+            ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
+                $query->whereRaw("NOT ($novoConvertidoExpr)");
+            })
+            ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
+                $query->whereRaw($novoConvertidoExpr);
             })
             ->when($dataReuniao, function ($query) use ($dataReuniao) {
-                $query->whereDate('gceu_reuniao_pessoas.data_reuniao', $dataReuniao);
+                $query->whereRaw("$dataReferenciaExpr = ?", [$dataReuniao]);
             })
-            ->orderByDesc('gceu_reuniao_pessoas.data_reuniao')
-            ->orderByDesc('gceu_reuniao_pessoas.created_at')
+            ->orderByRaw("$dataReferenciaExpr DESC")
+            ->orderByDesc('membresia_membros.created_at')
             ->get();
 
         return view('gceu.reuniao-pessoas.index', [
@@ -188,6 +223,31 @@ class GceuController extends Controller
     public function storeReuniaoPessoas(Request $request)
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+        $tipoInformado = $request->input('tipo');
+        $cpfRules = ['nullable', 'string', 'max:14'];
+
+        if ($tipoInformado === 'N') {
+            $cpfRules = [
+                'required',
+                'string',
+                'max:14',
+                new ValidaCPF,
+                function ($attribute, $value, $fail) {
+                    $cpf = $this->sanitizeCpf($value);
+                    if (!empty($cpf) && $this->cpfJaExisteNaBase($cpf)) {
+                        $fail('O cadastro com esse CPF já existe!');
+                    }
+                }
+            ];
+        } elseif ($request->filled('cpf')) {
+            $cpfRules[] = new ValidaCPF;
+            $cpfRules[] = function ($attribute, $value, $fail) {
+                $cpf = $this->sanitizeCpf($value);
+                if (!empty($cpf) && $this->cpfJaExisteNaBase($cpf)) {
+                    $fail('O cadastro com esse CPF já existe!');
+                }
+            };
+        }
 
         $payload = $request->validate([
             'gceu_cadastro_id' => ['required', 'integer'],
@@ -195,6 +255,7 @@ class GceuController extends Controller
             'contato' => ['nullable', 'string', 'max:20'],
             'tipo' => ['required', 'in:V,N'],
             'data_reuniao' => ['required', 'date'],
+            'cpf' => $cpfRules,
         ]);
 
         $gceu = GCeu::where('id', $payload['gceu_cadastro_id'])
@@ -206,14 +267,33 @@ class GceuController extends Controller
             return back()->withInput()->with('error', 'GCEU inválido para a igreja logada.');
         }
 
-        GCeuReuniaoPessoa::create([
-            'gceu_cadastro_id' => $payload['gceu_cadastro_id'],
-            'instituicao_id' => $igrejaId,
-            'nome' => trim($payload['nome']),
-            'contato' => !empty($payload['contato']) ? trim($payload['contato']) : null,
-            'tipo' => $payload['tipo'],
-            'data_reuniao' => $payload['data_reuniao'],
-        ]);
+        $cpf = $this->sanitizeCpf($payload['cpf'] ?? null);
+        if ($payload['tipo'] === 'N' && !empty($cpf) && $this->cpfJaExisteNaBase($cpf)) {
+            return back()->withInput()->with('error', 'O cadastro com esse CPF já existe!');
+        }
+
+        DB::transaction(function () use ($payload, $cpf) {
+            $membro = MembresiaMembro::create([
+                'status' => MembresiaMembro::STATUS_ATIVO,
+                'nome' => trim($payload['nome']),
+                'sexo' => 'N',
+                'cpf' => $cpf ?: null,
+                'gceu_id' => (int) $payload['gceu_cadastro_id'],
+                'data_conversao' => $payload['data_reuniao'],
+                'vinculo' => $payload['tipo'] === 'N'
+                    ? MembresiaMembro::VINCULO_CONGREGADO
+                    : MembresiaMembro::VINCULO_VISITANTE,
+                'novo_convertido' => $payload['tipo'] === 'N' ? 'S' : 'N',
+                ...Identifiable::fetchSessionInstituicoesStoreMembresia(),
+            ]);
+
+            if (!empty($payload['contato'])) {
+                MembresiaContato::create([
+                    'membro_id' => $membro->id,
+                    'telefone_preferencial' => preg_replace('/[^0-9]/', '', $payload['contato']),
+                ]);
+            }
+        });
 
         return redirect()->route('gceu.reuniao-pessoas')->with('success', 'Pessoa da reunião cadastrada com sucesso.');
     }
@@ -222,15 +302,24 @@ class GceuController extends Controller
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
 
-        $registro = GCeuReuniaoPessoa::where('id', $id)
-            ->where('instituicao_id', $igrejaId)
+        $registro = MembresiaMembro::where('id', $id)
+            ->where('igreja_id', $igrejaId)
+            ->whereIn('vinculo', [MembresiaMembro::VINCULO_VISITANTE, MembresiaMembro::VINCULO_CONGREGADO])
+            ->whereNotNull('gceu_id')
             ->first();
 
         if (!$registro) {
             return back()->with('error', 'Registro não encontrado para a igreja logada.');
         }
 
-        $registro->update(['tipo' => GCeuReuniaoPessoa::TIPO_NOVO_CONVERTIDO]);
+        if (empty($registro->cpf)) {
+            return back()->with('error', 'Para marcar como Novo Convertido, é obrigatório informar CPF neste cadastro.');
+        }
+
+        $registro->update([
+            'novo_convertido' => 'S',
+            'vinculo' => MembresiaMembro::VINCULO_CONGREGADO,
+        ]);
 
         return back()->with('success', 'Registro atualizado para Novo Convertido.');
     }
@@ -239,14 +328,17 @@ class GceuController extends Controller
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
 
-        $registro = GCeuReuniaoPessoa::where('id', $id)
-            ->where('instituicao_id', $igrejaId)
+        $registro = MembresiaMembro::where('id', $id)
+            ->where('igreja_id', $igrejaId)
+            ->whereIn('vinculo', [MembresiaMembro::VINCULO_VISITANTE, MembresiaMembro::VINCULO_CONGREGADO])
+            ->whereNotNull('gceu_id')
             ->first();
 
         if (!$registro) {
             return back()->with('error', 'Registro não encontrado para a igreja logada.');
         }
 
+        MembresiaContato::where('membro_id', $registro->id)->delete();
         $registro->delete();
         return back()->with('success', 'Registro removido com sucesso.');
     }
@@ -316,35 +408,52 @@ class GceuController extends Controller
                 DB::raw('gm.created_at as data_cadastro'),
             ]);
 
-        $reuniaoQuery = DB::table('gceu_reuniao_pessoas as grp')
-            ->join('gceu_cadastros as gc', 'gc.id', '=', 'grp.gceu_cadastro_id')
-            ->where('grp.instituicao_id', $igrejaId)
+        $dataReferenciaExpr = "COALESCE(mm.data_conversao, DATE(mm.created_at))";
+        $reuniaoQuery = DB::table('membresia_membros as mm')
+            ->join('gceu_cadastros as gc', 'gc.id', '=', 'mm.gceu_id')
+            ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
+            ->where('mm.igreja_id', $igrejaId)
+            ->where(function ($query) use ($novoConvertidoExpr) {
+                $query->where('mm.vinculo', MembresiaMembro::VINCULO_VISITANTE)
+                    ->orWhere(function ($sub) use ($novoConvertidoExpr) {
+                        $sub->where('mm.vinculo', MembresiaMembro::VINCULO_CONGREGADO)
+                            ->whereRaw($novoConvertidoExpr);
+                    });
+            })
+            ->whereNotNull('mm.gceu_id')
             ->when($gceuId, function ($query) use ($gceuId) {
-                $query->where('grp.gceu_cadastro_id', $gceuId);
+                $query->where('mm.gceu_id', $gceuId);
             })
             ->when($dataInicial, function ($query) use ($dataInicial) {
-                $query->whereDate('grp.data_reuniao', '>=', $dataInicial);
+                $query->whereRaw("$dataReferenciaExpr >= ?", [$dataInicial]);
             })
             ->when($dataFinal, function ($query) use ($dataFinal) {
-                $query->whereDate('grp.data_reuniao', '<=', $dataFinal);
+                $query->whereRaw("$dataReferenciaExpr <= ?", [$dataFinal]);
             })
-            ->when(in_array($tipo, ['V', 'N'], true), function ($query) use ($tipo) {
-                $query->where('grp.tipo', $tipo);
+            ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
+                $query->whereRaw("NOT ($novoConvertidoExpr)");
+            })
+            ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
+                $query->whereRaw($novoConvertidoExpr);
             })
             ->when($tipo === 'C', function ($query) {
                 $query->whereRaw('1 = 0');
             })
             ->select([
-                DB::raw("'Reunião' as origem"),
+                DB::raw("'Cadastro Reunião' as origem"),
                 'gc.nome as gceu_nome',
-                'grp.nome as nome',
-                'grp.contato as contato',
+                'mm.nome as nome',
                 DB::raw("CASE
-                    WHEN grp.tipo = 'N' THEN 'Novo Convertido'
+                    WHEN mc.telefone_preferencial IS NOT NULL AND mc.telefone_preferencial <> '' THEN mc.telefone_preferencial
+                    WHEN mc.telefone_alternativo IS NOT NULL AND mc.telefone_alternativo <> '' THEN mc.telefone_alternativo
+                    ELSE mc.telefone_whatsapp
+                END as contato"),
+                DB::raw("CASE
+                    WHEN $novoConvertidoExpr THEN 'Novo Convertido'
                     ELSE 'Visitante'
                 END as tipo"),
-                'grp.data_reuniao as data_reuniao',
-                'grp.created_at as data_cadastro',
+                DB::raw("$dataReferenciaExpr as data_reuniao"),
+                'mm.created_at as data_cadastro',
             ]);
 
         $dados = DB::query()
@@ -359,6 +468,24 @@ class GceuController extends Controller
             'dados' => $dados,
             'titulo' => 'Relatório de Visitantes, Congregados e Novos Convertidos por Reunião de GCEU',
         ]);
+    }
+
+    private function sanitizeCpf(?string $cpf): ?string
+    {
+        if ($cpf === null) {
+            return null;
+        }
+
+        $cpfSanitizado = preg_replace('/[^0-9]/', '', $cpf);
+        return $cpfSanitizado !== '' ? $cpfSanitizado : null;
+    }
+
+    private function cpfJaExisteNaBase(string $cpf): bool
+    {
+        return DB::table('membresia_membros')
+            ->whereNotNull('cpf')
+            ->whereRaw("REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', '') = ?", [$cpf])
+            ->exists();
     }
 
     public function updateMembro(Request $request, $id)
