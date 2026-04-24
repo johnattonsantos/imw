@@ -101,7 +101,7 @@
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aniversariantes">
                     <thead>
                         <tr>
-                           <th>#</th>
+                           <th>Nº</th>
                             <th>IGREJA</th>
                             <th>MEMBRO</th>
                             <th>TIPO</th>

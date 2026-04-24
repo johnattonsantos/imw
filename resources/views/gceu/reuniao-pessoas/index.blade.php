@@ -118,7 +118,7 @@
                     <thead>
                         <tr>
                             <th>Nº</th>
-                            <th>Instituição</th>
+                            <th>IGREJA</th>
                             <th>GCEU</th>
                             <th>Data Reunião</th>
                             <th>Nome</th>

@@ -66,7 +66,8 @@
         <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="relatorio-reuniao-pessoas">
           <thead>
             <tr>
-              <th>#</th>
+              <th>Nº</th>
+              <th>IGREJA</th>
               <th>GCEU</th>
               <th>Nome</th>
               <th>Contato</th>
@@ -80,6 +81,7 @@
             @foreach($dados as $index => $item)
               <tr>
                 <td>{{ $index + 1 }}</td>
+                <td>{{ $item->instituicao_nome ?? '-' }}</td>
                 <td>{{ $item->gceu_nome }}</td>
                 <td>{{ $item->nome }}</td>
                 <td>{{ $item->contato ?: '-' }}</td>
@@ -151,4 +153,3 @@
   });
 </script>
 @endsection
-

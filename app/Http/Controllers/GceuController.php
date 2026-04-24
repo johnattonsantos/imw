@@ -318,6 +318,7 @@ class GceuController extends Controller
 
         $membresiaQuery = DB::table('gceu_membros as gm')
             ->join('gceu_cadastros as gc', 'gc.id', '=', 'gm.gceu_cadastro_id')
+            ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'gc.instituicao_id')
             ->join('membresia_membros as mm', 'mm.id', '=', 'gm.membro_id')
             ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
             ->where('gc.instituicao_id', $igrejaId)
@@ -348,6 +349,7 @@ class GceuController extends Controller
             })
             ->select([
                 DB::raw("'Membresia' as origem"),
+                'ii.nome as instituicao_nome',
                 'gc.nome as gceu_nome',
                 'mm.nome as nome',
                 DB::raw("CASE
@@ -368,6 +370,7 @@ class GceuController extends Controller
         $dataReferenciaExpr = "COALESCE(mm.data_conversao, DATE(mm.created_at))";
         $reuniaoQuery = DB::table('membresia_membros as mm')
             ->join('gceu_cadastros as gc', 'gc.id', '=', 'mm.gceu_id')
+            ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mm.igreja_id')
             ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
             ->where('mm.igreja_id', $igrejaId)
             ->where('mm.vinculo', MembresiaMembro::VINCULO_VISITANTE)
@@ -392,6 +395,7 @@ class GceuController extends Controller
             })
             ->select([
                 DB::raw("'Cadastro Reunião' as origem"),
+                'ii.nome as instituicao_nome',
                 'gc.nome as gceu_nome',
                 'mm.nome as nome',
                 DB::raw("CASE
