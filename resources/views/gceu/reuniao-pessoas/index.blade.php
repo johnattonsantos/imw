@@ -66,20 +66,6 @@
                         @error('tipo')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
-                <div class="form-group row mb-4" id="cpf-container" style="{{ old('tipo', 'V') === 'N' ? '' : 'display:none;' }}">
-                    <div class="col-lg-3">
-                        <label class="control-label">* CPF (Novo Convertido)</label>
-                        <input
-                            type="text"
-                            id="cpf"
-                            name="cpf"
-                            class="form-control @error('cpf') is-invalid @enderror"
-                            value="{{ old('cpf') }}"
-                            maxlength="14"
-                            placeholder="000.000.000-00">
-                        @error('cpf')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                    </div>
-                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary"><x-bx-save /> Salvar</button>
                 </div>
@@ -137,7 +123,6 @@
                             <th>GCEU</th>
                             <th>Data Reunião</th>
                             <th>Nome</th>
-                            <th>CPF</th>
                             <th>Contato</th>
                             <th>Tipo</th>
                             <th>Criado Em</th>
@@ -155,7 +140,6 @@
                                 <td>{{ $registro->gceu_nome }}</td>
                                 <td>{{ !empty($registro->data_reuniao) ? \Carbon\Carbon::parse($registro->data_reuniao)->format('d/m/Y') : '-' }}</td>
                                 <td>{{ $registro->nome }}</td>
-                                <td>{{ !empty($registro->cpf) ? formatStr($registro->cpf, '###.###.###-##') : '-' }}</td>
                                 <td>{{ !empty($registro->contato) ? formatStr($registro->contato, '(##) #####-####') : '-' }}</td>
                                 <td>
                                     @if($registro->tipo === 'N')
@@ -216,7 +200,7 @@
               text: '<i class="fas fa-file-excel"></i> Excel',
               title: 'Cadastro de Visitantes e Novos Convertidos por Reunião - {{ $igreja }}',
               exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10,11]
+                columns: [0,1,2,3,4,5,6,7,8,9,10]
               }
             },
             {
@@ -227,7 +211,7 @@
               orientation: 'landscape',
               title: 'Cadastro de Visitantes e Novos Convertidos por Reunião - {{ $igreja }}',
               exportOptions: {
-                columns: [0,1,2,3,4,5,6,7,8,9,10,11]
+                columns: [0,1,2,3,4,5,6,7,8,9,10]
               }
             }
           ]
@@ -253,32 +237,5 @@
         }
       }
     });
-
-    function toggleCpfField() {
-      const tipo = $('#tipo').val();
-      const cpfContainer = $('#cpf-container');
-      const cpfInput = $('#cpf');
-      if (tipo === 'N') {
-        cpfContainer.show();
-        cpfInput.prop('required', true);
-      } else {
-        cpfContainer.hide();
-        cpfInput.prop('required', false).val('');
-      }
-    }
-
-    function mascaraCpf(valor) {
-      return valor
-        .replace(/\D/g, '')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d)/, '$1.$2')
-        .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    }
-
-    $('#tipo').on('change', toggleCpfField);
-    $('#cpf').on('input', function () {
-      this.value = mascaraCpf(this.value).substring(0, 14);
-    });
-    toggleCpfField();
 </script>
 @endsection
