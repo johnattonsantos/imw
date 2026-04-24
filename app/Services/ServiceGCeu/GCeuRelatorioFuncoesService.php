@@ -8,26 +8,138 @@ use Illuminate\Support\Facades\DB;
 
 class GCeuRelatorioFuncoesService
 {
-    public function getList($igrejaId, $funcaoId, $gceuId)
+    public function getList($igrejaId, $funcaoId, $gceuId, $tipo = null)
     {
-        $dados =  GCeu::select('gceu_cadastros.*', 'gceu_funcoes.funcao', 'membresia_membros.nome as lider', 'membresia_contatos.telefone_preferencial',
-        DB::raw("(SELECT membresia_membros.nome FROM gceu_membros JOIN membresia_membros ON membresia_membros.id = gceu_membros.membro_id WHERE gceu_funcao_id = 7 AND gceu_membros.gceu_cadastro_id = gceu_cadastros.id AND membresia_membros.status = 'A' limit 1) anfitriao"),
-            DB::raw("(SELECT CASE WHEN telefone_preferencial IS NOT NULL AND telefone_preferencial <> '' THEN telefone_preferencial
-                              WHEN telefone_alternativo IS NOT NULL AND telefone_alternativo <> '' THEN telefone_alternativo
-                              ELSE telefone_whatsapp END contato FROM gceu_membros JOIN membresia_membros ON membresia_membros.id = gceu_membros.membro_id JOIN membresia_contatos ON membresia_contatos.membro_id = membresia_membros.id WHERE gceu_funcao_id = 7 AND gceu_membros.gceu_cadastro_id = gceu_cadastros.id  AND membresia_membros.status = 'A' limit 1) contato")
-        )
-                ->join('gceu_membros', 'gceu_membros.gceu_cadastro_id', 'gceu_cadastros.id')
-                ->join('membresia_membros', 'membresia_membros.id', 'gceu_membros.membro_id')
-                ->join('gceu_funcoes', 'gceu_funcoes.id', 'gceu_membros.gceu_funcao_id')
-                ->leftJoin('membresia_contatos', 'membresia_contatos.membro_id', 'membresia_membros.id')
-                ->where(['gceu_cadastros.instituicao_id' => $igrejaId, 'gceu_cadastros.status' => 'A'])
-                ->when($funcaoId, function ($query) use ($funcaoId) {
-                    $query->where('gceu_membros.gceu_funcao_id', $funcaoId);
+        $novoConvertidoExpr = "UPPER(COALESCE(mm.novo_convertido, '')) IN ('1','S','SIM','Y','TRUE')";
+
+        $dadosMembresia = DB::table('gceu_cadastros as gc')
+            ->select(
+                'gc.*',
+                'gf.funcao',
+                'mm.nome as lider',
+                'mm.novo_convertido',
+                'mm.created_at as data_cadastro',
+                'mc.telefone_preferencial',
+                DB::raw("CASE
+                    WHEN $novoConvertidoExpr THEN 'Novo Convertido'
+                    WHEN mm.vinculo = 'M' THEN 'Membro'
+                    WHEN mm.vinculo = 'C' THEN 'Congregado'
+                    WHEN mm.vinculo = 'V' THEN 'Visitante'
+                    ELSE 'Não informado'
+                END as tipo"),
+                DB::raw("(SELECT membresia_membros.nome
+                    FROM gceu_membros
+                    JOIN membresia_membros ON membresia_membros.id = gceu_membros.membro_id
+                    WHERE gceu_funcao_id = 7
+                        AND gceu_membros.gceu_cadastro_id = gc.id
+                        AND membresia_membros.status = 'A'
+                    LIMIT 1) as anfitriao"),
+                DB::raw("(SELECT CASE
+                    WHEN telefone_preferencial IS NOT NULL AND telefone_preferencial <> '' THEN telefone_preferencial
+                    WHEN telefone_alternativo IS NOT NULL AND telefone_alternativo <> '' THEN telefone_alternativo
+                    ELSE telefone_whatsapp
+                END
+                    FROM gceu_membros
+                    JOIN membresia_membros ON membresia_membros.id = gceu_membros.membro_id
+                    JOIN membresia_contatos ON membresia_contatos.membro_id = membresia_membros.id
+                    WHERE gceu_funcao_id = 7
+                        AND gceu_membros.gceu_cadastro_id = gc.id
+                        AND membresia_membros.status = 'A'
+                    LIMIT 1) as contato")
+            )
+            ->join('gceu_membros as gm', 'gm.gceu_cadastro_id', '=', 'gc.id')
+            ->join('membresia_membros as mm', 'mm.id', '=', 'gm.membro_id')
+            ->join('gceu_funcoes as gf', 'gf.id', '=', 'gm.gceu_funcao_id')
+            ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
+            ->where(['gc.instituicao_id' => $igrejaId, 'gc.status' => 'A'])
+            ->when($funcaoId, function ($query) use ($funcaoId) {
+                $query->where('gm.gceu_funcao_id', $funcaoId);
+            })
+            ->when($gceuId, function ($query) use ($gceuId) {
+                $query->where('gc.id', $gceuId);
+            })
+            ->when(in_array($tipo, ['M', 'C'], true), function ($query) use ($tipo) {
+                $query->where('mm.vinculo', $tipo);
+            })
+            ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
+                $query->where('mm.vinculo', 'V')->whereRaw("NOT ($novoConvertidoExpr)");
+            })
+            ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
+                $query->whereRaw($novoConvertidoExpr);
+            })
+            ->get();
+
+        $dadosReuniao = collect();
+        $deveIncluirReuniao = empty($funcaoId) && (!$tipo || in_array($tipo, ['V', 'N'], true));
+        if ($deveIncluirReuniao) {
+            $dadosReuniao = DB::table('membresia_membros as mm')
+                ->join('gceu_cadastros as gc', 'gc.id', '=', 'mm.gceu_id')
+                ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
+                ->select(
+                    'gc.*',
+                    DB::raw("'Cadastro da Reunião' as funcao"),
+                    'mm.nome as lider',
+                    'mm.novo_convertido',
+                    'mm.created_at as data_cadastro',
+                    DB::raw("CASE
+                        WHEN mc.telefone_preferencial IS NOT NULL AND mc.telefone_preferencial <> '' THEN mc.telefone_preferencial
+                        WHEN mc.telefone_alternativo IS NOT NULL AND mc.telefone_alternativo <> '' THEN mc.telefone_alternativo
+                        ELSE mc.telefone_whatsapp
+                    END as telefone_preferencial"),
+                    DB::raw("CASE
+                        WHEN $novoConvertidoExpr THEN 'Novo Convertido'
+                        ELSE 'Visitante'
+                    END as tipo"),
+                    DB::raw("(SELECT membresia_membros.nome
+                        FROM gceu_membros
+                        JOIN membresia_membros ON membresia_membros.id = gceu_membros.membro_id
+                        WHERE gceu_funcao_id = 7
+                            AND gceu_membros.gceu_cadastro_id = gc.id
+                            AND membresia_membros.status = 'A'
+                        LIMIT 1) as anfitriao"),
+                    DB::raw("(SELECT CASE
+                        WHEN telefone_preferencial IS NOT NULL AND telefone_preferencial <> '' THEN telefone_preferencial
+                        WHEN telefone_alternativo IS NOT NULL AND telefone_alternativo <> '' THEN telefone_alternativo
+                        ELSE telefone_whatsapp
+                    END
+                        FROM gceu_membros
+                        JOIN membresia_membros ON membresia_membros.id = gceu_membros.membro_id
+                        JOIN membresia_contatos ON membresia_contatos.membro_id = membresia_membros.id
+                        WHERE gceu_funcao_id = 7
+                            AND gceu_membros.gceu_cadastro_id = gc.id
+                        AND membresia_membros.status = 'A'
+                        LIMIT 1) as contato")
+                )
+                ->where('mm.igreja_id', $igrejaId)
+                ->where(function ($query) use ($novoConvertidoExpr) {
+                    $query->where('mm.vinculo', 'V')
+                        ->orWhere(function ($sub) use ($novoConvertidoExpr) {
+                            $sub->where('mm.vinculo', 'C')
+                                ->whereRaw($novoConvertidoExpr);
+                        });
                 })
+                ->whereNotNull('mm.gceu_id')
+                ->where('gc.instituicao_id', $igrejaId)
+                ->where('gc.status', 'A')
                 ->when($gceuId, function ($query) use ($gceuId) {
-                    $query->where('gceu_cadastros.id', $gceuId);
+                    $query->where('mm.gceu_id', $gceuId);
+                })
+                ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
+                    $query->whereRaw("NOT ($novoConvertidoExpr)");
+                })
+                ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
+                    $query->whereRaw($novoConvertidoExpr);
                 })
                 ->get();
+        }
+
+        $dados = $dadosMembresia
+            ->concat($dadosReuniao)
+            ->sortByDesc(function ($item) {
+                return $item->data_cadastro ?? null;
+            })
+            ->values();
+
         $funcoes = GCeuFuncoes::get();
         $gceus = GCeu::where(['instituicao_id' => $igrejaId])->get();
         return ['dados' => $dados, 'funcoes' => $funcoes, 'gceus' => $gceus];

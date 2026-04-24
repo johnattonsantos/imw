@@ -470,6 +470,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/membros', [GceuController::class, 'membros'])->name('membros')->middleware(['seguranca:gceu-membros']);
             Route::post('membro-atualizar/{id}', [GceuController::class, 'updateMembro'])->name('membro.update')->middleware(['seguranca:gceu-membros']);
             Route::post('/diario-presenca-falta', [GceuController::class, 'diarioPresencaFalta'])->name('diario.presenca.falta')->middleware(['seguranca:gceu-diario']);
+            Route::get('/reuniao-pessoas', [GceuController::class, 'reuniaoPessoas'])->name('reuniao-pessoas')->middleware(['seguranca:gceu-diario']);
+            Route::post('/reuniao-pessoas/store', [GceuController::class, 'storeReuniaoPessoas'])->name('reuniao-pessoas.store')->middleware(['seguranca:gceu-diario']);
+            Route::post('/reuniao-pessoas/{id}/converter', [GceuController::class, 'marcarNovoConvertidoReuniaoPessoa'])->name('reuniao-pessoas.converter')->middleware(['seguranca:gceu-diario']);
+            Route::post('/reuniao-pessoas/{id}/deletar', [GceuController::class, 'deletarReuniaoPessoa'])->name('reuniao-pessoas.deletar')->middleware(['seguranca:gceu-diario']);
             //Palavra pastoral
             Route::get('/carta-pastoral', [GceuController::class, 'cartaPastoral'])->name('carta-pastoral')->middleware(['seguranca:gceu-carta-pastoral']);
             Route::get('/carta-pastoral-novo', [GceuController::class, 'cartaPastoralNovo'])->name('carta-pastoral.novo')->middleware(['seguranca:gceu-carta-pastoral-cadastrar']);
@@ -490,6 +494,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio-aniversariantes', [GceuController::class, 'gceuRelatorioAniversariantes'])->name('relatorio.aniversariantes')->middleware(['seguranca:gceu-igreja-lista-aniversariantes']);
             Route::get('/relatorio-carta-pastoral', [GceuController::class, 'cartaPastoralRelatorio'])->name('carta-pastoral-relatorio')->middleware(['seguranca:gceu-carta-pastoral-relatorio']);
             Route::get('/relatorio-diario', [GceuController::class, 'diarioRelatorio'])->name('diario-relatorio')->middleware(['seguranca:gceu-relatorio-diario']);
+            Route::get('/relatorio-reuniao-pessoas', [GceuController::class, 'relatorioReuniaoPessoas'])->name('relatorio.reuniao-pessoas')->middleware(['seguranca:gceu-relatorio-diario']);
             
         });
 

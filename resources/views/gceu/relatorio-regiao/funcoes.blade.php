@@ -45,7 +45,7 @@
         
         {{-- Congregação --}}
         <div class="form-group row mb-3">
-          <div class="col-lg-4">
+          <div class="col-lg-2">
             <label class="control-label">Distrito:</label>
             <select id="regiao_id" name="distrito_id" class="form-control @error('distrito_id') is-invalid @enderror" >
               <option value="" {{ request()->distrito_id == '' ? 'selected' : '' }}>TODOS</option>
@@ -54,7 +54,7 @@
               @endforeach
             </select>
           </div>
-          <div class="col-lg-4">
+          <div class="col-lg-2">
             <label class="control-label">Igreja:</label>
             <select id="igreja_id" name="igreja_id" class="form-control @error('igreja_id') is-invalid @enderror" >
               <option value="" {{ request()->igreja_id == '' ? 'selected' : '' }}>TODAS</option>
@@ -70,6 +70,16 @@
               @foreach ($funcoes as $funcao)
                 <option value="{{ $funcao->id }}" {{ request()->funcao_id == $funcao->id ? 'selected' : '' }}>{{ $funcao->funcao }}</option>
               @endforeach
+            </select>
+          </div>
+          <div class="col-lg-2">
+            <label class="control-label">Tipo:</label>
+            <select id="tipo" name="tipo" class="form-control">
+              <option value="" {{ request()->tipo == '' ? 'selected' : '' }}>TODOS</option>
+              <option value="M" {{ request()->tipo == 'M' ? 'selected' : '' }}>Membro</option>
+              <option value="C" {{ request()->tipo == 'C' ? 'selected' : '' }}>Congregado</option>
+              <option value="V" {{ request()->tipo == 'V' ? 'selected' : '' }}>Visitante</option>
+              <option value="N" {{ request()->tipo == 'N' ? 'selected' : '' }}>Novo Convertido</option>
             </select>
           </div>
           <div class="col-lg-2">
@@ -104,6 +114,9 @@
                             <th>DISTRITO</th>
                             <th>IGREJA</th>
                             <th>MEMBRO</th>
+                            <th>TIPO</th>
+                            <th>NOVO CONVERTIDO</th>
+                            <th>DATA CADASTRO</th>
                             <th>CONTATO</th>
                             <th>FUNÇÃO</th>
                             <th>GCEU</th>
@@ -119,6 +132,9 @@
                             <td>{{ $item->distrito_nome }}</td>
                             <td>{{ $item->igreja_nome }}</td>
                             <td>{{ $item->lider }}</td>
+                            <td>{{ $item->tipo }}</td>
+                            <td>{{ in_array(strtoupper((string) ($item->novo_convertido ?? '')), ['1', 'S', 'SIM', 'Y', 'TRUE'], true) ? 'Sim' : 'Não' }}</td>
+                            <td>{{ !empty($item->data_cadastro) ? \Carbon\Carbon::parse($item->data_cadastro)->format('d/m/Y') : '-' }}</td>
                             <td>{{ formatStr($item->telefone_preferencial, '## (##) #####-####') }}</td>
                             <td>{{ $item->funcao }}</td>
                             <td>{{ $item->nome }}</td>
@@ -132,7 +148,7 @@
                     <tfoot>
                       <tr>
                           <td>{{ $key }}</td>
-                          <td colspan="10"></td>
+                          <td colspan="12"></td>
                         </tr>
                     </tfoot>
                     @endif
