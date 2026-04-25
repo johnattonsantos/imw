@@ -200,7 +200,7 @@ class GceuController extends Controller
             ->when($tipo === 'N', function ($query) use ($novoConvertidoExpr) {
                 $query->whereRaw($novoConvertidoExpr);
             })
-            ->when($dataReuniao, function ($query) use ($dataReuniao) {
+            ->when($dataReuniao, function ($query) use ($dataReuniao, $dataReferenciaExpr) {
                 $query->whereRaw("$dataReferenciaExpr = ?", [$dataReuniao]);
             })
             ->orderByRaw("$dataReferenciaExpr DESC")
