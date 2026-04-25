@@ -378,10 +378,10 @@ class GceuController extends Controller
             ->when($gceuId, function ($query) use ($gceuId) {
                 $query->where('mm.gceu_id', $gceuId);
             })
-            ->when($dataInicial, function ($query) use ($dataInicial) {
+            ->when($dataInicial, function ($query) use ($dataInicial, $dataReferenciaExpr) {
                 $query->whereRaw("$dataReferenciaExpr >= ?", [$dataInicial]);
             })
-            ->when($dataFinal, function ($query) use ($dataFinal) {
+            ->when($dataFinal, function ($query) use ($dataFinal, $dataReferenciaExpr) {
                 $query->whereRaw("$dataReferenciaExpr <= ?", [$dataFinal]);
             })
             ->when($tipo === 'V', function ($query) use ($novoConvertidoExpr) {
