@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 trait EstatisticaEstadoCivilUtils
 {
-    public static function fetch($distritoId, $regiaoId = null): Collection
+    public static function fetch($distritoId, $regiaoId = null, $vinculo = 'M'): Collection
     {
         $estadosCivis = collect([
             (object) ['estado_civil' => 'S', 'descricao' => 'Solteiro'],
@@ -17,24 +17,30 @@ trait EstatisticaEstadoCivilUtils
             (object) ['estado_civil' => 'N', 'descricao' => 'Não informado'],
         ]);
 
-        $query = DB::table('membresia_membros as mm')
-            ->leftJoin('membresia_rolpermanente as mr', function ($join) {
-                $join->on('mr.membro_id', '=', 'mm.id')
-                    ->whereNull('mr.dt_exclusao');
-            })
-            ->selectRaw('COUNT(mm.id) as total, COALESCE(mm.estado_civil, "N") as estado_civil')
-            ->where('mm.status', 'A')
-            ->whereIn('mm.vinculo', ['M']);
+        $estadoCivilNormalizadoSql = "CASE
+                WHEN mm.estado_civil IS NULL OR TRIM(mm.estado_civil) = '' THEN 'N'
+                WHEN UPPER(TRIM(mm.estado_civil)) IN ('S', 'C', 'V', 'D') THEN UPPER(TRIM(mm.estado_civil))
+                ELSE 'N'
+            END";
 
-        if ($distritoId != "all") {
-            $query->where('mm.distrito_id', $distritoId);
-        } else {
-            $query->where('mm.regiao_id', $regiaoId);
+        $baseQuery = DB::table('membresia_membros as mm')
+            ->selectRaw("mm.id as membro_id, {$estadoCivilNormalizadoSql} as estado_civil")
+            ->where('mm.vinculo', $vinculo);
+
+        if ($regiaoId !== null) {
+            $baseQuery->where('mm.regiao_id', $regiaoId);
         }
 
-        $query->groupBy(DB::raw('COALESCE(mm.estado_civil, "N")'));
+        if ($distritoId !== "all" && !empty($distritoId)) {
+            $baseQuery->where('mm.distrito_id', $distritoId);
+        }
 
-        $result = $query->get()->keyBy('estado_civil');
+        $result = DB::query()
+            ->fromSub($baseQuery, 'base')
+            ->selectRaw('COUNT(base.membro_id) as total, base.estado_civil')
+            ->groupBy('base.estado_civil')
+            ->get()
+            ->keyBy('estado_civil');
 
         $finalResult = $estadosCivis->map(function ($estado) use ($result) {
             return (object) [

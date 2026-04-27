@@ -86,6 +86,11 @@
 
 @php
     use Carbon\Carbon;
+    $vinculoDescricao = match ($vinculo ?? 'M') {
+        'C' => 'Congregado',
+        'V' => 'Visitante',
+        default => 'Membro',
+    };
 @endphp
 
 <body>
@@ -102,6 +107,7 @@
                 <div class="col-12">
                     <h6 class="mt-3">QUANTIDADE DE MEMBROS -
                         {{ $lancamentos->sum('total') }}</h6>
+                    <h6 class="mt-1">Vínculo: {{ $vinculoDescricao }}</h6>
                     <div class="table-responsive">
                         <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-dark">
