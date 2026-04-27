@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 trait EstatisticaEstadoCivilUtils
 {
-    public static function fetch($distritoId, $regiaoId = null, $vinculo = 'M'): Collection
+    public static function fetch($distritoId, $regiaoId = null): Collection
     {
         $estadosCivis = collect([
             (object) ['estado_civil' => 'S', 'descricao' => 'Solteiro'],
@@ -24,8 +24,7 @@ trait EstatisticaEstadoCivilUtils
             END";
 
         $baseQuery = DB::table('membresia_membros as mm')
-            ->selectRaw("mm.id as membro_id, {$estadoCivilNormalizadoSql} as estado_civil")
-            ->where('mm.vinculo', $vinculo);
+            ->selectRaw("mm.id as membro_id, {$estadoCivilNormalizadoSql} as estado_civil");
 
         if ($regiaoId !== null) {
             $baseQuery->where('mm.regiao_id', $regiaoId);
