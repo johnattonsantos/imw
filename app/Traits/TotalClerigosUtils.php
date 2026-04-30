@@ -12,10 +12,17 @@ trait TotalClerigosUtils
     public static function fetchTotalClerigosStatus($regiaoId)
     {
         $results = DB::table('pessoas_pessoas as pp')
-            ->rightJoin('pessoas_status as ps', 'pp.status_id', '=', 'ps.id')
-            ->whereNull('pp.deleted_at')
+            ->join('pessoas_status as ps', 'pp.status_id', '=', 'ps.id')
+            ->join('pessoas_nomeacoes as pn', function ($join) {
+                $join->on('pp.id', '=', 'pn.pessoa_id')
+                    ->whereNull('pn.data_termino');
+            })
+            ->join('instituicoes_instituicoes as ii', function ($join) {
+                $join->on('pn.instituicao_id', '=', 'ii.id')
+                    ->where('ii.ativo', '=', 1);
+            })
             ->where('pp.regiao_id', '=', $regiaoId)
-            ->select(DB::raw('count(*) as total'), 'ps.descricao')
+            ->select(DB::raw('COUNT(DISTINCT pp.id) as total'), 'ps.descricao')
             ->groupBy('pp.status_id', 'ps.descricao')
             ->orderByDesc('total')
             ->get();

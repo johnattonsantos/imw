@@ -183,9 +183,10 @@ class RegiaoRelatorioController extends Controller
     {
 
         $distritoId = $request->input('distrito');
+        $vinculo = $request->input('vinculo');
 
 
-        $data = app(EstatisticaEstadoCivilService::class)->execute($distritoId );
+        $data = app(EstatisticaEstadoCivilService::class)->execute($distritoId, $vinculo);
 
 
         return view('regiao.estatisticas.estatisticaestadocivil', $data);
@@ -194,9 +195,10 @@ class RegiaoRelatorioController extends Controller
     public function estatisticaestadocivilPdf(Request $request)
     {
         $distritoId = $request->input('distrito');
+        $vinculo = $request->input('vinculo');
 
 
-        $data = app(EstatisticaEstadoCivilService::class)->execute($distritoId);
+        $data = app(EstatisticaEstadoCivilService::class)->execute($distritoId, $vinculo);
 
         $pdf = FacadePdf::loadView('regiao.estatisticas.estatisticaestadocivil_pdf', $data)
             ->setPaper('a4', 'landscape');
