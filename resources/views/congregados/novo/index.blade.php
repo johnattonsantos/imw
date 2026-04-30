@@ -121,6 +121,30 @@
             }
           });
         });
+
+        let ultimoCepConsultado = null;
+
+        function buscarEnderecoPorCep() {
+          const cep = $('#cep').val().replace(/\D/g, '');
+          if (cep.length !== 8 || cep === ultimoCepConsultado) {
+            return;
+          }
+
+          $.getJSON('/api/cep/' + cep, function (data) {
+            if (!('erro' in data)) {
+              $('#endereco').val(data.logradouro);
+              $('#bairro').val(data.bairro);
+              $('#cidade').val(data.localidade);
+              $('#estado').val(data.uf);
+              ultimoCepConsultado = cep;
+            } else {
+              alert('CEP não encontrado.');
+            }
+          });
+        }
+
+        $('#cep').on('blur', buscarEnderecoPorCep);
+        $('#cep').on('input', buscarEnderecoPorCep);
       });
     </script>
     @stack('tab-scripts')

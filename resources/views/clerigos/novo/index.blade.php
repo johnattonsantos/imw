@@ -214,7 +214,7 @@
             if (cep.length != 8) {
                 return; // Se o CEP não tem 8 dígitos, não faz nada
             }
-            $.getJSON('https://viacep.com.br/ws/' + cep + '/json/', function(data) {
+            $.getJSON('/api/cep/' + cep, function(data) {
                 if (!("erro" in data)) {
                     $('#endereco').val(data.logradouro);
                     // Preenche os outros campos de endereço

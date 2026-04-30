@@ -192,7 +192,7 @@
                         $("#cidade").val("...");
                         $("#uf").val("...");
 
-                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+                        $.getJSON("/api/cep/" + cep, function(dados) {
                             if (!("erro" in dados)) {
                                 $("#endereco").val(dados.logradouro);
                                 $("#bairro").val(dados.bairro);

@@ -5,7 +5,7 @@
               <!-- Coluna para foto do usuário -->
               <div class="col-xl-3 text-center">
                   <input type="hidden" name="membro_id" value="{{ $pessoa->id }}">
-                  <img src="{{ $pessoa->foto ? asset($pessoa->foto) : 'https://via.placeholder.com/150' }}"
+                  <img src="{{ $pessoa->foto ? asset($pessoa->foto) : asset('theme/images/sem-foto.jpg') }}"
                       id="user-picture" class="rounded-circle img-fluid mb-3" alt="Foto do usuário" width="150px"
                       height="150px;">
                   <div>
