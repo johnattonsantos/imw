@@ -1167,7 +1167,7 @@
                  </li>
              @endif
 
-             @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-dashboard') --}})
+             @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-dashboard') )
                  <li class="menu">
                      <a href="#ebd" data-toggle="collapse" aria-expanded="{{ Request::is('ebd*') ? 'true' : 'false' }}" class="dropdown-toggle">
                          <div class="">
@@ -1188,42 +1188,42 @@
                          </div>
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('ebd*') ? 'collapse show' : '' }}" id="ebd" data-parent="#ebd">
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-dashboard') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-dashboard') )
                              <li {!! Request::is('ebd') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.dashboard') }}">Dashboard</a>
                              </li>
                          @endif
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-liderancas') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-liderancas') )
                              <li {!! Request::is('ebd/liderancas*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.liderancas.index') }}">Liderança</a>
                              </li>
                          @endif
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-professores') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-professores') )
                              <li {!! Request::is('ebd/professores*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.professores.index') }}">Professores</a>
                              </li>
                          @endif
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-alunos') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-alunos') )
                              <li {!! Request::is('ebd/alunos*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.alunos.index') }}">Alunos</a>
                              </li>
                          @endif
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-classes') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-classes') )
                              <li {!! Request::is('ebd/classes*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.classes.index') }}">Classes</a>
                              </li>
                          @endif
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-turmas') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-turmas') )
                              <li {!! Request::is('ebd/turmas*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.turmas.index') }}">Turmas</a>
                              </li>
                          @endif
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-diarios') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-diarios') )
                              <li {!! Request::is('ebd/diarios*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.diarios.index') }}">Diários</a>
                              </li>
                          @endif
-                         @if (auth()->check() {{-- && auth()->user()->hasPerfilRegra('ebd-agendas') --}})
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-agendas') )
                              <li {!! Request::is('ebd/agendas*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.agendas.index') }}">Agenda</a>
                              </li>

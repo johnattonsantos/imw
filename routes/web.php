@@ -509,19 +509,19 @@ Route::middleware(['auth'])->group(function () {
 
         // Módulo EBD
         Route::prefix('ebd')->name('ebd.')->group(function () {
-            Route::get('/', [EbdDashboardController::class, 'index'])->name('dashboard')/*->middleware(['seguranca:ebd-dashboard'])*/;
+            Route::get('/', [EbdDashboardController::class, 'index'])->name('dashboard')->middleware(['seguranca:ebd-dashboard']);
 
-            Route::resource('liderancas', EbdLiderancaController::class)->except(['show'])/*->middleware(['seguranca:ebd-liderancas'])*/;
-            Route::resource('professores', EbdProfessorController::class)->except(['show'])/*->middleware(['seguranca:ebd-professores'])*/;
-            Route::resource('alunos', EbdAlunoController::class)->except(['show'])/*->middleware(['seguranca:ebd-alunos'])*/;
-            Route::resource('classes', EbdClasseController::class)->except(['show'])/*->middleware(['seguranca:ebd-classes'])*/;
-            Route::resource('turmas', EbdTurmaController::class)->except(['show'])/*->middleware(['seguranca:ebd-turmas'])*/;
-            Route::resource('diarios', EbdDiarioController::class)->except(['show'])/*->middleware(['seguranca:ebd-diarios'])*/;
-            Route::resource('agendas', EbdAgendaController::class)->except(['show'])/*->middleware(['seguranca:ebd-agendas'])*/;
+            Route::resource('liderancas', EbdLiderancaController::class)->except(['show'])->middleware(['seguranca:ebd-liderancas']);
+            Route::resource('professores', EbdProfessorController::class)->except(['show'])->middleware(['seguranca:ebd-professores']);
+            Route::resource('alunos', EbdAlunoController::class)->except(['show'])->middleware(['seguranca:ebd-alunos']);
+            Route::resource('classes', EbdClasseController::class)->except(['show'])->middleware(['seguranca:ebd-classes']);
+            Route::resource('turmas', EbdTurmaController::class)->except(['show'])->middleware(['seguranca:ebd-turmas']);
+            Route::resource('diarios', EbdDiarioController::class)->except(['show'])->middleware(['seguranca:ebd-diarios']);
+            Route::resource('agendas', EbdAgendaController::class)->except(['show'])->middleware(['seguranca:ebd-agendas']);
 
-            Route::get('buscar-membro', [EbdMembroBuscaController::class, 'buscar'])->name('buscar-membro')/*->middleware(['seguranca:ebd-buscar-membro'])*/;
-            Route::post('cadastrar-visitante', [EbdMembroBuscaController::class, 'cadastrarVisitante'])->name('cadastrar-visitante')/*->middleware(['seguranca:ebd-cadastrar-visitante'])*/;
-            Route::get('diarios/turma/{turma}/alunos', [EbdDiarioController::class, 'turmaAlunos'])->name('diarios.turma-alunos')/*->middleware(['seguranca:ebd-diarios'])*/;
+            Route::get('buscar-membro', [EbdMembroBuscaController::class, 'buscar'])->name('buscar-membro')->middleware(['seguranca:ebd-buscar-membro']);
+            Route::post('cadastrar-visitante', [EbdMembroBuscaController::class, 'cadastrarVisitante'])->name('cadastrar-visitante')->middleware(['seguranca:ebd-cadastrar-visitante']);
+            Route::get('diarios/turma/{turma}/alunos', [EbdDiarioController::class, 'turmaAlunos'])->name('diarios.turma-alunos')->middleware(['seguranca:ebd-diarios']);
         });
 
         /* Por enquanto somente visualiações */
