@@ -27,72 +27,239 @@ INSERT INTO `perfils` (`id`, `nome`, `nivel`, `created_at`, `updated_at`, `delet
 INSERT INTO `perfils` (`id`, `nome`, `nivel`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'Superintendente da EBD', 'I', current_timestamp(), current_timestamp(), NULL);
 
 
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-dashboard'
+ORDER BY r.id DESC
+LIMIT 1;
 
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '207', current_timestamp(), current_timestamp());
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-dashboard'
+ORDER BY r.id DESC
+LIMIT 1;
 
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '207', current_timestamp(), current_timestamp());
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-dashboard'
+ORDER BY r.id DESC
+LIMIT 1;
 
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '207', current_timestamp(), current_timestamp());
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-liderancas'
+ORDER BY r.id DESC
+LIMIT 1;
 
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '208', current_timestamp(), current_timestamp());
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-liderancas'
+ORDER BY r.id DESC
+LIMIT 1;
 
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '208', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '208', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '209', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '209', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '209', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '210', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '210', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '210', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '212', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '212', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '212', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '213', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '213', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '213', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '214', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '214', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '214', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '215', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '215', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '215', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '216', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '216', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '216', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '217', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '217', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '217', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '7', '218', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '14', '218', current_timestamp(), current_timestamp());
-
-INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES (NULL, '15', '218', current_timestamp(), current_timestamp());
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-liderancas'
+ORDER BY r.id DESC
+LIMIT 1;
 
 
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-professores'
+ORDER BY r.id DESC
+LIMIT 1;
 
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-professores'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-professores'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-alunos'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-alunos'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-alunos'
+ORDER BY r.id DESC
+LIMIT 1;
+
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-classes'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-classes'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-classes'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-turmas'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-turmas'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-turmas'
+ORDER BY r.id DESC
+LIMIT 1;
+
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-diarios'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-diarios'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-diarios'
+ORDER BY r.id DESC
+LIMIT 1;
+
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-agendas'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-agendas'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-agendas'
+ORDER BY r.id DESC
+LIMIT 1;
+
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-buscar-membro'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-buscar-membro'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-buscar-membro'
+ORDER BY r.id DESC
+LIMIT 1;
+
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-cadastrar-visitante'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-cadastrar-visitante'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-cadastrar-visitante'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '7', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-diarios'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '24', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-diarios'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '25', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'ebd-diarios'
+ORDER BY r.id DESC
+LIMIT 1;

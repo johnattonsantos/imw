@@ -1,12 +1,5 @@
 
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-
-
 CREATE TABLE `ebd_agendas` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `titulo` varchar(160) NOT NULL,
