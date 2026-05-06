@@ -332,7 +332,7 @@
             var cep = $(this).val().replace(/\D/g, '');
             if (cep.length != 8) return;
 
-            $.getJSON('https://viacep.com.br/ws/' + cep + '/json/', function(data) {
+            $.getJSON('/api/cep/' + cep, function(data) {
                 if (!data.erro) {
                     $('#endereco').val(data.logradouro);
                     $('#bairro').val(data.bairro);

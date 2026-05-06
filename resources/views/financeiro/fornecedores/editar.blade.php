@@ -273,7 +273,7 @@
                         $("#pais").val("...");
 
                         //Consulta o webservice viacep.com.br/
-                        $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function(
+                        $.getJSON("/api/cep/" + cep, function(
                             dados) {
 
                             if (!("erro" in dados)) {

@@ -4,7 +4,7 @@
       <!-- Coluna para foto do usuário -->
       <div class="col-xl-3 text-center">
         <input type="hidden" name="membro_id">
-        <img src="{{ old('foto') ? asset(old('foto')) : 'https://via.placeholder.com/150' }}" id="user-picture" class="rounded-circle img-fluid mb-3" alt="Foto do usuário" width="150px" height="150px;">
+        <img src="{{ old('foto') ? asset(old('foto')) : asset('theme/images/sem-foto.jpg') }}" id="user-picture" class="rounded-circle img-fluid mb-3" alt="Foto do usuário" width="150px" height="150px;">
         <div>
           <button class="btn btn-primary btn-sm" id="upload-picture">Trocar Foto</button>
           <input type="file" name="foto" class="d-none" id="upload-picture-input">

@@ -136,7 +136,7 @@ $(document).ready(function () {
     // Retorna foto para o padrão
     $('#delete-picture').click(function(event) {
         event.preventDefault();
-        $('#user-picture').attr('src', "https://via.placeholder.com/150");
+        $('#user-picture').attr('src', "/theme/images/sem-foto.jpg");
         $('#upload-picture-input').val('');
     });
 });

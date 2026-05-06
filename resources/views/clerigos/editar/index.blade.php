@@ -175,7 +175,7 @@
             if (cep.length != 8) {
                 return;
             }
-            $.getJSON('https://viacep.com.br/ws/' + cep + '/json/', function(data) {
+            $.getJSON('/api/cep/' + cep, function(data) {
                 if (!("erro" in data)) {
                     $('#endereco').val(data.logradouro);
                     // Preencha os outros campos de endereço aqui, se necessário
