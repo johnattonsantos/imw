@@ -7,7 +7,7 @@
             <div class="widget-content widget-content-area">
                 <form method="POST" action="{{ route('ebd.alunos.store') }}">
                     @csrf
-                    @include('ebd.partials.member-picker')
+                    @include('ebd.partials.member-picker', ['visitanteButtonClass' => 'btn btn-sm btn-success', 'buscarButtonClass' => 'btn btn-primary'])
                     @include('ebd.partials.quick-visitante-modal')
 
                     <div class="form-group">

@@ -1228,6 +1228,23 @@
                                  <a href="{{ route('ebd.agendas.index') }}">Agenda</a>
                              </li>
                          @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-dashboard') )
+                             <li class="submenu-fixo mt-3 mb-3">
+                                 <span>Relatórios</span>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/lista-ebd*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.lista-ebd') }}">Lista de EBD</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/alunos*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.alunos') }}">Alunos</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/professores*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.professores') }}">Professores</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/liderancas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.liderancas') }}">Liderança</a>
+                             </li>
+                         @endif
                      </ul>
                  </li>
              @endif

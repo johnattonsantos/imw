@@ -25,7 +25,7 @@ class EbdDashboardController extends Controller
             'totalLiderancas' => EbdLideranca::whereHas('membro', $scopeMembro)->count(),
             'totalProfessores' => EbdProfessor::whereHas('membro', $scopeMembro)->count(),
             'totalAlunos' => EbdAluno::whereHas('membro', $scopeMembro)->count(),
-            'totalClasses' => EbdClasse::count(),
+            'totalClasses' => EbdClasse::where('igreja_id', $igrejaId)->count(),
             'totalTurmas' => EbdTurma::whereHas('professor.membro', $scopeMembro)->count(),
             'totalDiarios' => EbdDiario::whereHas('turma.professor.membro', $scopeMembro)->count(),
             'totalAgendas' => EbdAgenda::where(function ($query) use ($scopeMembro) {

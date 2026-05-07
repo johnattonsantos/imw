@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEbdLiderancaRequest;
 use App\Http\Requests\UpdateEbdLiderancaRequest;
 use App\Models\EbdLideranca;
+use App\Models\MembresiaMembro;
 use App\Traits\Identifiable;
 use Illuminate\Validation\ValidationException;
 
@@ -71,9 +72,22 @@ class EbdLiderancaController extends Controller
 
     private function validateBusinessRules(array $data, ?int $ignoreId = null): void
     {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+
+        $membroDaIgreja = MembresiaMembro::where('id', $data['membro_id'])
+            ->where('igreja_id', $igrejaId)
+            ->exists();
+
+        if (! $membroDaIgreja) {
+            throw ValidationException::withMessages([
+                'membro_id' => 'Selecione um membro da igreja local logada.',
+            ]);
+        }
+
         if ((bool) ($data['ativo'] ?? false) && config('ebd.unique_active_leadership_per_role', true)) {
             $exists = EbdLideranca::where('cargo', $data['cargo'])
                 ->where('ativo', true)
+                ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
                 ->when($ignoreId, fn ($q) => $q->where('id', '<>', $ignoreId))
                 ->exists();
 

@@ -27,6 +27,7 @@ CREATE TABLE `ebd_alunos` (
 
 CREATE TABLE `ebd_classes` (
   `id` bigint(20) UNSIGNED NOT NULL,
+  `igreja_id` bigint(20) UNSIGNED DEFAULT NULL,
   `nome` varchar(120) NOT NULL,
   `faixa_etaria` varchar(120) DEFAULT NULL,
   `descricao` text DEFAULT NULL,
@@ -126,7 +127,8 @@ ALTER TABLE `ebd_alunos`
 
 
 ALTER TABLE `ebd_classes`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ebd_classes_igreja_id_foreign` (`igreja_id`);
 
 
 ALTER TABLE `ebd_diarios`
@@ -206,6 +208,10 @@ ALTER TABLE `ebd_alunos`
   ADD CONSTRAINT `ebd_alunos_membro_id_foreign` FOREIGN KEY (`membro_id`) REFERENCES `membresia_membros` (`id`);
 
 
+ALTER TABLE `ebd_classes`
+  ADD CONSTRAINT `ebd_classes_igreja_id_foreign` FOREIGN KEY (`igreja_id`) REFERENCES `instituicoes_instituicoes` (`id`);
+
+
 ALTER TABLE `ebd_diarios`
   ADD CONSTRAINT `ebd_diarios_turma_id_foreign` FOREIGN KEY (`turma_id`) REFERENCES `ebd_turmas` (`id`);
 
@@ -231,4 +237,3 @@ ALTER TABLE `ebd_turmas`
 ALTER TABLE `ebd_turma_alunos`
   ADD CONSTRAINT `ebd_turma_alunos_aluno_id_foreign` FOREIGN KEY (`aluno_id`) REFERENCES `ebd_alunos` (`id`),
   ADD CONSTRAINT `ebd_turma_alunos_turma_id_foreign` FOREIGN KEY (`turma_id`) REFERENCES `ebd_turmas` (`id`);
-

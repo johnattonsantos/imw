@@ -7,8 +7,7 @@
             <div class="widget-content widget-content-area">
                 <form method="POST" action="{{ route('ebd.professores.store') }}">
                     @csrf
-                    @include('ebd.partials.member-picker')
-                    @include('ebd.partials.quick-visitante-modal')
+                    @include('ebd.partials.member-picker', ['showVisitanteButton' => false, 'buscarButtonClass' => 'btn btn-primary'])
 
                     <div class="form-group">
                         <label>Ativo</label>

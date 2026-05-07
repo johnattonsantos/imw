@@ -12,6 +12,7 @@ class EbdClasse extends Model
     protected $table = 'ebd_classes';
 
     protected $fillable = [
+        'igreja_id',
         'nome',
         'faixa_etaria',
         'descricao',

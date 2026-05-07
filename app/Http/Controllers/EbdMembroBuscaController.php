@@ -76,17 +76,7 @@ class EbdMembroBuscaController extends Controller
         $query = $buildQuery()
             ->where('membresia_membros.status', MembresiaMembro::STATUS_ATIVO)
             ->whereIn('membresia_membros.vinculo', $vinculos)
-            ->where(function ($q) use ($igrejaId) {
-                $q->where('membresia_membros.igreja_id', $igrejaId)
-                    ->orWhereExists(function ($sub) use ($igrejaId) {
-                        $sub->select(DB::raw(1))
-                            ->from('membresia_rolpermanente as mr')
-                            ->whereColumn('mr.membro_id', 'membresia_membros.id')
-                            ->where('mr.igreja_id', $igrejaId)
-                            ->where('mr.lastrec', 1)
-                            ->whereNull('mr.deleted_at');
-                    });
-            })
+            ->where('membresia_membros.igreja_id', $igrejaId)
             ->when($term !== '', $applySearchFilter)
             ->orderBy('membresia_membros.nome')
             ->limit(20)

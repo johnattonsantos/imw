@@ -43,6 +43,7 @@ class EbdTurmaController extends Controller
     {
         $data = $request->validated();
 
+        $this->validateClasseByIgreja($data['classe_id']);
         $this->validateProfessorAndAlunos($data['professor_id'], $data['alunos'] ?? []);
 
         DB::beginTransaction();
@@ -83,6 +84,7 @@ class EbdTurmaController extends Controller
         $this->authorizeByIgreja($turma);
 
         $data = $request->validated();
+        $this->validateClasseByIgreja($data['classe_id']);
         $this->validateProfessorAndAlunos($data['professor_id'], $data['alunos'] ?? []);
 
         DB::beginTransaction();
@@ -121,7 +123,10 @@ class EbdTurmaController extends Controller
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
 
         return [
-            'classes' => EbdClasse::where('ativo', true)->orderBy('nome')->get(),
+            'classes' => EbdClasse::where('ativo', true)
+                ->where('igreja_id', $igrejaId)
+                ->orderBy('nome')
+                ->get(),
             'professores' => EbdProfessor::with('membro')
                 ->where('ativo', true)
                 ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
@@ -194,6 +199,22 @@ class EbdTurmaController extends Controller
         if ($qtd !== count(array_unique($alunoIds))) {
             throw ValidationException::withMessages([
                 'alunos' => 'Um ou mais alunos estão inválidos ou inativos.',
+            ]);
+        }
+    }
+
+    private function validateClasseByIgreja(int $classeId): void
+    {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+
+        $classeValida = EbdClasse::where('id', $classeId)
+            ->where('ativo', true)
+            ->where('igreja_id', $igrejaId)
+            ->exists();
+
+        if (! $classeValida) {
+            throw ValidationException::withMessages([
+                'classe_id' => 'Classe inválida ou inativa para esta igreja.',
             ]);
         }
     }

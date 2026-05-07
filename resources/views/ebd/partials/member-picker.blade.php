@@ -1,14 +1,19 @@
 @php
     $selectedMembro = $selectedMembro ?? null;
     $fieldName = $fieldName ?? 'membro_id';
+    $showVisitanteButton = $showVisitanteButton ?? true;
+    $buscarButtonClass = $buscarButtonClass ?? 'btn btn-outline-secondary';
+    $visitanteButtonClass = $visitanteButtonClass ?? 'btn btn-sm btn-outline-primary';
 @endphp
 
 <div class="card mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
         <span>Vínculo com Membresia</span>
-        <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#visitanteRapidoModal">
-            Cadastrar como Visitante
-        </button>
+        @if ($showVisitanteButton)
+            <button type="button" class="{{ $visitanteButtonClass }}" data-toggle="modal" data-target="#visitanteRapidoModal">
+                Cadastrar como Visitante
+            </button>
+        @endif
     </div>
     <div class="card-body">
         <div class="form-group">
@@ -16,7 +21,7 @@
             <div class="input-group">
                 <input type="text" id="membroBuscaInput" class="form-control" placeholder="Digite para buscar...">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button" id="membroBuscaBtn">Buscar</button>
+                    <button class="{{ $buscarButtonClass }}" type="button" id="membroBuscaBtn">Buscar</button>
                 </div>
             </div>
         </div>
