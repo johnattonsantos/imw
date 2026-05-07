@@ -237,3 +237,9 @@ ALTER TABLE `ebd_turmas`
 ALTER TABLE `ebd_turma_alunos`
   ADD CONSTRAINT `ebd_turma_alunos_aluno_id_foreign` FOREIGN KEY (`aluno_id`) REFERENCES `ebd_alunos` (`id`),
   ADD CONSTRAINT `ebd_turma_alunos_turma_id_foreign` FOREIGN KEY (`turma_id`) REFERENCES `ebd_turmas` (`id`);
+
+
+ALTER TABLE `ebd_classes` ADD `igreja_id` BIGINT(20) UNSIGNED NOT NULL AFTER `id`;
+
+ALTER TABLE `ebd_classes`
+  ADD CONSTRAINT `ebd_classes_igreja_id_foreign` FOREIGN KEY (`igreja_id`) REFERENCES `instituicoes_instituicoes` (`id`);
