@@ -65,7 +65,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($professores as $item)
+                            @foreach ($professores as $item)
                                 <tr>
                                     <td>{{ $item->membro->nome ?? '-' }}</td>
                                     <td>{{ $item->membro->cpf ?? '-' }}</td>
@@ -75,11 +75,7 @@
                                     <td>{{ $item->ativo ? 'Sim' : 'Não' }}</td>
                                     <td>{{ $item->total_turmas_ativas }}</td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center">Nenhum professor encontrado.</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

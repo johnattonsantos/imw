@@ -72,7 +72,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($liderancas as $item)
+                            @foreach ($liderancas as $item)
                                 <tr>
                                     <td>{{ $item->membro->nome ?? '-' }}</td>
                                     <td>{{ ucfirst($item->cargo) }}</td>
@@ -84,11 +84,7 @@
                                     <td>{{ optional($item->data_inicio)->format('d/m/Y') ?? '-' }}</td>
                                     <td>{{ optional($item->data_fim)->format('d/m/Y') ?? '-' }}</td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">Nenhuma liderança encontrada.</td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
