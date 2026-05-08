@@ -3,6 +3,23 @@
 @section('extras-css')
     <link href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.datatables.net/buttons/3.2.3/css/buttons.dataTables.css" rel="stylesheet" type="text/css" />
+    <style>
+        .ebd-filtros .row {
+            row-gap: 8px;
+        }
+
+        .ebd-filtros .form-group {
+            margin-bottom: 0;
+        }
+
+        .ebd-filtros .filtro-acoes {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            height: 100%;
+            flex-wrap: wrap;
+        }
+    </style>
 @endsection
 
 @section('breadcrumb')
@@ -21,7 +38,7 @@
                 <h5 class="mb-0">Lista de EBDs Cadastradas</h5>
             </div>
             <div class="widget-content widget-content-area">
-                <form method="GET" action="{{ route('ebd.relatorios.lista-ebd') }}" class="mb-4">
+                <form method="GET" action="{{ route('ebd.relatorios.lista-ebd') }}" class="mb-4 ebd-filtros">
                     <div class="row">
                         <div class="col-md-6 mb-2">
                             <label for="q" class="mb-1">Busca</label>
@@ -36,7 +53,7 @@
                                 <option value="0" {{ ($filters['ativo'] ?? '') === '0' ? 'selected' : '' }}>Inativos</option>
                             </select>
                         </div>
-                        <div class="col-md-12 mt-2">
+                        <div class="col-md-12 mt-2 filtro-acoes">
                             <button type="submit" class="btn btn-primary">Filtrar</button>
                             <a href="{{ route('ebd.relatorios.lista-ebd') }}" class="btn btn-secondary">Limpar</a>
                         </div>

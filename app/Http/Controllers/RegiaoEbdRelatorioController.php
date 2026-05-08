@@ -9,64 +9,103 @@ use App\Models\EbdDiario;
 use App\Models\EbdLideranca;
 use App\Models\EbdProfessor;
 use App\Models\EbdTurma;
+use App\Models\InstituicoesInstituicao;
+use App\Models\InstituicoesTipoInstituicao;
 use App\Traits\Identifiable;
 use Illuminate\Http\Request;
 
-class EbdRelatorioController extends Controller
+class RegiaoEbdRelatorioController extends Controller
 {
     use Identifiable;
 
-    public function listaEbd(Request $request)
+    public function lista(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'ativo' => (string) $request->query('ativo', ''),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
 
-        $applyAtivoFilter = function ($query) use ($filters) {
-            if ($filters['ativo'] === '1') {
-                $query->where('ativo', true);
-            } elseif ($filters['ativo'] === '0') {
-                $query->where('ativo', false);
-            }
-        };
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
 
-        $classes = EbdClasse::where('igreja_id', $igrejaId)
+        $classes = EbdClasse::query()
+            ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'ebd_classes.igreja_id')
+            ->leftJoin('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'igreja.instituicao_pai_id')
+            ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->whereNull('igreja.data_encerramento')
+            ->whereIn('ebd_classes.igreja_id', $allowedIgrejasIds)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
                 $query->where(function ($inner) use ($filters) {
-                    $inner->where('nome', 'like', "%{$filters['q']}%")
-                        ->orWhere('faixa_etaria', 'like', "%{$filters['q']}%")
-                        ->orWhere('descricao', 'like', "%{$filters['q']}%");
+                    $inner->where('ebd_classes.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('ebd_classes.faixa_etaria', 'like', "%{$filters['q']}%")
+                        ->orWhere('ebd_classes.descricao', 'like', "%{$filters['q']}%")
+                        ->orWhere('igreja.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('distrito.nome', 'like', "%{$filters['q']}%");
                 });
             })
-            ->when(true, $applyAtivoFilter)
-            ->orderByDesc('ativo')
-            ->orderBy('nome')
+            ->when($filters['ativo'] === '1', fn ($query) => $query->where('ebd_classes.ativo', true))
+            ->when($filters['ativo'] === '0', fn ($query) => $query->where('ebd_classes.ativo', false))
+            ->select([
+                'ebd_classes.id',
+                'ebd_classes.nome',
+                'ebd_classes.faixa_etaria',
+                'ebd_classes.descricao',
+                'ebd_classes.ativo',
+                'igreja.nome as igreja_nome',
+                'distrito.nome as distrito_nome',
+            ])
+            ->orderBy('distrito.nome')
+            ->orderBy('igreja.nome')
+            ->orderBy('ebd_classes.nome')
             ->get();
 
-        return view('ebd.relatorios.lista-ebd', compact('classes', 'filters'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.lista', compact(
+            'classes',
+            'distritos',
+            'igrejas',
+            'filters'
+        ));
     }
 
     public function alunos(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
-        $scopeMembro = fn ($query) => $query->where('igreja_id', $igrejaId);
-
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'ativo' => (string) $request->query('ativo', ''),
-            'turma_id' => (string) $request->query('turma_id', ''),
             'status_membro' => (string) $request->query('status_membro', ''),
             'vinculo' => (string) $request->query('vinculo', ''),
+            'turma_id' => (string) $request->query('turma_id', ''),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
 
-        $turmasFiltro = EbdTurma::whereHas('professor.membro', $scopeMembro)
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
+
+        $turmasFiltro = EbdTurma::with('classe')
+            ->whereHas('professor.membro', $scopeMembro)
             ->orderByDesc('ano')
             ->orderBy('nome')
-            ->get(['id', 'nome', 'ano']);
+            ->get(['id', 'nome', 'ano', 'classe_id']);
 
-        $alunos = EbdAluno::with(['membro.contato'])
+        $alunos = EbdAluno::with(['membro.contato', 'membro.distrito', 'membro.igreja'])
             ->withCount(['turmaVinculos as total_turmas_ativas' => fn ($q) => $q->where('ativo', true)])
             ->whereHas('membro', $scopeMembro)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
@@ -87,28 +126,46 @@ class EbdRelatorioController extends Controller
             })
             ->when($filters['ativo'] === '1', fn ($query) => $query->where('ativo', true))
             ->when($filters['ativo'] === '0', fn ($query) => $query->where('ativo', false))
-            ->when($filters['turma_id'] !== '', fn ($query) => $query->whereHas('turmaVinculos', fn ($tv) => $tv->where('turma_id', $filters['turma_id'])))
             ->when($filters['status_membro'] !== '', fn ($query) => $query->whereHas('membro', fn ($m) => $m->where('status', $filters['status_membro'])))
             ->when($filters['vinculo'] !== '', fn ($query) => $query->whereHas('membro', fn ($m) => $m->where('vinculo', $filters['vinculo'])))
+            ->when($filters['turma_id'] !== '', fn ($query) => $query->whereHas('turmaVinculos', fn ($tv) => $tv->where('turma_id', $filters['turma_id'])))
             ->orderByDesc('ativo')
             ->orderByDesc('id')
             ->get();
 
-        return view('ebd.relatorios.alunos', compact('alunos', 'filters', 'turmasFiltro'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.alunos', compact(
+            'alunos',
+            'distritos',
+            'igrejas',
+            'turmasFiltro',
+            'filters'
+        ));
     }
 
     public function professores(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
-        $scopeMembro = fn ($query) => $query->where('igreja_id', $igrejaId);
-
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'ativo' => (string) $request->query('ativo', ''),
             'status_membro' => (string) $request->query('status_membro', ''),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
 
-        $professores = EbdProfessor::with(['membro.contato'])
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
+
+        $professores = EbdProfessor::with(['membro.contato', 'membro.distrito', 'membro.igreja'])
             ->withCount(['turmas as total_turmas_ativas' => fn ($q) => $q->where('ativo', true)])
             ->whereHas('membro', $scopeMembro)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
@@ -134,22 +191,39 @@ class EbdRelatorioController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        return view('ebd.relatorios.professores', compact('professores', 'filters'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.professores', compact(
+            'professores',
+            'distritos',
+            'igrejas',
+            'filters'
+        ));
     }
 
     public function liderancas(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
-        $scopeMembro = fn ($query) => $query->where('igreja_id', $igrejaId);
-
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'ativo' => (string) $request->query('ativo', ''),
             'cargo' => trim((string) $request->query('cargo', '')),
             'status_membro' => (string) $request->query('status_membro', ''),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
 
-        $liderancas = EbdLideranca::with(['membro.contato'])
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
+
+        $liderancas = EbdLideranca::with(['membro.contato', 'membro.distrito', 'membro.igreja'])
             ->whereHas('membro', $scopeMembro)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
                 $query->where(function ($inner) use ($filters) {
@@ -176,53 +250,98 @@ class EbdRelatorioController extends Controller
             ->orderBy('cargo')
             ->get();
 
-        return view('ebd.relatorios.liderancas', compact('liderancas', 'filters'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.liderancas', compact(
+            'liderancas',
+            'distritos',
+            'igrejas',
+            'filters'
+        ));
     }
 
     public function classes(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'ativo' => (string) $request->query('ativo', ''),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
 
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
         $classes = EbdClasse::query()
+            ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'ebd_classes.igreja_id')
+            ->leftJoin('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'igreja.instituicao_pai_id')
             ->withCount(['turmas as total_turmas_ativas' => fn ($q) => $q->where('ativo', true)])
-            ->where('igreja_id', $igrejaId)
+            ->whereIn('igreja_id', $allowedIgrejasIds)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
                 $query->where(function ($inner) use ($filters) {
-                    $inner->where('nome', 'like', "%{$filters['q']}%")
-                        ->orWhere('faixa_etaria', 'like', "%{$filters['q']}%")
-                        ->orWhere('descricao', 'like', "%{$filters['q']}%");
+                    $inner->where('ebd_classes.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('ebd_classes.faixa_etaria', 'like', "%{$filters['q']}%")
+                        ->orWhere('ebd_classes.descricao', 'like', "%{$filters['q']}%")
+                        ->orWhere('igreja.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('distrito.nome', 'like', "%{$filters['q']}%");
                 });
             })
-            ->when($filters['ativo'] === '1', fn ($query) => $query->where('ativo', true))
-            ->when($filters['ativo'] === '0', fn ($query) => $query->where('ativo', false))
+            ->when($filters['ativo'] === '1', fn ($query) => $query->where('ebd_classes.ativo', true))
+            ->when($filters['ativo'] === '0', fn ($query) => $query->where('ebd_classes.ativo', false))
+            ->select([
+                'ebd_classes.*',
+                'igreja.nome as igreja_nome',
+                'distrito.nome as distrito_nome',
+            ])
             ->orderByDesc('ativo')
-            ->orderBy('nome')
+            ->orderBy('ebd_classes.nome')
             ->get();
 
-        return view('ebd.relatorios.classes', compact('classes', 'filters'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.classes', compact(
+            'classes',
+            'distritos',
+            'igrejas',
+            'filters'
+        ));
     }
 
     public function turmas(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
-        $scopeMembro = fn ($query) => $query->where('igreja_id', $igrejaId);
-
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'ativo' => (string) $request->query('ativo', ''),
             'ano' => trim((string) $request->query('ano', '')),
             'semestre' => trim((string) $request->query('semestre', '')),
             'classe_id' => (string) $request->query('classe_id', ''),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
 
-        $classesFiltro = EbdClasse::where('igreja_id', $igrejaId)->orderBy('nome')->get(['id', 'nome']);
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
+
+        $classesFiltro = EbdClasse::whereIn('igreja_id', $allowedIgrejasIds)
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
 
         $turmas = EbdTurma::query()
-            ->with(['classe', 'professor.membro'])
+            ->with(['classe', 'professor.membro.distrito', 'professor.membro.igreja'])
             ->withCount(['alunosVinculos as total_alunos_ativos' => fn ($q) => $q->where('ativo', true)])
             ->whereHas('professor.membro', $scopeMembro)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
@@ -244,21 +363,39 @@ class EbdRelatorioController extends Controller
             ->orderBy('nome')
             ->get();
 
-        return view('ebd.relatorios.turmas', compact('turmas', 'classesFiltro', 'filters'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.turmas', compact(
+            'turmas',
+            'classesFiltro',
+            'distritos',
+            'igrejas',
+            'filters'
+        ));
     }
 
     public function diarios(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
-        $scopeMembro = fn ($query) => $query->where('igreja_id', $igrejaId);
-
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'turma_id' => (string) $request->query('turma_id', ''),
             'periodo_aula' => trim((string) $request->query('periodo_aula', '')),
             'data_inicio' => trim((string) $request->query('data_inicio', '')),
             'data_fim' => trim((string) $request->query('data_fim', '')),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
+
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
         $turmasFiltro = EbdTurma::whereHas('professor.membro', $scopeMembro)
             ->orderByDesc('ano')
@@ -266,7 +403,7 @@ class EbdRelatorioController extends Controller
             ->get(['id', 'nome', 'ano']);
 
         $diarios = EbdDiario::query()
-            ->with(['turma.classe', 'turma.professor.membro'])
+            ->with(['turma.classe', 'turma.professor.membro.distrito', 'turma.professor.membro.igreja'])
             ->withCount('presencas')
             ->withCount(['presencas as total_presentes' => fn ($q) => $q->where('presente', true)])
             ->whereHas('turma.professor.membro', $scopeMembro)
@@ -288,20 +425,38 @@ class EbdRelatorioController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        return view('ebd.relatorios.diarios', compact('diarios', 'turmasFiltro', 'filters'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.diarios', compact(
+            'diarios',
+            'turmasFiltro',
+            'distritos',
+            'igrejas',
+            'filters'
+        ));
     }
 
     public function agendas(Request $request)
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
-        $scopeMembro = fn ($query) => $query->where('igreja_id', $igrejaId);
-
         $filters = [
             'q' => trim((string) $request->query('q', '')),
             'turma_id' => (string) $request->query('turma_id', ''),
             'data_inicio' => trim((string) $request->query('data_inicio', '')),
             'data_fim' => trim((string) $request->query('data_fim', '')),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
+
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
         $turmasFiltro = EbdTurma::whereHas('professor.membro', $scopeMembro)
             ->orderByDesc('ano')
@@ -309,11 +464,8 @@ class EbdRelatorioController extends Controller
             ->get(['id', 'nome', 'ano']);
 
         $agendas = EbdAgenda::query()
-            ->with(['turma.classe', 'turma.professor.membro'])
-            ->where(function ($query) use ($scopeMembro) {
-                $query->whereNull('turma_id')
-                    ->orWhereHas('turma.professor.membro', $scopeMembro);
-            })
+            ->with(['turma.classe', 'turma.professor.membro.distrito', 'turma.professor.membro.igreja'])
+            ->whereHas('turma.professor.membro', $scopeMembro)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
                 $query->where(function ($inner) use ($filters) {
                     $inner->where('titulo', 'like', "%{$filters['q']}%")
@@ -331,6 +483,55 @@ class EbdRelatorioController extends Controller
             ->orderByDesc('id')
             ->get();
 
-        return view('ebd.relatorios.agendas', compact('agendas', 'turmasFiltro', 'filters'));
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.agendas', compact(
+            'agendas',
+            'turmasFiltro',
+            'distritos',
+            'igrejas',
+            'filters'
+        ));
+    }
+
+    private function resolveRegionalFilters(array $filters): array
+    {
+        $regiaoId = Identifiable::fetchtSessionRegiao()->id;
+        $distritos = Identifiable::fetchDistritosByRegiao($regiaoId);
+        $distritosIds = $distritos->pluck('id')->map(fn ($id) => (int) $id)->all();
+
+        $selectedDistritoId = in_array((int) ($filters['distrito_id'] ?? 0), $distritosIds, true)
+            ? (int) $filters['distrito_id']
+            : null;
+
+        $igrejasQuery = InstituicoesInstituicao::query()
+            ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->whereIn('instituicao_pai_id', $distritosIds)
+            ->whereNull('data_encerramento')
+            ->orderBy('nome');
+
+        if ($selectedDistritoId !== null) {
+            $igrejasQuery->where('instituicao_pai_id', $selectedDistritoId);
+        }
+
+        $igrejas = $igrejasQuery->get(['id', 'nome', 'instituicao_pai_id']);
+        $igrejasIds = $igrejas->pluck('id')->map(fn ($id) => (int) $id)->all();
+
+        $selectedIgrejaId = in_array((int) ($filters['igreja_id'] ?? 0), $igrejasIds, true)
+            ? (int) $filters['igreja_id']
+            : null;
+
+        $allowedIgrejasIds = $selectedIgrejaId !== null ? [$selectedIgrejaId] : $igrejasIds;
+
+        return compact(
+            'distritos',
+            'distritosIds',
+            'selectedDistritoId',
+            'igrejas',
+            'igrejasIds',
+            'selectedIgrejaId',
+            'allowedIgrejasIds'
+        );
     }
 }

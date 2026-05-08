@@ -648,6 +648,52 @@
                             @endif
                         </li>
 
+                        <li class="submenu-fixo mt-3 mb-3">
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <span>EBD</span>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd') }}">Lista de EBD</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/alunos') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.alunos') }}">Alunos</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/professores') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.professores') }}">Professores</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/liderancas') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.liderancas') }}">Liderança</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/classes') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.classes') }}">Classes</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.turmas') }}">Turmas</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/diarios') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.diarios') }}">Diário</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/agendas') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.agendas') }}">Agenda</a>
+                            @endif
+                        </li>
+
                          <li class="submenu-fixo mt-3 mb-3">
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
                                  <span>Membresia</span>
@@ -1243,6 +1289,18 @@
                              </li>
                              <li {!! Request::is('ebd/relatorios/liderancas*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.relatorios.liderancas') }}">Liderança</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/classes*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.classes') }}">Classes</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/turmas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.turmas') }}">Turmas</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/diarios*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.diarios') }}">Diário</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/agendas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.agendas') }}">Agenda</a>
                              </li>
                          @endif
                      </ul>

@@ -47,6 +47,7 @@ use App\Http\Controllers\PrebendaController;
 use App\Http\Controllers\PrebendasClerigosController;
 use App\Http\Controllers\RegiaoEstatisticasController;
 use App\Http\Controllers\RegiaoRelatorioController;
+use App\Http\Controllers\RegiaoEbdRelatorioController;
 use App\Http\Controllers\RelatorioClerigoPrebendasController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\TotalizacaoController;
@@ -311,6 +312,14 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('regiao/relatorio')->name('regiao.')->group(function () {
+            Route::get('/ebd', [RegiaoEbdRelatorioController::class, 'lista'])->name('relatorio.ebd')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/alunos', [RegiaoEbdRelatorioController::class, 'alunos'])->name('relatorio.ebd.alunos')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/professores', [RegiaoEbdRelatorioController::class, 'professores'])->name('relatorio.ebd.professores')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/liderancas', [RegiaoEbdRelatorioController::class, 'liderancas'])->name('relatorio.ebd.liderancas')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/classes', [RegiaoEbdRelatorioController::class, 'classes'])->name('relatorio.ebd.classes')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/turmas', [RegiaoEbdRelatorioController::class, 'turmas'])->name('relatorio.ebd.turmas')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/diarios', [RegiaoEbdRelatorioController::class, 'diarios'])->name('relatorio.ebd.diarios')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/agendas', [RegiaoEbdRelatorioController::class, 'agendas'])->name('relatorio.ebd.agendas')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/lancamentodasigrejas', [RegiaoRelatorioController::class, 'lancamentodasigrejas'])->name('relatorio.lancamentodasigrejas')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/lancamentodasigrejas/pdf', [RegiaoRelatorioController::class, 'lancamentodasigrejasPdf'])->name('relatorio.lancamentodasigrejas-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
 
@@ -523,6 +532,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('relatorios/alunos', [EbdRelatorioController::class, 'alunos'])->name('relatorios.alunos')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/professores', [EbdRelatorioController::class, 'professores'])->name('relatorios.professores')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/liderancas', [EbdRelatorioController::class, 'liderancas'])->name('relatorios.liderancas')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/classes', [EbdRelatorioController::class, 'classes'])->name('relatorios.classes')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/turmas', [EbdRelatorioController::class, 'turmas'])->name('relatorios.turmas')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/diarios', [EbdRelatorioController::class, 'diarios'])->name('relatorios.diarios')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/agendas', [EbdRelatorioController::class, 'agendas'])->name('relatorios.agendas')->middleware(['seguranca:ebd-dashboard']);
 
             Route::get('buscar-membro', [EbdMembroBuscaController::class, 'buscar'])->name('buscar-membro')->middleware(['seguranca:ebd-buscar-membro']);
             Route::post('cadastrar-visitante', [EbdMembroBuscaController::class, 'cadastrarVisitante'])->name('cadastrar-visitante')->middleware(['seguranca:ebd-cadastrar-visitante']);
