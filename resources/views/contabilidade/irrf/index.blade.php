@@ -95,11 +95,12 @@
                 @forelse($prebendas as $item)
                     @php
                         $possuiRegistros = true;
+                        $prebendaInformada = !is_null($item['prebanda']->valor_prebendas);
                         $valorPrebenda = (float) ($item['prebanda']->valor_prebendas ?? 0);
                         $dependentes = (int) ($item['prebanda']->n_dependentes ?? 0);
                         $valorBase = (float) ($item['imposto']->valorBase ?? 0);
                         $valorRedutor = (float) ($item['imposto']->valorRedutor ?? 0);
-                        $irrfIsento = $valorPrebenda <= 5000;
+                        $irrfIsento = $prebendaInformada && $valorPrebenda <= 5000;
                         $valorIrrf = $irrfIsento ? 0.0 : (float) ($item['imposto']->valorImposto ?? 0);
                         $valorRetido = $irrfIsento ? 0.0 : (float) ($item['prebanda']->retido ?? 0);
                         $valorRepassado = $irrfIsento ? 0.0 : (float) ($item['prebanda']->repasse ?? 0);
@@ -116,8 +117,8 @@
                         <td>{{ $item['prebanda']->nome }}</td>
                         <td>{{ formatStr($item['prebanda']->cpf, '###.###.###-##') }}</td>
                         <td>
-                            @if($item['prebanda']->valor_prebendas)
-                                R$ {{ number_format($item['prebanda']->valor_prebendas, 2, ',', '.') }}
+                            @if($prebendaInformada)
+                                R$ {{ number_format($valorPrebenda, 2, ',', '.') }}
                             @else
                                 Não informado
                             @endif
@@ -126,7 +127,9 @@
                         <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
                         <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
                         <td>
-                            @if($irrfIsento)
+                            @if(!$prebendaInformada)
+                                Não informado
+                            @elseif($irrfIsento)
                                 ISENTO
                             @else
                                 R$ {{ number_format($valorIrrf, 2, ',', '.') }}
