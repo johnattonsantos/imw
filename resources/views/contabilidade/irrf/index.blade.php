@@ -99,11 +99,10 @@
                         $dependentes = (int) ($item['prebanda']->n_dependentes ?? 0);
                         $valorBase = (float) ($item['imposto']->valorBase ?? 0);
                         $valorRedutor = (float) ($item['imposto']->valorRedutor ?? 0);
-                        $valorIrrf = ((float) ($item['prebanda']->valor_prebendas ?? 0) > 5000 || (float) ($item['prebanda']->valor_prebendas ?? 0) == 0)
-                            ? (float) ($item['imposto']->valorImposto ?? 0)
-                            : 0.0;
-                        $valorRetido = (float) ($item['prebanda']->retido ?? 0);
-                        $valorRepassado = (float) ($item['prebanda']->repasse ?? 0);
+                        $irrfIsento = (bool) ($item['prebanda']->irrf_isento ?? false);
+                        $valorIrrf = (float) ($item['prebanda']->irrf_calculado_exibicao ?? 0);
+                        $valorRetido = (float) ($item['prebanda']->retido_exibicao ?? 0);
+                        $valorRepassado = (float) ($item['prebanda']->repasse_exibicao ?? 0);
 
                         $totalPrebendas += $valorPrebenda;
                         $totalDependentes += $dependentes;
@@ -127,28 +126,14 @@
                         <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
                         <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
                         <td>
-                            @if($item['prebanda']->valor_prebendas > 5000)
-                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
-                            @elseif($item['prebanda']->valor_prebendas == 0)
-                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
-                            @else
+                            @if($irrfIsento)
                                 ISENTO
+                            @else
+                                R$ {{ number_format($valorIrrf, 2, ',', '.') }}
                             @endif
                         </td>
-                        <td>
-                            @if($item['prebanda']->valor_prebendas <= 5000)
-                                R$ {{ number_format($item['prebanda']->retido, 2, ',', '.') }}
-                            @else
-                                R$ 0,00
-                            @endif                            
-                        </td>
-                        <td>
-                            @if($item['prebanda']->valor_prebendas <= 5000)
-                                R$ {{ number_format($item['prebanda']->repasse, 2, ',', '.') }}
-                            @else
-                                R$ 0,00
-                            @endif
-                        </td>
+                        <td>R$ {{ number_format($valorRetido, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($valorRepassado, 2, ',', '.') }}</td>
                     </tr>
                 @empty
                 <tr>

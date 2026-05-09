@@ -39,6 +39,18 @@ class IrrfServices
                         'progressao' => []
                     ];
                 }
+
+                $valorPrebenda = (float) ($item->valor_prebendas ?? 0);
+                $irrfIsento = $valorPrebenda > 5000;
+                $valorIrrfExibicao = $irrfIsento ? 0.0 : (float) ($impostoCalculado->valorImposto ?? 0);
+                $valorRetidoExibicao = $irrfIsento ? 0.0 : (float) ($item->retido ?? 0);
+                $valorRepassadoExibicao = $irrfIsento ? 0.0 : (float) ($item->repasse ?? 0);
+
+                $item->irrf_isento = $irrfIsento;
+                $item->irrf_calculado_exibicao = $valorIrrfExibicao;
+                $item->retido_exibicao = $valorRetidoExibicao;
+                $item->repasse_exibicao = $valorRepassadoExibicao;
+
                 $prebendas[] = ['prebanda' => $item, 'imposto' => $impostoCalculado];
             }
             $data['prebendas'] = (object) $prebendas;
