@@ -14,7 +14,7 @@ trait ContabilidadeDados
         if(!Auth::user()->pessoa){
             return PessoasPrebenda::select('ano')->orderBy('ano', 'desc')->groupBy('ano')->get();
         }else{
-            return PessoasPrebenda::where('pessoa_id', Identifiable::fetchSessionPessoa()->id)->orderBy('ano', 'desc')->get();
+            return PessoasPrebenda::/*where('pessoa_id', Identifiable::fetchSessionPessoa()->id)->*/orderBy('ano', 'desc')->get();
         }
     }
 
