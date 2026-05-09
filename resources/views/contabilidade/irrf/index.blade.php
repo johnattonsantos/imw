@@ -99,10 +99,10 @@
                         $dependentes = (int) ($item['prebanda']->n_dependentes ?? 0);
                         $valorBase = (float) ($item['imposto']->valorBase ?? 0);
                         $valorRedutor = (float) ($item['imposto']->valorRedutor ?? 0);
-                        $irrfIsento = (bool) ($item['prebanda']->irrf_isento ?? false);
-                        $valorIrrf = (float) ($item['prebanda']->irrf_calculado_exibicao ?? 0);
-                        $valorRetido = (float) ($item['prebanda']->retido_exibicao ?? 0);
-                        $valorRepassado = (float) ($item['prebanda']->repasse_exibicao ?? 0);
+                        $irrfIsento = $valorPrebenda > 5000;
+                        $valorIrrf = $irrfIsento ? 0.0 : (float) ($item['imposto']->valorImposto ?? 0);
+                        $valorRetido = $irrfIsento ? 0.0 : (float) ($item['prebanda']->retido ?? 0);
+                        $valorRepassado = $irrfIsento ? 0.0 : (float) ($item['prebanda']->repasse ?? 0);
 
                         $totalPrebendas += $valorPrebenda;
                         $totalDependentes += $dependentes;
