@@ -99,7 +99,7 @@
                         $dependentes = (int) ($item['prebanda']->n_dependentes ?? 0);
                         $valorBase = (float) ($item['imposto']->valorBase ?? 0);
                         $valorRedutor = (float) ($item['imposto']->valorRedutor ?? 0);
-                        $irrfIsento = $valorPrebenda > 5000;
+                        $irrfIsento = $valorPrebenda <= 5000;
                         $valorIrrf = $irrfIsento ? 0.0 : (float) ($item['imposto']->valorImposto ?? 0);
                         $valorRetido = $irrfIsento ? 0.0 : (float) ($item['prebanda']->retido ?? 0);
                         $valorRepassado = $irrfIsento ? 0.0 : (float) ($item['prebanda']->repasse ?? 0);
