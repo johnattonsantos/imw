@@ -110,7 +110,7 @@
                         $totalBaseCalculos += $valorBase;
                         $totalRedutor += $valorRedutor;
                         $totalIrrfCalculado += $valorIrrf;
-                        $totalRetido += $valorRetido;
+                        $totalRetido += $valorRetido;                        
                         $totalRepassado += $valorRepassado;
                     @endphp
                     <tr>
@@ -135,8 +135,20 @@
                                 ISENTO
                             @endif
                         </td>
-                        <td>R$ {{ number_format($item['prebanda']->retido, 2, ',', '.') }}</td>
-                        <td>R$ {{ number_format($item['prebanda']->repasse, 2, ',', '.') }}</td>
+                        <td>
+                            @if($item['prebanda']->valor_prebendas <= 5000)
+                                R$ {{ number_format($item['prebanda']->retido, 2, ',', '.') }}
+                            @else
+                                R$ 0,00
+                            @endif                            
+                        </td>
+                        <td>
+                            @if($item['prebanda']->valor_prebendas <= 5000)
+                                R$ {{ number_format($item['prebanda']->repasse, 2, ',', '.') }}
+                            @else
+                                R$ 0,00
+                            @endif
+                        </td>
                     </tr>
                 @empty
                 <tr>
