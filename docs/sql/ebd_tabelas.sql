@@ -242,4 +242,16 @@ ALTER TABLE `ebd_turma_alunos`
 ALTER TABLE `ebd_classes` ADD `igreja_id` BIGINT(20) UNSIGNED NOT NULL AFTER `id`;
 
 ALTER TABLE `ebd_classes`
+  ADD KEY `ebd_classes_igreja_id_foreign` (`igreja_id`);
+
+ALTER TABLE `ebd_classes`
   ADD CONSTRAINT `ebd_classes_igreja_id_foreign` FOREIGN KEY (`igreja_id`) REFERENCES `instituicoes_instituicoes` (`id`);
+
+
+ALTER TABLE `ebd_turmas` ADD `congregacao_id` BIGINT(20) UNSIGNED NULL AFTER `professor_id`;
+
+ALTER TABLE `ebd_turmas`
+  ADD KEY `ebd_turmas_congregacao_id_foreign` (`congregacao_id`);
+
+ALTER TABLE `ebd_turmas`
+  ADD CONSTRAINT `ebd_turmas_congregacao_id_foreign` FOREIGN KEY (`congregacao_id`) REFERENCES `congregacoes_congregacoes` (`id`);
