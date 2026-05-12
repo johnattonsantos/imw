@@ -4,7 +4,7 @@
     <x-breadcrumb :breadcrumbs="[
         ['text' => 'Home', 'url' => '/', 'active' => false],
         ['text' => 'Relatórios Regionais', 'url' => '#', 'active' => false],
-        ['text' => 'EBD - Agenda', 'url' => '#', 'active' => true],
+        ['text' => 'Relatório Geral EBD', 'url' => '#', 'active' => true],
     ]"></x-breadcrumb>
 @endsection
 
@@ -36,7 +36,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Relatório EBD - Agenda (Regional)</h4>
+                        <h4>Relatório Geral EBD (Regional)</h4>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,16 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-2 col-md-6">
+                            <label class="control-label">Classe:</label>
+                            <select name="classe_id" class="form-control">
+                                <option value="">Todas</option>
+                                @foreach ($classesFiltro as $classe)
+                                    <option value="{{ $classe->id }}" {{ (string) ($filters['classe_id'] ?? '') === (string) $classe->id ? 'selected' : '' }}>{{ $classe->nome }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-6">
                             <label class="control-label">EBD:</label>
                             <select name="turma_id" class="form-control">
                                 <option value="">Todas</option>
@@ -70,19 +79,36 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-2 col-md-6">
+                            <label class="control-label">Congregação:</label>
+                            <select name="tipo_unidade" class="form-control">
+                                <option value="">Todas</option>
+                                <option value="SEDE" {{ ($filters['tipo_unidade'] ?? '') === 'SEDE' ? 'selected' : '' }}>Sede</option>
+                                <option value="CONGREGACAO" {{ ($filters['tipo_unidade'] ?? '') === 'CONGREGACAO' ? 'selected' : '' }}>Congregação</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-6">
+                            <label class="control-label">Presença:</label>
+                            <select name="presenca_status" class="form-control">
+                                <option value="">Todas</option>
+                                <option value="PRESENTE" {{ ($filters['presenca_status'] ?? '') === 'PRESENTE' ? 'selected' : '' }}>Presente</option>
+                                <option value="AUSENTE" {{ ($filters['presenca_status'] ?? '') === 'AUSENTE' ? 'selected' : '' }}>Ausente</option>
+                                <option value="NAO_LANCADA" {{ ($filters['presenca_status'] ?? '') === 'NAO_LANCADA' ? 'selected' : '' }}>Não lançada</option>
+                            </select>
+                        </div>
+                        <div class="col-lg-2 col-md-6">
                             <label class="control-label">Data início:</label>
                             <input type="date" name="data_inicio" class="form-control" value="{{ $filters['data_inicio'] ?? '' }}">
                         </div>
-                        <div class="col-lg-3 col-md-6">
+                        <div class="col-lg-2 col-md-6">
                             <label class="control-label">Data fim:</label>
                             <input type="date" name="data_fim" class="form-control" value="{{ $filters['data_fim'] ?? '' }}">
                         </div>
-                        <div class="col-lg-7 col-md-12">
+                        <div class="col-lg-8 col-md-12">
                             <label class="control-label">Busca:</label>
-                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Título, local, EBD, professor..." />
+                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Classe, EBD, professor, aluno, tema..." />
                         </div>
-                        <div class="col-lg-2 col-md-12 filtro-acoes">
+                        <div class="col-lg-4 col-md-12 filtro-acoes">
                             <button type="submit" class="btn btn-primary"><x-bx-search /> Buscar</button>
                             <a href="{{ url()->current() }}" class="btn btn-secondary">Limpar</a>
                         </div>
@@ -90,34 +116,48 @@
                 </form>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped display nowrap" id="ebd-regional-agendas-table" style="width: 100%;">
+                    <table class="table table-bordered table-striped display nowrap" id="ebd-regional-geral-table" style="width: 100%;">
                         <thead>
                             <tr>
                                 <th>Distrito</th>
                                 <th>Igreja</th>
-                                <th>Início</th>
-                                <th>Fim</th>
-                                <th>Título</th>
+                                <th>Congregação</th>
+                                <th>Nome da Congregação</th>
+                                <th>Sala</th>
+                                <th>Faixa etária</th>
                                 <th>EBD</th>
-                                <th>Classe</th>
+                                <th>Ano</th>
+                                <th>Semestre</th>
                                 <th>Professor</th>
-                                <th>Local</th>
-                                <th>Descrição</th>
+                                <th>Aluno</th>
+                                <th>CPF</th>
+                                <th>Data aula</th>
+                                <th>Período</th>
+                                <th>Tema</th>
+                                <th>Presença</th>
+                                <th>Justificativa</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($agendas as $item)
+                            @foreach ($registros as $item)
                                 <tr>
-                                    <td>{{ optional(optional(optional(optional($item->turma)->professor)->membro)->distrito)->nome ?? '-' }}</td>
-                                    <td>{{ optional(optional(optional(optional($item->turma)->professor)->membro)->igreja)->nome ?? '-' }}</td>
-                                    <td>{{ optional($item->data_inicio)->format('d/m/Y H:i') ?? '-' }}</td>
-                                    <td>{{ optional($item->data_fim)->format('d/m/Y H:i') ?? '-' }}</td>
-                                    <td>{{ $item->titulo }}</td>
-                                    <td>{{ optional($item->turma)->nome ?? '-' }}</td>
-                                    <td>{{ optional(optional($item->turma)->classe)->nome ?? '-' }}</td>
-                                    <td>{{ optional(optional(optional($item->turma)->professor)->membro)->nome ?? '-' }}</td>
-                                    <td>{{ $item->local ?? '-' }}</td>
-                                    <td>{{ $item->descricao ?? '-' }}</td>
+                                    <td>{{ $item->distrito_nome ?? '-' }}</td>
+                                    <td>{{ $item->igreja_nome ?? '-' }}</td>
+                                    <td>{{ $item->tipo_unidade ?? '-' }}</td>
+                                    <td>{{ $item->congregacao_nome ?? '-' }}</td>
+                                    <td>{{ $item->sala_nome ?? '-' }}</td>
+                                    <td>{{ $item->sala_faixa_etaria ?? '-' }}</td>
+                                    <td>{{ $item->turma_nome ?? '-' }}</td>
+                                    <td>{{ $item->turma_ano ?? '-' }}</td>
+                                    <td>{{ $item->turma_semestre ?? '-' }}</td>
+                                    <td>{{ $item->professor_nome ?? '-' }}</td>
+                                    <td>{{ $item->aluno_nome ?? '-' }}</td>
+                                    <td>{{ $item->aluno_cpf ?? '-' }}</td>
+                                    <td>{{ $item->data_aula ? \Carbon\Carbon::parse($item->data_aula)->format('d/m/Y') : '-' }}</td>
+                                    <td>{{ $item->periodo_aula ? ucfirst($item->periodo_aula) : '-' }}</td>
+                                    <td>{{ $item->tema_aula ?? '-' }}</td>
+                                    <td>{{ $item->presenca_status ?? '-' }}</td>
+                                    <td>{{ $item->presenca_justificativa ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -164,14 +204,14 @@
             .catch(() => { igrejaSelect.innerHTML = '<option value="">Todas</option>'; });
         });
 
-        new DataTable('#ebd-regional-agendas-table', {
-            order: [[2, 'desc']],
+        new DataTable('#ebd-regional-geral-table', {
+            order: [[0, 'asc'], [1, 'asc'], [7, 'desc'], [6, 'asc'], [10, 'asc']],
             pageLength: 25,
             layout: {
                 topStart: {
                     buttons: [
-                        { extend: 'excel', className: 'btn btn-primary btn-rounded', text: '<i class="fas fa-file-excel"></i> Excel', title: 'IMW - RELATÓRIO EBD AGENDA (REGIONAL)' },
-                        { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'A4', className: 'btn btn-primary btn-rounded', text: '<i class="fas fa-file-pdf"></i> PDF', title: 'IMW - RELATÓRIO EBD AGENDA (REGIONAL)' }
+                        { extend: 'excel', className: 'btn btn-primary btn-rounded', text: '<i class="fas fa-file-excel"></i> Excel', title: 'IMW - RELATORIO GERAL EBD (REGIONAL)' },
+                        { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'A4', className: 'btn btn-primary btn-rounded', text: '<i class="fas fa-file-pdf"></i> PDF', title: 'IMW - RELATORIO GERAL EBD (REGIONAL)' }
                     ]
                 },
                 topEnd: 'search',

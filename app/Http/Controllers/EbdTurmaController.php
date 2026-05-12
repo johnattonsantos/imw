@@ -118,9 +118,40 @@ class EbdTurmaController extends Controller
     {
         $this->authorizeByIgreja($turma);
 
-        $turma->delete();
+        $totalDiarios = $turma->diarios()->count();
+        $totalAgendas = DB::table('ebd_agendas')->where('turma_id', $turma->id)->count();
 
-        return redirect()->route('ebd.turmas.index')->with('success', 'Turma removida com sucesso.');
+        if ($totalDiarios > 0 || $totalAgendas > 0) {
+            $mensagens = [];
+
+            if ($totalDiarios > 0) {
+                $mensagens[] = "{$totalDiarios} diário(s)";
+            }
+
+            if ($totalAgendas > 0) {
+                $mensagens[] = "{$totalAgendas} agenda(s)";
+            }
+
+            return redirect()
+                ->route('ebd.turmas.index')
+                ->with('error', 'Esta EBD possui ' . implode(' e ', $mensagens) . '. Ela só poderá ser deletada quando estiver sem agenda e sem diário.');
+        }
+
+        DB::beginTransaction();
+        try {
+            $turma->alunosVinculos()->delete();
+            $turma->delete();
+
+            DB::commit();
+
+            return redirect()->route('ebd.turmas.index')->with('success', 'Turma removida com sucesso.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->route('ebd.turmas.index')
+                ->with('error', 'Não foi possível remover a turma. Verifique os vínculos existentes e tente novamente.');
+        }
     }
 
     private function formData(): array

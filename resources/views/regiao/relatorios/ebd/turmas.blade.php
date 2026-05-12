@@ -70,9 +70,27 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-lg-2 col-md-4">
+                            <label class="control-label">Professor:</label>
+                            <select name="professor_id" class="form-control">
+                                <option value="">Todos</option>
+                                @foreach ($professoresFiltro as $professor)
+                                    <option value="{{ $professor->id }}" {{ (string) ($filters['professor_id'] ?? '') === (string) $professor->id ? 'selected' : '' }}>
+                                        {{ $professor->membro->nome ?? '-' }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div class="col-lg-1 col-md-2">
                             <label class="control-label">Ano:</label>
-                            <input type="number" name="ano" class="form-control" value="{{ $filters['ano'] ?? '' }}">
+                            <select name="ano" class="form-control">
+                                <option value="">Todos</option>
+                                @foreach ($anosFiltro as $ano)
+                                    <option value="{{ $ano }}" {{ (string) ($filters['ano'] ?? '') === (string) $ano ? 'selected' : '' }}>
+                                        {{ $ano }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="col-lg-1 col-md-2">
                             <label class="control-label">Sem:</label>
@@ -92,7 +110,7 @@
                         </div>
                         <div class="col-lg-8 col-md-12">
                             <label class="control-label">Busca:</label>
-                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="EBD, classe, professor..." />
+                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="EBD..." />
                         </div>
                         <div class="col-lg-4 col-md-12 filtro-acoes">
                             <button type="submit" class="btn btn-primary"><x-bx-search /> Buscar</button>

@@ -6,6 +6,7 @@ use App\Http\Requests\StoreEbdAlunoRequest;
 use App\Http\Requests\UpdateEbdAlunoRequest;
 use App\Models\EbdAluno;
 use App\Traits\Identifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class EbdAlunoController extends Controller
@@ -63,7 +64,25 @@ class EbdAlunoController extends Controller
     {
         $this->authorizeByIgreja($aluno);
 
-        $aluno->delete();
+        DB::beginTransaction();
+        try {
+            DB::table('ebd_diario_presencas')
+                ->where('aluno_id', $aluno->id)
+                ->delete();
+
+            DB::table('ebd_turma_alunos')
+                ->where('aluno_id', $aluno->id)
+                ->delete();
+
+            $aluno->delete();
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->route('ebd.alunos.index')
+                ->with('error', 'Não foi possível remover o aluno. Verifique os vínculos existentes e tente novamente.');
+        }
 
         return redirect()->route('ebd.alunos.index')->with('success', 'Aluno removido com sucesso.');
     }

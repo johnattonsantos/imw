@@ -126,7 +126,18 @@ class EbdDiarioController extends Controller
     {
         $this->authorizeByIgreja($diario);
 
-        $diario->delete();
+        DB::beginTransaction();
+        try {
+            EbdDiarioPresenca::where('diario_id', $diario->id)->delete();
+            $diario->delete();
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->route('ebd.diarios.index')
+                ->with('error', 'Não foi possível remover o diário. Verifique os vínculos existentes e tente novamente.');
+        }
 
         return redirect()->route('ebd.diarios.index')->with('success', 'Diário removido com sucesso.');
     }

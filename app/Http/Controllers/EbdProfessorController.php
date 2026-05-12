@@ -63,6 +63,12 @@ class EbdProfessorController extends Controller
     {
         $this->authorizeByIgreja($professore);
 
+        if ($professore->turmas()->exists()) {
+            return redirect()
+                ->route('ebd.professores.index')
+                ->with('error', 'Não é possível remover o professor, pois existem turmas vinculadas.');
+        }
+
         $professore->delete();
 
         return redirect()->route('ebd.professores.index')->with('success', 'Professor removido com sucesso.');

@@ -60,6 +60,12 @@ class EbdClasseController extends Controller
     {
         $this->authorizeByIgreja($class);
 
+        if ($class->turmas()->exists()) {
+            return redirect()
+                ->route('ebd.classes.index')
+                ->with('error', 'Não é possível remover a classe, pois existem turmas vinculadas.');
+        }
+
         $class->delete();
 
         return redirect()->route('ebd.classes.index')->with('success', 'Classe removida com sucesso.');

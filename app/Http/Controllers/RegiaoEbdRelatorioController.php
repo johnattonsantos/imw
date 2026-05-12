@@ -13,6 +13,7 @@ use App\Models\InstituicoesInstituicao;
 use App\Models\InstituicoesTipoInstituicao;
 use App\Traits\Identifiable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RegiaoEbdRelatorioController extends Controller
 {
@@ -322,6 +323,7 @@ class RegiaoEbdRelatorioController extends Controller
             'ano' => trim((string) $request->query('ano', '')),
             'semestre' => trim((string) $request->query('semestre', '')),
             'classe_id' => (string) $request->query('classe_id', ''),
+            'professor_id' => (string) $request->query('professor_id', ''),
             'distrito_id' => (int) $request->query('distrito_id', 0),
             'igreja_id' => (int) $request->query('igreja_id', 0),
         ];
@@ -339,21 +341,28 @@ class RegiaoEbdRelatorioController extends Controller
         $classesFiltro = EbdClasse::whereIn('igreja_id', $allowedIgrejasIds)
             ->orderBy('nome')
             ->get(['id', 'nome']);
+        $professoresFiltro = EbdProfessor::query()
+            ->with('membro')
+            ->where('ativo', true)
+            ->whereHas('membro', $scopeMembro)
+            ->orderByDesc('id')
+            ->get();
+        $anosFiltro = EbdTurma::query()
+            ->whereHas('professor.membro', $scopeMembro)
+            ->select('ano')
+            ->distinct()
+            ->orderByDesc('ano')
+            ->pluck('ano');
 
         $turmas = EbdTurma::query()
             ->with(['classe', 'professor.membro.distrito', 'professor.membro.igreja'])
             ->withCount(['alunosVinculos as total_alunos_ativos' => fn ($q) => $q->where('ativo', true)])
             ->whereHas('professor.membro', $scopeMembro)
             ->when($filters['q'] !== '', function ($query) use ($filters) {
-                $query->where(function ($inner) use ($filters) {
-                    $inner->where('nome', 'like', "%{$filters['q']}%")
-                        ->orWhere('ano', 'like', "%{$filters['q']}%")
-                        ->orWhere('semestre', 'like', "%{$filters['q']}%")
-                        ->orWhereHas('classe', fn ($c) => $c->where('nome', 'like', "%{$filters['q']}%"))
-                        ->orWhereHas('professor.membro', fn ($m) => $m->where('nome', 'like', "%{$filters['q']}%"));
-                });
+                $query->where('nome', 'like', "%{$filters['q']}%");
             })
             ->when($filters['classe_id'] !== '', fn ($query) => $query->where('classe_id', $filters['classe_id']))
+            ->when($filters['professor_id'] !== '', fn ($query) => $query->where('professor_id', $filters['professor_id']))
             ->when($filters['ano'] !== '', fn ($query) => $query->where('ano', $filters['ano']))
             ->when($filters['semestre'] !== '', fn ($query) => $query->where('semestre', $filters['semestre']))
             ->when($filters['ativo'] === '1', fn ($query) => $query->where('ativo', true))
@@ -369,6 +378,8 @@ class RegiaoEbdRelatorioController extends Controller
         return view('regiao.relatorios.ebd.turmas', compact(
             'turmas',
             'classesFiltro',
+            'professoresFiltro',
+            'anosFiltro',
             'distritos',
             'igrejas',
             'filters'
@@ -465,7 +476,10 @@ class RegiaoEbdRelatorioController extends Controller
 
         $agendas = EbdAgenda::query()
             ->with(['turma.classe', 'turma.professor.membro.distrito', 'turma.professor.membro.igreja'])
-            ->whereHas('turma.professor.membro', $scopeMembro)
+            ->where(function ($query) use ($scopeMembro) {
+                $query->whereNull('turma_id')
+                    ->orWhereHas('turma.professor.membro', $scopeMembro);
+            })
             ->when($filters['q'] !== '', function ($query) use ($filters) {
                 $query->where(function ($inner) use ($filters) {
                     $inner->where('titulo', 'like', "%{$filters['q']}%")
@@ -492,6 +506,125 @@ class RegiaoEbdRelatorioController extends Controller
             'distritos',
             'igrejas',
             'filters'
+        ));
+    }
+
+    public function geral(Request $request)
+    {
+        $filters = [
+            'q' => trim((string) $request->query('q', '')),
+            'turma_id' => (string) $request->query('turma_id', ''),
+            'classe_id' => (string) $request->query('classe_id', ''),
+            'tipo_unidade' => trim((string) $request->query('tipo_unidade', '')),
+            'presenca_status' => trim((string) $request->query('presenca_status', '')),
+            'data_inicio' => trim((string) $request->query('data_inicio', '')),
+            'data_fim' => trim((string) $request->query('data_fim', '')),
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
+        ];
+
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $turmasFiltro = EbdTurma::query()
+            ->whereHas('classe', fn ($q) => $q->whereIn('igreja_id', $allowedIgrejasIds))
+            ->orderByDesc('ano')
+            ->orderBy('nome')
+            ->get(['id', 'nome', 'ano']);
+
+        $classesFiltro = EbdClasse::query()
+            ->whereIn('igreja_id', $allowedIgrejasIds)
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
+
+        $registros = DB::table('ebd_turma_alunos as ta')
+            ->join('ebd_turmas as t', 't.id', '=', 'ta.turma_id')
+            ->join('ebd_classes as cl', 'cl.id', '=', 't.classe_id')
+            ->join('instituicoes_instituicoes as i', 'i.id', '=', 'cl.igreja_id')
+            ->leftJoin('instituicoes_instituicoes as d', 'd.id', '=', 'i.instituicao_pai_id')
+            ->leftJoin('congregacoes_congregacoes as c', 'c.id', '=', 't.congregacao_id')
+            ->join('ebd_professores as p', 'p.id', '=', 't.professor_id')
+            ->join('membresia_membros as mp', 'mp.id', '=', 'p.membro_id')
+            ->join('ebd_alunos as a', 'a.id', '=', 'ta.aluno_id')
+            ->join('membresia_membros as ma', 'ma.id', '=', 'a.membro_id')
+            ->leftJoin('ebd_diarios as di', 'di.turma_id', '=', 't.id')
+            ->leftJoin('ebd_diario_presencas as dp', function ($join) {
+                $join->on('dp.diario_id', '=', 'di.id')
+                    ->on('dp.aluno_id', '=', 'a.id');
+            })
+            ->whereIn('cl.igreja_id', $allowedIgrejasIds)
+            ->whereNull('i.deleted_at')
+            ->where(function ($q) {
+                $q->whereNull('d.id')
+                    ->orWhereNull('d.deleted_at');
+            })
+            ->where(function ($q) {
+                $q->whereNull('c.id')
+                    ->orWhereNull('c.deleted_at');
+            })
+            ->whereNull('ma.deleted_at')
+            ->whereNull('mp.deleted_at')
+            ->when($filters['q'] !== '', function ($query) use ($filters) {
+                $query->where(function ($inner) use ($filters) {
+                    $inner->where('cl.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('t.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('mp.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('ma.nome', 'like', "%{$filters['q']}%")
+                        ->orWhere('di.tema_aula', 'like', "%{$filters['q']}%");
+                });
+            })
+            ->when($filters['turma_id'] !== '', fn ($query) => $query->where('t.id', $filters['turma_id']))
+            ->when($filters['classe_id'] !== '', fn ($query) => $query->where('cl.id', $filters['classe_id']))
+            ->when($filters['tipo_unidade'] === 'SEDE', fn ($query) => $query->whereNull('t.congregacao_id'))
+            ->when($filters['tipo_unidade'] === 'CONGREGACAO', fn ($query) => $query->whereNotNull('t.congregacao_id'))
+            ->when($filters['presenca_status'] === 'PRESENTE', fn ($query) => $query->where('dp.presente', 1))
+            ->when($filters['presenca_status'] === 'AUSENTE', fn ($query) => $query->where('dp.presente', 0))
+            ->when($filters['presenca_status'] === 'NAO_LANCADA', fn ($query) => $query->whereNull('dp.id'))
+            ->when($filters['data_inicio'] !== '', fn ($query) => $query->whereDate('di.data_aula', '>=', $filters['data_inicio']))
+            ->when($filters['data_fim'] !== '', fn ($query) => $query->whereDate('di.data_aula', '<=', $filters['data_fim']))
+            ->select([
+                'd.nome as distrito_nome',
+                'i.nome as igreja_nome',
+                'c.nome as congregacao_nome',
+                'cl.nome as sala_nome',
+                'cl.faixa_etaria as sala_faixa_etaria',
+                't.nome as turma_nome',
+                't.ano as turma_ano',
+                't.semestre as turma_semestre',
+                'mp.nome as professor_nome',
+                'ma.nome as aluno_nome',
+                'ma.cpf as aluno_cpf',
+                'di.data_aula',
+                'di.periodo_aula',
+                'di.tema_aula',
+                'dp.justificativa as presenca_justificativa',
+                DB::raw("CASE WHEN t.congregacao_id IS NULL THEN 'SEDE' ELSE 'CONGREGACAO' END as tipo_unidade"),
+                DB::raw("CASE WHEN dp.id IS NULL THEN 'NAO LANCADA' WHEN dp.presente = 1 THEN 'PRESENTE' ELSE 'AUSENTE' END as presenca_status"),
+            ])
+            ->orderBy('d.nome')
+            ->orderBy('i.nome')
+            ->orderBy('cl.nome')
+            ->orderByDesc('t.ano')
+            ->orderBy('t.nome')
+            ->orderBy('ma.nome')
+            ->orderByDesc('di.data_aula')
+            ->get();
+
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.geral', compact(
+            'registros',
+            'distritos',
+            'igrejas',
+            'filters',
+            'turmasFiltro',
+            'classesFiltro'
         ));
     }
 

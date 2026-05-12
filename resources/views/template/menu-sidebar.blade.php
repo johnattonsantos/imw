@@ -658,11 +658,6 @@
                                 <a href="{{ route('regiao.relatorio.ebd.turmas') }}">EBDs</a>
                             @endif
                         </li>
-                        <li {!! Request::is('regiao/relatorio/ebd') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
-                                <a href="{{ route('regiao.relatorio.ebd') }}">Lista de EBD</a>
-                            @endif
-                        </li>
                         <li {!! Request::is('regiao/relatorio/ebd/alunos') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
                                 <a href="{{ route('regiao.relatorio.ebd.alunos') }}">Alunos</a>
@@ -691,6 +686,11 @@
                         <li {!! Request::is('regiao/relatorio/ebd/agendas') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
                                 <a href="{{ route('regiao.relatorio.ebd.agendas') }}">Agenda</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/geral') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.geral') }}">Relatório Geral EBD</a>
                             @endif
                         </li>
 

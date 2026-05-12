@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateEbdAgendaRequest;
 use App\Models\EbdAgenda;
 use App\Models\EbdTurma;
 use App\Traits\Identifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class EbdAgendaController extends Controller
@@ -72,7 +73,17 @@ class EbdAgendaController extends Controller
     {
         $this->authorizeByIgreja($agenda);
 
-        $agenda->delete();
+        DB::beginTransaction();
+        try {
+            $agenda->delete();
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->route('ebd.agendas.index')
+                ->with('error', 'Não foi possível remover o evento. Verifique os vínculos existentes e tente novamente.');
+        }
 
         return redirect()->route('ebd.agendas.index')->with('success', 'Evento removido com sucesso.');
     }
