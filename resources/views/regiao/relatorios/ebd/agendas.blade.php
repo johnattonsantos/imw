@@ -62,7 +62,7 @@
                             </select>
                         </div>
                         <div class="col-lg-3 col-md-6">
-                            <label class="control-label">Turma:</label>
+                            <label class="control-label">EBD:</label>
                             <select name="turma_id" class="form-control">
                                 <option value="">Todas</option>
                                 @foreach ($turmasFiltro as $turma)
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-lg-7 col-md-12">
                             <label class="control-label">Busca:</label>
-                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Título, local, turma, professor..." />
+                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Título, local, EBD, professor..." />
                         </div>
                         <div class="col-lg-2 col-md-12 filtro-acoes">
                             <button type="submit" class="btn btn-primary"><x-bx-search /> Buscar</button>
@@ -98,7 +98,7 @@
                                 <th>Início</th>
                                 <th>Fim</th>
                                 <th>Título</th>
-                                <th>Turma</th>
+                                <th>EBD</th>
                                 <th>Classe</th>
                                 <th>Professor</th>
                                 <th>Local</th>

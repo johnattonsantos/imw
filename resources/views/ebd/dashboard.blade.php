@@ -25,7 +25,7 @@
                             ['titulo' => 'Professores', 'total' => $totalProfessores, 'rota' => route('ebd.professores.index')],
                             ['titulo' => 'Alunos', 'total' => $totalAlunos, 'rota' => route('ebd.alunos.index')],
                             ['titulo' => 'Classes', 'total' => $totalClasses, 'rota' => route('ebd.classes.index')],
-                            ['titulo' => 'Turmas', 'total' => $totalTurmas, 'rota' => route('ebd.turmas.index')],
+                            ['titulo' => 'EBDs', 'total' => $totalTurmas, 'rota' => route('ebd.turmas.index')],
                             ['titulo' => 'Diários', 'total' => $totalDiarios, 'rota' => route('ebd.diarios.index')],
                             ['titulo' => 'Agenda', 'total' => $totalAgendas, 'rota' => route('ebd.agendas.index')],
                         ];

@@ -41,7 +41,7 @@
                 <form method="GET" action="{{ route('ebd.relatorios.agendas') }}" class="mb-4 ebd-filtros">
                     <div class="row">
                         <div class="col-md-3 mb-2">
-                            <label for="turma_id" class="mb-1">Turma</label>
+                            <label for="turma_id" class="mb-1">EBD</label>
                             <select id="turma_id" name="turma_id" class="form-control">
                                 <option value="">Todas</option>
                                 @foreach ($turmasFiltro as $turma)
@@ -62,7 +62,7 @@
                         <div class="col-md-5 mb-2">
                             <label for="q" class="mb-1">Busca</label>
                             <input type="text" id="q" name="q" class="form-control" value="{{ $filters['q'] ?? '' }}"
-                                placeholder="Título, local, turma, professor...">
+                                placeholder="Título, local, EBD, professor...">
                         </div>
                         <div class="col-md-12 mt-2 filtro-acoes">
                             <button type="submit" class="btn btn-primary">Filtrar</button>
@@ -78,7 +78,7 @@
                                 <th>Início</th>
                                 <th>Fim</th>
                                 <th>Título</th>
-                                <th>Turma</th>
+                                <th>EBD</th>
                                 <th>Classe</th>
                                 <th>Professor</th>
                                 <th>Local</th>

@@ -16,7 +16,7 @@ class EbdAlunoController extends Controller
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
 
-        $alunos = EbdAluno::with('membro')
+        $alunos = EbdAluno::with(['membro.contato'])
             ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
             ->orderByDesc('ativo')
             ->orderBy('id', 'desc')

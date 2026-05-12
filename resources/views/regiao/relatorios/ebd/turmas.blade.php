@@ -4,7 +4,7 @@
     <x-breadcrumb :breadcrumbs="[
         ['text' => 'Home', 'url' => '/', 'active' => false],
         ['text' => 'Relatórios Regionais', 'url' => '#', 'active' => false],
-        ['text' => 'EBD - Turmas', 'url' => '#', 'active' => true],
+        ['text' => 'EBDs', 'url' => '#', 'active' => true],
     ]"></x-breadcrumb>
 @endsection
 
@@ -36,7 +36,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Relatório EBD - Turmas (Regional)</h4>
+                        <h4>Relatório de EBDs (Regional)</h4>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                         </div>
                         <div class="col-lg-8 col-md-12">
                             <label class="control-label">Busca:</label>
-                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="Turma, classe, professor..." />
+                            <input type="text" name="q" value="{{ $filters['q'] ?? '' }}" class="form-control" placeholder="EBD, classe, professor..." />
                         </div>
                         <div class="col-lg-4 col-md-12 filtro-acoes">
                             <button type="submit" class="btn btn-primary"><x-bx-search /> Buscar</button>
@@ -107,7 +107,7 @@
                             <tr>
                                 <th>Distrito</th>
                                 <th>Igreja</th>
-                                <th>Turma</th>
+                                <th>EBD</th>
                                 <th>Classe</th>
                                 <th>Professor</th>
                                 <th>Ano</th>

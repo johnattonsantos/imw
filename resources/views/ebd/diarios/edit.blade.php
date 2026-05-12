@@ -10,7 +10,7 @@
                     @method('PUT')
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                            <label>Turma</label>
+                            <label>EBD</label>
                             <select name="turma_id" id="turma_id" class="form-control" required>
                                 @foreach ($turmas as $turma)
                                     <option value="{{ $turma->id }}" {{ (int)$turma->id === (int)$diario->turma_id ? 'selected' : '' }}>{{ $turma->nome }} - {{ $turma->ano }}</option>
@@ -89,7 +89,7 @@
     const render = (rows) => {
         tbody.innerHTML = '';
         if (!rows.length) {
-            tbody.innerHTML = '<tr><td colspan="3" class="text-center">Sem alunos ativos na turma.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" class="text-center">Sem alunos ativos na EBD.</td></tr>';
             return;
         }
 

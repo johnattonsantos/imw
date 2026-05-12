@@ -653,6 +653,11 @@
                                 <span>EBD</span>
                             @endif
                         </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                                <a href="{{ route('regiao.relatorio.ebd.turmas') }}">EBDs</a>
+                            @endif
+                        </li>
                         <li {!! Request::is('regiao/relatorio/ebd') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
                                 <a href="{{ route('regiao.relatorio.ebd') }}">Lista de EBD</a>
@@ -676,11 +681,6 @@
                         <li {!! Request::is('regiao/relatorio/ebd/classes') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
                                 <a href="{{ route('regiao.relatorio.ebd.classes') }}">Classes</a>
-                            @endif
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
-                                <a href="{{ route('regiao.relatorio.ebd.turmas') }}">Turmas</a>
                             @endif
                         </li>
                         <li {!! Request::is('regiao/relatorio/ebd/diarios') ? 'class="active"' : '' !!}>
@@ -1261,7 +1261,7 @@
                          @endif
                          @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-turmas') )
                              <li {!! Request::is('ebd/turmas*') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('ebd.turmas.index') }}">Turmas</a>
+                                 <a href="{{ route('ebd.turmas.index') }}">EBDs</a>
                              </li>
                          @endif
                          @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-diarios') )
@@ -1278,8 +1278,8 @@
                              <li class="submenu-fixo mt-3 mb-3">
                                  <span>Relatórios</span>
                              </li>
-                             <li {!! Request::is('ebd/relatorios/lista-ebd*') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('ebd.relatorios.lista-ebd') }}">Lista de EBD</a>
+                             <li {!! Request::is('ebd/relatorios/turmas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.turmas') }}">EBDs</a>
                              </li>
                              <li {!! Request::is('ebd/relatorios/alunos*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.relatorios.alunos') }}">Alunos</a>
@@ -1293,14 +1293,14 @@
                              <li {!! Request::is('ebd/relatorios/classes*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.relatorios.classes') }}">Classes</a>
                              </li>
-                             <li {!! Request::is('ebd/relatorios/turmas*') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('ebd.relatorios.turmas') }}">Turmas</a>
-                             </li>
                              <li {!! Request::is('ebd/relatorios/diarios*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.relatorios.diarios') }}">Diário</a>
                              </li>
                              <li {!! Request::is('ebd/relatorios/agendas*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('ebd.relatorios.agendas') }}">Agenda</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/geral*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.geral') }}">Relatório Geral EBD</a>
                              </li>
                          @endif
                      </ul>

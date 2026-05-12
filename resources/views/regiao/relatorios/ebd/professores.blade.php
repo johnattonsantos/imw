@@ -105,7 +105,7 @@
                                 <th>E-mail</th>
                                 <th>Status membro</th>
                                 <th>Ativo EBD</th>
-                                <th>Turmas ativas</th>
+                                <th>EBDs ativas</th>
                             </tr>
                         </thead>
                         <tbody>

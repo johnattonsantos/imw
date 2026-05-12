@@ -3,7 +3,7 @@
 @section('content')
     <div class="col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
-            <div class="widget-header p-3"><h5 class="mb-0">Nova Turma</h5></div>
+            <div class="widget-header p-3"><h5 class="mb-0">Nova EBD</h5></div>
             <div class="widget-content widget-content-area">
                 <form method="POST" action="{{ route('ebd.turmas.store') }}">
                     @csrf
@@ -30,14 +30,26 @@
 
                     <div class="form-row">
                         <div class="form-group col-md-4">
+                            <label>* Congregação</label>
+                            <select name="congregacao_id" class="form-control" required>
+                                <option value="">Selecione</option>
+                                <option value="sede" {{ old('congregacao_id') === 'sede' ? 'selected' : '' }}>SEDE</option>
+                                @foreach ($congregacoes as $congregacao)
+                                    <option value="{{ $congregacao->id }}" {{ (string) old('congregacao_id') === (string) $congregacao->id ? 'selected' : '' }}>
+                                        {{ $congregacao->nome }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
                             <label>Nome</label>
                             <input type="text" name="nome" class="form-control" required>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-2">
                             <label>Ano</label>
                             <input type="number" name="ano" class="form-control" value="{{ date('Y') }}" required>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-2">
                             <label>Semestre</label>
                             <select name="semestre" class="form-control">
                                 <option value="">-</option>

@@ -27,7 +27,7 @@
         ['text' => 'Home', 'url' => '/', 'active' => false],
         ['text' => 'EBD', 'url' => route('ebd.dashboard'), 'active' => false],
         ['text' => 'Relatórios', 'url' => '#', 'active' => false],
-        ['text' => 'EBDs', 'url' => '#', 'active' => true],
+        ['text' => 'Relatório Geral EBD', 'url' => '#', 'active' => true],
     ]"></x-breadcrumb>
 @endsection
 
@@ -35,27 +35,11 @@
     <div class="col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
             <div class="widget-header p-3">
-                <h5 class="mb-0">EBDs</h5>
+                <h5 class="mb-0">Relatório Geral EBD</h5>
             </div>
             <div class="widget-content widget-content-area">
-                <form method="GET" action="{{ route('ebd.relatorios.turmas') }}" class="mb-4 ebd-filtros">
+                <form method="GET" action="{{ route('ebd.relatorios.geral') }}" class="mb-4 ebd-filtros">
                     <div class="row">
-                        <div class="col-md-3 mb-2">
-                            <label for="q" class="mb-1">Nome EBD</label>
-                            <input type="text" id="q" name="q" class="form-control" value="{{ $filters['q'] ?? '' }}"
-                                placeholder="Digite o nome da EBD...">
-                        </div>
-                        <div class="col-md-3 mb-2">
-                            <label for="professor_id" class="mb-1">Professor</label>
-                            <select id="professor_id" name="professor_id" class="form-control">
-                                <option value="">Todos</option>
-                                @foreach ($professoresFiltro as $professor)
-                                    <option value="{{ $professor->id }}" {{ (string) ($filters['professor_id'] ?? '') === (string) $professor->id ? 'selected' : '' }}>
-                                        {{ $professor->membro->nome ?? '-' }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
                         <div class="col-md-2 mb-2">
                             <label for="classe_id" class="mb-1">Classe</label>
                             <select id="classe_id" name="classe_id" class="form-control">
@@ -68,62 +52,94 @@
                             </select>
                         </div>
                         <div class="col-md-2 mb-2">
-                            <label for="ano" class="mb-1">Ano</label>
-                            <select id="ano" name="ano" class="form-control">
-                                <option value="">Todos</option>
-                                @foreach ($anosFiltro as $ano)
-                                    <option value="{{ $ano }}" {{ (string) ($filters['ano'] ?? '') === (string) $ano ? 'selected' : '' }}>
-                                        {{ $ano }}
+                            <label for="turma_id" class="mb-1">EBD</label>
+                            <select id="turma_id" name="turma_id" class="form-control">
+                                <option value="">Todas</option>
+                                @foreach ($turmasFiltro as $turma)
+                                    <option value="{{ $turma->id }}" {{ (string) ($filters['turma_id'] ?? '') === (string) $turma->id ? 'selected' : '' }}>
+                                        {{ $turma->nome }} ({{ $turma->ano }})
                                     </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-2 mb-2">
-                            <label for="semestre" class="mb-1">Semestre</label>
-                            <select id="semestre" name="semestre" class="form-control">
-                                <option value="">Todos</option>
-                                <option value="1" {{ ($filters['semestre'] ?? '') === '1' ? 'selected' : '' }}>1</option>
-                                <option value="2" {{ ($filters['semestre'] ?? '') === '2' ? 'selected' : '' }}>2</option>
+                            <label for="tipo_unidade" class="mb-1">Congregação</label>
+                            <select id="tipo_unidade" name="tipo_unidade" class="form-control">
+                                <option value="">Todas</option>
+                                <option value="SEDE" {{ ($filters['tipo_unidade'] ?? '') === 'SEDE' ? 'selected' : '' }}>Sede</option>
+                                <option value="CONGREGACAO" {{ ($filters['tipo_unidade'] ?? '') === 'CONGREGACAO' ? 'selected' : '' }}>Congregação</option>
                             </select>
                         </div>
                         <div class="col-md-2 mb-2">
-                            <label for="ativo" class="mb-1">Status</label>
-                            <select id="ativo" name="ativo" class="form-control">
-                                <option value="">Todos</option>
-                                <option value="1" {{ ($filters['ativo'] ?? '') === '1' ? 'selected' : '' }}>Ativos</option>
-                                <option value="0" {{ ($filters['ativo'] ?? '') === '0' ? 'selected' : '' }}>Inativos</option>
+                            <label for="presenca_status" class="mb-1">Presença</label>
+                            <select id="presenca_status" name="presenca_status" class="form-control">
+                                <option value="">Todas</option>
+                                <option value="PRESENTE" {{ ($filters['presenca_status'] ?? '') === 'PRESENTE' ? 'selected' : '' }}>Presente</option>
+                                <option value="AUSENTE" {{ ($filters['presenca_status'] ?? '') === 'AUSENTE' ? 'selected' : '' }}>Ausente</option>
+                                <option value="NAO_LANCADA" {{ ($filters['presenca_status'] ?? '') === 'NAO_LANCADA' ? 'selected' : '' }}>Não lançada</option>
                             </select>
                         </div>
-                        <div class="col-md-12 mt-2 filtro-acoes">
+                        <div class="col-md-2 mb-2">
+                            <label for="data_inicio" class="mb-1">Data início</label>
+                            <input type="date" id="data_inicio" name="data_inicio" class="form-control" value="{{ $filters['data_inicio'] ?? '' }}">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label for="data_fim" class="mb-1">Data fim</label>
+                            <input type="date" id="data_fim" name="data_fim" class="form-control" value="{{ $filters['data_fim'] ?? '' }}">
+                        </div>
+                        <div class="col-md-8 mb-2">
+                            <label for="q" class="mb-1">Busca</label>
+                            <input type="text" id="q" name="q" class="form-control" value="{{ $filters['q'] ?? '' }}"
+                                placeholder="Classe, EBD, professor, aluno, tema...">
+                        </div>
+                        <div class="col-md-4 mt-2 filtro-acoes">
                             <button type="submit" class="btn btn-primary">Filtrar</button>
-                            <a href="{{ route('ebd.relatorios.turmas') }}" class="btn btn-secondary">Limpar</a>
+                            <a href="{{ route('ebd.relatorios.geral') }}" class="btn btn-secondary">Limpar</a>
                         </div>
                     </div>
                 </form>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-sm display nowrap" id="ebd-relatorio-turmas" style="width: 100%;">
+                    <table class="table table-bordered table-sm display nowrap" id="ebd-relatorio-geral" style="width: 100%;">
                         <thead>
                             <tr>
+                                <th>Igreja</th>
+                                <th>Congregação</th>
+                                <th>Nome da Congregação</th>
+                                <th>Sala</th>
+                                <th>Faixa etária</th>
                                 <th>EBD</th>
-                                <th>Classe</th>
-                                <th>Professor</th>
                                 <th>Ano</th>
                                 <th>Semestre</th>
-                                <th>Ativo</th>
-                                <th>Alunos ativos</th>
+                                <th>Professor</th>
+                                <th>Aluno</th>
+                                <th>CPF</th>
+                                <th>Data aula</th>
+                                <th>Período</th>
+                                <th>Tema</th>
+                                <th>Presença</th>
+                                <th>Justificativa</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($turmas as $item)
+                            @foreach ($registros as $item)
                                 <tr>
-                                    <td>{{ $item->nome }}</td>
-                                    <td>{{ $item->classe->nome ?? '-' }}</td>
-                                    <td>{{ $item->professor->membro->nome ?? '-' }}</td>
-                                    <td>{{ $item->ano }}</td>
-                                    <td>{{ $item->semestre ?? '-' }}</td>
-                                    <td>{{ $item->ativo ? 'Sim' : 'Não' }}</td>
-                                    <td>{{ $item->total_alunos_ativos }}</td>
+                                    <td>{{ $item->igreja_nome ?? '-' }}</td>
+                                    <td>{{ $item->tipo_unidade ?? '-' }}</td>
+                                    <td>{{ $item->congregacao_nome ?? '-' }}</td>
+                                    <td>{{ $item->sala_nome ?? '-' }}</td>
+                                    <td>{{ $item->sala_faixa_etaria ?? '-' }}</td>
+                                    <td>{{ $item->turma_nome ?? '-' }}</td>
+                                    <td>{{ $item->turma_ano ?? '-' }}</td>
+                                    <td>{{ $item->turma_semestre ?? '-' }}</td>
+                                    <td>{{ $item->professor_nome ?? '-' }}</td>
+                                    <td>{{ $item->aluno_nome ?? '-' }}</td>
+                                    <td>{{ $item->aluno_cpf ?? '-' }}</td>
+                                    <td>{{ $item->data_aula ? \Carbon\Carbon::parse($item->data_aula)->format('d/m/Y') : '-' }}</td>
+                                    <td>{{ $item->periodo_aula ? ucfirst($item->periodo_aula) : '-' }}</td>
+                                    <td>{{ $item->tema_aula ?? '-' }}</td>
+                                    <td>{{ $item->presenca_status ?? '-' }}</td>
+                                    <td>{{ $item->presenca_justificativa ?? '-' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -143,9 +159,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
     <script>
-        new DataTable('#ebd-relatorio-turmas', {
+        new DataTable('#ebd-relatorio-geral', {
             pageLength: 25,
-            order: [[3, 'desc'], [0, 'asc']],
+            order: [[6, 'desc'], [5, 'asc'], [9, 'asc'], [11, 'desc']],
             layout: {
                 topStart: {
                     buttons: [
@@ -153,7 +169,7 @@
                             extend: 'excel',
                             className: 'btn btn-primary btn-rounded',
                             text: '<i class="fas fa-file-excel"></i> Excel',
-                            title: 'EBD - TURMAS'
+                            title: 'EBD - RELATORIO GERAL'
                         },
                         {
                             extend: 'pdfHtml5',
@@ -161,7 +177,7 @@
                             pageSize: 'A4',
                             className: 'btn btn-primary btn-rounded',
                             text: '<i class="fas fa-file-pdf"></i> PDF',
-                            title: 'EBD - TURMAS'
+                            title: 'EBD - RELATORIO GERAL'
                         }
                     ]
                 },

@@ -17,7 +17,7 @@ class EbdLiderancaController extends Controller
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
 
-        $liderancas = EbdLideranca::with('membro')
+        $liderancas = EbdLideranca::with(['membro.contato'])
             ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
             ->orderByDesc('ativo')
             ->orderBy('cargo')

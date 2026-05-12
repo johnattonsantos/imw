@@ -6,6 +6,7 @@ use App\Http\Requests\StoreEbdTurmaRequest;
 use App\Http\Requests\UpdateEbdTurmaRequest;
 use App\Models\EbdAluno;
 use App\Models\EbdClasse;
+use App\Models\CongregacoesCongregacao;
 use App\Models\EbdProfessor;
 use App\Models\EbdTurma;
 use App\Models\EbdTurmaAluno;
@@ -42,6 +43,7 @@ class EbdTurmaController extends Controller
     public function store(StoreEbdTurmaRequest $request)
     {
         $data = $request->validated();
+        $congregacaoId = $this->resolveCongregacaoId($data['congregacao_id'] ?? null);
 
         $this->validateClasseByIgreja($data['classe_id']);
         $this->validateProfessorAndAlunos($data['professor_id'], $data['alunos'] ?? []);
@@ -51,6 +53,7 @@ class EbdTurmaController extends Controller
             $turma = EbdTurma::create([
                 'classe_id' => $data['classe_id'],
                 'professor_id' => $data['professor_id'],
+                'congregacao_id' => $congregacaoId,
                 'nome' => $data['nome'],
                 'ano' => $data['ano'],
                 'semestre' => $data['semestre'] ?? null,
@@ -84,6 +87,7 @@ class EbdTurmaController extends Controller
         $this->authorizeByIgreja($turma);
 
         $data = $request->validated();
+        $congregacaoId = $this->resolveCongregacaoId($data['congregacao_id'] ?? null);
         $this->validateClasseByIgreja($data['classe_id']);
         $this->validateProfessorAndAlunos($data['professor_id'], $data['alunos'] ?? []);
 
@@ -92,6 +96,7 @@ class EbdTurmaController extends Controller
             $turma->update([
                 'classe_id' => $data['classe_id'],
                 'professor_id' => $data['professor_id'],
+                'congregacao_id' => $congregacaoId,
                 'nome' => $data['nome'],
                 'ano' => $data['ano'],
                 'semestre' => $data['semestre'] ?? null,
@@ -137,7 +142,36 @@ class EbdTurmaController extends Controller
                 ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
                 ->orderByDesc('id')
                 ->get(),
+            'congregacoes' => CongregacoesCongregacao::query()
+                ->where('instituicao_id', $igrejaId)
+                ->where('ativo', true)
+                ->orderBy('nome')
+                ->get(['id', 'nome']),
         ];
+    }
+
+    private function resolveCongregacaoId(?string $congregacaoInput): ?int
+    {
+        if ($congregacaoInput === null || $congregacaoInput === '' || $congregacaoInput === 'sede') {
+            return null;
+        }
+
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+        $congregacaoId = (int) $congregacaoInput;
+
+        $exists = CongregacoesCongregacao::query()
+            ->where('id', $congregacaoId)
+            ->where('instituicao_id', $igrejaId)
+            ->where('ativo', true)
+            ->exists();
+
+        if (! $exists) {
+            throw ValidationException::withMessages([
+                'congregacao_id' => 'Congregação inválida para esta igreja.',
+            ]);
+        }
+
+        return $congregacaoId;
     }
 
     private function syncAlunos(EbdTurma $turma, array $alunoIds): void

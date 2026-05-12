@@ -528,7 +528,6 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('turmas', EbdTurmaController::class)->except(['show'])->middleware(['seguranca:ebd-turmas']);
             Route::resource('diarios', EbdDiarioController::class)->except(['show'])->middleware(['seguranca:ebd-diarios']);
             Route::resource('agendas', EbdAgendaController::class)->except(['show'])->middleware(['seguranca:ebd-agendas']);
-            Route::get('relatorios/lista-ebd', [EbdRelatorioController::class, 'listaEbd'])->name('relatorios.lista-ebd')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/alunos', [EbdRelatorioController::class, 'alunos'])->name('relatorios.alunos')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/professores', [EbdRelatorioController::class, 'professores'])->name('relatorios.professores')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/liderancas', [EbdRelatorioController::class, 'liderancas'])->name('relatorios.liderancas')->middleware(['seguranca:ebd-dashboard']);
@@ -536,6 +535,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('relatorios/turmas', [EbdRelatorioController::class, 'turmas'])->name('relatorios.turmas')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/diarios', [EbdRelatorioController::class, 'diarios'])->name('relatorios.diarios')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/agendas', [EbdRelatorioController::class, 'agendas'])->name('relatorios.agendas')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/geral', [EbdRelatorioController::class, 'geral'])->name('relatorios.geral')->middleware(['seguranca:ebd-dashboard']);
 
             Route::get('buscar-membro', [EbdMembroBuscaController::class, 'buscar'])->name('buscar-membro')->middleware(['seguranca:ebd-buscar-membro']);
             Route::post('cadastrar-visitante', [EbdMembroBuscaController::class, 'cadastrarVisitante'])->name('cadastrar-visitante')->middleware(['seguranca:ebd-cadastrar-visitante']);

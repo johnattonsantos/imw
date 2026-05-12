@@ -91,7 +91,7 @@
                             </select>
                         </div>
                         <div class="col-lg-4 col-md-6">
-                            <label class="control-label">Turma:</label>
+                            <label class="control-label">EBD:</label>
                             <select name="turma_id" class="form-control">
                                 <option value="">Todas</option>
                                 @foreach ($turmasFiltro as $turma)
@@ -126,7 +126,7 @@
                                 <th>Vínculo</th>
                                 <th>Status membro</th>
                                 <th>Ativo EBD</th>
-                                <th>Turmas ativas</th>
+                                <th>EBDs ativas</th>
                             </tr>
                         </thead>
                         <tbody>

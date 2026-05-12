@@ -14,6 +14,7 @@ class EbdTurma extends Model
     protected $fillable = [
         'classe_id',
         'professor_id',
+        'congregacao_id',
         'nome',
         'ano',
         'semestre',
@@ -32,6 +33,11 @@ class EbdTurma extends Model
     public function professor()
     {
         return $this->belongsTo(EbdProfessor::class, 'professor_id');
+    }
+
+    public function congregacao()
+    {
+        return $this->belongsTo(CongregacoesCongregacao::class, 'congregacao_id');
     }
 
     public function alunosVinculos()

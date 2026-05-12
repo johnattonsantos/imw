@@ -71,7 +71,7 @@
                             </select>
                         </div>
                         <div class="col-md-2 mb-2">
-                            <label for="turma_id" class="mb-1">Turma</label>
+                            <label for="turma_id" class="mb-1">EBD</label>
                             <select id="turma_id" name="turma_id" class="form-control">
                                 <option value="">Todas</option>
                                 @foreach ($turmasFiltro as $turma)
@@ -100,7 +100,6 @@
                                 <th>Vínculo</th>
                                 <th>Status membro</th>
                                 <th>Ativo EBD</th>
-                                <th>Turmas ativas</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -113,7 +112,6 @@
                                     <td>{{ $item->membro->vinculo_text ?? '-' }}</td>
                                     <td>{{ $item->membro->status_text ?? '-' }}</td>
                                     <td>{{ $item->ativo ? 'Sim' : 'Não' }}</td>
-                                    <td>{{ $item->total_turmas_ativas }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

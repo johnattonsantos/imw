@@ -68,7 +68,7 @@
                                 <th>Faixa etária</th>
                                 <th>Descrição</th>
                                 <th>Ativo</th>
-                                <th>Turmas ativas</th>
+                                <th>EBDs ativas</th>
                             </tr>
                         </thead>
                         <tbody>

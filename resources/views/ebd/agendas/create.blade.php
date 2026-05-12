@@ -26,9 +26,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Turma (opcional)</label>
+                        <label>EBD (opcional)</label>
                         <select name="turma_id" class="form-control">
-                            <option value="">Sem turma</option>
+                            <option value="">Sem EBD</option>
                             @foreach ($turmas as $turma)
                                 <option value="{{ $turma->id }}">{{ $turma->nome }} - {{ $turma->ano }}</option>
                             @endforeach

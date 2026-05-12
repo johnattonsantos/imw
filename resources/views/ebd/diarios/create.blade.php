@@ -9,7 +9,7 @@
                     @csrf
                     <div class="form-row">
                         <div class="form-group col-md-4">
-                            <label>Turma</label>
+                            <label>EBD</label>
                             <select name="turma_id" id="turma_id" class="form-control" required>
                                 <option value="">Selecione</option>
                                 @foreach ($turmas as $turma)
@@ -49,7 +49,7 @@
                     </div>
                     <div class="form-group">
                         <label>Conteúdo</label>
-                        <textarea name="conteudo" class="form-control" rows="4" required></textarea>
+                        <textarea name="conteudo" id="conteudo" class="form-control" rows="4" required>{{ old('conteudo') }}</textarea>
                     </div>
                     <div class="form-group">
                         <label>Observações</label>
@@ -79,8 +79,37 @@
 @endsection
 
 @section('extras-scripts')
+<script src="{{ asset('gceu/tinymce/tinymce.min.js') }}?time={{ time() }}"></script>
 <script>
 (function() {
+    if (typeof window.tinymce !== 'undefined') {
+        window.tinymce.init({
+            selector: '#conteudo',
+            height: 320,
+            menubar: true,
+            language: 'pt_BR',
+            theme: 'modern',
+            plugins: [
+                'advlist autolink lists link charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime table contextmenu paste code',
+            ],
+            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | code',
+            relative_urls: false,
+            remove_script_host: false,
+            content_css: ['//www.tinymce.com/css/codepen.min.css'],
+        });
+    }
+
+    const form = document.getElementById('formDiario');
+    if (form) {
+        form.addEventListener('submit', function () {
+            if (typeof window.tinymce !== 'undefined') {
+                window.tinymce.triggerSave();
+            }
+        });
+    }
+
     const turmaSelect = document.getElementById('turma_id');
     const tbody = document.querySelector('#tabelaPresencas tbody');
     const base = @json(route('ebd.diarios.turma-alunos', ['turma' => '__ID__']));
@@ -88,7 +117,7 @@
     const render = (rows) => {
         tbody.innerHTML = '';
         if (!rows.length) {
-            tbody.innerHTML = '<tr><td colspan="3" class="text-center">Sem alunos ativos na turma.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" class="text-center">Sem alunos ativos na EBD.</td></tr>';
             return;
         }
 
