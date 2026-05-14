@@ -15,7 +15,7 @@ use App\Traits\Identifiable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RegiaoEbdRelatorioController extends Controller
+class DistritoEbdRelatorioController extends Controller
 {
     use Identifiable;
 
@@ -32,14 +32,14 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.dashboard', [
+        return view('distrito.relatorios.ebd.dashboard', [
             'distritos' => $distritos,
             'igrejas' => $igrejas,
             'filters' => $filters,
@@ -71,7 +71,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $classes = EbdClasse::query()
             ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'ebd_classes.igreja_id')
@@ -107,7 +107,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.lista', compact(
+        return view('distrito.relatorios.ebd.lista', compact(
             'classes',
             'distritos',
             'igrejas',
@@ -133,7 +133,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
@@ -174,7 +174,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.alunos', compact(
+        return view('distrito.relatorios.ebd.alunos', compact(
             'alunos',
             'distritos',
             'igrejas',
@@ -199,7 +199,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
@@ -232,7 +232,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.professores', compact(
+        return view('distrito.relatorios.ebd.professores', compact(
             'professores',
             'distritos',
             'igrejas',
@@ -257,7 +257,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
@@ -291,7 +291,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.liderancas', compact(
+        return view('distrito.relatorios.ebd.liderancas', compact(
             'liderancas',
             'distritos',
             'igrejas',
@@ -314,7 +314,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $classes = EbdClasse::query()
             ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'ebd_classes.igreja_id')
@@ -344,7 +344,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.classes', compact(
+        return view('distrito.relatorios.ebd.classes', compact(
             'classes',
             'distritos',
             'igrejas',
@@ -371,7 +371,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
@@ -412,7 +412,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.turmas', compact(
+        return view('distrito.relatorios.ebd.turmas', compact(
             'turmas',
             'classesFiltro',
             'professoresFiltro',
@@ -441,7 +441,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
@@ -476,7 +476,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.diarios', compact(
+        return view('distrito.relatorios.ebd.diarios', compact(
             'diarios',
             'turmasFiltro',
             'distritos',
@@ -502,7 +502,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $scopeMembro = fn ($query) => $query->whereIn('igreja_id', $allowedIgrejasIds);
 
@@ -537,7 +537,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.agendas', compact(
+        return view('distrito.relatorios.ebd.agendas', compact(
             'agendas',
             'turmasFiltro',
             'distritos',
@@ -566,7 +566,7 @@ class RegiaoEbdRelatorioController extends Controller
             'selectedDistritoId' => $selectedDistritoId,
             'selectedIgrejaId' => $selectedIgrejaId,
             'allowedIgrejasIds' => $allowedIgrejasIds,
-        ] = $this->resolveRegionalFilters($filters);
+        ] = $this->resolveDistritoFilters($filters);
 
         $turmasFiltro = EbdTurma::query()
             ->whereHas('classe', fn ($q) => $q->whereIn('igreja_id', $allowedIgrejasIds))
@@ -655,7 +655,7 @@ class RegiaoEbdRelatorioController extends Controller
         $filters['distrito_id'] = $selectedDistritoId ?? '';
         $filters['igreja_id'] = $selectedIgrejaId ?? '';
 
-        return view('regiao.relatorios.ebd.geral', compact(
+        return view('distrito.relatorios.ebd.geral', compact(
             'registros',
             'distritos',
             'igrejas',
@@ -665,25 +665,18 @@ class RegiaoEbdRelatorioController extends Controller
         ));
     }
 
-    private function resolveRegionalFilters(array $filters): array
+    private function resolveDistritoFilters(array $filters): array
     {
-        $regiaoId = Identifiable::fetchtSessionRegiao()->id;
-        $distritos = Identifiable::fetchDistritosByRegiao($regiaoId);
-        $distritosIds = $distritos->pluck('id')->map(fn ($id) => (int) $id)->all();
-
-        $selectedDistritoId = in_array((int) ($filters['distrito_id'] ?? 0), $distritosIds, true)
-            ? (int) $filters['distrito_id']
-            : null;
+        $distrito = Identifiable::fetchtSessionDistrito();
+        $distritos = collect([$distrito]);
+        $distritosIds = [(int) $distrito->id];
+        $selectedDistritoId = (int) $distrito->id;
 
         $igrejasQuery = InstituicoesInstituicao::query()
             ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
-            ->whereIn('instituicao_pai_id', $distritosIds)
+            ->where('instituicao_pai_id', $selectedDistritoId)
             ->whereNull('data_encerramento')
             ->orderBy('nome');
-
-        if ($selectedDistritoId !== null) {
-            $igrejasQuery->where('instituicao_pai_id', $selectedDistritoId);
-        }
 
         $igrejas = $igrejasQuery->get(['id', 'nome', 'instituicao_pai_id']);
         $igrejasIds = $igrejas->pluck('id')->map(fn ($id) => (int) $id)->all();
