@@ -25,7 +25,7 @@ class EbdTurmaController extends Controller
 
         $turmas = EbdTurma::with(['classe', 'professor.membro'])
             ->withCount(['alunosVinculos as total_alunos_ativos' => fn ($q) => $q->where('ativo', true)])
-            ->whereHas('professor.membro', fn ($q) => $q->where('igreja_id', $igrejaId))
+            ->whereHas('classe', fn ($q) => $q->where('igreja_id', $igrejaId))
             ->orderByDesc('ano')
             ->orderBy('nome')
             ->paginate(20);
@@ -44,15 +44,18 @@ class EbdTurmaController extends Controller
     {
         $data = $request->validated();
         $congregacaoId = $this->resolveCongregacaoId($data['congregacao_id'] ?? null);
+        $professorId = isset($data['professor_id']) && $data['professor_id'] !== ''
+            ? (int) $data['professor_id']
+            : null;
 
         $this->validateClasseByIgreja($data['classe_id']);
-        $this->validateProfessorAndAlunos($data['professor_id'], $data['alunos'] ?? []);
+        $this->validateProfessorAndAlunos($professorId, $data['alunos'] ?? []);
 
         DB::beginTransaction();
         try {
             $turma = EbdTurma::create([
                 'classe_id' => $data['classe_id'],
-                'professor_id' => $data['professor_id'],
+                'professor_id' => $professorId,
                 'congregacao_id' => $congregacaoId,
                 'nome' => $data['nome'],
                 'ano' => $data['ano'],
@@ -60,7 +63,9 @@ class EbdTurmaController extends Controller
                 'ativo' => $data['ativo'],
             ]);
 
-            $this->syncAlunos($turma, $data['alunos'] ?? []);
+            if (array_key_exists('alunos', $data)) {
+                $this->syncAlunos($turma, $data['alunos'] ?? []);
+            }
 
             DB::commit();
 
@@ -88,14 +93,17 @@ class EbdTurmaController extends Controller
 
         $data = $request->validated();
         $congregacaoId = $this->resolveCongregacaoId($data['congregacao_id'] ?? null);
+        $professorId = isset($data['professor_id']) && $data['professor_id'] !== ''
+            ? (int) $data['professor_id']
+            : null;
         $this->validateClasseByIgreja($data['classe_id']);
-        $this->validateProfessorAndAlunos($data['professor_id'], $data['alunos'] ?? []);
+        $this->validateProfessorAndAlunos($professorId, $data['alunos'] ?? []);
 
         DB::beginTransaction();
         try {
             $turma->update([
                 'classe_id' => $data['classe_id'],
-                'professor_id' => $data['professor_id'],
+                'professor_id' => $professorId,
                 'congregacao_id' => $congregacaoId,
                 'nome' => $data['nome'],
                 'ano' => $data['ano'],
@@ -103,7 +111,9 @@ class EbdTurmaController extends Controller
                 'ativo' => $data['ativo'],
             ]);
 
-            $this->syncAlunos($turma, $data['alunos'] ?? []);
+            if (array_key_exists('alunos', $data)) {
+                $this->syncAlunos($turma, $data['alunos'] ?? []);
+            }
 
             DB::commit();
 
@@ -164,11 +174,6 @@ class EbdTurmaController extends Controller
                 ->orderBy('nome')
                 ->get(),
             'professores' => EbdProfessor::with('membro')
-                ->where('ativo', true)
-                ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
-                ->orderByDesc('id')
-                ->get(),
-            'alunos' => EbdAluno::with('membro')
                 ->where('ativo', true)
                 ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
                 ->orderByDesc('id')
@@ -237,19 +242,21 @@ class EbdTurmaController extends Controller
         }
     }
 
-    private function validateProfessorAndAlunos(int $professorId, array $alunoIds): void
+    private function validateProfessorAndAlunos(?int $professorId, array $alunoIds): void
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
 
-        $professorValido = EbdProfessor::where('id', $professorId)
-            ->where('ativo', true)
-            ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
-            ->exists();
+        if ($professorId !== null) {
+            $professorValido = EbdProfessor::where('id', $professorId)
+                ->where('ativo', true)
+                ->whereHas('membro', fn ($q) => $q->where('igreja_id', $igrejaId))
+                ->exists();
 
-        if (! $professorValido) {
-            throw ValidationException::withMessages([
-                'professor_id' => 'Professor inválido ou inativo para esta igreja.',
-            ]);
+            if (! $professorValido) {
+                throw ValidationException::withMessages([
+                    'professor_id' => 'Professor inválido ou inativo para esta igreja.',
+                ]);
+            }
         }
 
         if (empty($alunoIds)) {
@@ -287,7 +294,7 @@ class EbdTurmaController extends Controller
     private function authorizeByIgreja(EbdTurma $turma): void
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
-        if ((int) $turma->professor?->membro?->igreja_id !== (int) $igrejaId) {
+        if ((int) $turma->classe?->igreja_id !== (int) $igrejaId) {
             abort(403);
         }
     }

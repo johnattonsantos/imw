@@ -19,7 +19,8 @@
                         </div>
                         <div class="form-group col-md-6">
                             <label>Professor</label>
-                            <select name="professor_id" class="form-control" required>
+                            <select name="professor_id" class="form-control">
+                                <option value="">Sem professor</option>
                                 @foreach ($professores as $prof)
                                     <option value="{{ $prof->id }}" {{ (int)$prof->id === (int)$turma->professor_id ? 'selected' : '' }}>{{ $prof->membro->nome ?? '-' }}</option>
                                 @endforeach
@@ -59,29 +60,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label>Alunos (somente ativos)</label>
-                        @php($alunosSelecionados = old('alunos', $alunosAtivosVinculados ?? []))
-                        @php($alunosSelecionadosStr = array_map('strval', $alunosSelecionados))
-                        <div class="mb-2">
-                            <label class="mb-0">
-                                <input type="checkbox" id="marcarTodosAlunos">
-                                Marcar todos
-                            </label>
-                        </div>
-                        <div class="border rounded p-2" style="max-height: 280px; overflow-y: auto;">
-                            @forelse ($alunos as $aluno)
-                                @php($checked = in_array((string) $aluno->id, $alunosSelecionadosStr, true))
-                                <div class="form-check">
-                                    <input class="form-check-input aluno-checkbox" type="checkbox" name="alunos[]" value="{{ $aluno->id }}" id="aluno_{{ $aluno->id }}" {{ $checked ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="aluno_{{ $aluno->id }}">
-                                        {{ $aluno->membro->nome ?? '-' }}
-                                    </label>
-                                </div>
-                            @empty
-                                <div class="text-muted">Nenhum aluno ativo disponível.</div>
-                            @endforelse
-                        </div>
+                    <div class="alert alert-info">
+                        Para incluir ou remover alunos desta EBD, use o menu <strong>Alunos</strong> e clique em vincular EBD.
                     </div>
 
                     <div class="form-group">
@@ -98,33 +78,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('extras-scripts')
-<script>
-(function () {
-    const marcarTodos = document.getElementById('marcarTodosAlunos');
-    const checkboxes = Array.from(document.querySelectorAll('.aluno-checkbox'));
-
-    if (!marcarTodos || !checkboxes.length) {
-        return;
-    }
-
-    const syncMarcarTodos = () => {
-        marcarTodos.checked = checkboxes.every((checkbox) => checkbox.checked);
-    };
-
-    marcarTodos.addEventListener('change', () => {
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = marcarTodos.checked;
-        });
-    });
-
-    checkboxes.forEach((checkbox) => {
-        checkbox.addEventListener('change', syncMarcarTodos);
-    });
-
-    syncMarcarTodos();
-})();
-</script>
 @endsection

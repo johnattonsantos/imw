@@ -56,6 +56,74 @@ class RegiaoEbdRelatorioController extends Controller
         ]);
     }
 
+    public function estatisticas(Request $request)
+    {
+        $filters = [
+            'distrito_id' => (int) $request->query('distrito_id', 0),
+            'igreja_id' => (int) $request->query('igreja_id', 0),
+        ];
+
+        [
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'selectedDistritoId' => $selectedDistritoId,
+            'selectedIgrejaId' => $selectedIgrejaId,
+            'allowedIgrejasIds' => $allowedIgrejasIds,
+        ] = $this->resolveRegionalFilters($filters);
+
+        $subEbds = DB::table('ebd_turmas as t')
+            ->join('ebd_classes as cl', 'cl.id', '=', 't.classe_id')
+            ->select('cl.igreja_id', DB::raw('COUNT(DISTINCT t.id) as qtd_ebds'))
+            ->where('t.ativo', 1)
+            ->where('cl.ativo', 1)
+            ->groupBy('cl.igreja_id');
+
+        $subAlunos = DB::table('ebd_turma_alunos as ta')
+            ->join('ebd_turmas as t', 't.id', '=', 'ta.turma_id')
+            ->join('ebd_classes as cl', 'cl.id', '=', 't.classe_id')
+            ->join('ebd_alunos as a', 'a.id', '=', 'ta.aluno_id')
+            ->select('cl.igreja_id', DB::raw('COUNT(DISTINCT a.id) as qtd_alunos_ebd'))
+            ->where('ta.ativo', 1)
+            ->where('t.ativo', 1)
+            ->where('cl.ativo', 1)
+            ->where('a.ativo', 1)
+            ->groupBy('cl.igreja_id');
+
+        $dados = DB::table('instituicoes_instituicoes as distrito')
+            ->join('instituicoes_instituicoes as igreja', function ($join) {
+                $join->on('igreja.instituicao_pai_id', '=', 'distrito.id')
+                    ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+                    ->whereNull('igreja.data_encerramento');
+            })
+            ->leftJoinSub($subEbds, 'se', fn ($join) => $join->on('se.igreja_id', '=', 'igreja.id'))
+            ->leftJoinSub($subAlunos, 'sa', fn ($join) => $join->on('sa.igreja_id', '=', 'igreja.id'))
+            ->whereIn('igreja.id', $allowedIgrejasIds)
+            ->where('distrito.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->select(
+                'distrito.nome as distrito',
+                'igreja.nome as igreja',
+                DB::raw('COALESCE(se.qtd_ebds, 0) as qtd_ebds'),
+                DB::raw('COALESCE(sa.qtd_alunos_ebd, 0) as qtd_alunos_ebd')
+            )
+            ->orderBy('distrito.nome')
+            ->orderBy('igreja.nome')
+            ->get();
+
+        $filters['distrito_id'] = $selectedDistritoId ?? '';
+        $filters['igreja_id'] = $selectedIgrejaId ?? '';
+
+        return view('regiao.relatorios.ebd.estatisticas', [
+            'dados' => $dados,
+            'distritos' => $distritos,
+            'igrejas' => $igrejas,
+            'filters' => $filters,
+            'totais' => [
+                'qtd_ebds' => (int) $dados->sum('qtd_ebds'),
+                'qtd_alunos_ebd' => (int) $dados->sum('qtd_alunos_ebd'),
+            ],
+        ]);
+    }
+
     public function lista(Request $request)
     {
         $filters = [

@@ -14,6 +14,9 @@ INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VA
 
 INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'distrito-ebd-agendas', current_timestamp(), current_timestamp(), NULL);
 
+INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 
+'distrito-ebd-estatisticas', current_timestamp(), current_timestamp(), NULL);
+
 INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'ebd-buscar-membro', current_timestamp(), current_timestamp(), NULL);
 
 INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'ebd-cadastrar-visitante', current_timestamp(), current_timestamp(), NULL);
@@ -73,6 +76,13 @@ INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
 SELECT NULL, '2', r.id, current_timestamp(), current_timestamp()
 FROM regras r
 WHERE r.nome = 'distrito-ebd-agendas'
+ORDER BY r.id DESC
+LIMIT 1;
+
+INSERT INTO perfil_regra (id, perfil_id, regra_id, created_at, updated_at)
+SELECT NULL, '2', r.id, current_timestamp(), current_timestamp()
+FROM regras r
+WHERE r.nome = 'distrito-ebd-estatisticas'
 ORDER BY r.id DESC
 LIMIT 1;
 
