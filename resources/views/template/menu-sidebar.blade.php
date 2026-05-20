@@ -37,9 +37,34 @@
              box-shadow: 0 0 0 0 rgba(255, 77, 79, 0);
          }
      }
+
+     /* Menu com barra sempre visível quando houver overflow */
+     #sidebar ul.menu-categories {
+         overflow-y: auto !important;
+         scrollbar-width: thin;
+         scrollbar-color: #8a8fa8 rgba(255, 255, 255, 0.06);
+     }
+
+     #sidebar ul.menu-categories::-webkit-scrollbar {
+         width: 8px;
+     }
+
+     #sidebar ul.menu-categories::-webkit-scrollbar-track {
+         background: rgba(255, 255, 255, 0.06);
+     }
+
+     #sidebar ul.menu-categories::-webkit-scrollbar-thumb {
+         background: #8a8fa8;
+         border-radius: 8px;
+     }
+
+     /* Esconde a trilha overlay do PerfectScrollbar nesse menu */
+     #sidebar ul.menu-categories.ps > .ps__rail-y {
+         display: none !important;
+     }
  </style>
  <!--  BEGIN SIDEBAR  -->
- <div class="sidebar-wrapper sidebar-theme" style="overflow-y: scroll; scrollbar-width: thin; ">
+ <div class="sidebar-wrapper sidebar-theme">
      <nav id="sidebar">
 
          <ul class="navbar-nav theme-brand flex-row  text-center">
@@ -182,7 +207,6 @@
                                  <a href="{{ route('visitante.index') }}">Visitantes</a>
                              @endif
                          </li>
-                         <li>
                          <li class="submenu-fixo mt-3 mb-3">
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-secretaria'))
                                  <span>Relatórios</span>
@@ -245,70 +269,60 @@
                  </li>
              @endif
 
-             <li class="menu mx-3">
-                 @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+             @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+                 <li class="menu mx-3">
                      <a href="">Igrejas</a>
-                 @endif
-                 @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+                 </li>
                  <li class="menu {{ Request::is('igreja', 'igreja/*', 'igrejas-regiao*') ? 'active' : '' }}">
-                 <a href="{{ route('igrejas.regiao.index') }}" class="dropdown-toggle">
-                     <div class="">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="feather feather-church">
-                             <path d="M12 2L8 6h8l-4-4z"></path>
-                             <rect x="4" y="6" width="16" height="16" rx="2"></rect>
-                             <path d="M8 12h8M12 16v4"></path>
-                         </svg>
-                         <span>Igrejas</span>
-                     </div>
-                 </a>
-             </li>
-             @endif
-             </li>
+                     <a href="{{ route('igrejas.regiao.index') }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-church">
+                                 <path d="M12 2L8 6h8l-4-4z"></path>
+                                 <rect x="4" y="6" width="16" height="16" rx="2"></rect>
+                                 <path d="M8 12h8M12 16v4"></path>
+                             </svg>
+                             <span>Igrejas</span>
+                         </div>
+                     </a>
+                 </li>
 
-             {{-- Menu Clérigos --}}
-
-             <li class="menu mx-3">
-                 @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+                 {{-- Menu Clérigos --}}
+                 <li class="menu mx-3">
                      <a href="">Clérigos</a>
-                 @endif
-                 @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
-             <li class="menu x-2">
-                 <a href="#clerigos" data-toggle="collapse" aria-expanded="{{Request::is('clerigos*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                     <div class="">
-                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="feather feather-users">
-                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                             <circle cx="12" cy="7" r="4"></circle>
-                             <path d="M16 21v-2a4 4 0 0 0-3-3.87"></path>
-                             <path d="M8 21v-2a4 4 0 0 1 3-3.87"></path>
-                         </svg>
-
-                         <span>Clérigos</span>
-                     </div>
-                     <div>
-                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="feather feather-chevron-right">
-                             <polyline points="9 18 15 12 9 6"></polyline>
-                         </svg>
-                     </div>
-                 </a>
-                 <ul class="collapse submenu list-unstyled {{ Request::is('clerigos*') ? 'collapse show' : '' }}" id="clerigos" data-parent="#clerigos">
-                     <li {!! Request::is('clerigos', 'clerigos/nomeacoes/*', 'clerigos/novo*', 'clerigos/editar/*') ? 'class="active"' : '' !!}>
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+                 </li>
+                 <li class="menu x-2">
+                     <a href="#clerigos" data-toggle="collapse" aria-expanded="{{ Request::is('clerigos*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-users">
+                                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                 <circle cx="12" cy="7" r="4"></circle>
+                                 <path d="M16 21v-2a4 4 0 0 0-3-3.87"></path>
+                                 <path d="M8 21v-2a4 4 0 0 1 3-3.87"></path>
+                             </svg>
+                             <span>Clérigos</span>
+                         </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
+                     </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('clerigos*') ? 'collapse show' : '' }}" id="clerigos" data-parent="#accordionExample">
+                         <li {!! Request::is('clerigos', 'clerigos/nomeacoes/*', 'clerigos/novo*', 'clerigos/editar/*') ? 'class="active"' : '' !!}>
                              <a href="{{ route('clerigos.index') }}">Clérigos</a>
-                         @endif
-                     </li>
-                     <li {!! Request::is('clerigos/prebendas','clerigos/prebendas/*') ? 'class="active"' : '' !!}>
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+                         </li>
+                         <li {!! Request::is('clerigos/prebendas','clerigos/prebendas/*') ? 'class="active"' : '' !!}>
                              <a href="{{ route('clerigos.prebendas.index') }}">Prebendas</a>
-                         @endif
-                     </li>
-                 </ul>
-                 @endif
+                         </li>
+                     </ul>
+                 </li>
+             @endif
 
 
                  @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-financeiro'))
@@ -1136,44 +1150,44 @@
                      </ul>
                  </li>
              @endif
-            <li class="menu mx-3">
-                @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+            @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
+                <li class="menu mx-3">
                     <a href="">Contabilidade</a>
-                @endif
-             @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
-             <li class="menu x-2">
-                 <a href="#contabilidade" data-toggle="collapse" aria-expanded="{{Request::is('contabilidade/*') ? 'true' : 'false' }}" class="dropdown-toggle">
-                     <div class="">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
-                            <polyline points="10 9 9 9 8 9"></polyline>
-                        </svg>
-                        <span>SRA</span>
-                     </div>
-                     <div>
-                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="feather feather-chevron-right">
-                             <polyline points="9 18 15 12 9 6"></polyline>
-                         </svg>
-                     </div>
-                 </a>
-                 <ul class="collapse submenu list-unstyled {{ Request::is('contabilidade/*') ? 'collapse show' : '' }}" id="contabilidade" data-parent="#contabilidade">
-                     <li {!! Request::is('contabilidade/irrf') ? 'class="active"' : '' !!}>
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('contabilidade-irrf'))
-                             <a href="{{ route('contabilidade.irrf') }}">IRRF</a>
-                         @endif
-                     </li>
-                    <li {!! Request::is('contabilidade/financeiro/balancete') ? 'class="active"' : '' !!}>
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('contabilidade-irrf'))
-                            <a href="{{ route('contabilidade.relatorio-balancete') }}">Balancete</a>
-                        @endif
-                    </li>
-                 </ul>
-                 @endif
+                </li>
+                <li class="menu x-2">
+                    <a href="#contabilidade" data-toggle="collapse" aria-expanded="{{ Request::is('contabilidade/*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                        <div class="">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>SRA</span>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-chevron-right">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </div>
+                    </a>
+                    <ul class="collapse submenu list-unstyled {{ Request::is('contabilidade/*') ? 'collapse show' : '' }}" id="contabilidade" data-parent="#accordionExample">
+                        <li {!! Request::is('contabilidade/irrf') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('contabilidade-irrf'))
+                                <a href="{{ route('contabilidade.irrf') }}">IRRF</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('contabilidade/financeiro/balancete') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('contabilidade-irrf'))
+                                <a href="{{ route('contabilidade.relatorio-balancete') }}">Balancete</a>
+                            @endif
+                        </li>
+                    </ul>
+                </li>
+            @endif
 
              @if (auth()->check() && auth()->user()->hasPerfilRegra('congregacao-index'))
                  <li class="menu {{ Request::is('congregacao','congregacao/*') ? 'active' : '' }} ">
@@ -1436,7 +1450,7 @@
                          </svg>
                      </div>
                  </a>
-                 <ul class="collapse submenu list-unstyled {{ Request::is('seguranca/*', 'auditorias*') ? 'collapse show' : '' }}" id="segurancaLocal" data-parent="#segurancaLocal">
+                 <ul class="collapse submenu list-unstyled {{ Request::is('seguranca/*', 'auditorias*') ? 'collapse show' : '' }}" id="segurancaLocal" data-parent="#accordionExample">
                      @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-usuarios-instituicao'))
                          @php
                              // Obtém o perfil_id da sessão
@@ -1462,9 +1476,10 @@
                              </li>
                          @endif
                      @endif
-
                  </ul>
+             </li>
 
+             <li class="menu">
                  <a href="#perfil" data-toggle="collapse" aria-expanded="{{Request::is('usuario/*') ? 'true' : 'false' }}" class="dropdown-toggle">
                      <div class="">
                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -1483,7 +1498,7 @@
                          </svg>
                      </div>
                  </a>
-                 <ul class="collapse submenu list-unstyled {{ Request::is('usuario/*') ? 'collapse show' : '' }}" id="perfil" data-parent="#perfil">
+                 <ul class="collapse submenu list-unstyled {{ Request::is('usuario/*') ? 'collapse show' : '' }}" id="perfil" data-parent="#accordionExample">
                      <li {!! Request::is('usuario/perfis') ? 'class="active"' : '' !!}>
                          <a href="{{ route('perfil.index') }}"> Dados Pessoais</a>
                      </li>

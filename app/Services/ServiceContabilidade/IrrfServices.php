@@ -39,6 +39,7 @@ class IrrfServices
                         'progressao' => []
                     ];
                 }
+
                 $prebendas[] = ['prebanda' => $item, 'imposto' => $impostoCalculado];
             }
             $data['prebendas'] = (object) $prebendas;

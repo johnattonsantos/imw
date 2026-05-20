@@ -95,30 +95,30 @@
                 @forelse($prebendas as $item)
                     @php
                         $possuiRegistros = true;
+                        $prebendaInformada = !is_null($item['prebanda']->valor_prebendas);
                         $valorPrebenda = (float) ($item['prebanda']->valor_prebendas ?? 0);
                         $dependentes = (int) ($item['prebanda']->n_dependentes ?? 0);
                         $valorBase = (float) ($item['imposto']->valorBase ?? 0);
                         $valorRedutor = (float) ($item['imposto']->valorRedutor ?? 0);
-                        $valorIrrf = ((float) ($item['prebanda']->valor_prebendas ?? 0) > 5000 || (float) ($item['prebanda']->valor_prebendas ?? 0) == 0)
-                            ? (float) ($item['imposto']->valorImposto ?? 0)
-                            : 0.0;
-                        $valorRetido = (float) ($item['prebanda']->retido ?? 0);
-                        $valorRepassado = (float) ($item['prebanda']->repasse ?? 0);
+                        $irrfIsento = $prebendaInformada && $valorPrebenda <= 5000;
+                        $valorIrrf = $irrfIsento ? 0.0 : (float) ($item['imposto']->valorImposto ?? 0);
+                        $valorRetido = $irrfIsento ? 0.0 : (float) ($item['prebanda']->retido ?? 0);
+                        $valorRepassado = $irrfIsento ? 0.0 : (float) ($item['prebanda']->repasse ?? 0);
 
                         $totalPrebendas += $valorPrebenda;
                         $totalDependentes += $dependentes;
                         $totalBaseCalculos += $valorBase;
                         $totalRedutor += $valorRedutor;
                         $totalIrrfCalculado += $valorIrrf;
-                        $totalRetido += $valorRetido;
+                        $totalRetido += $valorRetido;                        
                         $totalRepassado += $valorRepassado;
                     @endphp
                     <tr>
                         <td>{{ $item['prebanda']->nome }}</td>
                         <td>{{ formatStr($item['prebanda']->cpf, '###.###.###-##') }}</td>
                         <td>
-                            @if($item['prebanda']->valor_prebendas)
-                                R$ {{ number_format($item['prebanda']->valor_prebendas, 2, ',', '.') }}
+                            @if($prebendaInformada)
+                                R$ {{ number_format($valorPrebenda, 2, ',', '.') }}
                             @else
                                 Não informado
                             @endif
@@ -127,16 +127,16 @@
                         <td>R$ {{ number_format($item['imposto']->valorBase, 2, ',', '.') }}</td>
                         <td>R$ {{ number_format($item['imposto']->valorRedutor, 2, ',', '.') }}</td>
                         <td>
-                            @if($item['prebanda']->valor_prebendas > 5000)
-                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
-                            @elseif($item['prebanda']->valor_prebendas == 0)
-                                R$ {{ number_format($item['imposto']->valorImposto, 2, ',', '.') }}
-                            @else
+                            @if(!$prebendaInformada)
+                                Não informado
+                            @elseif($irrfIsento)
                                 ISENTO
+                            @else
+                                R$ {{ number_format($valorIrrf, 2, ',', '.') }}
                             @endif
                         </td>
-                        <td>R$ {{ number_format($item['prebanda']->retido, 2, ',', '.') }}</td>
-                        <td>R$ {{ number_format($item['prebanda']->repasse, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($valorRetido, 2, ',', '.') }}</td>
+                        <td>R$ {{ number_format($valorRepassado, 2, ',', '.') }}</td>
                     </tr>
                 @empty
                 <tr>
