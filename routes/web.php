@@ -76,6 +76,8 @@ Route::get('/redefinir-senha', [AuthController::class, 'showResetForm'])->name('
 // Rota para processar a redefinição de senha
 Route::post('/redefinir-senha', [AuthController::class, 'reset'])->name('password.reset-post');
 
+require base_path('routes/patrimonio.php');
+
 
 // Rotas protegidas por autenticação
 Route::middleware(['auth'])->group(function () {

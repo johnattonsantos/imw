@@ -1278,6 +1278,69 @@
                  </li>
              @endif
 
+             @if (auth()->check() && (
+                auth()->user()->hasPerfilRegra('patrimonio.visualizar')
+                || auth()->user()->hasPerfilRegra('patrimonio.documentos')
+                || auth()->user()->hasPerfilRegra('patrimonio.juridico')
+                || auth()->user()->hasPerfilRegra('patrimonio.baixa')
+                || auth()->user()->hasPerfilRegra('patrimonio.relatorios')
+                || auth()->user()->hasPerfilRegra('patrimonio.criar')
+                || auth()->user()->hasPerfilRegra('patrimonio.editar')
+                || auth()->user()->hasPerfilRegra('patrimonio.excluir')
+             ))
+                 <li class="menu">
+                     <a href="#patrimonio" data-toggle="collapse" aria-expanded="{{ Request::is('patrimonio*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-home">
+                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                             </svg>
+                             <span>Patrimônio</span>
+                         </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
+                     </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('patrimonio*') ? 'collapse show' : '' }}" id="patrimonio" data-parent="#patrimonio">
+                         @if (auth()->user()->hasPerfilRegra('patrimonio.visualizar'))
+                             <li {!! Request::is('patrimonio') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.dashboard') }}">Dashboard</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/bens-imoveis*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.bens-imoveis.index') }}">Bens Imóveis</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/bens-moveis*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.bens-moveis.index') }}">Bens Móveis</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/benfeitorias*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.benfeitorias.index') }}">Benfeitorias</a>
+                             </li>
+                         @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio.documentos'))
+                             <li {!! Request::is('patrimonio/documentos*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.documentos.index') }}">Documentos</a>
+                             </li>
+                         @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio.baixa'))
+                             <li {!! Request::is('patrimonio/baixas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.baixas.index') }}">Baixas</a>
+                             </li>
+                         @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio.relatorios'))
+                             <li {!! Request::is('patrimonio/relatorios*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.index') }}">Relatórios</a>
+                             </li>
+                         @endif
+                     </ul>
+                 </li>
+             @endif
+
              @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-dashboard') )
                  <li class="menu">
                      <a href="#ebd" data-toggle="collapse" aria-expanded="{{ Request::is('ebd*') ? 'true' : 'false' }}" class="dropdown-toggle">
