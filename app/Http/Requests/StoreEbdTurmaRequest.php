@@ -15,14 +15,12 @@ class StoreEbdTurmaRequest extends FormRequest
     {
         return [
             'classe_id' => ['required', 'exists:ebd_classes,id'],
-            'professor_id' => ['required', 'exists:ebd_professores,id'],
+            'professor_id' => ['nullable', 'integer', 'exists:ebd_professores,id'],
             'congregacao_id' => ['required', 'string', 'regex:/^(sede|[0-9]+)$/'],
             'nome' => ['required', 'string', 'max:120'],
             'ano' => ['required', 'integer', 'min:2000', 'max:2100'],
             'semestre' => ['nullable', 'integer', 'in:1,2'],
             'ativo' => ['required', 'boolean'],
-            'alunos' => ['nullable', 'array'],
-            'alunos.*' => ['integer', 'exists:ebd_alunos,id'],
         ];
     }
 }

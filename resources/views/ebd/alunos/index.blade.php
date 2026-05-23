@@ -63,6 +63,9 @@
                                     <td>{{ $item->ativo ? 'Sim' : 'Não' }}</td>
                                     <td>{{ $item->observacoes }}</td>
                                     <td class="d-flex" style="gap: .5rem;">
+                                        <a href="{{ route('ebd.alunos.vinculos', $item->id) }}" class="btn btn-sm btn-primary btn-rounded bs-tooltip" title="Incluir em EBD" aria-label="Incluir em EBD">
+                                            <i class="fas fa-link"></i>
+                                        </a>
                                         <a href="{{ route('ebd.alunos.edit', $item->id) }}" class="btn btn-sm btn-dark mr-2 btn-rounded bs-tooltip" title="Editar" aria-label="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>

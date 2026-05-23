@@ -26,11 +26,11 @@ class EbdDashboardController extends Controller
             'totalProfessores' => EbdProfessor::whereHas('membro', $scopeMembro)->count(),
             'totalAlunos' => EbdAluno::whereHas('membro', $scopeMembro)->count(),
             'totalClasses' => EbdClasse::where('igreja_id', $igrejaId)->count(),
-            'totalTurmas' => EbdTurma::whereHas('professor.membro', $scopeMembro)->count(),
-            'totalDiarios' => EbdDiario::whereHas('turma.professor.membro', $scopeMembro)->count(),
-            'totalAgendas' => EbdAgenda::where(function ($query) use ($scopeMembro) {
+            'totalTurmas' => EbdTurma::whereHas('classe', fn ($q) => $q->where('igreja_id', $igrejaId))->count(),
+            'totalDiarios' => EbdDiario::whereHas('turma.classe', fn ($q) => $q->where('igreja_id', $igrejaId))->count(),
+            'totalAgendas' => EbdAgenda::where(function ($query) use ($igrejaId) {
                 $query->whereNull('turma_id')
-                    ->orWhereHas('turma.professor.membro', $scopeMembro);
+                    ->orWhereHas('turma.classe', fn ($q) => $q->where('igreja_id', $igrejaId));
             })->count(),
         ]);
     }

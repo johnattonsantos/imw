@@ -73,6 +73,7 @@
                             ['titulo' => 'EBDs', 'total' => $totalTurmas, 'rota' => route('distrito.relatorio.ebd.turmas')],
                             ['titulo' => 'Diários', 'total' => $totalDiarios, 'rota' => route('distrito.relatorio.ebd.diarios')],
                             ['titulo' => 'Agenda', 'total' => $totalAgendas, 'rota' => route('distrito.relatorio.ebd.agendas')],
+                            ['titulo' => 'Estatísticas EBD', 'total' => $totalTurmas, 'rota' => route('distrito.relatorio.ebd.estatisticas')],
                             ['titulo' => 'Relatório Geral', 'total' => $totalAlunos, 'rota' => route('distrito.relatorio.ebd.geral')],
                         ];
                     @endphp

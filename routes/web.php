@@ -291,6 +291,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio/estatisticas-gceu', [DistritoRelatorioController::class, 'estatisticasGceu'])->name('relatorio.estatisticas.gceu')->middleware(['seguranca:distrito-estatistica-gceu']);
 
             Route::get('/relatorio/ebd/dashboard', [DistritoEbdRelatorioController::class, 'dashboard'])->name('relatorio.ebd.dashboard')->middleware(['seguranca:distrito-ebd-dashboard']);
+            Route::get('/relatorio/ebd/estatisticas', [DistritoEbdRelatorioController::class, 'estatisticas'])->name('relatorio.ebd.estatisticas')->middleware(['seguranca:distrito-ebd-estatisticas']);
             Route::get('/relatorio/ebd/alunos', [DistritoEbdRelatorioController::class, 'alunos'])->name('relatorio.ebd.alunos')->middleware(['seguranca:distrito-ebd-alunos']);
             Route::get('/relatorio/ebd/professores', [DistritoEbdRelatorioController::class, 'professores'])->name('relatorio.ebd.professores')->middleware(['seguranca:distrito-ebd-professores']);
             Route::get('/relatorio/ebd/liderancas', [DistritoEbdRelatorioController::class, 'liderancas'])->name('relatorio.ebd.liderancas')->middleware(['seguranca:distrito-ebd-liderancas']);
@@ -324,6 +325,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('regiao/relatorio')->name('regiao.')->group(function () {
             Route::get('/ebd/dashboard', [RegiaoEbdRelatorioController::class, 'dashboard'])->name('relatorio.ebd.dashboard')->middleware(['seguranca:regiao-ebd-dashboard']);
+            Route::get('/ebd/estatisticas', [RegiaoEbdRelatorioController::class, 'estatisticas'])->name('relatorio.ebd.estatisticas')->middleware(['seguranca:regiao-ebd-estatisticas']);
             Route::get('/ebd/alunos', [RegiaoEbdRelatorioController::class, 'alunos'])->name('relatorio.ebd.alunos')->middleware(['seguranca:regiao-ebd-alunos']);
             Route::get('/ebd/professores', [RegiaoEbdRelatorioController::class, 'professores'])->name('relatorio.ebd.professores')->middleware(['seguranca:regiao-ebd-professores']);
             Route::get('/ebd/liderancas', [RegiaoEbdRelatorioController::class, 'liderancas'])->name('relatorio.ebd.liderancas')->middleware(['seguranca:regiao-ebd-liderancas']);
@@ -540,6 +542,14 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('turmas', EbdTurmaController::class)->except(['show'])->middleware(['seguranca:ebd-turmas']);
             Route::resource('diarios', EbdDiarioController::class)->except(['show'])->middleware(['seguranca:ebd-diarios']);
             Route::resource('agendas', EbdAgendaController::class)->except(['show'])->middleware(['seguranca:ebd-agendas']);
+
+            Route::get('alunos/{aluno}/vinculos', [EbdAlunoController::class, 'vinculos'])->name('alunos.vinculos')->middleware(['seguranca:ebd-alunos']);
+            Route::post('alunos/{aluno}/vinculos', [EbdAlunoController::class, 'vincularTurma'])->name('alunos.vinculos.store')->middleware(['seguranca:ebd-alunos']);
+            Route::delete('alunos/{aluno}/vinculos/{turma}', [EbdAlunoController::class, 'removerTurma'])->name('alunos.vinculos.destroy')->middleware(['seguranca:ebd-alunos']);
+
+            Route::get('professores/{professore}/vinculos', [EbdProfessorController::class, 'vinculos'])->name('professores.vinculos')->middleware(['seguranca:ebd-professores']);
+            Route::post('professores/{professore}/vinculos', [EbdProfessorController::class, 'vincularTurma'])->name('professores.vinculos.store')->middleware(['seguranca:ebd-professores']);
+
             Route::get('relatorios/alunos', [EbdRelatorioController::class, 'alunos'])->name('relatorios.alunos')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/professores', [EbdRelatorioController::class, 'professores'])->name('relatorios.professores')->middleware(['seguranca:ebd-dashboard']);
             Route::get('relatorios/liderancas', [EbdRelatorioController::class, 'liderancas'])->name('relatorios.liderancas')->middleware(['seguranca:ebd-dashboard']);

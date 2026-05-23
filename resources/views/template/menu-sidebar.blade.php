@@ -527,6 +527,11 @@
                                  <a href="{{ route('distrito.relatorio.ebd.dashboard') }}">Dashboard</a>
                              @endif
                          </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/estatisticas') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-estatisticas'))
+                                 <a href="{{ route('distrito.relatorio.ebd.estatisticas') }}">Estatísticas EBD</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('distrito/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-turmas'))
                                  <a href="{{ route('distrito.relatorio.ebd.turmas') }}">EBDs</a>
@@ -720,6 +725,11 @@
                         <li {!! Request::is('regiao/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboardo'))
                                 <a href="{{ route('regiao.relatorio.ebd.dashboard') }}">Dashboard</a>
+                            @endif
+                        </li>
+                        <li {!! Request::is('regiao/relatorio/ebd/estatisticas') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-estatisticas'))
+                                <a href="{{ route('regiao.relatorio.ebd.estatisticas') }}">Estatísticas EBD</a>
                             @endif
                         </li>
                         <li {!! Request::is('regiao/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
@@ -1308,9 +1318,9 @@
                                  <a href="{{ route('ebd.dashboard') }}">Dashboard</a>
                              </li>
                          @endif
-                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-liderancas') )
-                             <li {!! Request::is('ebd/liderancas*') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('ebd.liderancas.index') }}">Liderança</a>
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-turmas') )
+                             <li {!! Request::is('ebd/turmas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.turmas.index') }}">EBDs</a>
                              </li>
                          @endif
                          @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-professores') )
@@ -1328,9 +1338,9 @@
                                  <a href="{{ route('ebd.classes.index') }}">Classes</a>
                              </li>
                          @endif
-                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-turmas') )
-                             <li {!! Request::is('ebd/turmas*') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('ebd.turmas.index') }}">EBDs</a>
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-liderancas') )
+                             <li {!! Request::is('ebd/liderancas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.liderancas.index') }}">Liderança</a>
                              </li>
                          @endif
                          @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-diarios') )
