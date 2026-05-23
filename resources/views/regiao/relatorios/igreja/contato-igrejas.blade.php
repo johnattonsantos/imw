@@ -66,11 +66,24 @@
             </thead>
             <tbody>
                 @forelse($igrejas as $item)
+                @php
+                    $ddd = preg_replace('/\D+/', '', (string) $item->ddd);
+                    $telefone = preg_replace('/\D+/', '', (string) $item->telefone);
+                    $telefoneFormatado = '-';
+
+                    if ($ddd !== '' && strlen($telefone) === 9) {
+                        $telefoneFormatado = '(' . $ddd . ') ' . preg_replace('/(\d{5})(\d{4})/', '$1-$2', $telefone);
+                    } elseif ($ddd !== '' && strlen($telefone) === 8) {
+                        $telefoneFormatado = '(' . $ddd . ') ' . preg_replace('/(\d{4})(\d{4})/', '$1-$2', $telefone);
+                    } elseif ($telefone !== '') {
+                        $telefoneFormatado = $item->telefone;
+                    }
+                @endphp
                 <tr>
                     <td>{{ $item->distrito_nome }}</td>
                     <td>{{ $item->igreja_nome }}</td>
                     <td>{{ $item->email }}</td>
-                     <td>({{ $item->ddd }}) {{ formatStr($item->telefone, '#####-####') }}</td>
+                    <td>{{ $telefoneFormatado }}</td>
                 </tr>
                 @empty
                 <tr>

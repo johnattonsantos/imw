@@ -89,7 +89,6 @@
 </div>
 
 <!-- TABELA -->
-{{session()->get('funcao_eclesiastica_id')}}
 @isset($membros)
   <div class="col-lg-12 col-12 layout-spacing">
       <div class="statbox widget box box-shadow">
@@ -114,19 +113,15 @@
                           </tr>
                       </thead>
                       <tbody>
-                        @forelse ($membros as $membro)
-                            <tr>
-                                <td>{{ $membro->rol_atual }}</td>
-                                <td>{{ $membro->nome }}</td>
-                                <td>{{ formatStr($membro->telefone, '## (##) #####-####') }}</td>
-                                <td>{{ $membro->funcao_eclesiastica }}</td>
-                                <td>{{ $membro->igreja }}</td>
-                            </tr>
-                        @empty
+                        @foreach ($membros as $membro)
                           <tr>
-                              <td colspan="6" style="text-align: center">Não existem registros para este membro</td>
+                              <td>{{ $membro->rol_atual }}</td>
+                              <td>{{ $membro->nome }}</td>
+                              <td>{{ formatStr($membro->telefone, '## (##) #####-####') }}</td>
+                              <td>{{ $membro->funcao_eclesiastica }}</td>
+                              <td>{{ $membro->igreja }}</td>
                           </tr>
-                        @endforelse
+                        @endforeach
                       </tbody>
                   </table>
               </div>
@@ -168,8 +163,9 @@
     }
   })
 
-  new DataTable('#membros-por-ministerio', {
-    layout: {
+  if (document.querySelector('#membros-por-ministerio')) {
+    new DataTable('#membros-por-ministerio', {
+      layout: {
         //top1: 'searchBuilder',
         topStart: {
           buttons: [
@@ -216,9 +212,31 @@
         bottomStart: 'info',
        bottomEnd: 'paging'
     },
-    language: {
-      url:"https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json"
-    }
-  });
+      language: {
+        decimal: ",",
+        thousands: ".",
+        emptyTable: "Nenhum registro encontrado",
+        info: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+        infoEmpty: "Mostrando 0 até 0 de 0 registros",
+        infoFiltered: "(Filtrados de _MAX_ registros)",
+        infoPostFix: "",
+        lengthMenu: "_MENU_ resultados por página",
+        loadingRecords: "Carregando...",
+        processing: "Processando...",
+        search: "Pesquisar",
+        zeroRecords: "Nenhum registro encontrado",
+        paginate: {
+          first: "Primeiro",
+          last: "Último",
+          next: "Próximo",
+          previous: "Anterior"
+        },
+        aria: {
+          sortAscending: ": Ordenar colunas de forma ascendente",
+          sortDescending: ": Ordenar colunas de forma descendente"
+        }
+      }
+    });
+  }
 </script>
 @endsection
