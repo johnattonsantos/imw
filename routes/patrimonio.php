@@ -16,15 +16,15 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->middleware(['seguranca:patrimonio.visualizar']);
 
     Route::resource('bens-imoveis', PatrimonioBensImoveisController::class)
-        ->only(['index', 'show'])
-        ->names('bens-imoveis')
-        ->parameters(['bens-imoveis' => 'bemImovel'])
-        ->middleware(['seguranca:patrimonio.visualizar']);
-    Route::resource('bens-imoveis', PatrimonioBensImoveisController::class)
         ->only(['create', 'store'])
         ->names('bens-imoveis')
         ->parameters(['bens-imoveis' => 'bemImovel'])
         ->middleware(['seguranca:patrimonio.criar']);
+    Route::resource('bens-imoveis', PatrimonioBensImoveisController::class)
+        ->only(['index', 'show'])
+        ->names('bens-imoveis')
+        ->parameters(['bens-imoveis' => 'bemImovel'])
+        ->middleware(['seguranca:patrimonio.visualizar']);
     Route::resource('bens-imoveis', PatrimonioBensImoveisController::class)
         ->only(['edit', 'update'])
         ->names('bens-imoveis')
@@ -37,15 +37,15 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->middleware(['seguranca:patrimonio.excluir']);
 
     Route::resource('bens-moveis', PatrimonioBensMoveisController::class)
-        ->only(['index', 'show'])
-        ->names('bens-moveis')
-        ->parameters(['bens-moveis' => 'bemMovel'])
-        ->middleware(['seguranca:patrimonio.visualizar']);
-    Route::resource('bens-moveis', PatrimonioBensMoveisController::class)
         ->only(['create', 'store'])
         ->names('bens-moveis')
         ->parameters(['bens-moveis' => 'bemMovel'])
         ->middleware(['seguranca:patrimonio.criar']);
+    Route::resource('bens-moveis', PatrimonioBensMoveisController::class)
+        ->only(['index', 'show'])
+        ->names('bens-moveis')
+        ->parameters(['bens-moveis' => 'bemMovel'])
+        ->middleware(['seguranca:patrimonio.visualizar']);
     Route::resource('bens-moveis', PatrimonioBensMoveisController::class)
         ->only(['edit', 'update'])
         ->names('bens-moveis')
@@ -61,15 +61,15 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->name('documentos.download')
         ->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.visualizar']);
     Route::resource('documentos', PatrimonioDocumentosController::class)
-        ->only(['index', 'show'])
-        ->names('documentos')
-        ->parameters(['documentos' => 'documento'])
-        ->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.visualizar']);
-    Route::resource('documentos', PatrimonioDocumentosController::class)
         ->only(['create', 'store'])
         ->names('documentos')
         ->parameters(['documentos' => 'documento'])
         ->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.criar']);
+    Route::resource('documentos', PatrimonioDocumentosController::class)
+        ->only(['index', 'show'])
+        ->names('documentos')
+        ->parameters(['documentos' => 'documento'])
+        ->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.visualizar']);
     Route::resource('documentos', PatrimonioDocumentosController::class)
         ->only(['edit', 'update'])
         ->names('documentos')
@@ -82,15 +82,15 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.excluir']);
 
     Route::resource('riscos-juridicos', PatrimonioRiscosJuridicosController::class)
-        ->only(['index', 'show'])
-        ->names('riscos-juridicos')
-        ->parameters(['riscos-juridicos' => 'riscoJuridico'])
-        ->middleware(['seguranca:patrimonio.juridico', 'seguranca:patrimonio.visualizar']);
-    Route::resource('riscos-juridicos', PatrimonioRiscosJuridicosController::class)
         ->only(['create', 'store'])
         ->names('riscos-juridicos')
         ->parameters(['riscos-juridicos' => 'riscoJuridico'])
         ->middleware(['seguranca:patrimonio.juridico', 'seguranca:patrimonio.criar']);
+    Route::resource('riscos-juridicos', PatrimonioRiscosJuridicosController::class)
+        ->only(['index', 'show'])
+        ->names('riscos-juridicos')
+        ->parameters(['riscos-juridicos' => 'riscoJuridico'])
+        ->middleware(['seguranca:patrimonio.juridico', 'seguranca:patrimonio.visualizar']);
     Route::resource('riscos-juridicos', PatrimonioRiscosJuridicosController::class)
         ->only(['edit', 'update'])
         ->names('riscos-juridicos')
@@ -106,15 +106,15 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->name('benfeitorias.download')
         ->middleware(['seguranca:patrimonio.visualizar']);
     Route::resource('benfeitorias', PatrimonioBenfeitoriasController::class)
-        ->only(['index', 'show'])
-        ->names('benfeitorias')
-        ->parameters(['benfeitorias' => 'benfeitoria'])
-        ->middleware(['seguranca:patrimonio.visualizar']);
-    Route::resource('benfeitorias', PatrimonioBenfeitoriasController::class)
         ->only(['create', 'store'])
         ->names('benfeitorias')
         ->parameters(['benfeitorias' => 'benfeitoria'])
         ->middleware(['seguranca:patrimonio.criar']);
+    Route::resource('benfeitorias', PatrimonioBenfeitoriasController::class)
+        ->only(['index', 'show'])
+        ->names('benfeitorias')
+        ->parameters(['benfeitorias' => 'benfeitoria'])
+        ->middleware(['seguranca:patrimonio.visualizar']);
     Route::resource('benfeitorias', PatrimonioBenfeitoriasController::class)
         ->only(['edit', 'update'])
         ->names('benfeitorias')
@@ -130,15 +130,15 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->name('baixas.download')
         ->middleware(['seguranca:patrimonio.baixa', 'seguranca:patrimonio.visualizar']);
     Route::resource('baixas', PatrimonioBaixasController::class)
-        ->only(['index', 'show'])
-        ->names('baixas')
-        ->parameters(['baixas' => 'baixa'])
-        ->middleware(['seguranca:patrimonio.baixa', 'seguranca:patrimonio.visualizar']);
-    Route::resource('baixas', PatrimonioBaixasController::class)
         ->only(['create', 'store'])
         ->names('baixas')
         ->parameters(['baixas' => 'baixa'])
         ->middleware(['seguranca:patrimonio.baixa', 'seguranca:patrimonio.criar']);
+    Route::resource('baixas', PatrimonioBaixasController::class)
+        ->only(['index', 'show'])
+        ->names('baixas')
+        ->parameters(['baixas' => 'baixa'])
+        ->middleware(['seguranca:patrimonio.baixa', 'seguranca:patrimonio.visualizar']);
     Route::resource('baixas', PatrimonioBaixasController::class)
         ->only(['edit', 'update'])
         ->names('baixas')

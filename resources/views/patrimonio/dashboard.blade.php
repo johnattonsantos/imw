@@ -10,31 +10,31 @@
         </div>
 
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-primary text-white h-100"><div class="card-body"><small>Total de imóveis</small><h3>{{ number_format((int) $cards['total_imoveis'], 0, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-blue h-100"><div class="card-body"><small>Total de imóveis</small><h3>{{ number_format((int) $cards['total_imoveis'], 0, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-info text-white h-100"><div class="card-body"><small>Total de bens móveis</small><h3>{{ number_format((int) $cards['total_bens_moveis'], 0, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-cyan h-100"><div class="card-body"><small>Total de bens móveis</small><h3>{{ number_format((int) $cards['total_bens_moveis'], 0, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-success text-white h-100"><div class="card-body"><small>Valor total dos imóveis</small><h3>R$ {{ number_format((float) $cards['valor_total_imoveis'], 2, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-green h-100"><div class="card-body"><small>Valor total dos imóveis</small><h3>R$ {{ number_format((float) $cards['valor_total_imoveis'], 2, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-secondary text-white h-100"><div class="card-body"><small>Valor total dos bens móveis</small><h3>R$ {{ number_format((float) $cards['valor_total_bens_moveis'], 2, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-slate h-100"><div class="card-body"><small>Valor total dos bens móveis</small><h3>R$ {{ number_format((float) $cards['valor_total_bens_moveis'], 2, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-danger text-white h-100"><div class="card-body"><small>Documentos vencidos</small><h3>{{ number_format((int) $cards['documentos_vencidos'], 0, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-rose h-100"><div class="card-body"><small>Documentos vencidos</small><h3>{{ number_format((int) $cards['documentos_vencidos'], 0, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-warning text-dark h-100"><div class="card-body"><small>AVCB vencido</small><h3>{{ number_format((int) $cards['avcb_vencido'], 0, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-amber h-100"><div class="card-body"><small>AVCB vencido</small><h3>{{ number_format((int) $cards['avcb_vencido'], 0, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-dark text-white h-100"><div class="card-body"><small>Imóveis com regularização pendente</small><h3>{{ number_format((int) $cards['imoveis_regularizacao_pendente'], 0, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-indigo h-100"><div class="card-body"><small>Imóveis com regularização pendente</small><h3>{{ number_format((int) $cards['imoveis_regularizacao_pendente'], 0, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-purple text-white h-100"><div class="card-body"><small>Bens depreciados</small><h3>{{ number_format((int) $cards['bens_depreciados'], 0, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-violet h-100"><div class="card-body"><small>Bens depreciados</small><h3>{{ number_format((int) $cards['bens_depreciados'], 0, ',', '.') }}</h3></div></div>
         </div>
         <div class="col-lg-4 col-md-6 mb-3">
-            <div class="card card-kpi bg-danger text-white h-100"><div class="card-body"><small>Riscos críticos</small><h3>{{ number_format((int) $cards['riscos_criticos'], 0, ',', '.') }}</h3></div></div>
+            <div class="card card-kpi kpi-soft-red h-100"><div class="card-body"><small>Riscos críticos</small><h3>{{ number_format((int) $cards['riscos_criticos'], 0, ',', '.') }}</h3></div></div>
         </div>
 
         <div class="col-lg-4 col-12 mb-4">
@@ -120,8 +120,29 @@
 
 @section('extras-css')
 <style>
-    .card-kpi h3 { margin-top: .3rem; margin-bottom: 0; font-weight: 700; }
-    .bg-purple { background: #6f42c1; }
+    .card-kpi {
+        border: 1px solid transparent;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    }
+    .card-kpi small {
+        color: #334155;
+        font-weight: 600;
+    }
+    .card-kpi h3 {
+        margin-top: .3rem;
+        margin-bottom: 0;
+        font-weight: 700;
+        color: #0f172a;
+    }
+    .kpi-soft-blue { background: #eaf2ff; border-color: #d6e5ff; }
+    .kpi-soft-cyan { background: #e8f8ff; border-color: #cfefff; }
+    .kpi-soft-green { background: #eafaf1; border-color: #d2f2e1; }
+    .kpi-soft-slate { background: #f1f5f9; border-color: #e2e8f0; }
+    .kpi-soft-rose { background: #ffecef; border-color: #ffd7de; }
+    .kpi-soft-amber { background: #fff6e5; border-color: #ffe8be; }
+    .kpi-soft-indigo { background: #eef0ff; border-color: #dde2ff; }
+    .kpi-soft-violet { background: #f3edff; border-color: #e6dbff; }
+    .kpi-soft-red { background: #ffe8e8; border-color: #ffd3d3; }
 </style>
 @endsection
 
