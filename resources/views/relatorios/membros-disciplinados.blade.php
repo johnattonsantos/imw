@@ -104,7 +104,7 @@
           <div class="widget-content widget-content-area">
             
               <div class="table-responsive">
-                  <table class="table table-bordered table-striped table-hover mb-4" id="membros-por-ministerio">
+                  <table class="table table-bordered table-striped table-hover mb-4" id="membros-disciplinados-table">
                       <thead>
                           <tr>
                               <th>ROL</th>
@@ -138,7 +138,7 @@
           <div class="widget-content widget-content-area">
 
               <div class="table-responsive">
-                  <table class="table table-bordered table-striped table-hover mb-4" id="membros-por-ministerio">
+                  <table class="table table-bordered table-striped table-hover mb-4" id="membros-disciplinados-table">
                       <thead>
                           <tr>
                               <th>ROL</th>
@@ -150,20 +150,16 @@
                           </tr>
                       </thead>
                       <tbody>
-                        @forelse ($todos_membros as $membroEclesiastico)
-                            <tr>
-                                <td>{{ $membroEclesiastico['membro']->rol_atual }}</td>
-                                <td>{{ $membroEclesiastico['membro']->nome }}</td>
-                                <td>{{ formatStr($membroEclesiastico['membro']->telefone, '## (##) #####-####') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($membroEclesiastico['membro']->dt_inicio)->format('d/m/Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($membroEclesiastico['membro']->dt_termino)->format('d/m/Y') }}</td>
-                                <td>{{ $membroEclesiastico['membro']->observacao }}</td>
-                            </tr>
-                        @empty
+                        @foreach ($todos_membros as $membroEclesiastico)
                           <tr>
-                              <td colspan="6" style="text-align: center">Não existem registros para este membro</td>
+                              <td>{{ $membroEclesiastico['membro']->rol_atual }}</td>
+                              <td>{{ $membroEclesiastico['membro']->nome }}</td>
+                              <td>{{ formatStr($membroEclesiastico['membro']->telefone, '## (##) #####-####') }}</td>
+                              <td>{{ \Carbon\Carbon::parse($membroEclesiastico['membro']->dt_inicio)->format('d/m/Y') }}</td>
+                              <td>{{ \Carbon\Carbon::parse($membroEclesiastico['membro']->dt_termino)->format('d/m/Y') }}</td>
+                              <td>{{ $membroEclesiastico['membro']->observacao }}</td>
                           </tr>
-                        @endforelse
+                        @endforeach
                       </tbody>
                   </table>
               </div>
@@ -206,7 +202,8 @@
     }
   })
 
-  new DataTable('#membros-por-ministerio', {
+  if (document.querySelector('#membros-disciplinados-table')) {
+    new DataTable('#membros-disciplinados-table', {
     layout: {
         //top1: 'searchBuilder',
         topStart: {
@@ -255,8 +252,30 @@
        bottomEnd: 'paging'
     },
     language: {
-      url:"https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json"
+      decimal: ",",
+      thousands: ".",
+      emptyTable: "Nenhum registro encontrado",
+      info: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+      infoEmpty: "Mostrando 0 até 0 de 0 registros",
+      infoFiltered: "(Filtrados de _MAX_ registros)",
+      infoPostFix: "",
+      lengthMenu: "_MENU_ resultados por página",
+      loadingRecords: "Carregando...",
+      processing: "Processando...",
+      search: "Pesquisar",
+      zeroRecords: "Nenhum registro encontrado",
+      paginate: {
+        first: "Primeiro",
+        last: "Último",
+        next: "Próximo",
+        previous: "Anterior"
+      },
+      aria: {
+        sortAscending: ": Ordenar colunas de forma ascendente",
+        sortDescending: ": Ordenar colunas de forma descendente"
+      }
     }
-  });
+    });
+  }
 </script>
 @endsection
