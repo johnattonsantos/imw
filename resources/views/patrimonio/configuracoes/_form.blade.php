@@ -2,6 +2,10 @@
     $item = $configuracao ?? null;
 @endphp
 
+<div class="alert alert-info mb-3" role="alert">
+    Esta configuração é global e ficará disponível para todas as igrejas/unidades.
+</div>
+
 <div class="mb-3">
     <label>Nome *</label>
     <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" value="{{ old('nome', $item->nome ?? '') }}" maxlength="180" required>

@@ -34,10 +34,7 @@ class PatrimonioConfiguracoesController extends Controller
 
     public function hub()
     {
-        $igrejaId = $this->resolveIgrejaId();
-
         $counts = PatrimonioConfiguracao::query()
-            ->daIgreja($igrejaId)
             ->selectRaw('tipo, COUNT(*) as total')
             ->groupBy('tipo')
             ->pluck('total', 'tipo');
@@ -53,7 +50,6 @@ class PatrimonioConfiguracoesController extends Controller
         $tipo = $this->resolveTipo($tipo);
 
         $configuracoes = PatrimonioConfiguracao::query()
-            ->daIgreja($this->resolveIgrejaId())
             ->doTipo($tipo)
             ->orderBy('ordem')
             ->orderBy('nome')
@@ -79,10 +75,8 @@ class PatrimonioConfiguracoesController extends Controller
     public function store(StorePatrimonioConfiguracaoRequest $request, string $tipo)
     {
         $tipo = $this->resolveTipo($tipo);
-        $igrejaId = $this->resolveIgrejaId();
 
         $configuracao = PatrimonioConfiguracao::create([
-            'igreja_id' => $igrejaId,
             'tipo' => $tipo,
             'nome' => (string) $request->input('nome'),
             'descricao' => $request->input('descricao'),
@@ -162,28 +156,9 @@ class PatrimonioConfiguracoesController extends Controller
 
     private function authorizeConfiguracao(PatrimonioConfiguracao $configuracao, string $tipo): void
     {
-        if ((int) $configuracao->igreja_id !== $this->resolveIgrejaId()) {
-            abort(403, 'Configuração não pertence à igreja ativa.');
-        }
-
         if ($configuracao->tipo !== $tipo) {
             abort(404);
         }
-    }
-
-    private function resolveIgrejaId(): int
-    {
-        $igrejaId = (int) (
-            data_get(session('session_perfil'), 'instituicoes.igrejaLocal.id')
-            ?? data_get(session('session_perfil'), 'instituicao_id')
-            ?? 0
-        );
-
-        if ($igrejaId <= 0) {
-            abort(403, 'Igreja não identificada na sessão.');
-        }
-
-        return $igrejaId;
     }
 
     private function logAcao(string $acao, array $contexto = []): void

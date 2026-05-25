@@ -16,11 +16,6 @@ class StorePatrimonioConfiguracaoRequest extends FormRequest
     public function rules(): array
     {
         $tipo = (string) $this->route('tipo');
-        $igrejaId = (int) (
-            data_get(session('session_perfil'), 'instituicoes.igrejaLocal.id')
-            ?? data_get(session('session_perfil'), 'instituicao_id')
-            ?? 0
-        );
 
         return [
             'nome' => [
@@ -28,7 +23,7 @@ class StorePatrimonioConfiguracaoRequest extends FormRequest
                 'string',
                 'max:180',
                 Rule::unique('patrimonio_configuracoes', 'nome')
-                    ->where(fn ($query) => $query->where('igreja_id', $igrejaId)->where('tipo', $tipo)),
+                    ->where(fn ($query) => $query->where('tipo', $tipo)),
             ],
             'descricao' => ['nullable', 'string'],
             'ativo' => ['nullable', 'boolean'],

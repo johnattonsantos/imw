@@ -20,11 +20,6 @@ class UpdatePatrimonioConfiguracaoRequest extends FormRequest
         $configuracao = $this->route('configuracao');
 
         $tipo = (string) $this->route('tipo');
-        $igrejaId = (int) (
-            data_get(session('session_perfil'), 'instituicoes.igrejaLocal.id')
-            ?? data_get(session('session_perfil'), 'instituicao_id')
-            ?? 0
-        );
 
         return [
             'nome' => [
@@ -32,7 +27,7 @@ class UpdatePatrimonioConfiguracaoRequest extends FormRequest
                 'string',
                 'max:180',
                 Rule::unique('patrimonio_configuracoes', 'nome')
-                    ->where(fn ($query) => $query->where('igreja_id', $igrejaId)->where('tipo', $tipo))
+                    ->where(fn ($query) => $query->where('tipo', $tipo))
                     ->ignore($configuracao?->id),
             ],
             'descricao' => ['nullable', 'string'],
