@@ -10,7 +10,7 @@
     <div class="row layout-top-spacing">
         <div class="col-12 mb-3">
             <h4 class="mb-1">Configurações Patrimoniais</h4>
-            <p class="text-muted mb-0">Cadastros auxiliares do módulo de patrimônio.</p>
+            <p class="text-muted mb-0">Cadastros auxiliares globais do módulo de patrimônio (válidos para todas as igrejas/unidades).</p>
         </div>
         <div class="col-12">
             @include('patrimonio.configuracoes._menu-tipos')

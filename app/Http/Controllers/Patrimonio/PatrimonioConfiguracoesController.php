@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Patrimonio;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Patrimonio\StorePatrimonioConfiguracaoRequest;
 use App\Http\Requests\Patrimonio\UpdatePatrimonioConfiguracaoRequest;
+use App\Models\Patrimonio\BemMovel;
+use App\Models\Patrimonio\DocumentoPatrimonial;
+use App\Models\Patrimonio\Imovel;
 use App\Models\Patrimonio\PatrimonioConfiguracao;
 use Illuminate\Support\Facades\Log;
 
@@ -34,10 +37,7 @@ class PatrimonioConfiguracoesController extends Controller
 
     public function hub()
     {
-        $igrejaId = $this->resolveIgrejaId();
-
         $counts = PatrimonioConfiguracao::query()
-            ->daIgreja($igrejaId)
             ->selectRaw('tipo, COUNT(*) as total')
             ->groupBy('tipo')
             ->pluck('total', 'tipo');
@@ -53,7 +53,6 @@ class PatrimonioConfiguracoesController extends Controller
         $tipo = $this->resolveTipo($tipo);
 
         $configuracoes = PatrimonioConfiguracao::query()
-            ->daIgreja($this->resolveIgrejaId())
             ->doTipo($tipo)
             ->orderBy('ordem')
             ->orderBy('nome')
@@ -79,10 +78,8 @@ class PatrimonioConfiguracoesController extends Controller
     public function store(StorePatrimonioConfiguracaoRequest $request, string $tipo)
     {
         $tipo = $this->resolveTipo($tipo);
-        $igrejaId = $this->resolveIgrejaId();
 
         $configuracao = PatrimonioConfiguracao::create([
-            'igreja_id' => $igrejaId,
             'tipo' => $tipo,
             'nome' => (string) $request->input('nome'),
             'descricao' => $request->input('descricao'),
@@ -139,6 +136,13 @@ class PatrimonioConfiguracoesController extends Controller
         $tipo = $this->resolveTipo($tipo);
         $this->authorizeConfiguracao($configuracao, $tipo);
 
+        [$totalVinculos, $origemVinculo] = $this->contarVinculos($configuracao);
+        if ($totalVinculos > 0) {
+            return redirect()
+                ->route('patrimonio.configuracoes.tipos.index', ['tipo' => $tipo])
+                ->with('error', self::TIPOS[$tipo] . " não pode ser excluída. Esta configuração está vinculada em {$totalVinculos} registro(s) de {$origemVinculo}.");
+        }
+
         $configuracao->delete();
 
         $this->logAcao('configuracoes.destroy', [
@@ -162,28 +166,9 @@ class PatrimonioConfiguracoesController extends Controller
 
     private function authorizeConfiguracao(PatrimonioConfiguracao $configuracao, string $tipo): void
     {
-        if ((int) $configuracao->igreja_id !== $this->resolveIgrejaId()) {
-            abort(403, 'Configuração não pertence à igreja ativa.');
-        }
-
         if ($configuracao->tipo !== $tipo) {
             abort(404);
         }
-    }
-
-    private function resolveIgrejaId(): int
-    {
-        $igrejaId = (int) (
-            data_get(session('session_perfil'), 'instituicoes.igrejaLocal.id')
-            ?? data_get(session('session_perfil'), 'instituicao_id')
-            ?? 0
-        );
-
-        if ($igrejaId <= 0) {
-            abort(403, 'Igreja não identificada na sessão.');
-        }
-
-        return $igrejaId;
     }
 
     private function logAcao(string $acao, array $contexto = []): void
@@ -192,5 +177,20 @@ class PatrimonioConfiguracoesController extends Controller
             'user_id' => auth()->id(),
             'ip' => request()->ip(),
         ], $contexto));
+    }
+
+    private function contarVinculos(PatrimonioConfiguracao $configuracao): array
+    {
+        $nome = (string) $configuracao->nome;
+
+        return match ($configuracao->tipo) {
+            'natureza' => [Imovel::query()->where('natureza_imovel', $nome)->count(), 'imóveis'],
+            'status' => [Imovel::query()->where('status_titularidade', $nome)->count(), 'imóveis'],
+            'iptu' => [Imovel::query()->where('iptu_itr', $nome)->count(), 'imóveis'],
+            'categoria' => [BemMovel::query()->where('categoria', $nome)->count(), 'bens móveis'],
+            'comprobatorio' => [BemMovel::query()->where('natureza_comprobatoria', $nome)->count(), 'bens móveis'],
+            'tipo_documento' => [DocumentoPatrimonial::query()->where('tipo', $nome)->count(), 'documentos'],
+            default => [0, 'cadastros'],
+        };
     }
 }

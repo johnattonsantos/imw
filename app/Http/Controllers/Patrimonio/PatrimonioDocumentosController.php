@@ -268,7 +268,6 @@ class PatrimonioDocumentosController extends Controller
     private function configuracoesAtivasPorTipo(string $tipo)
     {
         return PatrimonioConfiguracao::query()
-            ->daIgreja($this->resolveIgrejaId())
             ->doTipo($tipo)
             ->ativos()
             ->orderBy('ordem')
