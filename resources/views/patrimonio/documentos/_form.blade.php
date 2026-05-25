@@ -1,5 +1,7 @@
 @php
     $item = $documento ?? null;
+    $tiposDocumento = $tiposDocumento ?? collect();
+    $tipoSelecionado = old('tipo', $item->tipo ?? '');
     $documentavelType = old('documentavel_type');
     $documentavelId = old('documentavel_id');
 
@@ -24,8 +26,17 @@
 
     <div class="mb-3 col-md-3">
         <label>Tipo *</label>
-        <input type="text" name="tipo" class="form-control @error('tipo') is-invalid @enderror"
-            value="{{ old('tipo', $item->tipo ?? '') }}" maxlength="120" required>
+        <select name="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
+            <option value="">Selecione</option>
+            @foreach ($tiposDocumento as $tipoDocumento)
+                <option value="{{ $tipoDocumento->nome }}" {{ (string) $tipoSelecionado === (string) $tipoDocumento->nome ? 'selected' : '' }}>
+                    {{ $tipoDocumento->nome }}
+                </option>
+            @endforeach
+            @if ($tipoSelecionado !== '' && ! $tiposDocumento->contains(fn ($tipoDocumento) => (string) $tipoDocumento->nome === (string) $tipoSelecionado))
+                <option value="{{ $tipoSelecionado }}" selected>{{ $tipoSelecionado }} (não encontrada nas configurações)</option>
+            @endif
+        </select>
         @error('tipo')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 

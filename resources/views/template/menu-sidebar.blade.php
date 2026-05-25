@@ -1351,6 +1351,37 @@
                                  <a href="{{ route('patrimonio.relatorios.index') }}">Relatórios</a>
                              </li>
                          @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio.visualizar'))
+                             <li {!! Request::is('patrimonio/configuracoes*') ? 'class="active"' : '' !!}>
+                                 <a href="#patrimonio-configuracoes"
+                                    data-toggle="collapse"
+                                    aria-expanded="{{ Request::is('patrimonio/configuracoes*') ? 'true' : 'false' }}"
+                                    class="dropdown-toggle">
+                                     Configurações
+                                 </a>
+                                 <ul class="collapse list-unstyled sub-submenu {{ Request::is('patrimonio/configuracoes*') ? 'collapse show' : '' }}"
+                                     id="patrimonio-configuracoes">
+                                     <li {!! Request::is('patrimonio/configuracoes/natureza*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'natureza']) }}">Natureza</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/status*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'status']) }}">Status</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/iptu*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'iptu']) }}">IPTU</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/categoria*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'categoria']) }}">Categoria</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/comprobatorio*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'comprobatorio']) }}">Comprobatório</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/tipo_documento*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'tipo_documento']) }}">Tipo de documento</a>
+                                     </li>
+                                 </ul>
+                             </li>
+                         @endif
                      </ul>
                  </li>
              @endif

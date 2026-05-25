@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Patrimonio\StorePatrimonioBemImovelRequest;
 use App\Http\Requests\Patrimonio\UpdatePatrimonioBemImovelRequest;
 use App\Models\Patrimonio\Imovel;
+use App\Models\Patrimonio\PatrimonioConfiguracao;
 use Illuminate\Support\Facades\Log;
 
 class PatrimonioBensImoveisController extends Controller
@@ -31,7 +32,11 @@ class PatrimonioBensImoveisController extends Controller
 
     public function create()
     {
-        return view('patrimonio.bens-imoveis.create');
+        return view('patrimonio.bens-imoveis.create', [
+            'naturezas' => $this->naturezasImovel(),
+            'statusTitularidades' => $this->statusTitularidades(),
+            'iptus' => $this->iptuOptions(),
+        ]);
     }
 
     public function store(StorePatrimonioBemImovelRequest $request)
@@ -64,7 +69,12 @@ class PatrimonioBensImoveisController extends Controller
     {
         $this->authorizeByIgreja($bemImovel);
 
-        return view('patrimonio.bens-imoveis.edit', ['imovel' => $bemImovel]);
+        return view('patrimonio.bens-imoveis.edit', [
+            'imovel' => $bemImovel,
+            'naturezas' => $this->naturezasImovel(),
+            'statusTitularidades' => $this->statusTitularidades(),
+            'iptus' => $this->iptuOptions(),
+        ]);
     }
 
     public function update(UpdatePatrimonioBemImovelRequest $request, Imovel $bemImovel)
@@ -135,5 +145,31 @@ class PatrimonioBensImoveisController extends Controller
             'user_id' => auth()->id(),
             'ip' => request()->ip(),
         ], $contexto));
+    }
+
+    private function naturezasImovel()
+    {
+        return $this->configuracoesAtivasPorTipo('natureza');
+    }
+
+    private function statusTitularidades()
+    {
+        return $this->configuracoesAtivasPorTipo('status');
+    }
+
+    private function iptuOptions()
+    {
+        return $this->configuracoesAtivasPorTipo('iptu');
+    }
+
+    private function configuracoesAtivasPorTipo(string $tipo)
+    {
+        return PatrimonioConfiguracao::query()
+            ->daIgreja($this->resolveIgrejaId())
+            ->doTipo($tipo)
+            ->ativos()
+            ->orderBy('ordem')
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Requests\Patrimonio\StorePatrimonioBemMovelRequest;
 use App\Http\Requests\Patrimonio\UpdatePatrimonioBemMovelRequest;
 use App\Models\Patrimonio\BemMovel;
 use App\Models\Patrimonio\Imovel;
+use App\Models\Patrimonio\PatrimonioConfiguracao;
 use App\Services\Patrimonio\DepreciacaoService;
 use Illuminate\Support\Facades\Log;
 
@@ -44,7 +45,11 @@ class PatrimonioBensMoveisController extends Controller
         $igrejaId = $this->resolveIgrejaId();
         $imoveis = Imovel::query()->daIgreja($igrejaId)->orderBy('nome')->get();
 
-        return view('patrimonio.bens-moveis.create', compact('imoveis'));
+        return view('patrimonio.bens-moveis.create', [
+            'imoveis' => $imoveis,
+            'categorias' => $this->configuracoesAtivasPorTipo('categoria'),
+            'comprobatorios' => $this->configuracoesAtivasPorTipo('comprobatorio'),
+        ]);
     }
 
     public function store(StorePatrimonioBemMovelRequest $request)
@@ -87,7 +92,12 @@ class PatrimonioBensMoveisController extends Controller
         $igrejaId = $this->resolveIgrejaId();
         $imoveis = Imovel::query()->daIgreja($igrejaId)->orderBy('nome')->get();
 
-        return view('patrimonio.bens-moveis.edit', compact('bemMovel', 'imoveis'));
+        return view('patrimonio.bens-moveis.edit', [
+            'bemMovel' => $bemMovel,
+            'imoveis' => $imoveis,
+            'categorias' => $this->configuracoesAtivasPorTipo('categoria'),
+            'comprobatorios' => $this->configuracoesAtivasPorTipo('comprobatorio'),
+        ]);
     }
 
     public function update(UpdatePatrimonioBemMovelRequest $request, BemMovel $bemMovel)
@@ -164,5 +174,16 @@ class PatrimonioBensMoveisController extends Controller
             'user_id' => auth()->id(),
             'ip' => request()->ip(),
         ], $contexto));
+    }
+
+    private function configuracoesAtivasPorTipo(string $tipo)
+    {
+        return PatrimonioConfiguracao::query()
+            ->daIgreja($this->resolveIgrejaId())
+            ->doTipo($tipo)
+            ->ativos()
+            ->orderBy('ordem')
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
     }
 }

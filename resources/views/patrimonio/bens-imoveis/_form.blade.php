@@ -1,5 +1,11 @@
 @php
     $item = $imovel ?? null;
+    $naturezas = $naturezas ?? collect();
+    $statusTitularidades = $statusTitularidades ?? collect();
+    $iptus = $iptus ?? collect();
+    $naturezaSelecionada = old('natureza_imovel', $item->natureza_imovel ?? '');
+    $statusTitularidadeSelecionado = old('status_titularidade', $item->status_titularidade ?? '');
+    $iptuSelecionado = old('iptu_itr', $item->iptu_itr ?? '');
 @endphp
 
 <div class="row">
@@ -10,13 +16,33 @@
 
     <div class="mb-3 col-md-4">
         <label>Natureza do imóvel</label>
-        <input type="text" name="natureza_imovel" class="form-control @error('natureza_imovel') is-invalid @enderror" value="{{ old('natureza_imovel', $item->natureza_imovel ?? '') }}" maxlength="120">
+        <select name="natureza_imovel" class="form-control @error('natureza_imovel') is-invalid @enderror">
+            <option value="">Selecione</option>
+            @foreach ($naturezas as $natureza)
+                <option value="{{ $natureza->nome }}" {{ (string) $naturezaSelecionada === (string) $natureza->nome ? 'selected' : '' }}>
+                    {{ $natureza->nome }}
+                </option>
+            @endforeach
+            @if ($naturezaSelecionada !== '' && ! $naturezas->contains(fn ($natureza) => (string) $natureza->nome === (string) $naturezaSelecionada))
+                <option value="{{ $naturezaSelecionada }}" selected>{{ $naturezaSelecionada }} (não encontrada nas configurações)</option>
+            @endif
+        </select>
         @error('natureza_imovel')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 
     <div class="mb-3 col-md-4">
         <label>Status de titularidade</label>
-        <input type="text" name="status_titularidade" class="form-control @error('status_titularidade') is-invalid @enderror" value="{{ old('status_titularidade', $item->status_titularidade ?? '') }}" maxlength="80" placeholder="Ex.: proprietário, posse contratual">
+        <select name="status_titularidade" class="form-control @error('status_titularidade') is-invalid @enderror">
+            <option value="">Selecione</option>
+            @foreach ($statusTitularidades as $statusTitularidade)
+                <option value="{{ $statusTitularidade->nome }}" {{ (string) $statusTitularidadeSelecionado === (string) $statusTitularidade->nome ? 'selected' : '' }}>
+                    {{ $statusTitularidade->nome }}
+                </option>
+            @endforeach
+            @if ($statusTitularidadeSelecionado !== '' && ! $statusTitularidades->contains(fn ($statusTitularidade) => (string) $statusTitularidade->nome === (string) $statusTitularidadeSelecionado))
+                <option value="{{ $statusTitularidadeSelecionado }}" selected>{{ $statusTitularidadeSelecionado }} (não encontrada nas configurações)</option>
+            @endif
+        </select>
         @error('status_titularidade')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 </div>
@@ -82,7 +108,17 @@
 
     <div class="mb-3 col-md-3">
         <label>IPTU/ITR</label>
-        <input type="text" name="iptu_itr" class="form-control @error('iptu_itr') is-invalid @enderror" value="{{ old('iptu_itr', $item->iptu_itr ?? '') }}" maxlength="120">
+        <select name="iptu_itr" class="form-control @error('iptu_itr') is-invalid @enderror">
+            <option value="">Selecione</option>
+            @foreach ($iptus as $iptu)
+                <option value="{{ $iptu->nome }}" {{ (string) $iptuSelecionado === (string) $iptu->nome ? 'selected' : '' }}>
+                    {{ $iptu->nome }}
+                </option>
+            @endforeach
+            @if ($iptuSelecionado !== '' && ! $iptus->contains(fn ($iptu) => (string) $iptu->nome === (string) $iptuSelecionado))
+                <option value="{{ $iptuSelecionado }}" selected>{{ $iptuSelecionado }} (não encontrada nas configurações)</option>
+            @endif
+        </select>
         @error('iptu_itr')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 

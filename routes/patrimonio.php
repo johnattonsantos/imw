@@ -6,6 +6,7 @@ use App\Http\Controllers\Patrimonio\PatrimonioBensImoveisController;
 use App\Http\Controllers\Patrimonio\PatrimonioBensMoveisController;
 use App\Http\Controllers\Patrimonio\PatrimonioDashboardController;
 use App\Http\Controllers\Patrimonio\PatrimonioDocumentosController;
+use App\Http\Controllers\Patrimonio\PatrimonioConfiguracoesController;
 use App\Http\Controllers\Patrimonio\PatrimonioRelatoriosController;
 use App\Http\Controllers\Patrimonio\PatrimonioRiscosJuridicosController;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,42 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
     Route::get('/', [PatrimonioDashboardController::class, 'index'])
         ->name('dashboard')
         ->middleware(['seguranca:patrimonio.visualizar']);
+
+    Route::prefix('configuracoes')->name('configuracoes.')->group(function () {
+        Route::get('/', [PatrimonioConfiguracoesController::class, 'hub'])
+            ->name('hub')
+            ->middleware(['seguranca:patrimonio.visualizar']);
+
+        Route::get('{tipo}', [PatrimonioConfiguracoesController::class, 'index'])
+            ->name('tipos.index')
+            ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
+            ->middleware(['seguranca:patrimonio.visualizar']);
+
+        Route::get('{tipo}/create', [PatrimonioConfiguracoesController::class, 'create'])
+            ->name('tipos.create')
+            ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
+            ->middleware(['seguranca:patrimonio.criar']);
+
+        Route::post('{tipo}', [PatrimonioConfiguracoesController::class, 'store'])
+            ->name('tipos.store')
+            ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
+            ->middleware(['seguranca:patrimonio.criar']);
+
+        Route::get('{tipo}/{configuracao}/edit', [PatrimonioConfiguracoesController::class, 'edit'])
+            ->name('tipos.edit')
+            ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
+            ->middleware(['seguranca:patrimonio.editar']);
+
+        Route::put('{tipo}/{configuracao}', [PatrimonioConfiguracoesController::class, 'update'])
+            ->name('tipos.update')
+            ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
+            ->middleware(['seguranca:patrimonio.editar']);
+
+        Route::delete('{tipo}/{configuracao}', [PatrimonioConfiguracoesController::class, 'destroy'])
+            ->name('tipos.destroy')
+            ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
+            ->middleware(['seguranca:patrimonio.excluir']);
+    });
 
     Route::resource('bens-imoveis', PatrimonioBensImoveisController::class)
         ->only(['create', 'store'])

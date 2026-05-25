@@ -1,5 +1,9 @@
 @php
     $item = $bemMovel ?? null;
+    $categorias = $categorias ?? collect();
+    $comprobatorios = $comprobatorios ?? collect();
+    $categoriaSelecionada = old('categoria', $item->categoria ?? '');
+    $comprobatorioSelecionado = old('natureza_comprobatoria', $item->natureza_comprobatoria ?? '');
 @endphp
 
 <div class="row">
@@ -39,8 +43,17 @@
 
     <div class="mb-3 col-md-3">
         <label>Categoria</label>
-        <input type="text" class="form-control @error('categoria') is-invalid @enderror" name="categoria"
-            value="{{ old('categoria', $item->categoria ?? '') }}" maxlength="120">
+        <select name="categoria" class="form-control @error('categoria') is-invalid @enderror">
+            <option value="">Selecione</option>
+            @foreach ($categorias as $categoria)
+                <option value="{{ $categoria->nome }}" {{ (string) $categoriaSelecionada === (string) $categoria->nome ? 'selected' : '' }}>
+                    {{ $categoria->nome }}
+                </option>
+            @endforeach
+            @if ($categoriaSelecionada !== '' && ! $categorias->contains(fn ($categoria) => (string) $categoria->nome === (string) $categoriaSelecionada))
+                <option value="{{ $categoriaSelecionada }}" selected>{{ $categoriaSelecionada }} (não encontrada nas configurações)</option>
+            @endif
+        </select>
         @error('categoria')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 
@@ -114,8 +127,17 @@
 <div class="row">
     <div class="mb-3 col-md-4">
         <label>Natureza comprobatória</label>
-        <input type="text" class="form-control @error('natureza_comprobatoria') is-invalid @enderror" name="natureza_comprobatoria"
-            value="{{ old('natureza_comprobatoria', $item->natureza_comprobatoria ?? '') }}" maxlength="120">
+        <select name="natureza_comprobatoria" class="form-control @error('natureza_comprobatoria') is-invalid @enderror">
+            <option value="">Selecione</option>
+            @foreach ($comprobatorios as $comprobatorio)
+                <option value="{{ $comprobatorio->nome }}" {{ (string) $comprobatorioSelecionado === (string) $comprobatorio->nome ? 'selected' : '' }}>
+                    {{ $comprobatorio->nome }}
+                </option>
+            @endforeach
+            @if ($comprobatorioSelecionado !== '' && ! $comprobatorios->contains(fn ($comprobatorio) => (string) $comprobatorio->nome === (string) $comprobatorioSelecionado))
+                <option value="{{ $comprobatorioSelecionado }}" selected>{{ $comprobatorioSelecionado }} (não encontrada nas configurações)</option>
+            @endif
+        </select>
         @error('natureza_comprobatoria')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 
