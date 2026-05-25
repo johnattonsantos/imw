@@ -14,7 +14,6 @@
                 <div class="row">
                     <div class="col-md-8">
                         <p><strong>Código patrimonial:</strong> {{ $bemMovel->codigo_patrimonial }}</p>
-                        <p><strong>Placa patrimonial:</strong> {{ $bemMovel->placa_patrimonial ?: '-' }}</p>
                         <p><strong>Nome:</strong> {{ $bemMovel->nome }}</p>
                         <p><strong>Categoria:</strong> {{ $bemMovel->categoria ?: '-' }}</p>
                         <p><strong>Descrição:</strong> {{ $bemMovel->descricao ?: '-' }}</p>

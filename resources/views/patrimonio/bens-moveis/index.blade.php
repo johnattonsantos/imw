@@ -29,7 +29,6 @@
                         <thead>
                             <tr>
                                 <th>Código</th>
-                                <th>Placa</th>
                                 <th>Nome</th>
                                 <th>Categoria</th>
                                 <th>Status</th>
@@ -43,7 +42,6 @@
                             @forelse ($bensMoveis as $item)
                                 <tr>
                                     <td>{{ $item->codigo_patrimonial }}</td>
-                                    <td>{{ $item->placa_patrimonial ?: '-' }}</td>
                                     <td>{{ $item->nome }}</td>
                                     <td>{{ $item->categoria ?: '-' }}</td>
                                     <td>{{ ucfirst(str_replace('_', ' ', $item->status)) }}</td>
@@ -66,7 +64,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">Nenhum bem móvel cadastrado.</td>
+                                    <td colspan="8" class="text-center">Nenhum bem móvel cadastrado.</td>
                                 </tr>
                             @endforelse
                         </tbody>

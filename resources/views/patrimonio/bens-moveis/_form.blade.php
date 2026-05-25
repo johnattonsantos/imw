@@ -7,19 +7,12 @@
 @endphp
 
 <div class="row">
-    <div class="mb-3 col-md-4">
+    <div class="mb-3 col-md-6">
         <label>Código patrimonial</label>
         <input type="text" class="form-control" value="{{ $item->codigo_patrimonial ?? 'Gerado automaticamente' }}" readonly>
     </div>
 
-    <div class="mb-3 col-md-4">
-        <label>Placa patrimonial</label>
-        <input type="text" class="form-control @error('placa_patrimonial') is-invalid @enderror" name="placa_patrimonial"
-            value="{{ old('placa_patrimonial', $item->placa_patrimonial ?? '') }}" maxlength="60">
-        @error('placa_patrimonial')<small class="text-danger">{{ $message }}</small>@enderror
-    </div>
-
-    <div class="mb-3 col-md-4">
+    <div class="mb-3 col-md-6">
         <label>Status *</label>
         <select name="status" class="form-control @error('status') is-invalid @enderror" required>
             @php $status = old('status', $item->status ?? 'ativo'); @endphp
