@@ -51,13 +51,17 @@
                                     <td class="d-flex" style="gap:.5rem;">
                                         <a href="{{ route('patrimonio.bens-moveis.show', $item->id) }}" class="btn btn-sm btn-info btn-rounded" title="Visualizar">Ver</a>
                                         @if ($podeEditar)
-                                            <a href="{{ route('patrimonio.bens-moveis.edit', $item->id) }}" class="btn btn-sm btn-dark btn-rounded" title="Editar">Editar</a>
+                                            <a href="{{ route('patrimonio.bens-moveis.edit', $item->id) }}" class="btn btn-sm btn-dark btn-rounded" title="Editar" aria-label="Editar">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
                                         @endif
                                         @if ($podeExcluir)
                                             <form method="POST" action="{{ route('patrimonio.bens-moveis.destroy', $item->id) }}" onsubmit="return confirm('Remover bem móvel?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-sm btn-danger btn-rounded" title="Excluir">Excluir</button>
+                                                <button class="btn btn-sm btn-danger btn-rounded" title="Excluir" aria-label="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </form>
                                         @endif
                                     </td>

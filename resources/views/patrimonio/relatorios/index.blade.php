@@ -2,6 +2,49 @@
 
 @section('content')
     @include('extras.alerts')
+    @php
+        $routeRelatorioIndex = $routeRelatorioIndex ?? 'patrimonio.relatorios.index';
+        $routeRelatorioExportXlsx = $routeRelatorioExportXlsx ?? 'patrimonio.relatorios.export.xlsx';
+        $routeRelatorioExportPdf = $routeRelatorioExportPdf ?? 'patrimonio.relatorios.export.pdf';
+    @endphp
+    <style>
+        .patrimonio-action-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: .32rem;
+            padding: .5rem .95rem;
+            border-radius: 999px;
+            border: 1px solid #4a63d4;
+            background: linear-gradient(180deg, #6179e8 0%, #4a64da 100%);
+            color: #fff;
+            font-weight: 600;
+            font-size: .93rem;
+            box-shadow: 0 4px 10px rgba(28, 58, 165, .28);
+            text-decoration: none;
+            line-height: 1;
+            transition: all .15s ease-in-out;
+        }
+
+        .patrimonio-action-pill:hover,
+        .patrimonio-action-pill:focus {
+            color: #fff;
+            background: linear-gradient(180deg, #6f86ed 0%, #536de0 100%);
+            text-decoration: none;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(28, 58, 165, .3);
+        }
+
+        .patrimonio-action-pill .pill-icon {
+            width: 18px;
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, .22);
+            font-size: .68rem;
+        }
+    </style>
 
     <div class="layout-px-spacing">
         <div class="row layout-top-spacing">
@@ -9,7 +52,7 @@
                 <div class="statbox widget box box-shadow">
                     <div class="widget-header p-3"><h4 class="mb-0">Relatórios Patrimoniais</h4></div>
                     <div class="widget-content widget-content-area">
-                        <form method="GET" action="{{ route('patrimonio.relatorios.index') }}">
+                        <form method="GET" action="{{ route($routeRelatorioIndex) }}">
                             <div class="row">
                                 <div class="mb-3 col-md-4">
                                     <label>Relatório *</label>
@@ -65,9 +108,16 @@
 
                             <div class="d-flex" style="gap:.5rem;">
                                 <button class="btn btn-primary">Aplicar filtros</button>
-                                <a href="{{ route('patrimonio.relatorios.index') }}" class="btn btn-secondary">Limpar</a>
-                                <a href="{{ route('patrimonio.relatorios.export.xlsx', request()->query()) }}" class="btn btn-success">Exportar Excel</a>
-                                <a href="{{ route('patrimonio.relatorios.export.pdf', request()->query()) }}" class="btn btn-danger">Exportar PDF</a>
+                                <a href="{{ route($routeRelatorioIndex) }}" class="btn btn-secondary">Limpar</a>
+                                <a href="{{ route($routeRelatorioExportXlsx, $filters) }}" class="patrimonio-action-pill" title="Exportar Excel" aria-label="Exportar Excel">
+                                    <span class="pill-icon"><i class="fas fa-file-excel"></i></span> Excel
+                                </a>
+                                <a href="{{ route($routeRelatorioExportPdf, $filters) }}" class="patrimonio-action-pill" title="Exportar PDF" aria-label="Exportar PDF">
+                                    <span class="pill-icon"><i class="fas fa-file-pdf"></i></span> PDF
+                                </a>
+                                <button type="button" onclick="window.print()" class="patrimonio-action-pill" title="Imprimir" aria-label="Imprimir">
+                                    <span class="pill-icon"><i class="fas fa-print"></i></span> Imprimir
+                                </button>
                             </div>
                         </form>
                     </div>
