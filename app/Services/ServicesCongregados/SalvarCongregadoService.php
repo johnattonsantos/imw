@@ -41,7 +41,7 @@ class SalvarCongregadoService
 
     private function handlePhotoUpload($photo, $membroId)
     {
-        $filePath = app(MemberPhotoUploadService::class)->upload($photo, 'fotos', true);
+        $filePath = app(MemberPhotoUploadService::class)->upload($photo, 'fotos', false);
 
         $membro = MembresiaMembro::find($membroId);
         if ($membro) {

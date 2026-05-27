@@ -6,6 +6,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 
 class MemberPhotoUploadService
 {
@@ -22,17 +23,25 @@ class MemberPhotoUploadService
         if ((int) $photo->getSize() > self::MAX_PHOTO_BYTES) {
             $contents = $this->compressToTarget($photo->getRealPath() ?: $photo->getPathname());
             $path = $directory . '/' . Uuid::uuid4()->toString() . '.jpg';
-            Storage::disk(self::DISK)->put($path, $contents, 'public');
-        } else {
-            $path = $photo->storeAs($directory, $filename, self::DISK);
-            Storage::disk(self::DISK)->setVisibility($path, 'public');
+            $stored = Storage::disk(self::DISK)->put($path, $contents, [
+                'ContentType' => 'image/jpeg',
+            ]);
+            if ($stored === true) {
+                return $returnPublicUrl ? (string) Storage::disk(self::DISK)->url($path) : $path;
+            }
+
+            throw new RuntimeException('Não foi possível enviar a foto para o S3 no momento.');
         }
 
-        if ($returnPublicUrl) {
-            return Storage::disk(self::DISK)->url($path);
+        $path = $photo->storeAs($directory, $filename, [
+            'disk' => self::DISK,
+        ]);
+
+        if (is_string($path) && $path !== '') {
+            return $returnPublicUrl ? (string) Storage::disk(self::DISK)->url($path) : $path;
         }
 
-        return $path;
+        throw new RuntimeException('Não foi possível enviar a foto para o S3 no momento.');
     }
 
     private function compressToTarget(string $sourcePath): string
@@ -40,10 +49,17 @@ class MemberPhotoUploadService
         $manager = new ImageManager(['driver' => 'gd']);
         $image = $manager->make($sourcePath)->orientate();
 
-        $quality = 85;
-        $minQuality = 35;
+        if ($image->width() > 1600 || $image->height() > 1600) {
+            $image->resize(1600, 1600, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+        }
 
-        for ($attempt = 0; $attempt < 24; $attempt++) {
+        $quality = 78;
+        $minQuality = 42;
+
+        for ($attempt = 0; $attempt < 12; $attempt++) {
             $encoded = $image->encode('jpg', $quality);
             $binary = (string) $encoded;
 
@@ -52,12 +68,12 @@ class MemberPhotoUploadService
             }
 
             if ($quality > $minQuality) {
-                $quality -= 5;
+                $quality -= 6;
                 continue;
             }
 
-            $newWidth = (int) floor($image->width() * 0.9);
-            $newHeight = (int) floor($image->height() * 0.9);
+            $newWidth = (int) floor($image->width() * 0.85);
+            $newHeight = (int) floor($image->height() * 0.85);
 
             if ($newWidth < 320 || $newHeight < 320) {
                 return $binary;
@@ -72,4 +88,3 @@ class MemberPhotoUploadService
         return (string) $image->encode('jpg', $minQuality);
     }
 }
-

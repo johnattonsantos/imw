@@ -50,9 +50,12 @@ class CongregadosController extends Controller
             DB::commit();
             return redirect()->action([CongregadosController::class, 'editar'], ['id' => $membroID])->with('success', 'Registro atualizado.');
         } catch(\Exception $e) {
-            dd($e);
             DB::rollback();
-            return redirect()->route('congregado.index')->with('error', 'Falha na criação do registro.');
+            report($e);
+            $message = str_contains($e->getMessage(), 'S3')
+                ? 'Não foi possível enviar a foto para o S3 no momento. Verifique a configuração do S3 e tente novamente.'
+                : 'Falha na criação do registro.';
+            return redirect()->route('congregado.index')->with('error', $message);
         }
     }
 
@@ -64,9 +67,12 @@ class CongregadosController extends Controller
             DB::commit();
             return redirect()->action([CongregadosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('success', 'Registro atualizado.');
         } catch(\Exception $e) {
-            dd($e);
             DB::rollback();
-            return redirect()->action([CongregadosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('error', 'Falha na atualização do registro.');
+            report($e);
+            $message = str_contains($e->getMessage(), 'S3')
+                ? 'Não foi possível enviar a foto para o S3 no momento. Verifique a configuração do S3 e tente novamente.'
+                : 'Falha na atualização do registro.';
+            return redirect()->action([CongregadosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('error', $message);
         }
     }
 

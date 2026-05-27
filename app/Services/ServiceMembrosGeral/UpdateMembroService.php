@@ -57,7 +57,11 @@ class UpdateMembroService
                         $membro->foto = $filePath;
                         $membro->save();
                     } catch (\Exception $e) {
-                        return response()->json(['error' => $e->getMessage()], 500);
+                        $message = $e->getMessage();
+                        if (str_contains($message, 'S3')) {
+                            throw new \RuntimeException($message, 0, $e);
+                        }
+                        throw new \RuntimeException('Falha ao processar upload da foto do membro.', 0, $e);
                     }
                 } else {
                     throw new \Exception("Foto inválida ou não fornecida.");
