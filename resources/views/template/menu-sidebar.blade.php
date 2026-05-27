@@ -1323,16 +1323,7 @@
                  </li>
              @endif
 
-             @if (auth()->check() && (
-                auth()->user()->hasPerfilRegra('patrimonio.visualizar')
-                || auth()->user()->hasPerfilRegra('patrimonio.documentos')
-                || auth()->user()->hasPerfilRegra('patrimonio.juridico')
-                || auth()->user()->hasPerfilRegra('patrimonio.baixa')
-                || auth()->user()->hasPerfilRegra('patrimonio.relatorios')
-                || auth()->user()->hasPerfilRegra('patrimonio.criar')
-                || auth()->user()->hasPerfilRegra('patrimonio.editar')
-                || auth()->user()->hasPerfilRegra('patrimonio.excluir')
-             ))
+     @if (auth()->user()->hasPerfilRegra('patrimonio-dashboard'))
                  <li class="menu">
                      <a href="#patrimonio" data-toggle="collapse" aria-expanded="{{ Request::is('patrimonio*') ? 'true' : 'false' }}" class="dropdown-toggle">
                          <div class="">
@@ -1353,31 +1344,37 @@
                          </div>
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('patrimonio*') ? 'collapse show' : '' }}" id="patrimonio" data-parent="#patrimonio">
-                         @if (auth()->user()->hasPerfilRegra('patrimonio.visualizar'))
+                         
                              <li {!! Request::is('patrimonio') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.dashboard') }}">Dashboard</a>
                              </li>
+                             @if (auth()->user()->hasPerfilRegra('patrimonio-bens-imoveis'))
                              <li {!! Request::is('patrimonio/bens-imoveis*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.bens-imoveis.index') }}">Bens Imóveis</a>
                              </li>
+                             @endif
+                             @if (auth()->user()->hasPerfilRegra('patrimonio-bens-moveis'))
                              <li {!! Request::is('patrimonio/bens-moveis*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.bens-moveis.index') }}">Bens Móveis</a>
                              </li>
+                             @endif
+                             @if (auth()->user()->hasPerfilRegra('patrimonio-benfeitoria'))
                              <li {!! Request::is('patrimonio/benfeitorias*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.benfeitorias.index') }}">Benfeitorias</a>
                              </li>
-                         @endif
-                         @if (auth()->user()->hasPerfilRegra('patrimonio.documentos'))
+                             @endif
+                         
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-documentos'))
                              <li {!! Request::is('patrimonio/documentos*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.documentos.index') }}">Documentos</a>
                              </li>
                          @endif
-                         @if (auth()->user()->hasPerfilRegra('patrimonio.baixa'))
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-baixa'))
                              <li {!! Request::is('patrimonio/baixas*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.baixas.index') }}">Baixas</a>
                              </li>
                          @endif
-                        @if (auth()->user()->hasPerfilRegra('patrimonio.relatorios'))
+                        @if (auth()->user()->hasPerfilRegra('patrimonio-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">
                                 <span>Relatórios</span>
                             </li>
