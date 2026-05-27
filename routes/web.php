@@ -384,6 +384,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/carta-pastoral/visualizar-html/{id}', [GceuController::class, 'cartaPastoralVisualizarHtmlRegiao'])->name('carta-pastoral-visualizar-html');
             Route::get('/carta-pastoral/visualizar-pdf/{id}', [GceuController::class, 'cartaPastoralPdfRegiao'])->name('carta-pastoral.pdf');
 
+            //PATRIMONIO
             Route::get('/patrimonio', [PatrimonioRelatoriosController::class, 'indexRegiao'])->name('relatorio.patrimonio.index')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/patrimonio/export/xlsx', [PatrimonioRelatoriosController::class, 'exportXlsxRegiao'])->name('relatorio.patrimonio.export.xlsx')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/patrimonio/export/pdf', [PatrimonioRelatoriosController::class, 'exportPdfRegiao'])->name('relatorio.patrimonio.export.pdf')->middleware(['seguranca:regiao-menu-relatorio']);
