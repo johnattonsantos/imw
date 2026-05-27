@@ -98,6 +98,11 @@
                       @php
                         $contatoNumerico = preg_replace('/\D+/', '', (string) $integrante->contato);
                         $contatoFormatado = '-';
+
+                        if (strlen($contatoNumerico) >= 12 && substr($contatoNumerico, 0, 2) === '55') {
+                            $contatoNumerico = substr($contatoNumerico, 2);
+                        }
+
                         if (strlen($contatoNumerico) === 11) {
                             $contatoFormatado = preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $contatoNumerico);
                         } elseif (strlen($contatoNumerico) === 10) {
@@ -167,7 +172,28 @@
       bottomEnd: 'paging'
     },
     language: {
-      url: "https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json"
+      decimal: ",",
+      thousands: ".",
+      emptyTable: "Nenhum registro encontrado",
+      info: "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+      infoEmpty: "Mostrando 0 até 0 de 0 registros",
+      infoFiltered: "(Filtrados de _MAX_ registros)",
+      infoPostFix: "",
+      lengthMenu: "_MENU_ resultados por página",
+      loadingRecords: "Carregando...",
+      processing: "Processando...",
+      search: "Pesquisar",
+      zeroRecords: "Nenhum registro encontrado",
+      paginate: {
+        first: "Primeiro",
+        last: "Último",
+        next: "Próximo",
+        previous: "Anterior"
+      },
+      aria: {
+        sortAscending: ": Ordenar colunas de forma ascendente",
+        sortDescending: ": Ordenar colunas de forma descendente"
+      }
     }
   });
 </script>
