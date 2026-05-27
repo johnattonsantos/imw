@@ -97,6 +97,11 @@ class EditarMembroService
             return $foto;
         }
 
+        // Fallback local (storage público): usa diretamente.
+        if (Str::startsWith($foto, ['/storage/', 'storage/'])) {
+            return Str::startsWith($foto, '/') ? $foto : '/' . ltrim($foto, '/');
+        }
+
         try {
             return Storage::disk('s3')->temporaryUrl($foto, Carbon::now()->addMinutes(15));
         } catch (\Throwable $e) {

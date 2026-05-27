@@ -1,0 +1,1 @@
+INSERT INTO `gceu_funcoes` (`id`, `funcao`) VALUES (NULL, 'Lider em Treinamento');

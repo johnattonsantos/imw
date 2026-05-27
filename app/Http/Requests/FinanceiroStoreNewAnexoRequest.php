@@ -24,7 +24,7 @@ class FinanceiroStoreNewAnexoRequest extends FormRequest
     public function rules()
     {
         return [
-            'anexo'           => 'required|file|max:20480|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
+            'anexo'           => 'required|file|max:10240|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
             'descricao_anexo' => 'nullable|string|max:255',
         ];
     }
@@ -33,7 +33,7 @@ class FinanceiroStoreNewAnexoRequest extends FormRequest
     {
         return [
             'anexo.required'      => 'Você deve anexar um arquivo.',
-            'anexo.max'           => 'O tamanho do arquivo arquivo deve ter no máximo 2Mb.',
+            'anexo.max'           => 'O tamanho do arquivo deve ter no máximo 10MB.',
             'anexo.mimes'         => 'O arquivo deve ser um arquivo PDF, DOC ou DOCX.',
             'descricao_anexo.max' => 'A descrição do anexo deve ter no máximo 255 caracteres.',
         ];
