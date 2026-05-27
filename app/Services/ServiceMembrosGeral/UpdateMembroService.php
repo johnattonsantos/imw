@@ -3,6 +3,7 @@
 namespace App\Services\ServiceMembrosGeral;
 
 use Carbon\Carbon;
+use App\Services\Media\MemberPhotoUploadService;
 use App\Models\MembresiaCurso;
 use App\Models\MembresiaSetor;
 use App\Models\MembresiaMembro;
@@ -11,13 +12,11 @@ use App\Models\MembresiaFamiliar;
 use App\Models\MembresiaFormacao;
 use App\Models\MembresiaTipoAtuacao;
 use App\Models\MembresiaRolPermanente;
-use Illuminate\Support\Facades\Storage;
 use App\Models\MembresiaFuncaoMinisterial;
 use App\Exceptions\MembroNotFoundException;
 use App\Models\GCeuMembros;
 use App\Models\MembresiaFuncaoEclesiastica;
 use App\Models\MembresiaFormacaoEclesiastica;
-use Ramsey\Uuid\Uuid;
 
 class UpdateMembroService
 {
@@ -54,20 +53,15 @@ class UpdateMembroService
             if ($isNew && $photo) {
                 if ($photo->isValid()) {
                     try {
-                        // Gerar um UUID para o nome do arquivo
-                        $filename = Uuid::uuid4()->toString() . '.' . $photo->getClientOriginalExtension();
-                        
-                        // Fazer upload do arquivo para o S3 usando o método storeAs
-                        $filePath = $photo->storeAs('fotos', $filename, 's3');
-                        
-                        // Atualizar o caminho da foto no modelo
+                        $filePath = app(MemberPhotoUploadService::class)->upload($photo, 'fotos', false);
                         $membro->foto = $filePath;
-                        
-                        // Salvar as mudanças no banco de dados
                         $membro->save();
                     } catch (\Exception $e) {
-                        // Tratamento de erro, caso o upload falhe
-                        return response()->json(['error' => $e->getMessage()], 500);
+                        $message = $e->getMessage();
+                        if (str_contains($message, 'S3')) {
+                            throw new \RuntimeException($message, 0, $e);
+                        }
+                        throw new \RuntimeException('Falha ao processar upload da foto do membro.', 0, $e);
                     }
                 } else {
                     throw new \Exception("Foto inválida ou não fornecida.");

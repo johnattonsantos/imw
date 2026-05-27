@@ -145,30 +145,36 @@ class MembrosController extends Controller
 
     public function update(UpdateMembroRequest $request, $id)
     {
-        /* try { */
+        try {
             DB::beginTransaction();
             app(UpdateMembroService::class)->execute($request->all(), MembresiaMembro::VINCULO_MEMBRO);
             DB::commit();
             return redirect()->action([MembrosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('success', 'Registro atualizado.');
-       /*  } catch(\Exception $e) {
+        } catch(\Exception $e) {
             DB::rollback();
-            dd($e);
-            return redirect()->action([MembrosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('error', 'Falha na atualização do registro.');
-        } */
+            report($e);
+            $message = str_contains($e->getMessage(), 'S3')
+                ? 'Não foi possível enviar a foto para o S3 no momento. Verifique a configuração do S3 e tente novamente.'
+                : 'Falha na atualização do registro.';
+            return redirect()->action([MembrosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('error', $message);
+        }
     }
 
     public function updateRecadastramento(UpdateMembroRequest $request, $id)
     {
-        /* try { */
+        try {
             DB::beginTransaction();
             app(UpdateMembroRecadastramentoService::class)->execute($request->all(), MembresiaMembro::VINCULO_MEMBRO);
             DB::commit();
             return redirect()->route('recadastramento-membro.indexRecadastramento')->with('success', 'Registro validado com sucesso.');
-       /*  } catch(\Exception $e) {
+        } catch(\Exception $e) {
             DB::rollback();
-            dd($e);
-            return redirect()->action([MembrosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('error', 'Falha na atualização do registro.');
-        } */
+            report($e);
+            $message = str_contains($e->getMessage(), 'S3')
+                ? 'Não foi possível enviar a foto para o S3 no momento. Verifique a configuração do S3 e tente novamente.'
+                : 'Falha na validação do registro.';
+            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', $message);
+        }
     }
 
     public function receberNovo($id)
