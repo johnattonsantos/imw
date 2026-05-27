@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Patrimonio;
 use App\Exports\PatrimonioRelatorioExport;
 use App\Http\Controllers\Controller;
 use App\Models\InstituicoesInstituicao;
+use App\Models\InstituicoesTipoInstituicao;
 use App\Models\Patrimonio\BaixaPatrimonial;
 use App\Models\Patrimonio\BemMovel;
 use App\Models\Patrimonio\DocumentoPatrimonial;
@@ -20,58 +21,55 @@ class PatrimonioRelatoriosController extends Controller
 {
     public function __construct(private readonly DepreciacaoService $depreciacaoService)
     {
-        $this->middleware('seguranca:patrimonio.relatorios');
+        $this->middleware('seguranca:patrimonio.relatorios')->except([
+            'indexRegiao',
+            'listaRegiao',
+            'exportXlsxRegiao',
+            'exportPdfRegiao',
+        ]);
+        $this->middleware('seguranca:regiao-menu-relatorio')->only([
+            'indexRegiao',
+            'listaRegiao',
+            'exportXlsxRegiao',
+            'exportPdfRegiao',
+        ]);
     }
 
     public function index(Request $request)
     {
-        $filters = $this->enforceIgrejaScope($this->validateFilters($request));
-        $reportOptions = $this->reportOptions();
+        return $this->renderIndex($request, 'igreja', [
+            'index' => 'patrimonio.relatorios.index',
+            'export_xlsx' => 'patrimonio.relatorios.export.xlsx',
+            'export_pdf' => 'patrimonio.relatorios.export.pdf',
+        ]);
+    }
 
-        if (empty($filters['relatorio'])) {
-            $filters['relatorio'] = array_key_first($reportOptions);
-        }
+    public function lista(Request $request, string $relatorio)
+    {
+        $request->merge(['relatorio' => $relatorio]);
 
-        $report = $this->buildReport((string) $filters['relatorio'], $filters);
+        return $this->index($request);
+    }
 
-        $igrejas = InstituicoesInstituicao::query()
-            ->whereKey((int) $filters['igreja_id'])
-            ->orderBy('nome')
-            ->get(['id', 'nome']);
+    public function indexRegiao(Request $request)
+    {
+        return $this->renderIndex($request, 'regiao', [
+            'index' => 'regiao.relatorio.patrimonio.index',
+            'export_xlsx' => 'regiao.relatorio.patrimonio.export.xlsx',
+            'export_pdf' => 'regiao.relatorio.patrimonio.export.pdf',
+        ]);
+    }
 
-        $categorias = BemMovel::query()
-            ->where('igreja_id', (int) $filters['igreja_id'])
-            ->selectRaw("COALESCE(NULLIF(TRIM(categoria), ''), 'Não informado') as categoria")
-            ->distinct()
-            ->orderBy('categoria')
-            ->pluck('categoria');
+    public function listaRegiao(Request $request, string $relatorio)
+    {
+        $request->merge(['relatorio' => $relatorio]);
 
-        $statusOptions = [
-            'ativo' => 'Ativo',
-            'inativo' => 'Inativo',
-            'baixado' => 'Baixado',
-            'em_manutencao' => 'Em manutenção',
-            'depreciado' => 'Depreciado',
-            'vigente' => 'Vigente (documento)',
-            'vencido' => 'Vencido (documento)',
-            'cancelado' => 'Cancelado (documento)',
-            'aberto' => 'Aberto (risco)',
-            'encerrado' => 'Encerrado (risco)',
-        ];
-
-        return view('patrimonio.relatorios.index', compact(
-            'filters',
-            'report',
-            'reportOptions',
-            'igrejas',
-            'categorias',
-            'statusOptions'
-        ));
+        return $this->indexRegiao($request);
     }
 
     public function exportXlsx(Request $request)
     {
-        $filters = $this->enforceIgrejaScope($this->validateFilters($request));
+        $filters = $this->resolveFiltersForScope($request, 'igreja');
         $reportOptions = $this->reportOptions();
 
         $reportKey = (string) ($filters['relatorio'] ?? array_key_first($reportOptions));
@@ -85,7 +83,7 @@ class PatrimonioRelatoriosController extends Controller
 
     public function exportPdf(Request $request)
     {
-        $filters = $this->enforceIgrejaScope($this->validateFilters($request));
+        $filters = $this->resolveFiltersForScope($request, 'igreja');
         $reportOptions = $this->reportOptions();
 
         $reportKey = (string) ($filters['relatorio'] ?? array_key_first($reportOptions));
@@ -97,6 +95,36 @@ class PatrimonioRelatoriosController extends Controller
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('patrimonio_' . $reportKey . '_' . now()->format('Ymd_His') . '.pdf');
+    }
+
+    public function exportXlsxRegiao(Request $request)
+    {
+        $filters = $this->resolveFiltersForScope($request, 'regiao');
+        $reportOptions = $this->reportOptions();
+
+        $reportKey = (string) ($filters['relatorio'] ?? array_key_first($reportOptions));
+        $report = $this->buildReport($reportKey, $filters);
+
+        return Excel::download(
+            new PatrimonioRelatorioExport($report['headings'], $report['rows']),
+            'patrimonio_regiao_' . $reportKey . '_' . now()->format('Ymd_His') . '.xlsx'
+        );
+    }
+
+    public function exportPdfRegiao(Request $request)
+    {
+        $filters = $this->resolveFiltersForScope($request, 'regiao');
+        $reportOptions = $this->reportOptions();
+
+        $reportKey = (string) ($filters['relatorio'] ?? array_key_first($reportOptions));
+        $report = $this->buildReport($reportKey, $filters);
+
+        $pdf = FacadePdf::loadView('patrimonio.relatorios.pdf', [
+            'report' => $report,
+            'filters' => $filters,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->download('patrimonio_regiao_' . $reportKey . '_' . now()->format('Ymd_His') . '.pdf');
     }
 
     private function reportOptions(): array
@@ -112,6 +140,69 @@ class PatrimonioRelatoriosController extends Controller
             'valor_total_por_categoria' => 'Valor total por categoria',
             'bens_por_igreja_unidade' => 'Bens por igreja/unidade',
         ];
+    }
+
+    private function renderIndex(Request $request, string $scope, array $routeNames)
+    {
+        $filters = $this->resolveFiltersForScope($request, $scope);
+        $reportOptions = $this->reportOptions();
+
+        if (empty($filters['relatorio'])) {
+            $filters['relatorio'] = array_key_first($reportOptions);
+        }
+
+        $report = $this->buildReport((string) $filters['relatorio'], $filters);
+
+        $igrejasQuery = InstituicoesInstituicao::query()->orderBy('nome');
+        if (! empty($filters['allowed_igrejas_ids'])) {
+            $igrejasQuery->whereIn('id', $filters['allowed_igrejas_ids']);
+        }
+        if (! empty($filters['igreja_id'])) {
+            $igrejasQuery->whereKey((int) $filters['igreja_id']);
+        }
+
+        $igrejas = $igrejasQuery->get(['id', 'nome']);
+
+        $categoriasQuery = BemMovel::query()
+            ->selectRaw("COALESCE(NULLIF(TRIM(categoria), ''), 'Não informado') as categoria")
+            ->distinct()
+            ->orderBy('categoria');
+        $this->applyIgrejaFilter($categoriasQuery, $filters);
+        $categorias = $categoriasQuery->pluck('categoria');
+
+        $statusOptions = [
+            'ativo' => 'Ativo',
+            'inativo' => 'Inativo',
+            'baixado' => 'Baixado',
+            'em_manutencao' => 'Em manutenção',
+            'depreciado' => 'Depreciado',
+            'vigente' => 'Vigente (documento)',
+            'vencido' => 'Vencido (documento)',
+            'cancelado' => 'Cancelado (documento)',
+            'aberto' => 'Aberto (risco)',
+            'encerrado' => 'Encerrado (risco)',
+        ];
+
+        return view('patrimonio.relatorios.index', [
+            'filters' => $filters,
+            'report' => $report,
+            'reportOptions' => $reportOptions,
+            'igrejas' => $igrejas,
+            'categorias' => $categorias,
+            'statusOptions' => $statusOptions,
+            'routeRelatorioIndex' => $routeNames['index'],
+            'routeRelatorioExportXlsx' => $routeNames['export_xlsx'],
+            'routeRelatorioExportPdf' => $routeNames['export_pdf'],
+        ]);
+    }
+
+    private function resolveFiltersForScope(Request $request, string $scope): array
+    {
+        $filters = $this->validateFilters($request);
+
+        return $scope === 'regiao'
+            ? $this->enforceRegiaoScope($filters)
+            : $this->enforceIgrejaScope($filters);
     }
 
     private function validateFilters(Request $request): array
@@ -143,6 +234,20 @@ class PatrimonioRelatoriosController extends Controller
         return $filters;
     }
 
+    private function enforceRegiaoScope(array $filters): array
+    {
+        $regiaoId = $this->resolveRegiaoId();
+        $allowedIgrejasIds = $this->resolveIgrejasDaRegiao($regiaoId);
+
+        if (! empty($filters['igreja_id']) && ! in_array((int) $filters['igreja_id'], $allowedIgrejasIds, true)) {
+            abort(403, 'Não é permitido gerar relatórios para outra região.');
+        }
+
+        $filters['allowed_igrejas_ids'] = $allowedIgrejasIds;
+
+        return $filters;
+    }
+
     private function resolveIgrejaId(): int
     {
         $igrejaId = (int) (
@@ -156,6 +261,33 @@ class PatrimonioRelatoriosController extends Controller
         }
 
         return $igrejaId;
+    }
+
+    private function resolveRegiaoId(): int
+    {
+        $regiaoId = (int) (
+            data_get(session('session_perfil'), 'instituicoes.regiao.id')
+            ?? data_get(session('session_perfil'), 'instituicao_id')
+            ?? 0
+        );
+
+        if ($regiaoId <= 0) {
+            abort(403, 'Região não identificada na sessão.');
+        }
+
+        return $regiaoId;
+    }
+
+    private function resolveIgrejasDaRegiao(int $regiaoId): array
+    {
+        return InstituicoesInstituicao::query()
+            ->where('regiao_id', $regiaoId)
+            ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->whereNull('data_encerramento')
+            ->pluck('id')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
     }
 
     private function buildReport(string $reportKey, array $filters): array
@@ -476,9 +608,7 @@ class PatrimonioRelatoriosController extends Controller
             ->groupBy('inst.id', 'inst.nome')
             ->orderBy('inst.nome');
 
-        if (! empty($filters['igreja_id'])) {
-            $query->where('patrimonio_bens_moveis.igreja_id', (int) $filters['igreja_id']);
-        }
+        $this->applyIgrejaFilter($query, $filters, 'patrimonio_bens_moveis.igreja_id');
 
         $this->applyCategoriaFilter($query, $filters, 'patrimonio_bens_moveis');
         if (! empty($filters['status'])) {
@@ -502,10 +632,14 @@ class PatrimonioRelatoriosController extends Controller
         ];
     }
 
-    private function applyIgrejaFilter(Builder $query, array $filters): void
+    private function applyIgrejaFilter(Builder $query, array $filters, string $column = 'igreja_id'): void
     {
+        if (! empty($filters['allowed_igrejas_ids'])) {
+            $query->whereIn($column, $filters['allowed_igrejas_ids']);
+        }
+
         if (! empty($filters['igreja_id'])) {
-            $query->where('igreja_id', (int) $filters['igreja_id']);
+            $query->where($column, (int) $filters['igreja_id']);
         }
     }
 

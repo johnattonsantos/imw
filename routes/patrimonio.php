@@ -190,6 +190,20 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
     Route::get('/relatorios', [PatrimonioRelatoriosController::class, 'index'])
         ->name('relatorios.index')
         ->middleware(['seguranca:patrimonio.relatorios']);
+    Route::get('/relatorios/{relatorio}', [PatrimonioRelatoriosController::class, 'lista'])
+        ->name('relatorios.lista')
+        ->whereIn('relatorio', [
+            'imoveis_cadastrados',
+            'bens_moveis_cadastrados',
+            'imoveis_regularizacao_pendente',
+            'documentos_vencidos',
+            'avcb_vencido',
+            'bens_depreciados',
+            'baixas_patrimoniais',
+            'valor_total_por_categoria',
+            'bens_por_igreja_unidade',
+        ])
+        ->middleware(['seguranca:patrimonio.relatorios']);
     Route::get('/relatorios/export/xlsx', [PatrimonioRelatoriosController::class, 'exportXlsx'])
         ->name('relatorios.export.xlsx')
         ->middleware(['seguranca:patrimonio.relatorios']);

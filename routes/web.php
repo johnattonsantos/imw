@@ -43,6 +43,7 @@ use App\Http\Controllers\MembresiaGeralController;
 use App\Http\Controllers\MembrosController;
 use App\Http\Controllers\NomeacoesClerigosController;
 use App\Http\Controllers\NotificacoesTranferenciaController;
+use App\Http\Controllers\Patrimonio\PatrimonioRelatoriosController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PrebendaController;
 use App\Http\Controllers\PrebendasClerigosController;
@@ -382,6 +383,25 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/carta-pastoral/visualizar-html/{id}', [GceuController::class, 'cartaPastoralVisualizarHtmlRegiao'])->name('carta-pastoral-visualizar-html');
             Route::get('/carta-pastoral/visualizar-pdf/{id}', [GceuController::class, 'cartaPastoralPdfRegiao'])->name('carta-pastoral.pdf');
+
+            //PATRIMONIO
+            Route::get('/patrimonio', [PatrimonioRelatoriosController::class, 'indexRegiao'])->name('relatorio.patrimonio.index')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/patrimonio/export/xlsx', [PatrimonioRelatoriosController::class, 'exportXlsxRegiao'])->name('relatorio.patrimonio.export.xlsx')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/patrimonio/export/pdf', [PatrimonioRelatoriosController::class, 'exportPdfRegiao'])->name('relatorio.patrimonio.export.pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/patrimonio/{relatorio}', [PatrimonioRelatoriosController::class, 'listaRegiao'])
+                ->name('relatorio.patrimonio.lista')
+                ->whereIn('relatorio', [
+                    'imoveis_cadastrados',
+                    'bens_moveis_cadastrados',
+                    'imoveis_regularizacao_pendente',
+                    'documentos_vencidos',
+                    'avcb_vencido',
+                    'bens_depreciados',
+                    'baixas_patrimoniais',
+                    'valor_total_por_categoria',
+                    'bens_por_igreja_unidade',
+                ])
+                ->middleware(['seguranca:regiao-menu-relatorio']);
         });
 
         // Relatórios Região Clérigos

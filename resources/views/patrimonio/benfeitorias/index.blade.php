@@ -55,13 +55,17 @@
                                     <td class="d-flex" style="gap:.5rem;">
                                         <a href="{{ route('patrimonio.benfeitorias.show', $item->id) }}" class="btn btn-sm btn-info btn-rounded">Ver</a>
                                         @if ($podeEditar)
-                                            <a href="{{ route('patrimonio.benfeitorias.edit', $item->id) }}" class="btn btn-sm btn-dark btn-rounded">Editar</a>
+                                            <a href="{{ route('patrimonio.benfeitorias.edit', $item->id) }}" class="btn btn-sm btn-dark btn-rounded" title="Editar" aria-label="Editar">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
                                         @endif
                                         @if ($podeExcluir)
                                             <form method="POST" action="{{ route('patrimonio.benfeitorias.destroy', $item->id) }}" onsubmit="return confirm('Remover benfeitoria?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-sm btn-danger btn-rounded">Excluir</button>
+                                                <button class="btn btn-sm btn-danger btn-rounded" title="Excluir" aria-label="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </form>
                                         @endif
                                     </td>

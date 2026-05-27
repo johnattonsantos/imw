@@ -54,6 +54,9 @@ class BemMovel extends Model
                 $bemMovel->codigo_patrimonial = self::gerarCodigoPatrimonial();
             }
 
+            // A placa não é informada manualmente: espelha o código patrimonial.
+            $bemMovel->placa_patrimonial = $bemMovel->codigo_patrimonial;
+
             $bemMovel->qr_code_patrimonial = self::gerarQrCodePatrimonial($bemMovel->codigo_patrimonial);
         });
 
@@ -61,6 +64,9 @@ class BemMovel extends Model
             if (empty($bemMovel->codigo_patrimonial)) {
                 $bemMovel->codigo_patrimonial = self::gerarCodigoPatrimonial();
             }
+
+            // Mantém placa e código sempre sincronizados.
+            $bemMovel->placa_patrimonial = $bemMovel->codigo_patrimonial;
 
             if ($bemMovel->isDirty('codigo_patrimonial') || empty($bemMovel->qr_code_patrimonial)) {
                 $bemMovel->qr_code_patrimonial = self::gerarQrCodePatrimonial($bemMovel->codigo_patrimonial);

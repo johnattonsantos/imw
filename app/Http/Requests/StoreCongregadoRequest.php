@@ -33,7 +33,7 @@ class StoreCongregadoRequest extends FormRequest
         $currentDate = date('Y-m-d');
 
         return [
-            'foto' => 'image|nullable|max:1999',
+            'foto' => 'image|nullable|max:10240',
             'nome' => 'required',
             'sexo' => 'required',
             'data_nascimento' => [

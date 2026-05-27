@@ -524,7 +524,7 @@ class GceuController extends Controller
     public function cartaPastoralUploadImage(Request $request)
     {
         $request->validate([
-            'file' => ['required', 'image', 'max:5120'],
+            'file' => ['required', 'image', 'max:10240'],
         ]);
 
         $file = $request->file('file');

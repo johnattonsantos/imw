@@ -29,7 +29,6 @@
                         <thead>
                             <tr>
                                 <th>Código</th>
-                                <th>Placa</th>
                                 <th>Nome</th>
                                 <th>Categoria</th>
                                 <th>Status</th>
@@ -43,7 +42,6 @@
                             @forelse ($bensMoveis as $item)
                                 <tr>
                                     <td>{{ $item->codigo_patrimonial }}</td>
-                                    <td>{{ $item->placa_patrimonial ?: '-' }}</td>
                                     <td>{{ $item->nome }}</td>
                                     <td>{{ $item->categoria ?: '-' }}</td>
                                     <td>{{ ucfirst(str_replace('_', ' ', $item->status)) }}</td>
@@ -53,20 +51,24 @@
                                     <td class="d-flex" style="gap:.5rem;">
                                         <a href="{{ route('patrimonio.bens-moveis.show', $item->id) }}" class="btn btn-sm btn-info btn-rounded" title="Visualizar">Ver</a>
                                         @if ($podeEditar)
-                                            <a href="{{ route('patrimonio.bens-moveis.edit', $item->id) }}" class="btn btn-sm btn-dark btn-rounded" title="Editar">Editar</a>
+                                            <a href="{{ route('patrimonio.bens-moveis.edit', $item->id) }}" class="btn btn-sm btn-dark btn-rounded" title="Editar" aria-label="Editar">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
                                         @endif
                                         @if ($podeExcluir)
                                             <form method="POST" action="{{ route('patrimonio.bens-moveis.destroy', $item->id) }}" onsubmit="return confirm('Remover bem móvel?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-sm btn-danger btn-rounded" title="Excluir">Excluir</button>
+                                                <button class="btn btn-sm btn-danger btn-rounded" title="Excluir" aria-label="Excluir">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                             </form>
                                         @endif
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">Nenhum bem móvel cadastrado.</td>
+                                    <td colspan="8" class="text-center">Nenhum bem móvel cadastrado.</td>
                                 </tr>
                             @endforelse
                         </tbody>

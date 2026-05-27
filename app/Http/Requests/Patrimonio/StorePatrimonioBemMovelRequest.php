@@ -16,7 +16,6 @@ class StorePatrimonioBemMovelRequest extends FormRequest
     {
         return [
             'imovel_id' => ['nullable', 'integer', 'exists:patrimonio_imoveis,id'],
-            'placa_patrimonial' => ['nullable', 'string', 'max:60'],
             'nome' => ['required', 'string', 'max:180'],
             'categoria' => ['nullable', 'string', 'max:120'],
             'descricao' => ['nullable', 'string'],
