@@ -33,11 +33,11 @@ class FinanceiroStoreSaidaRequest extends FormRequest
             'data_movimento' =>  ['required', new TodaysDeadlineRule],
             'descricao'      => 'nullable|string',
             'tipo_pagante_favorecido_id' => 'required',
-            'anexo1' => 'nullable|file|max:20480|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
+            'anexo1' => 'nullable|file|max:10240|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
             'descricao_anexo1' => 'nullable|string|max:255',
-            'anexo2' => 'nullable|file|max:20480|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
+            'anexo2' => 'nullable|file|max:10240|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
             'descricao_anexo2' => 'nullable|string|max:255',
-            'anexo3' => 'nullable|file|max:20480|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
+            'anexo3' => 'nullable|file|max:10240|mimes:jpeg,png,gif,pdf,doc,docx,xls,xlsx,ppt,pptx',
             'descricao_anexo3' => 'nullable|string|max:255',
         ];
     }

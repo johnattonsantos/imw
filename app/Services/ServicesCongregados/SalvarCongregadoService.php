@@ -2,6 +2,7 @@
 
 namespace App\Services\ServicesCongregados;
 
+use App\Services\Media\MemberPhotoUploadService;
 use App\Models\GCeuMembros;
 use App\Models\MembresiaContato;
 use App\Models\MembresiaFamiliar;
@@ -9,7 +10,6 @@ use App\Models\MembresiaFormacaoEclesiastica;
 use App\Models\MembresiaFuncaoMinisterial;
 use App\Models\MembresiaMembro;
 use App\Traits\Identifiable;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class SalvarCongregadoService
@@ -41,12 +41,11 @@ class SalvarCongregadoService
 
     private function handlePhotoUpload($photo, $membroId)
     {
-        $filePath = $photo->store('fotos', 's3');
-        Storage::disk('s3')->setVisibility($filePath, 'public');
+        $filePath = app(MemberPhotoUploadService::class)->upload($photo, 'fotos', true);
 
         $membro = MembresiaMembro::find($membroId);
         if ($membro) {
-            $membro->foto = Storage::disk('s3')->url($filePath);
+            $membro->foto = $filePath;
             $membro->save();
         }
     }
