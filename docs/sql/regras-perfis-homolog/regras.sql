@@ -1,0 +1,287 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1deb3
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Tempo de geração: 27/05/2026 às 18:14
+-- Versão do servidor: 10.11.13-MariaDB-0ubuntu0.24.04.1
+-- Versão do PHP: 8.3.25
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Banco de dados: `imwpgahml`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `regras`
+--
+
+CREATE TABLE `regras` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Despejando dados para a tabela `regras`
+--
+
+INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'menu-secretaria', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(2, 'menu-financeiro', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(3, 'menu-relatorios', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(4, 'usuarios-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(5, 'usuarios-cadastrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(6, 'usuarios-atualizar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(7, 'usuarios-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(8, 'usuarios-excluir', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(9, 'usuarios-pesquisar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(10, 'visitantes-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(11, 'visitantes-cadastrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(12, 'visitantes-atualizar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(13, 'visitantes-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(14, 'visitantes-excluir', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(15, 'visitantes-pesquisar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(16, 'visitantes-tornarcongregado', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(17, 'congregados-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(18, 'congregados-cadastrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(19, 'congregados-atualizar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(20, 'congregados-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(21, 'congregados-excluir', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(22, 'congregados-pesquisar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(23, 'membros-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(24, 'membros-cadastrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(25, 'membros-atualizar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(26, 'membros-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(27, 'membros-excluir', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(28, 'membros-pesquisar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(29, 'membros-recebernovo', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(30, 'membros-reintegrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(31, 'membros-transferenciainterna', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(32, 'membros-exclusaotransferencia', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(33, 'membros-recebermembroexterno', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(34, 'membros-disciplinar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(35, 'relmembresia-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(36, 'relrolatual-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(37, 'relrolpermanente-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(38, 'relrolexcluidos-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(39, 'relcongregados-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(40, 'relvisitantes-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(41, 'relaniversariantes-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(42, 'fornecedores-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(43, 'fornecedores-cadastrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(44, 'fornecedores-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(45, 'fornecedores-deletar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(46, 'fornecedores-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(47, 'financeiro-movimentocaixa-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(48, 'financeiro-consolidarcaixa', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(49, 'financeiro-planoconta', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(50, 'financeiro-caixas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(51, 'relatorio-membresia', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(52, 'relatorio-aniversariantes', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(53, 'relatorio-historico-eclesiastico', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(54, 'menu-relatorios-secretaria', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(55, 'menu-relatorios-financeiro', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(56, 'financeiro-relatorio-movimento-diario', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(57, 'financeiro-relatorio-livrorazao', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(58, 'financeiro-relatorio-livrocaixa', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(59, 'financeiro-relatorio-livrograde', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(60, 'financeiro-relatorio-balancete', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(61, 'admin-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(62, 'admin-cadastrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(63, 'admin-atualizar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(64, 'admin-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(65, 'admin-excluir', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(66, 'admin-pesquisar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(67, 'menu-todos-usuarios', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(68, 'menu-usuarios-instituicao', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(69, 'congregacao-index', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(70, 'congregacao-cadastrar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(71, 'congregacao-atualizar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(72, 'congregacao-editar', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(73, 'congregacao-excluir', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(74, 'distrito-relatorio-livro-razao-geral', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(75, 'distrito-relatorio-orcamento', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(76, 'distrito-relatorio-variacao-financeira', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(77, 'distrito-relatorio-lancamento-das-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(78, 'distrito-menu-relatorio', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(79, 'distrito-relatorio-saldo-das-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(80, 'distrito-relatorio-membros-ministerio', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(81, 'distrito-relatorio-quantidade-membros', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(82, 'distrito-relatorio-estatistica-genero', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(83, 'distrito-gestao-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(84, 'regiao-relatorio-livro-razao-geral', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(85, 'regiao-relatorio-orcamento', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(86, 'regiao-relatorio-variacao-financeira', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(87, 'regiao-relatorio-lancamento-das-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(88, 'regiao-menu-relatorio', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(89, 'regiao-relatorio-saldo-das-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(90, 'regiao-relatorio-membros-ministerio', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(91, 'regiao-relatorio-quantidade-membros', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(92, 'regiao-relatorio-estatistica-genero', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(93, 'regiao-gestao-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(94, 'instituicoes-distritos', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(95, 'instituicoes-secretarias', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(96, 'instituicoes-congregacoes', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(97, 'instituicoes-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(98, 'menu-instituicoes', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(99, 'regiao-gestao-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(100, 'regiao-menu-estatistica', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(101, 'regiao-estatistica-clerigo-faixa-etaria', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(102, 'regiao-estatistica-clerigo-recebimento-saida', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(103, 'regiao-estatistica-membros-evolucao', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(104, 'regiao-estatistica-membros-total', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(105, 'regiao-estatistica-membros-recebimento-saida', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(106, 'regiao-estatistica-total-membresia', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(107, 'regiao-estatistica-escolaridade', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(108, 'regiao-estatistica-estado-civl', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(109, 'regiao-estatistica-genero', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(110, 'regiao-estatistica-quantidade-membros', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(111, 'regiao-estatistica-hitorico-nomeacoes', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(112, 'regiao-estatistica-totalizacao-distrito', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(113, 'regiao-estatistica-totalizacao-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(114, 'regiao-estatistica-totalizacao-congregacoes-igrejas', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(115, 'regiao-estatistica-totalizacao-congregacoes-distrito', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(116, 'regiao-estatistica-frente-missionaria', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(117, 'regiao-estatistica-distrito-batismo', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(118, 'regiao-estatistica-distrito-membros', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(119, 'regiao-estatistica-distrito-crescimento', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(120, 'regiao-estatistica-igreja-batismo', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(121, 'regiao-estatistica-igreja-membros', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(122, 'regiao-estatistica-igreja-crescimento', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(123, 'regiao-estatistica-clerigo-situacao', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(124, 'regiao-estatistica-clerigo-status', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(125, 'regiao-estatistica-clerigo-faixa-etaria', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(126, 'regiao-estatistica-clerigo-tipo-vinculo', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(127, 'regiao-estatistica-clerigo-ticket-medio', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(128, 'relatorio-membro-disciplinado', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
+(129, 'relatorio-funcao-eclesiastica', '2025-06-28 19:52:28', '2025-06-28 19:52:28', NULL),
+(130, 'menu-relatorios-instituicoes-igrejas', '2025-07-03 02:19:03', '2025-07-03 02:19:03', NULL),
+(131, 'relatorio-clerigos-aniversariantes', '2025-07-03 02:19:06', '2025-07-03 02:19:06', NULL),
+(132, 'relatorio-clerigos-dados', '2025-07-09 01:16:31', '2025-07-09 01:16:31', NULL),
+(133, 'menu-relatorios-congregacoes-igrejas', '2025-07-12 20:09:14', '2025-07-12 20:09:14', NULL),
+(134, 'regiao-relatorio-congregacoes-igrejas', '2025-07-12 20:09:22', '2025-07-12 20:09:22', NULL),
+(135, 'distrito-menu-igrejas', '2025-07-12 22:04:15', '2025-07-12 22:04:15', NULL),
+(136, 'distrito-relatorio-congregacoes-igrejas', '2025-07-12 22:04:22', '2025-07-12 22:04:22', NULL),
+(137, 'menu-contabilidade', '2025-07-22 03:54:46', '2025-07-22 03:54:46', NULL),
+(138, 'contabilidade-irrf', '2025-07-22 03:54:46', '2025-07-22 03:54:46', NULL),
+(139, 'regiao-relatorio-cnpj-igreja', '2025-07-22 21:53:04', '2025-07-22 21:53:04', NULL),
+(140, 'regiao-relatorio-contato-igreja', '2025-07-23 22:56:38', '2025-07-23 22:56:38', NULL),
+(141, 'relatorio-clerigos-categoria', '2025-07-25 00:30:49', '2025-07-25 00:30:49', NULL),
+(142, 'relatorio-clerigos-status', '2025-07-25 00:31:00', '2025-07-25 00:31:00', NULL),
+(143, 'regiao-relatorio-conta-bancaria-igreja', '2025-07-25 22:37:56', '2025-07-25 22:37:56', NULL),
+(144, 'regiao-relatorio-ano-eclesiastico', '2025-07-29 20:58:04', '2025-07-29 20:58:04', NULL),
+(146, 'financeiro-por-categoria', '2025-08-09 18:27:04', '2025-08-09 18:27:04', NULL),
+(147, 'financeiro-movimento-bancario', '2025-08-06 20:06:04', '2025-08-06 20:06:04', NULL),
+(148, 'financeiro-movimento-bancario', '2025-08-06 20:06:04', '2025-08-06 20:06:04', NULL),
+(149, 'regiao-relatorio-ano-eclesiastico', '2025-07-29 20:58:04', '2025-07-29 20:58:04', NULL),
+(150, 'regiao-relatorio-conta-bancaria-igreja', '2025-07-25 20:51:04', '2025-07-25 20:51:04', NULL),
+(151, 'relatorio-clerigos-categoria', '2025-07-24 21:36:04', '2025-07-24 21:36:04', NULL),
+(152, 'relatorio-clerigos-status', '2025-07-24 22:24:04', '2025-07-24 22:24:04', NULL),
+(153, 'carteira-digital', '2025-09-06 22:09:04', '2025-09-06 22:09:04', NULL),
+(154, 'cota-orcamentaria', '2025-09-09 14:31:04', '2025-09-09 14:31:04', NULL),
+(155, 'distrito-cota-orcamentaria', '2025-10-03 20:10:04', '2025-10-03 20:10:04', NULL),
+(156, 'regiao-cota-orcamentaria', '2025-10-03 22:52:04', '2025-10-03 22:52:04', NULL),
+(157, 'distrito-relatorio-aspirantes-igrejas', '2025-10-11 18:54:41', '2025-10-11 18:54:41', NULL),
+(158, 'relatorio-clerigos-esposas', '2025-10-09 22:05:04', '2025-10-09 22:05:04', NULL),
+(159, 'distrito-recurso-humano', '2025-10-11 19:05:02', '2025-10-11 19:05:02', NULL),
+(160, 'regiao-cota-orcamentaria', '2025-11-19 09:42:43', '2025-11-19 09:42:43', NULL),
+(161, 'distrito-cota-orcamentaria', '2025-11-19 09:43:25', '2025-11-19 09:43:25', NULL),
+(162, 'regiao-relatorio-membresia', '2026-01-06 01:41:36', '2026-01-06 01:41:36', NULL),
+(163, 'gceu', '2026-01-24 01:57:45', '2026-01-24 01:57:45', NULL),
+(164, 'gceu-atualizar', '2026-01-24 01:57:46', '2026-01-24 01:57:46', NULL),
+(165, 'gceu-cadastrar', '2026-01-24 01:57:47', '2026-01-24 01:57:47', NULL),
+(166, 'gceu-carta-pastoral', '2026-01-24 01:57:48', '2026-01-24 01:57:48', NULL),
+(167, 'gceu-carta-pastoral-cadastrar', '2026-01-24 01:57:49', '2026-01-24 01:57:49', NULL),
+(168, 'gceu-carta-pastoral-atualizar', '2026-01-24 01:57:49', '2026-01-24 01:57:49', NULL),
+(169, 'gceu-carta-pastoral-excluir', '2026-01-24 01:57:50', '2026-01-24 01:57:50', NULL),
+(170, 'gceu-carta-pastoral-visualizar-html', '2026-01-24 01:57:50', '2026-01-24 01:57:50', NULL),
+(171, 'gceu-carta-pastoral-relatorio', '2026-01-24 01:57:51', '2026-01-24 01:57:51', NULL),
+(172, 'gceu-distrito-lista-aniversariantes', '2026-01-24 01:57:52', '2026-01-24 01:57:52', NULL),
+(173, 'gceu-distrito-lista-funcoes', '2026-01-24 01:57:52', '2026-01-24 01:57:52', NULL),
+(174, 'gceu-distrito-lista-gceu', '2026-01-24 01:57:52', '2026-01-24 01:57:52', NULL),
+(175, 'gceu-distrito-relatorio-carta-pastoral', '2026-01-24 01:57:53', '2026-01-24 01:57:53', NULL),
+(176, 'gceu-distrito-relatorios', '2026-01-24 01:57:53', '2026-01-24 01:57:53', NULL),
+(177, 'gceu-excluir', '2026-01-24 01:57:53', '2026-01-24 01:57:53', NULL),
+(178, 'gceu-igreja-lista-aniversariantes', '2026-01-24 01:57:54', '2026-01-24 01:57:54', NULL),
+(179, 'gceu-diario', '2026-01-24 01:57:55', '2026-01-24 01:57:55', NULL),
+(180, 'gceu-igreja-lista-funcoes', '2026-01-24 01:57:56', '2026-01-24 01:57:56', NULL),
+(181, 'gceu-igreja-lista-gceu', '2026-01-24 01:57:57', '2026-01-24 01:57:57', NULL),
+(182, 'gceu-igreja-relatorios', '2026-01-24 01:57:57', '2026-01-24 01:57:57', NULL),
+(183, 'gceu-lista', '2026-01-24 01:57:58', '2026-01-24 01:57:58', NULL),
+(184, 'gceu-membros', '2026-01-24 01:57:59', '2026-01-24 01:57:59', NULL),
+(185, 'gceu-regiao-lista-aniversariantes', '2026-01-24 01:58:00', '2026-01-24 01:58:00', NULL),
+(186, 'gceu-regiao-lista-funcoes', '2026-01-24 01:58:01', '2026-01-24 01:58:01', NULL),
+(187, 'gceu-regiao-lista-gceu', '2026-01-24 01:58:01', '2026-01-24 01:58:01', NULL),
+(188, 'gceu-regiao-relatorio-carta-pastoral', '2026-01-24 01:58:01', '2026-01-24 01:58:01', NULL),
+(189, 'gceu-regiao-relatorios', '2026-01-24 01:58:02', '2026-01-24 01:58:02', NULL),
+(190, 'gceu-relatorio-diario', '2026-01-24 01:58:02', '2026-01-24 01:58:02', NULL),
+(191, 'auditoria', '2026-02-11 05:21:27', '2026-02-11 05:21:27', NULL),
+(192, 'categoria-comunicacao', '2026-02-28 19:59:50', '2026-02-28 19:59:50', NULL),
+(193, 'comunicacao', '2026-02-28 20:00:07', '2026-02-28 20:00:07', NULL),
+(194, 'comunicacao-editar', '2026-02-28 20:00:33', '2026-02-28 20:00:33', NULL),
+(195, 'comunicacao-deletar', '2026-02-28 20:00:43', '2026-02-28 20:00:43', NULL),
+(196, 'comunicacao-novo', '2026-02-28 20:00:54', '2026-02-28 20:00:54', NULL),
+(197, 'tipo-arquivo', '2026-02-28 20:07:25', '2026-02-28 20:07:25', NULL),
+(198, 'distrito-clerigos-aniversariantes', '2026-03-08 07:43:24', '2026-03-08 07:43:24', NULL),
+(199, 'membresia-validacao', '2026-03-14 22:24:58', '2026-03-14 22:24:58', NULL),
+(200, 'regiao-estatistica-gceu', '2026-04-10 05:56:07', '2026-04-10 05:56:07', NULL),
+(201, 'distrito-estatistica-gceu', '2026-04-10 06:06:24', '2026-04-10 06:06:24', NULL),
+(202, 'distrito-relatorio-aspirantes-igrejas', '2026-04-11 16:20:58', '2026-04-11 16:20:58', NULL),
+(225, 'ebd-dashboard', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(226, 'ebd-liderancas', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(227, 'ebd-professores', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(228, 'ebd-alunos', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(229, 'ebd-classes', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(230, 'ebd-turmas', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(231, 'ebd-diarios', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(232, 'ebd-agendas', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(233, 'ebd-buscar-membro', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(234, 'ebd-cadastrar-visitante', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(235, 'ebd-diarios', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
+(236, 'patrimonio.visualizar', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
+(237, 'patrimonio.criar', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
+(238, 'patrimonio.editar', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
+(239, 'patrimonio.excluir', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
+(240, 'patrimonio.documentos', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
+(241, 'patrimonio.juridico', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
+(242, 'patrimonio.baixa', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
+(243, 'patrimonio.relatorios', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL);
+
+--
+-- Índices para tabelas despejadas
+--
+
+--
+-- Índices de tabela `regras`
+--
+ALTER TABLE `regras`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT para tabelas despejadas
+--
+
+--
+-- AUTO_INCREMENT de tabela `regras`
+--
+ALTER TABLE `regras`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
