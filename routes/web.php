@@ -512,6 +512,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Crud GCEU
         Route::prefix('gceu')->name('gceu.')->group(function () {
+            Route::get('/dashboard', [GceuController::class, 'dashboard'])->name('dashboard')->middleware(['seguranca:gceu']);
             Route::get('/lista', [GceuController::class, 'index'])->name('index')->middleware(['seguranca:gceu-lista']);
             Route::get('/lista/teste', [GceuController::class, 'index'])->name('index.teste')->middleware(['seguranca:gceu-lista-teste']);
             Route::get('list', [GceuController::class, 'list'])->name('list')->middleware(['seguranca:gceu-lista']);
