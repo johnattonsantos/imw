@@ -1244,7 +1244,18 @@
                     }
                 ]
             },
-            options: { scales: { y: { beginAtZero: true } } }
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { display: false }
+                    }
+                },
+                plugins: {
+                    datalabels: { display: false },
+                    tooltip: { enabled: false }
+                }
+            }
         });
     }
 

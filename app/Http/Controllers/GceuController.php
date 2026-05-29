@@ -8,6 +8,9 @@ use App\Http\Requests\StoreGCeuRequest;
 use App\Http\Requests\UpdateGCeuCartaPastoralRequest;
 use App\Http\Requests\UpdateGCeuRequest;
 use App\Models\GCeu;
+use App\Models\GCeuCartaPastoral;
+use App\Models\GCeuDiario;
+use App\Models\GCeuMembros;
 use App\Models\MembresiaContato;
 use App\Models\MembresiaMembro;
 use App\Models\PessoasPessoa;
@@ -50,6 +53,28 @@ class GceuController extends Controller
 {
     use Identifiable;
     ////////////////////////////GCEU IGREJA/////////////////////////////
+    public function dashboard()
+    {
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+
+        return view('gceu.dashboard', [
+            'totalGceus' => GCeu::where('instituicao_id', $igrejaId)->count(),
+            'totalMembros' => GCeuMembros::join('gceu_cadastros', 'gceu_cadastros.id', '=', 'gceu_membros.gceu_cadastro_id')
+                ->where('gceu_cadastros.instituicao_id', $igrejaId)
+                ->whereNull('gceu_membros.deleted_at')
+                ->distinct('gceu_membros.membro_id')
+                ->count('gceu_membros.membro_id'),
+            'totalCartasPastorais' => GCeuCartaPastoral::where('instituicao_id', $igrejaId)->count(),
+            'totalDiarios' => GCeuDiario::join('gceu_cadastros', 'gceu_cadastros.id', '=', 'gceu_diario.gceu_id')
+                ->where('gceu_cadastros.instituicao_id', $igrejaId)
+                ->count(),
+            'totalReuniaoPessoas' => MembresiaMembro::where('igreja_id', $igrejaId)
+                ->where('vinculo', MembresiaMembro::VINCULO_VISITANTE)
+                ->whereNotNull('gceu_id')
+                ->count(),
+        ]);
+    }
+
     public function index(Request $request)
     {
         $data = app(IdentificaDadosIndexService::class)->execute($request->all());
