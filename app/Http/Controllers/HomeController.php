@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InstituicoesInstituicao;
+use App\Models\InstituicoesTipoInstituicao;
 use App\Models\FinanceiroPlanoConta;
 use App\Models\PerfilUser;
 use App\Services\ServicePerfil\IdentificaPerfilService;
@@ -18,6 +19,16 @@ class HomeController extends Controller
     {
         $igrejaId = session()->get('session_perfil')->instituicao_id;
         $instituicao = InstituicoesInstituicao::where('id', $igrejaId)->first();
+        $perfilNome = (string) data_get(session('session_perfil'), 'perfil_nome', '');
+        $isIgrejaLocal = (int) ($instituicao->tipo_instituicao_id ?? 0) === InstituicoesTipoInstituicao::IGREJA_LOCAL;
+        $isPerfilPastor = mb_strtolower(trim($perfilNome)) === 'pastor';
+
+        if ($isIgrejaLocal && ! $isPerfilPastor) {
+            return view('dashboard-perfil-local', [
+                'nomeUsuario' => (string) (Auth::user()->name ?? 'Usuário'),
+            ]);
+        }
+
         $anoAtual = (int) Carbon::now()->year;
         $sanitizeAno = fn ($value) => $this->sanitizeAno($value, $anoAtual);
 
