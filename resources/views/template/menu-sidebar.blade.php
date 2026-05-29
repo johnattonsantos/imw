@@ -1223,6 +1223,11 @@
                          </div>
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('gceu/*') ? 'collapse show' : '' }}" id="gceu" data-parent="#gceu">
+                        <li {!! Request::is('gceu/dashboard*') ? 'class="active"' : '' !!}>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu'))
+                                <a href="{{ route('gceu.dashboard') }}">Dashboard</a>
+                            @endif
+                        </li>
                          <li {!! Request::is('gceu/lista') || Request::is('gceu/editar*') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-lista'))
                                  <a href="{{ route('gceu.index') }}">Cadastro</a>
