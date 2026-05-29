@@ -25,3 +25,11 @@
         </div>
     </div>
 @endsection
+
+@section('extras-scripts')
+    <script>
+        $(document).ready(function() {
+            $('#cnpj_utilizado').mask('00.000.000/0000-00');
+        });
+    </script>
+@endsection

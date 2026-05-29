@@ -48,13 +48,19 @@
 </div>
 
 <div class="row">
-    <div class="mb-3 col-md-6">
+    <div class="mb-3 col-md-4">
+        <label>CNPJ Utilizado</label>
+        <input type="text" id="cnpj_utilizado" name="cnpj_utilizado" class="form-control @error('cnpj_utilizado') is-invalid @enderror" value="{{ old('cnpj_utilizado', $item->cnpj_utilizado ?? '') }}" maxlength="18">
+        @error('cnpj_utilizado')<small class="text-danger">{{ $message }}</small>@enderror
+    </div>
+
+    <div class="mb-3 col-md-4">
         <label>Nome *</label>
         <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" value="{{ old('nome', $item->nome ?? '') }}" maxlength="180" required>
         @error('nome')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
 
-    <div class="mb-3 col-md-6">
+    <div class="mb-3 col-md-4">
         <label>Endereço</label>
         <input type="text" name="endereco" class="form-control @error('endereco') is-invalid @enderror" value="{{ old('endereco', $item->endereco ?? '') }}" maxlength="255">
         @error('endereco')<small class="text-danger">{{ $message }}</small>@enderror
@@ -153,6 +159,7 @@
         <input type="text" name="situacao_tributaria" class="form-control @error('situacao_tributaria') is-invalid @enderror" value="{{ old('situacao_tributaria', $item->situacao_tributaria ?? '') }}" maxlength="120">
         @error('situacao_tributaria')<small class="text-danger">{{ $message }}</small>@enderror
     </div>
+
 </div>
 
 <div class="row">

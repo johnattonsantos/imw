@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -9,26 +10,47 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (! Schema::hasColumn('patrimonio_configuracoes', 'igreja_id')) {
-            return;
-        }
-
         $database = DB::getDatabaseName();
-
-        $foreignKeys = DB::table('information_schema.KEY_COLUMN_USAGE')
+        $igrejaIdExists = DB::table('information_schema.COLUMNS')
             ->where('TABLE_SCHEMA', $database)
             ->where('TABLE_NAME', 'patrimonio_configuracoes')
             ->where('COLUMN_NAME', 'igreja_id')
-            ->whereNotNull('REFERENCED_TABLE_NAME')
-            ->pluck('CONSTRAINT_NAME');
+            ->exists();
 
-        foreach ($foreignKeys as $foreignKeyName) {
-            DB::statement("ALTER TABLE `patrimonio_configuracoes` DROP FOREIGN KEY `{$foreignKeyName}`");
+        if ($igrejaIdExists) {
+            $foreignKeys = DB::table('information_schema.KEY_COLUMN_USAGE')
+                ->where('TABLE_SCHEMA', $database)
+                ->where('TABLE_NAME', 'patrimonio_configuracoes')
+                ->where('COLUMN_NAME', 'igreja_id')
+                ->whereNotNull('REFERENCED_TABLE_NAME')
+                ->pluck('CONSTRAINT_NAME');
+
+            foreach ($foreignKeys as $foreignKeyName) {
+                DB::statement("ALTER TABLE `patrimonio_configuracoes` DROP FOREIGN KEY `{$foreignKeyName}`");
+            }
+
+            $igrejaIdExists = DB::table('information_schema.COLUMNS')
+                ->where('TABLE_SCHEMA', $database)
+                ->where('TABLE_NAME', 'patrimonio_configuracoes')
+                ->where('COLUMN_NAME', 'igreja_id')
+                ->exists();
+
+            if ($igrejaIdExists) {
+                try {
+                    DB::statement('ALTER TABLE `patrimonio_configuracoes` DROP COLUMN `igreja_id`');
+                } catch (QueryException $e) {
+                    // Ambientes legados podem sinalizar a coluna como existente no metadata
+                    // e ainda assim falhar no DROP com "não existe". Ignora apenas esse caso.
+                    $message = $e->getMessage();
+                    $isMissingColumnError = str_contains($message, 'SQLSTATE[42000]')
+                        && (str_contains($message, ' 1072 ') || str_contains($message, ' 1091 '));
+
+                    if (! $isMissingColumnError) {
+                        throw $e;
+                    }
+                }
+            }
         }
-
-        Schema::table('patrimonio_configuracoes', function (Blueprint $table) {
-            $table->dropColumn('igreja_id');
-        });
 
         $uniqueExists = DB::table('information_schema.STATISTICS')
             ->where('TABLE_SCHEMA', $database)

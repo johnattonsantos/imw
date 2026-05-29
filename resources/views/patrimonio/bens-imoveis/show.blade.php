@@ -2,6 +2,12 @@
 
 @section('content')
     @php $podeEditar = auth()->check() && auth()->user()->hasPerfilRegra('patrimonio.editar'); @endphp
+    @php
+        $cnpjDigits = preg_replace('/\D/', '', (string) ($imovel->cnpj_utilizado ?? ''));
+        $cnpjFormatado = strlen($cnpjDigits) === 14
+            ? substr($cnpjDigits, 0, 2) . '.' . substr($cnpjDigits, 2, 3) . '.' . substr($cnpjDigits, 5, 3) . '/' . substr($cnpjDigits, 8, 4) . '-' . substr($cnpjDigits, 12, 2)
+            : ($imovel->cnpj_utilizado ?: '-');
+    @endphp
 
     <div class="col-lg-12 col-12 layout-spacing">
         <div class="statbox widget box box-shadow">
@@ -19,6 +25,7 @@
                 <p><strong>Cidade/UF:</strong> {{ trim(($imovel->cidade ?: '-') . ' / ' . ($imovel->estado ?: '-')) }}</p>
                 <p><strong>Status de titularidade:</strong> {{ $imovel->status_titularidade ?: '-' }}</p>
                 <p><strong>Matrícula:</strong> {{ $imovel->numero_matricula ?: '-' }}</p>
+                <p><strong>CNPJ Utilizado:</strong> {{ $cnpjFormatado }}</p>
                 <p><strong>Possui escritura registrada:</strong> {{ $imovel->possui_escritura_registrada ? 'Sim' : 'Não' }}</p>
                 <p><strong>Regularização pendente:</strong> {{ $imovel->regularizacao_pendente ? 'Sim' : 'Não' }}</p>
                 <p><strong>Valor histórico:</strong> R$ {{ number_format((float) $imovel->valor_historico, 2, ',', '.') }}</p>

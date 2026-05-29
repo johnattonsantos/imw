@@ -96,7 +96,7 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
 
     Route::get('documentos/{documento}/download', [PatrimonioDocumentosController::class, 'download'])
         ->name('documentos.download')
-        ->middleware(['seguranca:patrimonio-documentos', 'patrimonio-documentos']);
+        ->middleware(['seguranca:patrimonio-documentos']);
     Route::resource('documentos', PatrimonioDocumentosController::class)
         ->only(['create', 'store'])
         ->names('documentos')
@@ -106,7 +106,7 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->only(['index', 'show'])
         ->names('documentos')
         ->parameters(['documentos' => 'documento'])
-        ->middleware(['seguranca:patrimonio-documentos', 'patrimonio-documentos']);
+        ->middleware(['seguranca:patrimonio-documentos']);
     Route::resource('documentos', PatrimonioDocumentosController::class)
         ->only(['edit', 'update'])
         ->names('documentos')
@@ -170,7 +170,7 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->only(['create', 'store'])
         ->names('baixas')
         ->parameters(['baixas' => 'baixa'])
-        ->middleware(['seguranca:patrimonio-baixa', 'patrimonio-baixa']);
+        ->middleware(['seguranca:patrimonio-baixa']);
     Route::resource('baixas', PatrimonioBaixasController::class)
         ->only(['index', 'show'])
         ->names('baixas')
@@ -185,7 +185,7 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->only(['destroy'])
         ->names('baixas')
         ->parameters(['baixas' => 'baixa'])
-        ->middleware(['seguranca:patrimonio-baixa', 'patrimonio-baixa']);
+        ->middleware(['seguranca:patrimonio-baixa']);
 
     Route::get('/relatorios', [PatrimonioRelatoriosController::class, 'index'])
         ->name('relatorios.index')

@@ -33,6 +33,7 @@ class Imovel extends Model
         'valor_venal',
         'valor_mercado',
         'situacao_tributaria',
+        'cnpj_utilizado',
         'status_titularidade',
         'numero_matricula',
         'cartorio',

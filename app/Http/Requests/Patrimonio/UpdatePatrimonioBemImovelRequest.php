@@ -41,6 +41,7 @@ class UpdatePatrimonioBemImovelRequest extends FormRequest
             'valor_venal' => ['nullable', 'numeric', 'min:0'],
             'valor_mercado' => ['nullable', 'numeric', 'min:0'],
             'situacao_tributaria' => ['nullable', 'string', 'max:120'],
+            'cnpj_utilizado' => ['nullable', 'string', 'max:18'],
             'status_titularidade' => ['nullable', 'string', 'max:80'],
             'numero_matricula' => ['nullable', 'string', 'max:120'],
             'cartorio' => ['nullable', 'string', 'max:180'],
