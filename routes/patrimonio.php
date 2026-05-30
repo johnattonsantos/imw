@@ -19,37 +19,37 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
     Route::prefix('configuracoes')->name('configuracoes.')->group(function () {
         Route::get('/', [PatrimonioConfiguracoesController::class, 'hub'])
             ->name('hub')
-            ->middleware(['seguranca:patrimonio.visualizar']);
+            ->middleware(['seguranca:patrimonio-dashboard']);
 
         Route::get('{tipo}', [PatrimonioConfiguracoesController::class, 'index'])
             ->name('tipos.index')
             ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
-            ->middleware(['seguranca:patrimonio.visualizar']);
+            ->middleware(['seguranca:patrimonio-dashboard']);
 
         Route::get('{tipo}/create', [PatrimonioConfiguracoesController::class, 'create'])
             ->name('tipos.create')
             ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
-            ->middleware(['seguranca:patrimonio.criar']);
+            ->middleware(['seguranca:patrimonio-dashboard']);
 
         Route::post('{tipo}', [PatrimonioConfiguracoesController::class, 'store'])
             ->name('tipos.store')
             ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
-            ->middleware(['seguranca:patrimonio.criar']);
+            ->middleware(['seguranca:patrimonio-dashboard']);
 
         Route::get('{tipo}/{configuracao}/edit', [PatrimonioConfiguracoesController::class, 'edit'])
             ->name('tipos.edit')
             ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
-            ->middleware(['seguranca:patrimonio.editar']);
+            ->middleware(['seguranca:patrimonio-dashboard']);
 
         Route::put('{tipo}/{configuracao}', [PatrimonioConfiguracoesController::class, 'update'])
             ->name('tipos.update')
             ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
-            ->middleware(['seguranca:patrimonio.editar']);
+            ->middleware(['seguranca:patrimonio-dashboard']);
 
         Route::delete('{tipo}/{configuracao}', [PatrimonioConfiguracoesController::class, 'destroy'])
             ->name('tipos.destroy')
             ->whereIn('tipo', PatrimonioConfiguracoesController::tiposPermitidos())
-            ->middleware(['seguranca:patrimonio.excluir']);
+            ->middleware(['seguranca:patrimonio-dashboard']);
     });
 
     Route::resource('bens-imoveis', PatrimonioBensImoveisController::class)
@@ -122,22 +122,22 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->only(['create', 'store'])
         ->names('riscos-juridicos')
         ->parameters(['riscos-juridicos' => 'riscoJuridico'])
-        ->middleware(['seguranca:patrimonio.juridico', 'seguranca:patrimonio.criar']);
+        ->middleware(['seguranca:patrimonio-dashboard', 'seguranca:patrimonio-dashboard']);
     Route::resource('riscos-juridicos', PatrimonioRiscosJuridicosController::class)
         ->only(['index', 'show'])
         ->names('riscos-juridicos')
         ->parameters(['riscos-juridicos' => 'riscoJuridico'])
-        ->middleware(['seguranca:patrimonio.juridico', 'seguranca:patrimonio.visualizar']);
+        ->middleware(['seguranca:patrimonio-dashboard', 'seguranca:patrimonio-dashboard']);
     Route::resource('riscos-juridicos', PatrimonioRiscosJuridicosController::class)
         ->only(['edit', 'update'])
         ->names('riscos-juridicos')
         ->parameters(['riscos-juridicos' => 'riscoJuridico'])
-        ->middleware(['seguranca:patrimonio.juridico', 'seguranca:patrimonio.editar']);
+        ->middleware(['seguranca:patrimonio-dashboard', 'seguranca:patrimonio-dashboard']);
     Route::resource('riscos-juridicos', PatrimonioRiscosJuridicosController::class)
         ->only(['destroy'])
         ->names('riscos-juridicos')
         ->parameters(['riscos-juridicos' => 'riscoJuridico'])
-        ->middleware(['seguranca:patrimonio.juridico', 'seguranca:patrimonio.excluir']);
+        ->middleware(['seguranca:patrimonio-dashboard', 'seguranca:patrimonio-dashboard']);
 
     Route::get('benfeitorias/{benfeitoria}/download', [PatrimonioBenfeitoriasController::class, 'download'])
         ->name('benfeitorias.download')
