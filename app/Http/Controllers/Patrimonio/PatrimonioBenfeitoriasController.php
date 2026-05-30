@@ -22,10 +22,10 @@ class PatrimonioBenfeitoriasController extends Controller
 
     public function __construct(private readonly PatrimonioBenfeitoriasService $service)
     {
-        $this->middleware('seguranca:patrimonio.visualizar')->only(['index', 'show', 'download']);
-        $this->middleware('seguranca:patrimonio.criar')->only(['create', 'store']);
-        $this->middleware('seguranca:patrimonio.editar')->only(['edit', 'update']);
-        $this->middleware('seguranca:patrimonio.excluir')->only(['destroy']);
+        // $this->middleware('seguranca:patrimonio.visualizar')->only(['index', 'show', 'download']);
+        // $this->middleware('seguranca:patrimonio.criar')->only(['create', 'store']);
+        // $this->middleware('seguranca:patrimonio.editar')->only(['edit', 'update']);
+        // $this->middleware('seguranca:patrimonio.excluir')->only(['destroy']);
     }
 
     public function index()

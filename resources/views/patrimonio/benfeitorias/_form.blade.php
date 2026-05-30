@@ -49,7 +49,7 @@
         <small class="text-muted">Tipos permitidos: PDF, JPG, PNG, DOC e DOCX.</small>
         @error('documento_anexo')<small class="text-danger d-block">{{ $message }}</small>@enderror
 
-        @if (isset($benfeitoria) && $benfeitoria->documento_anexo && auth()->check() && auth()->user()->hasPerfilRegra('patrimonio.visualizar'))
+        @if (isset($benfeitoria) && $benfeitoria->documento_anexo && auth()->check())
             <div class="mt-2">
                 <a href="{{ route('patrimonio.benfeitorias.download', $benfeitoria->id) }}" class="btn btn-sm btn-outline-primary">Baixar anexo atual</a>
             </div>

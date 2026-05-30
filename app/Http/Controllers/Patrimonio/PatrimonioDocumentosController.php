@@ -23,10 +23,10 @@ class PatrimonioDocumentosController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.visualizar'])->only(['index', 'show', 'download']);
-        $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.criar'])->only(['create', 'store']);
-        $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.editar'])->only(['edit', 'update']);
-        $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.excluir'])->only(['destroy']);
+        // $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.visualizar'])->only(['index', 'show', 'download']);
+        // $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.criar'])->only(['create', 'store']);
+        // $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.editar'])->only(['edit', 'update']);
+        // $this->middleware(['seguranca:patrimonio.documentos', 'seguranca:patrimonio.excluir'])->only(['destroy']);
     }
 
     public function index(Request $request)

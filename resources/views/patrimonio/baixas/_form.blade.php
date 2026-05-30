@@ -42,7 +42,7 @@
     <small class="text-muted">Tipos permitidos: PDF, JPG, PNG, DOC e DOCX.</small>
     @error('documento_comprobatorio')<small class="text-danger d-block">{{ $message }}</small>@enderror
 
-    @if (isset($baixa) && $baixa->documento_comprobatorio && auth()->check() && auth()->user()->hasPerfilRegra('patrimonio.visualizar') && auth()->user()->hasPerfilRegra('patrimonio.baixa'))
+    @if (isset($baixa) && $baixa->documento_comprobatorio && auth()->check())
         <div class="mt-2">
             <a href="{{ route('patrimonio.baixas.download', $baixa->id) }}" class="btn btn-sm btn-outline-primary">Baixar documento atual</a>
         </div>

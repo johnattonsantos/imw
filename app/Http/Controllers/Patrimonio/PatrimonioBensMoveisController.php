@@ -15,10 +15,10 @@ class PatrimonioBensMoveisController extends Controller
 {
     public function __construct(private readonly DepreciacaoService $depreciacaoService)
     {
-        $this->middleware('seguranca:patrimonio.visualizar')->only(['index', 'show']);
-        $this->middleware('seguranca:patrimonio.criar')->only(['create', 'store']);
-        $this->middleware('seguranca:patrimonio.editar')->only(['edit', 'update']);
-        $this->middleware('seguranca:patrimonio.excluir')->only(['destroy']);
+        // $this->middleware('seguranca:patrimonio.visualizar')->only(['index', 'show']);
+        // $this->middleware('seguranca:patrimonio.criar')->only(['create', 'store']);
+        // $this->middleware('seguranca:patrimonio.editar')->only(['edit', 'update']);
+        // $this->middleware('seguranca:patrimonio.excluir')->only(['destroy']);
     }
 
     public function index()

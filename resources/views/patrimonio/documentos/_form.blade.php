@@ -106,7 +106,7 @@
     <small class="text-muted">Tipos permitidos: PDF, JPG, PNG, DOC, DOCX.</small>
     @error('arquivo')<small class="text-danger d-block">{{ $message }}</small>@enderror
 
-    @if (isset($documento) && $documento->arquivo && auth()->check() && auth()->user()->hasPerfilRegra('patrimonio.visualizar') && auth()->user()->hasPerfilRegra('patrimonio.documentos'))
+    @if (isset($documento) && $documento->arquivo && auth()->check())
         <div class="mt-2">
             <a href="{{ route('patrimonio.documentos.download', $documento->id) }}" class="btn btn-sm btn-outline-primary">Baixar arquivo atual</a>
         </div>

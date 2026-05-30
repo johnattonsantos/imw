@@ -24,10 +24,10 @@ class PatrimonioConfiguracoesController extends Controller
 
     public function __construct()
     {
-        $this->middleware('seguranca:patrimonio.visualizar')->only(['hub', 'index']);
-        $this->middleware('seguranca:patrimonio.criar')->only(['create', 'store']);
-        $this->middleware('seguranca:patrimonio.editar')->only(['edit', 'update']);
-        $this->middleware('seguranca:patrimonio.excluir')->only(['destroy']);
+        // $this->middleware('seguranca:patrimonio.visualizar')->only(['hub', 'index']);
+        // $this->middleware('seguranca:patrimonio.criar')->only(['create', 'store']);
+        // $this->middleware('seguranca:patrimonio.editar')->only(['edit', 'update']);
+        // $this->middleware('seguranca:patrimonio.excluir')->only(['destroy']);
     }
 
     public static function tiposPermitidos(): array
