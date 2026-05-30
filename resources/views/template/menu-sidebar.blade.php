@@ -658,11 +658,11 @@
                      <ul class="collapse submenu list-unstyled {{ Request::is('regiao/relatorio/*') ? 'collapse show' : '' }}" id="financeiro-regiao"
                          data-parent="#financeiro-regiao">
                          <!-- <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
                                  <span>Contabilidade</span>
                              @endif
                          </li> -->
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
                          <li class="submenu-fixo mt-3 mb-3">
                              
                                  <span>Financeiro</span>
@@ -726,7 +726,7 @@
                              
                          </li>
                          @endif
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
                          <li {!! Request::is('regiao/relatorio/cota-orcamentaria') ? 'class="active"' : '' !!}>
                             
                                 <a href="{{ route('regiao.cota.orcamentaria') }}">Cota Orçamentária</a>
@@ -740,7 +740,7 @@
                             
                         </li>
                         @endif
-                        
+
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboardo'))
                         <li {!! Request::is('regiao/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
                             
@@ -808,7 +808,7 @@
                             
                         </li>
                         @endif
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
                          <li class="submenu-fixo mt-3 mb-3">
                              
                                  <span>Membresia</span>
