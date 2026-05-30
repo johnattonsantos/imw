@@ -630,7 +630,7 @@
                  </li>
              @endif
 
-             @if (auth()->check())
+             @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-menu-relatorio')))
                  <li class="menu">
                      <a href="#financeiro-regiao" data-toggle="collapse" aria-expanded="{{Request::is('regiao/relatorio/*') ? 'true' : 'false' }}"
                          class="dropdown-toggle">
@@ -736,10 +736,11 @@
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-ebd'))
                         <li class="submenu-fixo mt-3 mb-3">
                             
-                                <span>EBD</span>
+                        <span>EBD</span>
                             
                         </li>
                         @endif
+                        
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboardo'))
                         <li {!! Request::is('regiao/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
                             
@@ -941,38 +942,39 @@
                             
                         </li>
                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-patrimonio'))
+                            <li class="submenu-fixo mt-3 mb-3">
+                                <span>Patrimônio</span>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/imoveis_cadastrados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'imoveis_cadastrados']) }}">Imóveis cadastrados</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/bens_moveis_cadastrados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_moveis_cadastrados']) }}">Bens móveis cadastrados</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/imoveis_regularizacao_pendente') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'imoveis_regularizacao_pendente']) }}">Regularização pendente</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/documentos_vencidos') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'documentos_vencidos']) }}">Documentos vencidos</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/avcb_vencido') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'avcb_vencido']) }}">AVCB vencido</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/bens_depreciados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_depreciados']) }}">Bens depreciados</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/baixas_patrimoniais') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'baixas_patrimoniais']) }}">Baixas patrimoniais</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/valor_total_por_categoria') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'valor_total_por_categoria']) }}">Valor total por categoria</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/bens_por_igreja_unidade') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">Bens por igreja/unidade</a>
+                            </li>
 
-                        <li class="submenu-fixo mt-3 mb-3">
-                            <span>Patrimônio</span>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/imoveis_cadastrados') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'imoveis_cadastrados']) }}">Imóveis cadastrados</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/bens_moveis_cadastrados') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_moveis_cadastrados']) }}">Bens móveis cadastrados</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/imoveis_regularizacao_pendente') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'imoveis_regularizacao_pendente']) }}">Regularização pendente</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/documentos_vencidos') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'documentos_vencidos']) }}">Documentos vencidos</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/avcb_vencido') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'avcb_vencido']) }}">AVCB vencido</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/bens_depreciados') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_depreciados']) }}">Bens depreciados</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/baixas_patrimoniais') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'baixas_patrimoniais']) }}">Baixas patrimoniais</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/valor_total_por_categoria') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'valor_total_por_categoria']) }}">Valor total por categoria</a>
-                        </li>
-                        <li {!! Request::is('regiao/relatorio/patrimonio/bens_por_igreja_unidade') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">Bens por igreja/unidade</a>
-                        </li>
-
+                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">
                                 <span>GCEU</span>
