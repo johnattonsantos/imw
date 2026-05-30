@@ -859,7 +859,7 @@
                             
                         </li>
                         @endif
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
                         <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
                             <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Cônjuges dos Clérigos</a>
                         </li>
