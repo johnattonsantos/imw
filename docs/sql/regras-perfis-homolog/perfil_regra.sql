@@ -1,31 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1deb3
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Tempo de geração: 27/05/2026 às 18:15
--- Versão do servidor: 10.11.13-MariaDB-0ubuntu0.24.04.1
--- Versão do PHP: 8.3.25
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Banco de dados: `imwpgahml`
---
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `perfil_regra`
---
 
 CREATE TABLE `perfil_regra` (
   `id` bigint(20) UNSIGNED NOT NULL,
@@ -34,10 +6,6 @@ CREATE TABLE `perfil_regra` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Despejando dados para a tabela `perfil_regra`
---
 
 INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `updated_at`) VALUES
 (73, 1, 1, '2026-05-12 23:47:46', '2026-05-12 23:47:46'),
@@ -662,66 +630,21 @@ INSERT INTO `perfil_regra` (`id`, `perfil_id`, `regra_id`, `created_at`, `update
 (1158, 2, 201, '2026-04-10 06:06:33', '2026-04-10 06:06:33'),
 (1159, 6, 201, '2026-04-10 06:06:37', '2026-04-10 06:06:37'),
 (1160, 3, 202, '2026-04-10 06:08:14', '2026-04-10 06:08:14'),
-(1161, 12, 202, '2026-04-10 06:08:19', '2026-04-10 06:08:19'),
-(1541, 1, 236, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1542, 4, 236, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1543, 7, 236, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1544, 1, 237, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1545, 4, 237, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1546, 7, 237, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1547, 1, 238, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1548, 4, 238, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1549, 7, 238, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1550, 1, 239, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1551, 4, 239, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1552, 7, 239, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1553, 1, 240, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1554, 4, 240, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1555, 7, 240, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1556, 1, 241, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1557, 4, 241, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1558, 7, 241, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1559, 1, 242, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1560, 4, 242, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1561, 7, 242, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1562, 1, 243, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1563, 4, 243, '2026-05-23 16:37:22', '2026-05-23 16:37:22'),
-(1564, 7, 243, '2026-05-23 16:37:22', '2026-05-23 16:37:22');
+(1161, 12, 202, '2026-04-10 06:08:19', '2026-04-10 06:08:19');
 
---
--- Índices para tabelas despejadas
---
 
---
--- Índices de tabela `perfil_regra`
---
 ALTER TABLE `perfil_regra`
   ADD PRIMARY KEY (`id`),
   ADD KEY `perfil_regra_perfil_id_foreign` (`perfil_id`),
   ADD KEY `perfil_regra_regra_id_foreign` (`regra_id`);
 
---
--- AUTO_INCREMENT para tabelas despejadas
---
 
---
--- AUTO_INCREMENT de tabela `perfil_regra`
---
 ALTER TABLE `perfil_regra`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1565;
 
---
--- Restrições para tabelas despejadas
---
 
---
--- Restrições para tabelas `perfil_regra`
---
+
 ALTER TABLE `perfil_regra`
   ADD CONSTRAINT `perfil_regra_perfil_id_foreign` FOREIGN KEY (`perfil_id`) REFERENCES `perfils` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `perfil_regra_regra_id_foreign` FOREIGN KEY (`regra_id`) REFERENCES `regras` (`id`) ON DELETE CASCADE;
-COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

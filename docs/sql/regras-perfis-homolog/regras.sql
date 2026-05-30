@@ -1,31 +1,3 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1deb3
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Tempo de geração: 27/05/2026 às 18:14
--- Versão do servidor: 10.11.13-MariaDB-0ubuntu0.24.04.1
--- Versão do PHP: 8.3.25
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Banco de dados: `imwpgahml`
---
-
--- --------------------------------------------------------
-
---
--- Estrutura para tabela `regras`
---
 
 CREATE TABLE `regras` (
   `id` bigint(20) UNSIGNED NOT NULL,
@@ -35,9 +7,6 @@ CREATE TABLE `regras` (
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Despejando dados para a tabela `regras`
---
 
 INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VALUES
 (1, 'menu-secretaria', '2026-05-12 23:41:57', '2026-05-12 23:41:57', NULL),
@@ -251,37 +220,12 @@ INSERT INTO `regras` (`id`, `nome`, `created_at`, `updated_at`, `deleted_at`) VA
 (232, 'ebd-agendas', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
 (233, 'ebd-buscar-membro', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
 (234, 'ebd-cadastrar-visitante', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
-(235, 'ebd-diarios', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL),
-(236, 'patrimonio.visualizar', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
-(237, 'patrimonio.criar', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
-(238, 'patrimonio.editar', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
-(239, 'patrimonio.excluir', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
-(240, 'patrimonio.documentos', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
-(241, 'patrimonio.juridico', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
-(242, 'patrimonio.baixa', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL),
-(243, 'patrimonio.relatorios', '2026-05-23 16:37:22', '2026-05-23 16:37:22', NULL);
+(235, 'ebd-diarios', '2026-05-07 00:09:14', '2026-05-07 00:09:14', NULL);
 
---
--- Índices para tabelas despejadas
---
 
---
--- Índices de tabela `regras`
---
 ALTER TABLE `regras`
   ADD PRIMARY KEY (`id`);
 
---
--- AUTO_INCREMENT para tabelas despejadas
---
 
---
--- AUTO_INCREMENT de tabela `regras`
---
 ALTER TABLE `regras`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
