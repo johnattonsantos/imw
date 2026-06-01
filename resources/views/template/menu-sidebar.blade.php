@@ -517,12 +517,62 @@
                                  <a href="{{ route('distrito.relatorio.estatisticas.gceu') }}">Estatísticas GCEU</a>
                              @endif
                          </li>
-
-                         <li {!! Request::is('distrito/apirantes-por-igrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-aspirantes-igrejas'))
-                                 <a href="{{ route('distrito.relatorio.apirateporigreja') }}">Aspirantes por Igrejas</a>
+                         <li class="submenu-fixo mt-3 mb-3">
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio'))
+                                 <span>EBD</span>
                              @endif
                          </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-dashboard'))
+                                 <a href="{{ route('distrito.relatorio.ebd.dashboard') }}">Dashboard</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/estatisticas') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-estatisticas'))
+                                 <a href="{{ route('distrito.relatorio.ebd.estatisticas') }}">Estatísticas EBD</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-turmas'))
+                                 <a href="{{ route('distrito.relatorio.ebd.turmas') }}">EBDs</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/alunos') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-alunos'))
+                                 <a href="{{ route('distrito.relatorio.ebd.alunos') }}">Alunos</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/professores') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-professores'))
+                                 <a href="{{ route('distrito.relatorio.ebd.professores') }}">Professores</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/liderancas') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-liderancas'))
+                                 <a href="{{ route('distrito.relatorio.ebd.liderancas') }}">Liderança</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/classes') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-classes'))
+                                 <a href="{{ route('distrito.relatorio.ebd.classes') }}">Classes</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/diarios') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-diarios'))
+                                 <a href="{{ route('distrito.relatorio.ebd.diarios') }}">Diário</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/agendas') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-agendas'))
+                                 <a href="{{ route('distrito.relatorio.ebd.agendas') }}">Agenda</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/relatorio/ebd/geral') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-ebd-geral'))
+                                 <a href="{{ route('distrito.relatorio.ebd.geral') }}">Relatório Geral EBD</a>
+                             @endif
+                         </li>
+
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-clerigos-aniversariantes'))
                             <li class="submenu-fixo mt-3 mb-3">
                                         <span>Clérigos</span>
@@ -539,6 +589,11 @@
                          <li {!! Request::is('distrito/congregacoes-por-igrejas') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-congregacoes-igrejas'))
                                  <a href="{{ route('distrito.relatorio.congregacaoporigreja') }}">Congregações por Igrejas</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('distrito/apirantes-por-igrejas') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-aspirantes-igrejas'))
+                                 <a href="{{ route('distrito.relatorio.apirateporigreja') }}">Aspirantes por Igrejas</a>
                              @endif
                          </li>
 
@@ -575,7 +630,7 @@
                  </li>
              @endif
 
-             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+             @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-menu-relatorio')))
                  <li class="menu">
                      <a href="#financeiro-regiao" data-toggle="collapse" aria-expanded="{{Request::is('regiao/relatorio/*') ? 'true' : 'false' }}"
                          class="dropdown-toggle">
@@ -603,188 +658,355 @@
                      <ul class="collapse submenu list-unstyled {{ Request::is('regiao/relatorio/*') ? 'collapse show' : '' }}" id="financeiro-regiao"
                          data-parent="#financeiro-regiao">
                          <!-- <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
                                  <span>Contabilidade</span>
                              @endif
                          </li> -->
-                         
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
                          <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                             
                                  <span>Financeiro</span>
-                             @endif
+                             
                          </li>
+                         @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-lancamento-das-igrejas'))
                          <li {!! Request::is('regiao/relatorio/irrf') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-lancamento-das-igrejas'))
+                            
                                  <a href="{{ route('regiao.relatorio.irrf') }}">IRRF Repasse</a>
-                             @endif
+                             
                          </li>
+                         @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-lancamento-das-igrejas'))
                          <li {!! Request::is('regiao/relatorio/lancamentodasigrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-lancamento-das-igrejas'))
+                            
                                  <a href="{{ route('regiao.relatorio.lancamentodasigrejas') }}">Lançamento das
                                      Igrejas</a>
-                             @endif
+                             
                          </li>
+                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('financeiro-relatorio-balancete'))
                          <li {!! Request::is('regiao/relatorio/financeiro/balancete') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('financeiro-relatorio-balancete'))
+                            
                                 <a href="{{ route('regiao.relatorio-balancete-regiao') }}">Balancete</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-saldo-das-igrejas'))
                          <li {!! Request::is('regiao/relatorio/saldodasigrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-saldo-das-igrejas'))
+                             
                                  <a href="{{ route('regiao.relatorio.saldodasigrejas') }}">Saldo de Caixas</a>
-                             @endif
+                             
                          </li>
+                        @endif
+                          @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-livro-razao-geral'))
                          <li {!! Request::is('regiao/relatorio/livrorazaogeral') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-livro-razao-geral'))
+                            
                                  <a href="{{ route('regiao.relatorio.livrorazaogeral') }}">Livro Razão Geral</a>
-                             @endif
+                             
                          </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-orcamento'))
                          <li {!! Request::is('regiao/relatorio/orcamento') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-orcamento'))
+                             
                                  <a href="{{ route('regiao.relatorio.orcamento') }}">Orçamento</a>
-                             @endif
+                             
                          </li>
+                         @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-variacao-financeira'))
                          <li {!! Request::is('regiao/relatorio/variacaofinanceira') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-variacao-financeira'))
+                             
                                  <a href="{{ route('regiao.relatorio.variacaofinanceira') }}">Variação Financeira</a>
-                             @endif
+                             
                          </li>
-
+                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('financeiro-por-categoria'))
                          <li {!! Request::is('regiao/relatorio/financeiro-por-categoria') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('financeiro-por-categoria'))
+                             
                                  <a href="{{ route('regiao.relatorio.financeiroPorCategoria') }}">Financeiro por Categoria</a>
-                             @endif
+                             
                          </li>
-
+                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
                          <li {!! Request::is('regiao/relatorio/cota-orcamentaria') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                            
                                 <a href="{{ route('regiao.cota.orcamentaria') }}">Cota Orçamentária</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-ebd'))
+                        <li class="submenu-fixo mt-3 mb-3">
+                            
+                        <span>EBD</span>
+                            
+                        </li>
+                        @endif
 
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboardo'))
+                        <li {!! Request::is('regiao/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.dashboard') }}">Dashboard</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-estatisticas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/estatisticas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.estatisticas') }}">Estatísticas EBD</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-turmas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.turmas') }}">EBDs</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-alunos'))
+                        <li {!! Request::is('regiao/relatorio/ebd/alunos') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.alunos') }}">Alunos</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-professores'))
+                        <li {!! Request::is('regiao/relatorio/ebd/professores') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.professores') }}">Professores</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-liderancas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/liderancas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.liderancas') }}">Liderança</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-classes'))
+                        <li {!! Request::is('regiao/relatorio/ebd/classes') ? 'class="active"' : '' !!}>
+                         
+                                <a href="{{ route('regiao.relatorio.ebd.classes') }}">Classes</a>                           
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-diarios'))
+                        <li {!! Request::is('regiao/relatorio/ebd/diarios') ? 'class="active"' : '' !!}>                     
+                                <a href="{{ route('regiao.relatorio.ebd.diarios') }}">Diário</a>                           
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-agendas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/agendas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.agendas') }}">Agenda</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-geral'))
+                        <li {!! Request::is('regiao/relatorio/ebd/geral') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.geral') }}">Relatório Geral EBD</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
                          <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                             
                                  <span>Membresia</span>
-                             @endif
+                             
                          </li>
+                         @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
                          <li {!! Request::is('regiao/relatorio/membrosministerio') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
+                             
                                 <a href="{{ route('regiao.relatorio.membrosministerio') }}">Membros por
                                     Ministério</a>
-                             @endif
+                             
                          </li>
+                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-quantidade-membros'))
                          <li {!! Request::is('regiao/relatorio/quantidademembros') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-quantidade-membros'))
+                             
                                  <a href="{{ route('regiao.relatorio.quantidademembros') }}">Quantidade de Membros</a>
-                             @endif
+                             
                          </li>
+                        @endif
+                          @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-estatistica-genero'))
                          <li {!! Request::is('regiao/relatorio/estatisticagenero') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-estatistica-genero'))
+                            
                                  <a href="{{ route('regiao.relatorio.estatisticagenero') }}">Estatística por
                                      Gênero</a>
-                             @endif
+                             
                          </li>
+                         @endif
+                          @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-ano-eclesiastico'))
                          <li {!! Request::is('regiao/relatorio/ano-eclesiastico') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-ano-eclesiastico'))
+                            
                                  <a href="{{ route('regiao.relatorio.ano.eclesiastico') }}">Mapa Estatístico Membros</a>
-                             @endif
+                    
                          </li>
+                         @endif
+                          @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-instituicoes-igrejas'))
                         <li class="submenu-fixo mt-3 mb-3">
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-instituicoes-igrejas'))
+                           
                                 <span>Clérigos</span>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-aniversariantes'))
                         <li {!! Request::is('regiao/relatorio/clerigos-aniversariantes') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-aniversariantes'))
+                            
                                 <a href="{{ route('regiao.relatorio.clerigosaniversariantes') }}">Clérigos Aniversariantes</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
                         <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
                             <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">Cônjuges dos Clérigos</a>
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
                         <li {!! Request::is('regiao/relatorio/clerigos-dados') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
+                            
                                 <a href="{{ route('regiao.relatorio.clerigosdados') }}">Clérigos Documentação</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-categoria'))
                         <li {!! Request::is('regiao/relatorio/clerigos-categorias') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-categoria'))
+                            
                                 <a href="{{ route('regiao.relatorio.clerigoscategoria') }}">Clérigos Categorias</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-status'))
                         <li {!! Request::is('regiao/relatorio/clerigos-status') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-status'))
+                            
                                 <a href="{{ route('regiao.relatorio.clerigosstatus') }}">Clérigos Status</a>
-                            @endif
+                            
                         </li>
-
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-hitorico-nomeacoes'))
                          <li {!! Request::is('regiao/relatorio/historiconomeacoes') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-hitorico-nomeacoes'))
+                             
                                  <a href="{{ route('regiao.estatistica.historiconomeacoes.regionais') }}">Histórico de
                                      Nomeacões</a>
-                             @endif
+                             
                          </li>
-
+                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-congregacoes-igrejas'))
                          <li class="submenu-fixo mt-3 mb-3">
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-congregacoes-igrejas'))
+                            
                                 <span>Igrejas</span>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
                         <li {!! Request::is('regiao/relatorio/congregacoes-por-igrejas') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
+                            
                                 <a href="{{ route('regiao.relatorio.congregacaoporigreja') }}">Congregações por Igrejas</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-cnpj-igreja'))
                         <li {!! Request::is('regiao/relatorio/cnpj-igrejas') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-cnpj-igreja'))
+                            
                                 <a href="{{ route('regiao.cnpj.igreja') }}">CNPJ por Igreja</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-contato-igreja'))
                         <li {!! Request::is('regiao/relatorio/contato-igrejas') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-contato-igreja'))
+                            
                                 <a href="{{ route('regiao.contato.igreja') }}">Contatos por Igreja</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-conta-bancaria-igreja'))
                         <li {!! Request::is('regiao/relatorio/conta-bancaria-igrejas') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-conta-bancaria-igreja'))
+                            
                                 <a href="{{ route('regiao.conta.bancaria.igreja') }}">Conta Bancária por Igreja</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
                         <li {!! Request::is('regiao/relatorio/igrejas-por-clerigos') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
+                            
                                 <a href="{{ route('regiao.relatorio.igrejas.clerigos') }}">Igrejas por Clérigos</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
                         <li {!! Request::is('regiao/relatorio/clerigo-por-igreja') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
+                           
                                 <a href="{{ route('regiao.relatorio.clerigo.por.igreja') }}">Clérigo por Igreja</a>
-                            @endif
+                            
                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-patrimonio'))
+                            <li class="submenu-fixo mt-3 mb-3">
+                                <span>Patrimônio</span>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/imoveis_cadastrados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'imoveis_cadastrados']) }}">Imóveis cadastrados</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/bens_moveis_cadastrados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_moveis_cadastrados']) }}">Bens móveis cadastrados</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/imoveis_regularizacao_pendente') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'imoveis_regularizacao_pendente']) }}">Regularização pendente</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/documentos_vencidos') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'documentos_vencidos']) }}">Documentos vencidos</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/avcb_vencido') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'avcb_vencido']) }}">AVCB vencido</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/bens_depreciados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_depreciados']) }}">Bens depreciados</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/baixas_patrimoniais') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'baixas_patrimoniais']) }}">Baixas patrimoniais</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/valor_total_por_categoria') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'valor_total_por_categoria']) }}">Valor total por categoria</a>
+                            </li>
+                            <li {!! Request::is('regiao/relatorio/patrimonio/bens_por_igreja_unidade') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">Bens por igreja/unidade</a>
+                            </li>
 
+                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">
                                 <span>GCEU</span>
                             </li>
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-lista-gceu'))
                             <li {!! Request::is('regiao/relatorio/gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-lista-gceu'))
+                                
                                     <a href="{{ route('regiao.relatorio.gceu') }}">Lista GCEU</a>
-                                @endif
+                                
                             </li>
+                            @endif
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorio-carta-pastoral'))
                             <li {!! Request::is('regiao/relatorio/relatorio-carta-pastoral-gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorio-carta-pastoral'))
+                                
                                     <a href="{{ route('regiao.relatorio.carta-pastoral-regiao') }}">Carta Pastoral</a>
-                                @endif
+                                
                             </li>
+                            @endif
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-lista-funcoes'))
                             <li {!! Request::is('regiao/relatorio/relatorio-funcoes-gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-lista-funcoes'))
+                                
                                     <a href="{{ route('regiao.relatorio.funcoes.gceu') }}">Lista Função</a>
-                                @endif
+                                
                             </li>
+                            @endif
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-lista-aniversariantes'))
                             <li {!! Request::is('regiao/relatorio/relatorio-aniversariantes-gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-lista-aniversariantes'))
+                                
                                     <a href="{{ route('regiao.relatorio.aniversariantes.gceu') }}">Lista Aniversariantes</a>
-                                @endif
+                                
                             </li>
+                            @endif
                         @endif
                      </ul>
                  </li>
@@ -1089,7 +1311,7 @@
                  </li>
              @endif
 
-              @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu'))
+             @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu'))
                  <li class="menu">
                      <a href="#gceu" data-toggle="collapse" aria-expanded="{{Request::is('gceu/*') ? 'true' : 'false' }}" class="dropdown-toggle">
                          <div class="">
@@ -1182,6 +1404,221 @@
                                 <a href="{{ route('gceu.relatorio.aniversariantes') }}">Aniversariantes</a>
                             @endif
                          </li>
+                     </ul>
+                 </li>
+             @endif
+
+     @if (auth()->user()->hasPerfilRegra('patrimonio-dashboard'))
+                 <li class="menu">
+                     <a href="#patrimonio" data-toggle="collapse" aria-expanded="{{ Request::is('patrimonio*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-home">
+                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                 <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                             </svg>
+                             <span>Patrimônio</span>
+                         </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
+                     </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('patrimonio*') ? 'collapse show' : '' }}" id="patrimonio" data-parent="#patrimonio">
+                         
+                             <li {!! Request::is('patrimonio') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.dashboard') }}">Dashboard</a>
+                             </li>
+                             @if (auth()->user()->hasPerfilRegra('patrimonio-bens-imoveis'))
+                             <li {!! Request::is('patrimonio/bens-imoveis*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.bens-imoveis.index') }}">Bens Imóveis</a>
+                             </li>
+                             @endif
+                             @if (auth()->user()->hasPerfilRegra('patrimonio-bens-moveis'))
+                             <li {!! Request::is('patrimonio/bens-moveis*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.bens-moveis.index') }}">Bens Móveis</a>
+                             </li>
+                             @endif
+                             @if (auth()->user()->hasPerfilRegra('patrimonio-benfeitoria'))
+                             <li {!! Request::is('patrimonio/benfeitorias*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.benfeitorias.index') }}">Benfeitorias</a>
+                             </li>
+                             @endif
+                         
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-documentos'))
+                             <li {!! Request::is('patrimonio/documentos*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.documentos.index') }}">Documentos</a>
+                             </li>
+                         @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-baixa'))
+                             <li {!! Request::is('patrimonio/baixas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.baixas.index') }}">Baixas</a>
+                             </li>
+                         @endif
+                        @if (auth()->user()->hasPerfilRegra('patrimonio-relatorios'))
+                            <li class="submenu-fixo mt-3 mb-3">
+                                <span>Relatórios</span>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/imoveis_cadastrados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'imoveis_cadastrados']) }}">Imóveis cadastrados</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/bens_moveis_cadastrados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_moveis_cadastrados']) }}">Bens móveis cadastrados</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/imoveis_regularizacao_pendente') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'imoveis_regularizacao_pendente']) }}">Regularização pendente</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/documentos_vencidos') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'documentos_vencidos']) }}">Documentos vencidos</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/avcb_vencido') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'avcb_vencido']) }}">AVCB vencido</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/bens_depreciados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_depreciados']) }}">Bens depreciados</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/baixas_patrimoniais') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'baixas_patrimoniais']) }}">Baixas patrimoniais</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/valor_total_por_categoria') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'valor_total_por_categoria']) }}">Valor total por categoria</a>
+                            </li>
+                            <li {!! Request::is('patrimonio/relatorios/bens_por_igreja_unidade') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">Bens por igreja/unidade</a>
+                            </li>
+                         @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio.visualizar'))
+                             <li class="submenu-fixo mt-3 mb-3">
+                                 <span>Configurações</span>
+                             </li>
+                             <li {!! Request::is('patrimonio/configuracoes*') ? 'class="active"' : '' !!}>
+                                 <a href="#patrimonio-configuracoes"
+                                    data-toggle="collapse"
+                                    aria-expanded="{{ Request::is('patrimonio/configuracoes*') ? 'true' : 'false' }}"
+                                    class="dropdown-toggle">
+                                     Configurações
+                                 </a>
+                                 <ul class="collapse list-unstyled sub-submenu {{ Request::is('patrimonio/configuracoes*') ? 'collapse show' : '' }}"
+                                     id="patrimonio-configuracoes">
+                                     <li {!! Request::is('patrimonio/configuracoes/natureza*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'natureza']) }}">Natureza</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/status*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'status']) }}">Status</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/iptu*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'iptu']) }}">IPTU</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/categoria*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'categoria']) }}">Categoria</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/comprobatorio*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'comprobatorio']) }}">Comprobatório</a>
+                                     </li>
+                                     <li {!! Request::is('patrimonio/configuracoes/tipo_documento*') ? 'class="active"' : '' !!}>
+                                         <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'tipo_documento']) }}">Tipo de documento</a>
+                                     </li>
+                                 </ul>
+                             </li>
+                         @endif
+                     </ul>
+                 </li>
+             @endif
+
+             @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-dashboard') )
+                 <li class="menu">
+                     <a href="#ebd" data-toggle="collapse" aria-expanded="{{ Request::is('ebd*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-book-open">
+                                 <path d="M2 3h6a4 4 0 0 1 4 4v14a4 4 0 0 0-4-4H2z"></path>
+                                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a4 4 0 0 1 4-4h6z"></path>
+                             </svg>
+                             <span>EBD</span>
+                         </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
+                     </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('ebd*') ? 'collapse show' : '' }}" id="ebd" data-parent="#ebd">
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-dashboard') )
+                             <li {!! Request::is('ebd') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.dashboard') }}">Dashboard</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-turmas') )
+                             <li {!! Request::is('ebd/turmas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.turmas.index') }}">EBDs</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-professores') )
+                             <li {!! Request::is('ebd/professores*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.professores.index') }}">Professores</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-alunos') )
+                             <li {!! Request::is('ebd/alunos*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.alunos.index') }}">Alunos</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-classes') )
+                             <li {!! Request::is('ebd/classes*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.classes.index') }}">Classes</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-liderancas') )
+                             <li {!! Request::is('ebd/liderancas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.liderancas.index') }}">Liderança</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-diarios') )
+                             <li {!! Request::is('ebd/diarios*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.diarios.index') }}">Diários</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-agendas') )
+                             <li {!! Request::is('ebd/agendas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.agendas.index') }}">Agenda</a>
+                             </li>
+                         @endif
+                         @if (auth()->check()  && auth()->user()->hasPerfilRegra('ebd-dashboard') )
+                             <li class="submenu-fixo mt-3 mb-3">
+                                 <span>Relatórios</span>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/turmas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.turmas') }}">EBDs</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/alunos*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.alunos') }}">Alunos</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/professores*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.professores') }}">Professores</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/liderancas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.liderancas') }}">Liderança</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/classes*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.classes') }}">Classes</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/diarios*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.diarios') }}">Diário</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/agendas*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.agendas') }}">Agenda</a>
+                             </li>
+                             <li {!! Request::is('ebd/relatorios/geral*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('ebd.relatorios.geral') }}">Relatório Geral EBD</a>
+                             </li>
+                         @endif
                      </ul>
                  </li>
              @endif
