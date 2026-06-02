@@ -1013,11 +1013,12 @@
                             </li>
                             @endif
                         @endif
-                     </ul>
-                 </li>
-             
+	                     </ul>
+	                 </li>
+	             @endif
+	             
 
-             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
+	             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                  <li class="menu">
                     <a href="#estatistica-regiao" data-toggle="collapse" aria-expanded="{{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu') || Request::is('regiao/relatorio/aspirantes-por-igrejas')) ? 'true' : 'false' }}"
                          class="dropdown-toggle">
