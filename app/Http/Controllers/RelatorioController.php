@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioAniversariantesService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioConjugesService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioFuncoesEclesiasticasService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioHistoricoEclesiasticoService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembresiaService;
@@ -45,6 +46,16 @@ class RelatorioController extends Controller
 
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de aniversariantes');
+        }
+    }
+
+    public function conjuges()
+    {
+        try {
+            $data = app(IdentificaDadosRelatorioConjugesService::class)->execute();
+            return view('relatorios.conjuges', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Não foi possível abrir a página do relatório de cônjuges');
         }
     }
 
