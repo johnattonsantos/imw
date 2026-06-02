@@ -224,7 +224,7 @@
                          </li>
                          <li {!! Request::is('secretaria/relatorio/conjuges') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-conjuges'))
-                                 <a href="{{ route('relatorio.conjuges') }}">Relatório de Cônjuges</a>
+                                 <a href="{{ route('relatorio.conjuges') }}">Cônjuges</a>
                              @endif
                          </li>
                          <li {!! Request::is('secretaria/relatorio/membros-por-ministerios') ? 'class="active"' : '' !!}>
