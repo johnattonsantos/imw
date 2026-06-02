@@ -222,6 +222,11 @@
                                  <a href="{{ route('relatorio.aniversariantes') }}">Aniversariantes</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/conjuges') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-conjuges'))
+                                 <a href="{{ route('relatorio.conjuges') }}">Relatório de Cônjuges</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('secretaria/relatorio/membros-por-ministerios') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-historico-eclesiastico'))
                                  <a href="{{ route('relatorio.membros-por-ministerios') }}">Membros por Ministérios</a>
@@ -658,7 +663,7 @@
                      <ul class="collapse submenu list-unstyled {{ Request::is('regiao/relatorio/*') ? 'collapse show' : '' }}" id="financeiro-regiao"
                          data-parent="#financeiro-regiao">
                          <!-- <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
                                  <span>Contabilidade</span>
                              @endif
                          </li> -->
@@ -942,6 +947,7 @@
                         </li>
                         @endif
 
+                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">
                                 <span>GCEU</span>
@@ -977,7 +983,7 @@
                         @endif
                      </ul>
                  </li>
-             @endif
+             
 
              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                  <li class="menu">
