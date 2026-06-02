@@ -222,6 +222,11 @@
                                  <a href="{{ route('relatorio.aniversariantes') }}">Aniversariantes</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/conjuges') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-conjuges'))
+                                 <a href="{{ route('relatorio.conjuges') }}">Cônjuges</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('secretaria/relatorio/membros-por-ministerios') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-historico-eclesiastico'))
                                  <a href="{{ route('relatorio.membros-por-ministerios') }}">Membros por Ministérios</a>
@@ -1010,7 +1015,7 @@
                         @endif
                      </ul>
                  </li>
-             @endif
+             
 
              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                  <li class="menu">
