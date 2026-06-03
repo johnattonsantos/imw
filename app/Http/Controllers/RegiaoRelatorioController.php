@@ -24,6 +24,7 @@ use App\Services\ServiceRegiaoRelatorios\OrcamentoService;
 use App\Services\ServiceRegiaoRelatorios\QuantidadeMembrosService;
 use App\Services\ServiceRegiaoRelatorios\SaldoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\VariacaoFinanceiraService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioConjugesHierarquiaService;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoAniversariantes;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoCategorias;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoDados;
@@ -154,6 +155,15 @@ class RegiaoRelatorioController extends Controller
         );
 
         return view('regiao.relatorios.estatisticas-gceu', $data);
+    }
+
+    public function conjuges()
+    {
+        $data = app(IdentificaDadosRelatorioConjugesHierarquiaService::class)->executeRegiao();
+
+        return view('relatorios.conjuges-hierarquia', $data + [
+            'breadcrumbGrupo' => 'Relatórios Regionais',
+        ]);
     }
 
     //Escorlaridade
