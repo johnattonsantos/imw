@@ -40,6 +40,7 @@
                       <tr>
                           <th>NOME DO MEMBRO</th>
                           <th>NOME DO CÔNJUGE</th>
+                          <th>DATA DO CASAMENTO</th>
                           <th>CONTATO</th>
                       </tr>
                   </thead>
@@ -48,11 +49,13 @@
                       <tr>
                           <td>{{ $membro->nome }}</td>
                           <td>{{ $membro->conjuge_nome }}</td>
+                          <td>{{ $membro->data_casamento ? \Carbon\Carbon::parse($membro->data_casamento)->format('d/m/Y') : '-' }}</td>
                           <td>{{ $membro->contato ? formatStr($membro->contato, '## (##) #####-####') : '-' }}</td>
                       </tr>
                     @empty
                       <tr>
                           <td>Nenhum registro encontrado</td>
+                          <td>-</td>
                           <td>-</td>
                           <td>-</td>
                       </tr>
@@ -73,7 +76,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js"></script>
 <script>
   const reportTitle = @json($tituloRelatorio);
 
@@ -94,14 +96,17 @@
             className: 'btn btn-primary btn-rounded',
             text: '<i class="fas fa-file-pdf"></i> PDF',
             titleAttr: 'PDF',
-            title: reportTitle
-          },
-          {
-            extend: 'print',
-            className: 'btn btn-primary btn-rounded',
-            text: '<i class="fas fa-print"></i> Imprimir',
-            titleAttr: 'Imprimir',
-            title: reportTitle
+            title: reportTitle,
+            customize: function (doc) {
+              const tableNode = doc.content.find(function (item) {
+                return item.table;
+              });
+
+              if (tableNode) {
+                const columns = tableNode.table.body[0].length;
+                tableNode.table.widths = Array(columns).fill('*');
+              }
+            }
           }
         ]
       },

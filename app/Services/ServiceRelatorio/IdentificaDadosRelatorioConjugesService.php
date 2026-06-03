@@ -22,6 +22,7 @@ class IdentificaDadosRelatorioConjugesService
         return MembresiaMembro::select(
                 'membresia_membros.nome',
                 'membresia_familiares.conjuge_nome',
+                'membresia_familiares.data_casamento',
                 DB::raw("CASE WHEN membresia_contatos.telefone_preferencial IS NOT NULL AND membresia_contatos.telefone_preferencial <> '' THEN membresia_contatos.telefone_preferencial
                     WHEN membresia_contatos.telefone_alternativo IS NOT NULL AND membresia_contatos.telefone_alternativo <> '' THEN membresia_contatos.telefone_alternativo
                     ELSE membresia_contatos.telefone_whatsapp END as contato")
