@@ -250,12 +250,13 @@ class UpdateMembroRequest extends FormRequest
             'data_casamento' => [
                 'nullable',
                 'date',
-                function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
+                function ($attribute, $value, $fail) use ($dataNascimento) {
+                    if (empty($value)) {
+                        return;
+                    }
+
                     if (strtotime($value) <= strtotime($dataNascimento)) {
                         $fail('A data de casamento deve ser após a data de nascimento.');
-                    }
-                    if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de casamento deve ser após a data de nascimento e a data atual.');
                     }
                 },
             ],
