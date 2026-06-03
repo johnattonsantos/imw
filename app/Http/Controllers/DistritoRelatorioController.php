@@ -13,6 +13,7 @@ use App\Services\ServiceDistritoRelatorios\OrcamentoService;
 use App\Services\ServiceDistritoRelatorios\QuantidadeMembrosService;
 use App\Services\ServiceDistritoRelatorios\SaldoIgrejasService;
 use App\Services\ServiceDistritoRelatorios\VariacaoFinanceiraService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioConjugesHierarquiaService;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoAniversariantesDistrito;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
@@ -88,6 +89,15 @@ class DistritoRelatorioController extends Controller
         $data = app(EstatisticasGceuService::class)->execute();
 
         return view('distrito.relatorios.estatisticas-gceu', $data);
+    }
+
+    public function conjuges()
+    {
+        $data = app(IdentificaDadosRelatorioConjugesHierarquiaService::class)->executeDistrito();
+
+        return view('relatorios.conjuges-hierarquia', $data + [
+            'breadcrumbGrupo' => 'Relatórios Distritais',
+        ]);
     }
 
 

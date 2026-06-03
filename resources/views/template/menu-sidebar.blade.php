@@ -506,6 +506,11 @@
                                      Membros</a>
                              @endif
                          </li>
+                         <li {!! Request::is('distrito/relatorio/conjuges') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio-conjuges'))
+                                 <a href="{{ route('distrito.relatorio.conjuges') }}">conjuges</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('distrito/relatorio/estatisticagenero') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-estatistica-genero'))
                                  <a href="{{ route('distrito.relatorio.estatisticagenero') }}">Estatística por
@@ -832,6 +837,13 @@
                          <li {!! Request::is('regiao/relatorio/quantidademembros') ? 'class="active"' : '' !!}>
                              
                                  <a href="{{ route('regiao.relatorio.quantidademembros') }}">Quantidade de Membros</a>
+                             
+                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-conjuges'))
+                         <li {!! Request::is('regiao/relatorio/conjuges') ? 'class="active"' : '' !!}>
+                             
+                                 <a href="{{ route('regiao.relatorio.conjuges') }}">conjuges</a>
                              
                          </li>
                         @endif
