@@ -147,7 +147,7 @@ class UpdateMembroService
             'mae_nome' => $data['mae_nome'],
             'pai_nome' => $data['pai_nome'],
             'conjuge_nome' => $data['conjuge_nome'],
-            'data_casamento' => $data['data_casamento'],
+            'data_casamento' => $data['data_casamento'] ?? null,
             'filhos' => $data['filhos'],
             'historico_familiar' => $data['historico_familiar'],
             'membro_id' => $data['membro_id'],
