@@ -31,97 +31,12 @@
   </div>
 </div>
 
-@if ($nivel === 'regiao')
 <div class="col-lg-12 col-12 layout-spacing">
   <div class="statbox widget box box-shadow">
     <div class="widget-header">
       <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Total por Distrito</h4>
-        </div>
-      </div>
-    </div>
-    <div class="widget-content widget-content-area">
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover mb-4" id="conjuges-total-distrito-table">
-          <thead>
-            <tr>
-              <th>DISTRITO</th>
-              <th>TOTAL</th>
-            </tr>
-          </thead>
-          <tbody>
-            @forelse ($totaisDistritos as $totalDistrito)
-              <tr>
-                <td>{{ $totalDistrito->distrito_nome }}</td>
-                <td>{{ $totalDistrito->total }}</td>
-              </tr>
-            @empty
-              <tr>
-                <td>Nenhum registro encontrado</td>
-                <td>0</td>
-              </tr>
-            @endforelse
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-@endif
-
-<div class="col-lg-12 col-12 layout-spacing">
-  <div class="statbox widget box box-shadow">
-    <div class="widget-header">
-      <div class="row">
-        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Total por Igreja</h4>
-        </div>
-      </div>
-    </div>
-    <div class="widget-content widget-content-area">
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover mb-4" id="conjuges-total-igreja-table">
-          <thead>
-            <tr>
-              @if ($nivel === 'regiao')
-                <th>DISTRITO</th>
-              @endif
-              <th>IGREJA</th>
-              <th>TOTAL</th>
-            </tr>
-          </thead>
-          <tbody>
-            @forelse ($totaisIgrejas as $totalIgreja)
-              <tr>
-                @if ($nivel === 'regiao')
-                  <td>{{ $totalIgreja->distrito_nome }}</td>
-                @endif
-                <td>{{ $totalIgreja->igreja_nome }}</td>
-                <td>{{ $totalIgreja->total }}</td>
-              </tr>
-            @empty
-              <tr>
-                @if ($nivel === 'regiao')
-                  <td>Nenhum registro encontrado</td>
-                @endif
-                <td>{{ $nivel === 'regiao' ? '-' : 'Nenhum registro encontrado' }}</td>
-                <td>0</td>
-              </tr>
-            @endforelse
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="col-lg-12 col-12 layout-spacing">
-  <div class="statbox widget box box-shadow">
-    <div class="widget-header">
-      <div class="row">
-        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Detalhamento</h4>
+          <h4>Cônjuges por Distritos</h4>
         </div>
       </div>
     </div>
@@ -239,20 +154,8 @@
     };
   }
 
-  @if ($nivel === 'regiao')
-    new DataTable('#conjuges-total-distrito-table', {
-      layout: exportLayout(reportTitle + ' - TOTAL POR DISTRITO'),
-      language: language
-    });
-  @endif
-
-  new DataTable('#conjuges-total-igreja-table', {
-    layout: exportLayout(reportTitle + ' - TOTAL POR IGREJA'),
-    language: language
-  });
-
   new DataTable('#conjuges-detalhe-table', {
-    layout: exportLayout(reportTitle + ' - DETALHAMENTO'),
+    layout: exportLayout(reportTitle + ' - CÔNJUGES POR DISTRITOS'),
     language: language
   });
 </script>
