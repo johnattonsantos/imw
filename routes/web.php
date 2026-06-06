@@ -528,6 +528,7 @@ Route::middleware(['auth'])->group(function () {
         // Relatórios
         Route::prefix('secretaria/relatorio')->name('relatorio.')->controller(RelatorioController::class)->group(function () {
             Route::get('/membresia', 'membresia')->name('membresia')->middleware('seguranca:relatorio-membresia');
+            Route::get('/membros-por-bairro', 'membrosPorBairro')->name('membros-por-bairro')->middleware('seguranca:relatorio-membros-por-bairro');
             Route::get('/aniversariantes', 'aniversariantes')->name('aniversariantes')->middleware('seguranca:relatorio-aniversariantes');
             Route::get('/conjuges', 'conjuges')->name('conjuges')->middleware('seguranca:relatorio-conjuges');
             Route::get('/membros-por-ministerios', 'membrosPorMinisterios')->name('membros-por-ministerios')->middleware('seguranca:relatorio-historico-eclesiastico');
