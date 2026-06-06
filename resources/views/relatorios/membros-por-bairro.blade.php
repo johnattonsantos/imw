@@ -3,8 +3,8 @@
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
     ['text' => 'Home', 'url' => '/', 'active' => false],
-    ['text' => $breadcrumbGrupo, 'url' => '#', 'active' => false],
-    ['text' => 'Cônjuges', 'url' => '#', 'active' => true]
+    ['text' => 'Relatórios', 'url' => '#', 'active' => false],
+    ['text' => 'Membros por Bairro', 'url' => '#', 'active' => true]
 ]"></x-breadcrumb>
 @endsection
 
@@ -17,17 +17,22 @@
 @include('extras.alerts')
 
 @section('content')
+@php
+  $igrejaNome = session()->get('session_perfil')->instituicoes->igrejaLocal->nome;
+  $tituloRelatorio = 'RELATÓRIO DE MEMBROS POR BAIRRO - ' . $igrejaNome;
+@endphp
+
 <div class="col-lg-12 col-12 layout-spacing">
   <div class="statbox widget box box-shadow">
-      <div class="widget-header">
-        <div class="row">
-            <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                <h4>Cônjuges</h4>
-                <p class="pl-3 mb-0">{{ $nivel === 'regiao' ? 'Região' : 'Distrito' }}: {{ $instituicaoNome }}</p>
-                <p class="pl-3">Registros Encontrados: {{ $membros->count() }}</p>
-            </div>
+    <div class="widget-header">
+      <div class="row">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+          <h4>Membros por Bairro</h4>
+          <p class="pl-3 mb-0">Igreja Local: {{ $igrejaNome }}</p>
+          <p class="pl-3">Registros Encontrados: {{ $membros->count() }}</p>
         </div>
       </div>
+    </div>
   </div>
 </div>
 
@@ -36,43 +41,45 @@
     <div class="widget-header">
       <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Cônjuges por Distritos</h4>
+          <h4>Membros por Bairro</h4>
         </div>
       </div>
     </div>
     <div class="widget-content widget-content-area">
       <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="conjuges-detalhe-table">
+        <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="membros-bairro-detalhe-table">
           <thead>
             <tr>
-              @if ($nivel === 'regiao')
-                <th>DISTRITO</th>
-              @endif
-              <th>IGREJA</th>
               <th>NOME DO MEMBRO</th>
-              <th>NOME DO CÔNJUGE</th>
-              <th>DATA DO CASAMENTO</th>
+              <th>BAIRRO</th>
+              <th>CEP</th>
+              <th>ENDEREÇO</th>
+              <th>CIDADE/UF</th>
               <th>CONTATO</th>
             </tr>
           </thead>
           <tbody>
             @forelse ($membros as $membro)
               <tr>
-                @if ($nivel === 'regiao')
-                  <td>{{ $membro->distrito_nome }}</td>
-                @endif
-                <td>{{ $membro->igreja_nome }}</td>
-                <td>{{ $membro->membro_nome }}</td>
-                <td>{{ $membro->conjuge_nome }}</td>
-                <td>{{ $membro->data_casamento ? \Carbon\Carbon::parse($membro->data_casamento)->format('d/m/Y') : '-' }}</td>
+                <td>{{ $membro->nome }}</td>
+                <td>{{ $membro->bairro }}</td>
+                <td>{{ $membro->cep ? formatStr($membro->cep, '#####-###') : '-' }}</td>
+                <td>
+                  {{ $membro->endereco ?: '-' }}
+                  @if ($membro->numero)
+                    , {{ $membro->numero }}
+                  @endif
+                  @if ($membro->complemento)
+                    - {{ $membro->complemento }}
+                  @endif
+                </td>
+                <td>{{ $membro->cidade ? $membro->cidade . '/' . $membro->estado : '-' }}</td>
                 <td>{{ $membro->contato ? formatStr($membro->contato, '## (##) #####-####') : '-' }}</td>
               </tr>
             @empty
               <tr>
-                @if ($nivel === 'regiao')
-                  <td>Nenhum registro encontrado</td>
-                @endif
-                <td>{{ $nivel === 'regiao' ? '-' : 'Nenhum registro encontrado' }}</td>
+                <td>Nenhum registro encontrado</td>
+                <td>-</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
@@ -96,7 +103,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
 <script>
-  const reportTitle = @json($titulo);
+  const reportTitle = @json($tituloRelatorio);
   const language = {
     decimal: ",",
     thousands: ".",
@@ -154,8 +161,8 @@
     };
   }
 
-  new DataTable('#conjuges-detalhe-table', {
-    layout: exportLayout(reportTitle + ' - CÔNJUGES POR DISTRITOS'),
+  new DataTable('#membros-bairro-detalhe-table', {
+    layout: exportLayout(reportTitle + ' - DETALHAMENTO'),
     language: language
   });
 </script>

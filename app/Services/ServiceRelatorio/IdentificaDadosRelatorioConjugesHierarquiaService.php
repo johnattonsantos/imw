@@ -22,8 +22,6 @@ class IdentificaDadosRelatorioConjugesHierarquiaService
             'titulo' => 'RELATÓRIO DE CÔNJUGES - ' . optional($distrito)->nome,
             'instituicaoNome' => optional($distrito)->nome,
             'membros' => $membros,
-            'totaisIgrejas' => $this->totaisPorIgreja($membros),
-            'totaisDistritos' => collect(),
         ];
     }
 
@@ -37,8 +35,6 @@ class IdentificaDadosRelatorioConjugesHierarquiaService
             'titulo' => 'RELATÓRIO DE CÔNJUGES - ' . $regiao->nome,
             'instituicaoNome' => $regiao->nome,
             'membros' => $membros,
-            'totaisIgrejas' => $this->totaisPorIgreja($membros),
-            'totaisDistritos' => $this->totaisPorDistrito($membros),
         ];
     }
 
@@ -77,32 +73,4 @@ class IdentificaDadosRelatorioConjugesHierarquiaService
             ->get();
     }
 
-    private function totaisPorIgreja($membros)
-    {
-        return $membros
-            ->groupBy(fn ($membro) => ($membro->distrito_nome ?? '-') . '|' . ($membro->igreja_nome ?? '-'))
-            ->map(function ($items) {
-                $first = $items->first();
-
-                return (object) [
-                    'distrito_nome' => $first->distrito_nome ?? '-',
-                    'igreja_nome' => $first->igreja_nome ?? '-',
-                    'total' => $items->count(),
-                ];
-            })
-            ->values();
-    }
-
-    private function totaisPorDistrito($membros)
-    {
-        return $membros
-            ->groupBy(fn ($membro) => $membro->distrito_nome ?? '-')
-            ->map(function ($items) {
-                return (object) [
-                    'distrito_nome' => $items->first()->distrito_nome ?? '-',
-                    'total' => $items->count(),
-                ];
-            })
-            ->values();
-    }
 }
