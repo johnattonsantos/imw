@@ -8,6 +8,7 @@ use App\Services\ServiceRelatorio\IdentificaDadosRelatorioFuncoesEclesiasticasSe
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioHistoricoEclesiasticoService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembresiaService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembrosDisciplinadosService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembrosPorBairroService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioMembrosPorMinisterioService;
 use App\Models\MembresiaMembro;
 use Illuminate\Support\Facades\DB;
@@ -56,6 +57,16 @@ class RelatorioController extends Controller
             return view('relatorios.conjuges', $data);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Não foi possível abrir a página do relatório de cônjuges');
+        }
+    }
+
+    public function membrosPorBairro()
+    {
+        try {
+            $data = app(IdentificaDadosRelatorioMembrosPorBairroService::class)->execute();
+            return view('relatorios.membros-por-bairro', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Não foi possível abrir a página do relatório de membros por bairro');
         }
     }
 
