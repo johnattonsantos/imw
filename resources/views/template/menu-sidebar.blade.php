@@ -217,6 +217,11 @@
                                  <a href="{{ route('relatorio.membresia') }}">Membresia</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/membros-por-bairro') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-membros-por-bairro'))
+                                 <a href="{{ route('relatorio.membros-por-bairro') }}">Membros por Bairro</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('secretaria/relatorio/aniversariantes') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-aniversariantes'))
                                  <a href="{{ route('relatorio.aniversariantes') }}">Aniversariantes</a>
