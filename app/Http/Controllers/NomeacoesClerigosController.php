@@ -25,14 +25,26 @@ class NomeacoesClerigosController extends Controller
 
     public function novo(PessoasPessoa $pessoa)
     {
+        $regiaoId = $this->regiaoLogadaId();
 
-        $instituicoes = InstituicoesInstituicao::whereIn('tipo_instituicao_id', [
+        $instituicoes = InstituicoesInstituicao::with('instituicaoPai')
+            ->whereIn('tipo_instituicao_id', [
             InstituicoesTipoInstituicao::IGREJA_LOCAL,
             InstituicoesTipoInstituicao::DISTRITO,
             InstituicoesTipoInstituicao::REGIAO,
             InstituicoesTipoInstituicao::SECRETARIA,
             InstituicoesTipoInstituicao::SECRETARIA_REGIONAL,
         ])
+            ->where(function ($query) use ($regiaoId) {
+                $query->where('instituicoes_instituicoes.id', $regiaoId)
+                    ->orWhere('instituicoes_instituicoes.regiao_id', $regiaoId)
+                    ->orWhereIn('instituicoes_instituicoes.instituicao_pai_id', function ($subQuery) use ($regiaoId) {
+                        $subQuery->select('id')
+                            ->from('instituicoes_instituicoes')
+                            ->where('regiao_id', $regiaoId)
+                            ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO);
+                    });
+            })
             ->orderBy('nome')
             ->get();
 
@@ -54,5 +66,10 @@ class NomeacoesClerigosController extends Controller
     {
         app(FinalizarNomeacoesClerigos::class)->execute($id, $request);
         return redirect()->route('clerigos.nomeacoes.index', ['id' => $clerigoId])->with('success', 'Nomeação finalizada com sucesso!');
+    }
+
+    private function regiaoLogadaId(): int
+    {
+        return (int) session()->get('session_perfil')->instituicao_id;
     }
 }

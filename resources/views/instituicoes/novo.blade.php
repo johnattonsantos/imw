@@ -141,7 +141,7 @@
                 </div>
 
 
-                <input type="hidden" name="regiao_id" id="regiao_id" value="23">
+                <input type="hidden" name="regiao_id" id="regiao_id" value="{{ $regiaoId }}">
             </div>
 
             <!-- Endereço -->
