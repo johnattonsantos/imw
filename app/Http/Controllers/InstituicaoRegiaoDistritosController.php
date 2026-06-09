@@ -46,18 +46,10 @@ class InstituicaoRegiaoDistritosController extends Controller
     {
         //Enviar Lista de insituicões pai, todas da regiao_id exceto igrejas
         $ufs = $this->fetchUFs();
-        $instituicoes_pai = InstituicoesInstituicao::select('instituicoes_instituicoes.*', 'ii_pai.nome as instituicao_pai_nome') // Selecionando apenas os nomes
-            ->where(function ($query) {
-                $query->where('instituicoes_instituicoes.tipo_instituicao_id', 3);
-            })
-            ->orWhere(function ($query) {
-                $query->where('instituicoes_instituicoes.regiao_id', session()->get('session_perfil')->instituicao_id)
-                    ->where('instituicoes_instituicoes.tipo_instituicao_id', '!=', 1);
-            })
-            ->join('instituicoes_instituicoes as ii_pai', 'ii_pai.id', '=', 'instituicoes_instituicoes.instituicao_pai_id') // Realiza o JOIN
-            ->get();
+        $regiaoId = $this->regiaoLogadaId();
+        $instituicoes_pai = $this->fetchInstituicoesPaiDaRegiao($regiaoId);
 
-        return view('instituicoes.novo', compact('instituicoes_pai', 'ufs'));
+        return view('instituicoes.novo', compact('instituicoes_pai', 'ufs', 'regiaoId'));
     }
 
     public function store(StoreReceberNovoRequest $request)
@@ -71,20 +63,12 @@ class InstituicaoRegiaoDistritosController extends Controller
     public function editar(string $id)
     {
         //Enviar Lista de insituicões pai, todas da regiao_id exceto igrejas
-        $instituicoes_pai = InstituicoesInstituicao::select('instituicoes_instituicoes.*', 'ii_pai.nome as instituicao_pai_nome') // Selecionando apenas os nomes
-            ->where(function ($query) {
-                $query->where('instituicoes_instituicoes.tipo_instituicao_id', 3);
-            })
-            ->orWhere(function ($query) {
-                $query->where('instituicoes_instituicoes.regiao_id', session()->get('session_perfil')->instituicao_id)
-                    ->where('instituicoes_instituicoes.tipo_instituicao_id', '!=', 1);
-            })
-            ->join('instituicoes_instituicoes as ii_pai', 'ii_pai.id', '=', 'instituicoes_instituicoes.instituicao_pai_id') // Realiza o JOIN
-            ->get();
+        $regiaoId = $this->regiaoLogadaId();
+        $instituicoes_pai = $this->fetchInstituicoesPaiDaRegiao($regiaoId);
 
-        $instituicao = InstituicoesInstituicao::findOrFail($id);
+        $instituicao = InstituicoesInstituicao::where('regiao_id', $regiaoId)->findOrFail($id);
         $ufs = $this->fetchUFs();
-        return view('instituicoes.editar', compact('instituicao', 'instituicoes_pai', 'ufs'));
+        return view('instituicoes.editar', compact('instituicao', 'instituicoes_pai', 'ufs', 'regiaoId'));
     }
 
 
@@ -162,5 +146,28 @@ class InstituicaoRegiaoDistritosController extends Controller
     {
         app(FinalizarNomeacoesClerigos::class)->execute($id, $request);
         return redirect()->route('instituicoes-regiao.nomeacoes', $instituicao_id)->with('success', 'Nomeação finalizada com sucesso!');
+    }
+
+    private function regiaoLogadaId(): int
+    {
+        return (int) session()->get('session_perfil')->instituicao_id;
+    }
+
+    private function fetchInstituicoesPaiDaRegiao(int $regiaoId)
+    {
+        return InstituicoesInstituicao::select('instituicoes_instituicoes.*', 'ii_pai.nome as instituicao_pai_nome')
+            ->leftJoin('instituicoes_instituicoes as ii_pai', 'ii_pai.id', '=', 'instituicoes_instituicoes.instituicao_pai_id')
+            ->where(function ($query) use ($regiaoId) {
+                $query->where(function ($query) use ($regiaoId) {
+                    $query->where('instituicoes_instituicoes.id', $regiaoId)
+                        ->where('instituicoes_instituicoes.tipo_instituicao_id', InstituicoesTipoInstituicao::REGIAO);
+                })->orWhere(function ($query) use ($regiaoId) {
+                    $query->where('instituicoes_instituicoes.regiao_id', $regiaoId)
+                        ->where('instituicoes_instituicoes.tipo_instituicao_id', '!=', InstituicoesTipoInstituicao::IGREJA_LOCAL);
+                });
+            })
+            ->orderBy('instituicoes_instituicoes.tipo_instituicao_id')
+            ->orderBy('instituicoes_instituicoes.nome')
+            ->get();
     }
 }
