@@ -60,10 +60,10 @@ class RelatorioController extends Controller
         }
     }
 
-    public function membrosPorBairro()
+    public function membrosPorBairro(Request $request)
     {
         try {
-            $data = app(IdentificaDadosRelatorioMembrosPorBairroService::class)->execute();
+            $data = app(IdentificaDadosRelatorioMembrosPorBairroService::class)->execute($request->all());
             return view('relatorios.membros-por-bairro', $data);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Não foi possível abrir a página do relatório de membros por bairro');
