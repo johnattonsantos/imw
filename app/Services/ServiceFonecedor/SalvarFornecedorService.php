@@ -4,6 +4,7 @@ namespace App\Services\ServiceFonecedor;
 
 use App\Models\FinanceiroFornecedores;
 use App\Models\PerfilUser;
+use App\Support\CpfCnpj;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
@@ -13,7 +14,7 @@ class SalvarFornecedorService
     public function execute($data)
     {
         FinanceiroFornecedores::create([
-            'cpfcnpj' => $data['cpf_cnpj'],
+            'cpfcnpj' => CpfCnpj::normalize($data['cpf_cnpj']),
             'nome' => $data['nome'],
             'email' => $data['email'],
             'site' => $data['site'],

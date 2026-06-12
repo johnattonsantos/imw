@@ -333,6 +333,20 @@
     });
 
 
+    function formatCnpjAlfanumerico(value) {
+        var clean = String(value || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+
+        if (clean.length !== 14) {
+            return value || '';
+        }
+
+        return clean.substring(0, 2) + '.' +
+            clean.substring(2, 5) + '.' +
+            clean.substring(5, 8) + '/' +
+            clean.substring(8, 12) + '-' +
+            clean.substring(12, 14);
+    }
+
     $('.btn-view-details').on('click', function() {
         var instituicaoId = $(this).data('instituicao-id');
         var modalId = '#viewDetailsModal_' + instituicaoId;
@@ -354,7 +368,7 @@
                     </div>
                     <div class="card-body">
                         <p><strong>Nome:</strong> ${data.nome}</p>
-                        <p><strong>CNPJ:</strong> ${data.cnpj || '-'}</p>
+                        <p><strong>CNPJ:</strong> ${formatCnpjAlfanumerico(data.cnpj) || '-'}</p>
                         <p><strong>CEP:</strong> ${data.cep || '-'}</p>
                         <p><strong>Endereço:</strong> ${data.endereco || '-'}, ${data.numero || '-'}</p>
                         <p><strong>Complemento:</strong> ${data.complemento || '-'}</p>
