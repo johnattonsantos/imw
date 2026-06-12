@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\InstituicoesInstituicao;
+use App\Support\CpfCnpj;
 
 class InstituicoesObserver
 {
@@ -18,7 +19,7 @@ class InstituicoesObserver
         }
 
         if ($instituicoesInstituicao->cnpj) {
-            $instituicoesInstituicao->cnpj = preg_replace('/[^\d]/', '', $instituicoesInstituicao->cnpj);
+            $instituicoesInstituicao->cnpj = CpfCnpj::normalize($instituicoesInstituicao->cnpj);
         }
     }
 
@@ -34,7 +35,7 @@ class InstituicoesObserver
         }
 
         if ($instituicoesInstituicao->cnpj) {
-            $instituicoesInstituicao->cnpj = preg_replace('/[^\d]/', '', $instituicoesInstituicao->cnpj);
+            $instituicoesInstituicao->cnpj = CpfCnpj::normalize($instituicoesInstituicao->cnpj);
         }
     }
 }
