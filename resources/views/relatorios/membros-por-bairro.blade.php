@@ -19,8 +19,8 @@
 @section('content')
 @php
   $igrejaNome = session()->get('session_perfil')->instituicoes->igrejaLocal->nome;
-  $localidade = $localidade ?? request()->get('localidade', 'todos');
-  $localidadeTexto = $localidadeTexto ?? 'Todos';
+  $localidade = $localidade ?? request()->get('localidade', 'sede');
+  $localidadeTexto = $localidadeTexto ?? 'Sede';
   $tituloRelatorio = 'RELATÓRIO DE MEMBROS POR BAIRRO - ' . $igrejaNome . ' - ' . strtoupper($localidadeTexto);
 @endphp
 
@@ -52,11 +52,14 @@
       <form method="GET" action="{{ route('relatorio.membros-por-bairro') }}">
         <div class="row align-items-end">
           <div class="col-md-4 form-group">
-            <label for="localidade">Congregação/Sede</label>
+            <label for="localidade">Sede/Congregação</label>
             <select id="localidade" name="localidade" class="form-control">
-              <option value="todos" {{ $localidade === 'todos' ? 'selected' : '' }}>Todos</option>
               <option value="sede" {{ $localidade === 'sede' ? 'selected' : '' }}>Sede</option>
-              <option value="congregacao" {{ $localidade === 'congregacao' ? 'selected' : '' }}>Congregação</option>
+              @foreach (($congregacoes ?? collect()) as $congregacao)
+                <option value="{{ $congregacao->id }}" {{ (string) $localidade === (string) $congregacao->id ? 'selected' : '' }}>
+                  {{ $congregacao->nome }}
+                </option>
+              @endforeach
             </select>
           </div>
           <div class="col-md-4 form-group">

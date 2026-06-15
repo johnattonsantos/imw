@@ -12,13 +12,17 @@ class IdentificaDadosRelatorioMembrosPorBairroService
 
     public function execute(array $params = []): array
     {
-        $localidade = $this->resolveLocalidade($params['localidade'] ?? 'todos');
+        $congregacoes = Identifiable::fetchCongregacoes()
+            ->sortBy('nome', SORT_NATURAL | SORT_FLAG_CASE)
+            ->values();
+        $localidade = $this->resolveLocalidade($params['localidade'] ?? 'sede', $congregacoes);
         $membros = $this->fetchMembrosPorBairro($localidade);
 
         return [
             'membros' => $membros,
+            'congregacoes' => $congregacoes,
             'localidade' => $localidade,
-            'localidadeTexto' => $this->localidadeTexto($localidade),
+            'localidadeTexto' => $this->localidadeTexto($localidade, $congregacoes),
         ];
     }
 
@@ -30,12 +34,10 @@ class IdentificaDadosRelatorioMembrosPorBairroService
                     ->whereNull('mc.deleted_at');
             })
             ->leftJoin('congregacoes_congregacoes as cc', function ($join) {
-                $join->on('cc.id', '=', 'mm.congregacao_id')
-                    ->whereNull('cc.deleted_at');
+                $join->on('cc.id', '=', 'mm.congregacao_id');
             })
             ->select(
                 'mm.nome',
-                DB::raw("CASE WHEN mm.congregacao_id IS NULL OR mm.congregacao_id = 0 THEN 'Sede' ELSE 'Congregação' END as localidade_tipo"),
                 DB::raw("CASE WHEN mm.congregacao_id IS NULL OR mm.congregacao_id = 0 THEN 'Sede' ELSE COALESCE(cc.nome, 'Congregação sem nome') END as localidade_nome"),
                 DB::raw("COALESCE(NULLIF(TRIM(mc.bairro), ''), 'Sem bairro informado') as bairro"),
                 'mc.cep',
@@ -57,9 +59,8 @@ class IdentificaDadosRelatorioMembrosPorBairroService
                         ->orWhere('mm.congregacao_id', 0);
                 });
             })
-            ->when($localidade === 'congregacao', function ($query) {
-                $query->whereNotNull('mm.congregacao_id')
-                    ->where('mm.congregacao_id', '>', 0);
+            ->when($localidade !== 'sede', function ($query) use ($localidade) {
+                $query->where('mm.congregacao_id', (int) $localidade);
             })
             ->orderBy('bairro')
             ->orderBy('localidade_nome')
@@ -67,18 +68,28 @@ class IdentificaDadosRelatorioMembrosPorBairroService
             ->get();
     }
 
-    private function resolveLocalidade(string $localidade): string
+    private function resolveLocalidade(string $localidade, $congregacoes): string
     {
-        return in_array($localidade, ['todos', 'sede', 'congregacao'], true) ? $localidade : 'todos';
+        if ($localidade === 'sede') {
+            return 'sede';
+        }
+
+        if (ctype_digit($localidade) && $congregacoes->contains('id', (int) $localidade)) {
+            return $localidade;
+        }
+
+        return 'sede';
     }
 
-    private function localidadeTexto(string $localidade): string
+    private function localidadeTexto(string $localidade, $congregacoes): string
     {
-        return [
-            'todos' => 'Todos',
-            'sede' => 'Sede',
-            'congregacao' => 'Congregação',
-        ][$localidade] ?? 'Todos';
+        if ($localidade === 'sede') {
+            return 'Sede';
+        }
+
+        $congregacao = $congregacoes->firstWhere('id', (int) $localidade);
+
+        return $congregacao ? $congregacao->nome : 'Sede';
     }
 
 }
