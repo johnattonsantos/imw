@@ -7,7 +7,9 @@ use App\Models\MembresiaSetor;
 use App\Models\PessoasPessoa;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ListPerfilService
 {
@@ -42,14 +44,61 @@ class ListPerfilService
         }
 
         $pessoa['nome_regiao'] = optional($instituicao)->nome ?? '';
+        $pessoa['nome_regiao_formatado'] = $this->formatRegionName($pessoa['nome_regiao']);
 
         if ($pessoa->foto) {
-            $disk = Storage::disk('s3');
-            $pessoa->foto = $disk->temporaryUrl($pessoa->foto, Carbon::now()->addMinutes(15));
+            $pessoa->foto = $this->resolveFotoUrl((string) $pessoa->foto);
         }
 
         $pessoa['pessoa_id'] = $usuario->pessoa_id;
         return $pessoa;
     }
-}
 
+    private function resolveFotoUrl(string $foto): string
+    {
+        if (Str::startsWith($foto, ['http://', 'https://'])) {
+            return $foto;
+        }
+
+        if (Str::startsWith($foto, ['/storage/', 'storage/'])) {
+            return Str::startsWith($foto, '/') ? $foto : '/' . ltrim($foto, '/');
+        }
+
+        if (! $this->hasS3Credentials()) {
+            return $foto;
+        }
+
+        try {
+            return Storage::disk('s3')->temporaryUrl($foto, Carbon::now()->addMinutes(15));
+        } catch (\Throwable $e) {
+            try {
+                return Storage::disk('s3')->url($foto);
+            } catch (\Throwable $e) {
+                return $foto;
+            }
+        }
+    }
+
+    private function hasS3Credentials(): bool
+    {
+        return filled(Config::get('filesystems.disks.s3.key'))
+            && filled(Config::get('filesystems.disks.s3.secret'))
+            && filled(Config::get('filesystems.disks.s3.region'))
+            && filled(Config::get('filesystems.disks.s3.bucket'));
+    }
+
+    private function formatRegionName(?string $regionName): string
+    {
+        $regionName = trim((string) $regionName);
+
+        if ($regionName === '') {
+            return '';
+        }
+
+        if (preg_match('/\d+/', $regionName, $matches)) {
+            return $matches[0] . 'ª Região';
+        }
+
+        return mb_convert_case($regionName, MB_CASE_TITLE, 'UTF-8');
+    }
+}

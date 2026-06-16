@@ -1508,6 +1508,9 @@
                      <li {!! Request::is('usuario/perfis') ? 'class="active"' : '' !!}>
                          <a href="{{ route('perfil.index') }}"> Dados Pessoais</a>
                      </li>
+                     <li {!! Request::is('usuario/perfil/carteira-digital') ? 'class="active"' : '' !!}>
+                         <a href="{{ route('perfil.carteira-digital') }}"> Carteira Digital</a>
+                     </li>
                      @if (auth()->user()->pessoa_id)
                          <li {!! Request::is('usuario/clerigos/perfil/dependentes') ? 'class="active"' : '' !!}>
                              <a href="{{ route('clerigos.perfil.dependentes.index') }}"> Dependentes</a>
