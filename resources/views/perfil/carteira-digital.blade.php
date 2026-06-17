@@ -41,9 +41,8 @@
         }
         .superintendente-regiao{
             position: absolute;
-            top: 203px;
-            left: 465px;
-            width: 350px;
+            top: 1005px;
+            left: 425px;
             background: #fff;
             color: #000;
             font-family: Arial, Helvetica, sans-serif;
@@ -109,9 +108,14 @@
             </div>
             @if($usuario['pessoa_id'])
             <div class="widget-content widget-content-area">
+                @php
+                    $regiaoEclesiastica = trim(($usuario->nome_regiao_formatado ?? '') . ' Eclesiástica');
+                    $superintendenteRegiao = trim('Superintendente da ' . $regiaoEclesiastica);
+                    $telefoneSedeAdministrativa = $usuario->telefone_sede_administrativa ?: '(21) 98456-0937';
+                @endphp
                 <div class="carteira-wrapper">
-                    <div class="regiao_top">{{ $usuario->nome_regiao_formatado }} Eclesiástica</div>
-                    <div class="superintendente-regiao">Superintendente da {{ $usuario->nome_regiao_formatado }} Eclesiástica</div>
+                    <div class="regiao_top">{{ $regiaoEclesiastica }}</div>
+                    <div class="superintendente-regiao">{{ $superintendenteRegiao }}</div>
                     <img src="{{ $usuario->foto }}" class="foto" alt="">
                     <div class="rol">{{ $usuario->rol }}</div>
                     <div class="nome">{{ $usuario->nome }}</div>
@@ -122,8 +126,8 @@
                     <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
                     <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
                     <div class="validade">Validade: 31/10/2027</div>
-                    <div class="contato-sede">Sede Administrativa: (21) 98456-0937</div>
-                    <div class="regiao_bottom">{{ $usuario->nome_regiao_formatado }} Eclesiástica</div>
+                    <div class="contato-sede">Sede Administrativa: {{ $telefoneSedeAdministrativa }}</div>
+                    <div class="regiao_bottom">{{ $regiaoEclesiastica }}</div>
                     <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
                 </div>
             </div>
