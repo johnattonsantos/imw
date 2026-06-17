@@ -19,7 +19,9 @@
 @section('content')
 @php
   $igrejaNome = session()->get('session_perfil')->instituicoes->igrejaLocal->nome;
-  $tituloRelatorio = 'RELATÓRIO DE MEMBROS POR BAIRRO - ' . $igrejaNome;
+  $localidade = $localidade ?? request()->get('localidade', 'sede');
+  $localidadeTexto = $localidadeTexto ?? 'Sede';
+  $tituloRelatorio = 'RELATÓRIO DE MEMBROS POR BAIRRO - ' . $igrejaNome . ' - ' . strtoupper($localidadeTexto);
 @endphp
 
 <div class="col-lg-12 col-12 layout-spacing">
@@ -29,9 +31,43 @@
         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
           <h4>Membros por Bairro</h4>
           <p class="pl-3 mb-0">Igreja Local: {{ $igrejaNome }}</p>
+          <p class="pl-3 mb-0">Filtro: {{ $localidadeTexto }}</p>
           <p class="pl-3">Registros Encontrados: {{ $membros->count() }}</p>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-lg-12 col-12 layout-spacing">
+  <div class="statbox widget box box-shadow">
+    <div class="widget-header">
+      <div class="row">
+        <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+          <h4>Filtros</h4>
+        </div>
+      </div>
+    </div>
+    <div class="widget-content widget-content-area">
+      <form method="GET" action="{{ route('relatorio.membros-por-bairro') }}">
+        <div class="row align-items-end">
+          <div class="col-md-4 form-group">
+            <label for="localidade">Sede/Congregação</label>
+            <select id="localidade" name="localidade" class="form-control">
+              <option value="sede" {{ $localidade === 'sede' ? 'selected' : '' }}>Sede</option>
+              @foreach (($congregacoes ?? collect()) as $congregacao)
+                <option value="{{ $congregacao->id }}" {{ (string) $localidade === (string) $congregacao->id ? 'selected' : '' }}>
+                  {{ $congregacao->nome }}
+                </option>
+              @endforeach
+            </select>
+          </div>
+          <div class="col-md-4 form-group">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="{{ route('relatorio.membros-por-bairro') }}" class="btn btn-secondary">Limpar</a>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>
@@ -51,6 +87,7 @@
           <thead>
             <tr>
               <th>NOME DO MEMBRO</th>
+              <th>CONGREGAÇÃO/SEDE</th>
               <th>BAIRRO</th>
               <th>CEP</th>
               <th>ENDEREÇO</th>
@@ -62,6 +99,7 @@
             @forelse ($membros as $membro)
               <tr>
                 <td>{{ $membro->nome }}</td>
+                <td>{{ $membro->localidade_nome }}</td>
                 <td>{{ $membro->bairro }}</td>
                 <td>{{ $membro->cep ? formatStr($membro->cep, '#####-###') : '-' }}</td>
                 <td>
@@ -79,6 +117,7 @@
             @empty
               <tr>
                 <td>Nenhum registro encontrado</td>
+                <td>-</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>

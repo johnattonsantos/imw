@@ -3,6 +3,7 @@
 namespace App\Services\ServiceFonecedor;
 
 use App\Models\FinanceiroFornecedores;
+use App\Support\CpfCnpj;
 
 class UpdateFornecedorService
 {
@@ -11,7 +12,7 @@ class UpdateFornecedorService
         $fornecedor = FinanceiroFornecedores::findOrFail($id);
         
         $fornecedor->update([
-            'cpfcnpj' => $data['cpf_cnpj'],
+            'cpfcnpj' => CpfCnpj::normalize($data['cpf_cnpj']),
             'nome' => $data['nome'],
             'email' => $data['email'],
             'site' => $data['site'],

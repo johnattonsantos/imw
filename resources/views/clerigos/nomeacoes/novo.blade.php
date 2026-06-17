@@ -75,7 +75,7 @@
                             <option value="{{ $instituicao->id }}"
                                 {{ old('instituicao_id') == $instituicao->id ? 'selected' : '' }}>
                                 {{ $instituicao->nome }}
-                                {{-- {{ $instituicao->instituicaoPai ? sprintf('(%s)', $instituicao->instituicaoPai->nome) : '' }} --}}
+                                {{ $instituicao->instituicaoPai ? sprintf('(%s)', $instituicao->instituicaoPai->nome) : '' }}
                             </option>
                         @endforeach
                         </option>

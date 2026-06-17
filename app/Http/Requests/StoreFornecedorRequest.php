@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\CpfCnpj;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreFornecedorRequest extends FormRequest
@@ -24,7 +25,16 @@ class StoreFornecedorRequest extends FormRequest
     public function rules()
     {
         return [
-            'cpf_cnpj' => 'required|string|max:18',
+            'cpf_cnpj' => [
+                'required',
+                'string',
+                'max:18',
+                function ($attribute, $value, $fail) {
+                    if (!CpfCnpj::isValidCpfOrCnpj($value)) {
+                        $fail('O CPF/CNPJ informado é inválido. Para CNPJ alfanumérico, use 12 letras/números e 2 dígitos verificadores numéricos.');
+                    }
+                },
+            ],
             'nome' => 'required|string|max:100',
             'email' => ['nullable', 'email', function ($attribute, $value, $fail) {
                 if ($value) {

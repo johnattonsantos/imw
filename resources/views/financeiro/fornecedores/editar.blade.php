@@ -28,9 +28,10 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="mb-3 col-lg-3 col-md-3 col-sm-6">
-                                    <label for="cpf_cnpj">* CPF/CPNJ <small>(somente números)</small></label>
+                                    <label for="cpf_cnpj">* CPF/CNPJ <small>(aceita CNPJ alfanumérico)</small></label>
                                     <input class="form-control @error('cpf_cnpj') is-invalid @enderror" id="cpf_cnpj"
-                                        name="cpf_cnpj" value="{{ $fornecedor->cpfcnpj }}" type="text" required>
+                                        name="cpf_cnpj" value="{{ old('cpf_cnpj', \App\Support\CpfCnpj::format($fornecedor->cpfcnpj)) }}"
+                                        type="text" maxlength="18" style="text-transform: uppercase" required>
                                     @error('cpf_cnpj')
                                         <small class="form-text text-danger">{{ $message }}</small>
                                     @enderror
@@ -240,15 +241,34 @@
     </script>
 
     <script>
-        var options = {
-            onKeyPress: function(cpf, ev, el, op) {
-                var masks = ['000.000.000-000', '00.000.000/0000-00'];
-                $('#cpf_cnpj').mask((cpf.length > 14) ? masks[1] : masks[0], op);
+        function formatCpfCnpj(value) {
+            var clean = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+            var isCnpj = /[A-Z]/.test(clean) || clean.length > 11;
+
+            if (!isCnpj) {
+                var cpf = clean.replace(/\D/g, '').slice(0, 11);
+                return cpf
+                    .replace(/^(\d{3})(\d)/, '$1.$2')
+                    .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
+                    .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
             }
+
+            var body = clean.slice(0, 12);
+            var digits = clean.slice(12).replace(/\D/g, '').slice(0, 2);
+            var cnpj = body + digits;
+
+            return cnpj
+                .replace(/^([A-Z0-9]{2})([A-Z0-9])/, '$1.$2')
+                .replace(/^([A-Z0-9]{2})\.([A-Z0-9]{3})([A-Z0-9])/, '$1.$2.$3')
+                .replace(/^([A-Z0-9]{2})\.([A-Z0-9]{3})\.([A-Z0-9]{3})([A-Z0-9])/, '$1.$2.$3/$4')
+                .replace(/^([A-Z0-9]{2})\.([A-Z0-9]{3})\.([A-Z0-9]{3})\/([A-Z0-9]{4})(\d)/, '$1.$2.$3/$4-$5');
         }
 
-        $('#cpf_cnpj').length > 11 ? $('#cpf_cnpj').mask('00.000.000/0000-00', options) : $('#cpf_cnpj').mask(
-            '000.000.000-00#', options);
+        $('#cpf_cnpj').on('input', function() {
+            this.value = formatCpfCnpj(this.value);
+        });
+
+        $('#cpf_cnpj').val(formatCpfCnpj($('#cpf_cnpj').val()));
     </script>
     
     <script>

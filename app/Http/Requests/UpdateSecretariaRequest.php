@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\CpfCnpj;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSecretariaRequest extends FormRequest
@@ -30,7 +31,16 @@ class UpdateSecretariaRequest extends FormRequest
             'bairro' => 'required',
             'cep' => 'required',
             'cidade' => 'required',
-            'cnpj' => 'required',
+            'cnpj' => [
+                'required',
+                'string',
+                'max:18',
+                function ($attribute, $value, $fail) {
+                    if (! CpfCnpj::isValidCnpj($value)) {
+                        $fail('O CNPJ informado é inválido. Para CNPJ alfanumérico, use 12 letras/números e 2 dígitos verificadores numéricos.');
+                    }
+                },
+            ],
             'complemento' => '',
             'data_abertura' => 'required|date',
             'numero' => 'required',
@@ -51,6 +61,7 @@ class UpdateSecretariaRequest extends FormRequest
             'cep.required' => 'O CEP é obrigatório.',
             'cidade.required' => 'A cidade é obrigatória.',
             'cnpj.required' => 'O CNPJ é obrigatório.',
+            'cnpj.max' => 'O CNPJ não pode ter mais de 18 caracteres.',
             'data_abertura.required' => 'A data de abertura é obrigatória.',
             'data_abertura.date' => 'A data de abertura deve ser uma data válida.',
             'numero.required' => 'O número é obrigatório.',

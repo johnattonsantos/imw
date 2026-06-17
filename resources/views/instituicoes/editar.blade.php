@@ -62,9 +62,9 @@
                     @enderror
                 </div>
                 <div class="col-md-3 form-group">
-                    <label for="cnpj"><span>*</span> CNPJ</label>
+                    <label for="cnpj"><span>*</span> CNPJ <small>(aceita alfanumérico)</small></label>
                     <input class="form-control @error('cnpj') is-invalid @enderror" type="text" id="cnpj"
-                        name="cnpj" value="{{ old('cnpj', $instituicao['cnpj']) }}">
+                        name="cnpj" value="{{ old('cnpj', \App\Support\CpfCnpj::format($instituicao['cnpj'])) }}" maxlength="18" style="text-transform: uppercase;">
                     @error('cnpj')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -93,7 +93,7 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <input type="hidden" name="regiao_id" id="regiao_id" value="23">
+                <input type="hidden" name="regiao_id" id="regiao_id" value="{{ $regiaoId }}">
             </div>
 
             <div class="row">
@@ -259,9 +259,25 @@
         $(document).ready(function() {
             $('#cep').mask('00000.000')
             $('#telefone').mask('00000-0000')
-            $('#cnpj').mask('00.000.000/0000-00', {
-                reverse: true
-            })
+
+            function formatCnpjAlfanumerico(value) {
+                var clean = value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+                var body = clean.slice(0, 12);
+                var digits = clean.slice(12).replace(/\D/g, '').slice(0, 2);
+                var cnpj = body + digits;
+
+                return cnpj
+                    .replace(/^([A-Z0-9]{2})([A-Z0-9])/, '$1.$2')
+                    .replace(/^([A-Z0-9]{2})\.([A-Z0-9]{3})([A-Z0-9])/, '$1.$2.$3')
+                    .replace(/^([A-Z0-9]{2})\.([A-Z0-9]{3})\.([A-Z0-9]{3})([A-Z0-9])/, '$1.$2.$3/$4')
+                    .replace(/^([A-Z0-9]{2})\.([A-Z0-9]{3})\.([A-Z0-9]{3})\/([A-Z0-9]{4})(\d)/, '$1.$2.$3/$4-$5');
+            }
+
+            $('#cnpj').on('input', function() {
+                this.value = formatCnpjAlfanumerico(this.value);
+            });
+
+            $('#cnpj').val(formatCnpjAlfanumerico($('#cnpj').val()));
 
             function validarDataAbertura() {
                 const minDate = '1967-01-05';
