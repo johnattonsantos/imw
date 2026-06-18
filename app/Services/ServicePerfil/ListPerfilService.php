@@ -8,6 +8,7 @@ use App\Models\PessoasPessoa;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -46,6 +47,7 @@ class ListPerfilService
         $pessoa['nome_regiao'] = optional($instituicao)->nome ?? '';
         $pessoa['nome_regiao_formatado'] = $this->formatRegionName($pessoa['nome_regiao']);
         $pessoa['telefone_sede_administrativa'] = $this->formatInstitutionPhone($instituicao);
+        $pessoa['superintendente_regional_nome'] = $this->getActiveRegionalSuperintendentName($instituicao);
 
         if ($pessoa->foto) {
             $pessoa->foto = $this->resolveFotoUrl((string) $pessoa->foto);
@@ -101,6 +103,32 @@ class ListPerfilService
         }
 
         return mb_convert_case($regionName, MB_CASE_TITLE, 'UTF-8');
+    }
+
+    private function getActiveRegionalSuperintendentName(?InstituicoesInstituicao $instituicao): string
+    {
+        if (!$instituicao) {
+            return '';
+        }
+
+        $nome = DB::table('pessoas_nomeacoes as pn')
+            ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
+            ->join('pessoas_pessoas as pp', 'pp.id', '=', 'pn.pessoa_id')
+            ->leftJoin('instituicoes_instituicoes as inst', 'inst.id', '=', 'pn.instituicao_id')
+            ->where(function ($query) use ($instituicao) {
+                $query->where('pn.instituicao_id', $instituicao->id)
+                    ->orWhere('pn.hist_regiao_id', $instituicao->id)
+                    ->orWhere('inst.instituicao_pai_id', $instituicao->id)
+                    ->orWhere('inst.regiao_id', $instituicao->id);
+            })
+            ->where('pf.funcao', 'Superintendente Regional')
+            ->whereNull('pn.data_termino')
+            ->whereNull('pn.deleted_at')
+            ->whereNull('pp.deleted_at')
+            ->orderByDesc('pn.data_nomeacao')
+            ->value('pp.nome');
+
+        return $nome ? mb_convert_case($nome, MB_CASE_TITLE, 'UTF-8') : '';
     }
 
     private function formatInstitutionPhone(?InstituicoesInstituicao $instituicao): string

@@ -35,14 +35,34 @@
             width: 100%;
             height: auto;
             display: block;
+            position: relative;
+            z-index: 0;
         }
         .regiao_top{
             position: absolute; top:213px; left: 330px; font-size: 14px; color: #4361ee;
         }
+        .superintendente-nome{
+            position: absolute;
+            top: 962px;
+            left: 420px;
+            width: 385px;
+            height: 34px;
+            line-height: 34px;
+            background: #fff;
+            color: #000;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            z-index: 2;
+        }
         .superintendente-regiao{
             position: absolute;
-            top: 1005px;
-            left: 425px;
+            top: 1000px;
+            left: 420px;
+            width: 385px;
+            height: 28px;
+            line-height: 28px;
             background: #fff;
             color: #000;
             font-family: Arial, Helvetica, sans-serif;
@@ -115,6 +135,7 @@
                 @endphp
                 <div class="carteira-wrapper">
                     <div class="regiao_top">{{ $regiaoEclesiastica }}</div>
+                    <div class="superintendente-nome">{{ $usuario->superintendente_regional_nome }}</div>
                     <div class="superintendente-regiao">{{ $superintendenteRegiao }}</div>
                     <img src="{{ $usuario->foto }}" class="foto" alt="">
                     <div class="rol">{{ $usuario->rol }}</div>
