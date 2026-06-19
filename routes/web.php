@@ -11,6 +11,7 @@ use App\Http\Controllers\CategoriaComunicacaoController;
 use App\Http\Controllers\ComunicacaoController;
 use App\Http\Controllers\ContabilidadeController;
 use App\Http\Controllers\DistritoRelatorioController;
+use App\Http\Controllers\EventoController;
 use App\Http\Controllers\FinanceiroCaixasController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\FinanceiroPlanoContaController;
@@ -187,6 +188,16 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export/xlsx', 'exportXlsx')->name('export.xlsx');
             Route::get('/export/pdf', 'exportPdf')->name('export.pdf');
         })->middleware(['seguranca:comunicacao']);
+
+        Route::prefix('eventos')->name('eventos.')->controller(EventoController::class)->middleware(['seguranca:evento'])->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/novo', 'create')->name('create')->middleware(['seguranca:evento-novo']);
+            Route::post('/store', 'store')->name('store')->middleware(['seguranca:evento-novo']);
+            Route::get('/detalhes/{evento}', 'show')->name('show');
+            Route::get('/editar/{evento}', 'edit')->name('edit')->middleware(['seguranca:evento-editar']);
+            Route::put('/update/{evento}', 'update')->name('update')->middleware(['seguranca:evento-editar']);
+            Route::delete('/deletar/{evento}', 'destroy')->name('destroy')->middleware(['seguranca:evento-excluir']);
+        });
 
         Route::prefix('categoria-comunicacao')->name('categoria-comunicacao.')->controller(CategoriaComunicacaoController::class)->group(function () {
             Route::get('/', 'index')->name('index');
