@@ -131,7 +131,7 @@
                 @php
                     $regiaoEclesiastica = trim(($usuario->nome_regiao_formatado ?? '') . ' Eclesiástica');
                     $superintendenteRegiao = trim('Superintendente da ' . $regiaoEclesiastica);
-                    $telefoneSedeAdministrativa = $usuario->telefone_sede_administrativa ?: '(21) 98456-0937';
+                    $telefoneSedeAdministrativa = $usuario->telefone_sede_administrativa ?? '';
                 @endphp
                 <div class="carteira-wrapper">
                     <div class="regiao_top">{{ $regiaoEclesiastica }}</div>
