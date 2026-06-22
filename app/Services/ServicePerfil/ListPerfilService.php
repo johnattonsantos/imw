@@ -166,12 +166,6 @@ class ListPerfilService
                 'pp.telefone_alternativo',
             ])
             ->where('pp.tipo', 'CLE')
-            ->where('pp.regiao_id', $instituicao->id)
-            ->where(function ($query) {
-                $query->where('pp.status_id', 1)
-                    ->orWhere('pp.status', 'A')
-                    ->orWhere('pp.status', 'Ativo');
-            })
             ->where(function ($query) use ($instituicao) {
                 $query->where('pn.instituicao_id', $instituicao->id)
                     ->orWhere('pn.hist_regiao_id', $instituicao->id)
