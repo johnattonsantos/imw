@@ -3,11 +3,12 @@
 namespace App\Services\ServicePerfil;
 
 use App\Models\InstituicoesInstituicao;
-use App\Models\MembresiaSetor;
+use App\Models\InstituicoesTipoInstituicao;
 use App\Models\PessoasPessoa;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -38,14 +39,13 @@ class ListPerfilService
             return ['pessoa_id' => null];
         }
 
-        $instituicao = null;
-        if (!empty($pessoa->regiao_id)) {
-            $instituicao = InstituicoesInstituicao::where('id', $pessoa->regiao_id)->first();
-        }
+        $instituicao = $this->getLoggedRegionInstitution($pessoa);
+        $superintendenteRegional = $this->getActiveRegionalSuperintendent($instituicao);
 
         $pessoa['nome_regiao'] = optional($instituicao)->nome ?? '';
         $pessoa['nome_regiao_formatado'] = $this->formatRegionName($pessoa['nome_regiao']);
-        $pessoa['telefone_sede_administrativa'] = $this->formatInstitutionPhone($instituicao);
+        $pessoa['telefone_sede_administrativa'] = $this->formatPersonPhone($superintendenteRegional);
+        $pessoa['superintendente_regional_nome'] = $this->formatPersonName(optional($superintendenteRegional)->nome);
 
         if ($pessoa->foto) {
             $pessoa->foto = $this->resolveFotoUrl((string) $pessoa->foto);
@@ -103,17 +103,99 @@ class ListPerfilService
         return mb_convert_case($regionName, MB_CASE_TITLE, 'UTF-8');
     }
 
-    private function formatInstitutionPhone(?InstituicoesInstituicao $instituicao): string
+    private function getLoggedRegionInstitution(PessoasPessoa $pessoa): ?InstituicoesInstituicao
     {
-        if (!$instituicao || empty($instituicao->telefone)) {
+        $sessionPerfil = session('session_perfil');
+        $regiaoId = (int) data_get($sessionPerfil, 'instituicoes.regiao.id', 0);
+
+        if ($regiaoId <= 0) {
+            $instituicaoId = (int) data_get($sessionPerfil, 'instituicao_id', 0);
+            $regiaoId = $this->resolveRegionIdByInstitutionId($instituicaoId);
+        }
+
+        if ($regiaoId <= 0 && !empty($pessoa->regiao_id)) {
+            $regiaoId = (int) $pessoa->regiao_id;
+        }
+
+        return $regiaoId > 0
+            ? InstituicoesInstituicao::query()->where('id', $regiaoId)->first()
+            : null;
+    }
+
+    private function resolveRegionIdByInstitutionId(int $instituicaoId): int
+    {
+        $currentId = $instituicaoId;
+        $maxDepth = 10;
+
+        while ($currentId > 0 && $maxDepth-- > 0) {
+            $instituicao = InstituicoesInstituicao::query()
+                ->select(['id', 'tipo_instituicao_id', 'instituicao_pai_id', 'regiao_id'])
+                ->find($currentId);
+
+            if (!$instituicao) {
+                return 0;
+            }
+
+            if ((int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::REGIAO) {
+                return (int) $instituicao->id;
+            }
+
+            if (!empty($instituicao->regiao_id)) {
+                return (int) $instituicao->regiao_id;
+            }
+
+            $currentId = (int) ($instituicao->instituicao_pai_id ?? 0);
+        }
+
+        return 0;
+    }
+
+    private function getActiveRegionalSuperintendent(?InstituicoesInstituicao $instituicao): ?object
+    {
+        if (!$instituicao) {
+            return null;
+        }
+
+        return DB::table('pessoas_pessoas as pp')
+            ->join('pessoas_nomeacoes as pn', 'pn.pessoa_id', '=', 'pp.id')
+            ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
+            ->select([
+                'pp.nome',
+                'pp.telefone_preferencial',
+                'pp.telefone_alternativo',
+            ])
+            ->where('pp.tipo', 'CLE')
+            ->where('pp.situacao_id', 1)
+            ->where('pp.regiao_id', $instituicao->id)
+            ->where('pf.funcao', 'Superintendente Regional')
+            ->whereNull('pn.data_termino')
+            ->whereNull('pn.deleted_at')
+            ->whereNull('pp.deleted_at')
+            ->orderByDesc('pn.data_nomeacao')
+            ->first();
+    }
+
+    private function formatPersonName(?string $nome): string
+    {
+        $nome = trim((string) $nome);
+
+        return $nome !== '' ? mb_convert_case($nome, MB_CASE_TITLE, 'UTF-8') : '';
+    }
+
+    private function formatPersonPhone(?object $pessoa): string
+    {
+        if (!$pessoa) {
             return '';
         }
 
-        $telefone = preg_replace('/\D+/', '', (string) $instituicao->telefone);
-        $ddd = preg_replace('/\D+/', '', (string) $instituicao->ddd);
+        $telefone = preg_replace(
+            '/\D+/',
+            '',
+            (string) ($pessoa->telefone_preferencial ?: $pessoa->telefone_alternativo)
+        );
 
-        if ($ddd !== '' && strlen($telefone) <= 9) {
-            $telefone = $ddd . $telefone;
+        if ($telefone === '') {
+            return '';
         }
 
         return formatarTelefone($telefone);
