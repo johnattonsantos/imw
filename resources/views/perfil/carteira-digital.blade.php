@@ -35,47 +35,81 @@
             width: 100%;
             height: auto;
             display: block;
+            position: relative;
+            z-index: 0;
         }
         .regiao_top{
-            position: absolute; top:213px; left: 330px; font-size: 14px; color: #4361ee;
+            position: absolute; top:213px; left: 330px; font-size: 14px; color: #4361ee; z-index: 1;
+        }
+        .superintendente-nome{
+            position: absolute;
+            top: 978px;
+            left: 420px;
+            width: 385px;
+            height: 34px;
+            line-height: 34px;
+            background: #fff;
+            color: #000;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            text-align: center;
+            z-index: 2;
+        }
+        .superintendente-regiao{
+            position: absolute;
+            top: 1000px;
+            left: 420px;
+            width: 405px;
+            height: 38px;
+            line-height: 28px;
+            background: #fff;
+            color: #000;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 19px;
+            font-style: italic;
+            font-weight: 600;
+            text-align: center;
+            z-index: 2;
         }
         .foto{
             position: absolute; top:150px; left: 633px;
             width: 210px;
             height: 268px;
+            z-index: 1;
         }
         .nome{
-            position: absolute; top:543px; left:70px;
+            position: absolute; top:543px; left:70px; z-index: 1;
         }
         .rol{
-            position: absolute; top:543px; left: 615px;
+            position: absolute; top:543px; left: 615px; z-index: 1;
         }
         .cpf{
-            position: absolute; top:640px; left: 70px;
+            position: absolute; top:640px; left: 70px; z-index: 1;
         }
         .rg{
-            position: absolute; top:640px; left: 340px;
+            position: absolute; top:640px; left: 340px; z-index: 1;
         }
         .dt-nascimento{
-            position: absolute; top:640px; left: 620px;
+            position: absolute; top:640px; left: 620px; z-index: 1;
         }
         .categoria{
-            position: absolute; top:737px; left: 70px;
+            position: absolute; top:737px; left: 70px; z-index: 1;
         }
         .dt-ordenacao{
-            position: absolute; top:737px; left:620px;
+            position: absolute; top:737px; left:620px; z-index: 1;
         }        
         .dt-consagracao{
-            position: absolute; top:737px; left: 346px;
+            position: absolute; top:737px; left: 346px; z-index: 1;
         }
         .validade{
-            position: absolute; top:850px; left: 130px; font-size: 20px;
+            position: absolute; top:850px; left: 130px; font-size: 20px; z-index: 1;
         }
         .contato-sede{
-            position: absolute; top:850px; left: 450px; font-size: 20px;
+            position: absolute; top:850px; left: 450px; font-size: 20px; z-index: 1;
         }
         .regiao_bottom{
-            position: absolute; top:1030px; left: 240px; font-size: 14px; color: #4361ee;
+            position: absolute; top:1030px; left: 240px; font-size: 14px; color: #4361ee; z-index: 1;
         }
     </style>
 @endsection
@@ -95,8 +129,15 @@
             </div>
             @if($usuario['pessoa_id'])
             <div class="widget-content widget-content-area">
+                @php
+                    $regiaoEclesiastica = trim(($usuario->nome_regiao_formatado ?? '') . ' Eclesiástica');
+                    $superintendenteRegiao = trim('Superintendente da ' . $regiaoEclesiastica);
+                    $telefoneSedeAdministrativa = $usuario->telefone_sede_administrativa ?? '';
+                @endphp
                 <div class="carteira-wrapper">
-                    <div class="regiao_top">{{ mb_convert_case($usuario->nome_regiao, MB_CASE_TITLE, "UTF-8") }} Eclesiástica</div>
+                    <div class="regiao_top">{{ $regiaoEclesiastica }}</div>
+                    <div class="superintendente-nome">{{ $usuario->superintendente_regional_nome }}</div>
+                    <div class="superintendente-regiao">{{ $superintendenteRegiao }}</div>
                     <img src="{{ $usuario->foto }}" class="foto" alt="">
                     <div class="rol">{{ $usuario->rol }}</div>
                     <div class="nome">{{ $usuario->nome }}</div>
@@ -107,8 +148,8 @@
                     <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
                     <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
                     <div class="validade">Validade: 31/10/2027</div>
-                    <div class="contato-sede">Sede Administrativa: (21) 98456-0937</div>
-                    <div class="regiao_bottom">{{ mb_convert_case($usuario->nome_regiao, MB_CASE_TITLE, "UTF-8") }} Eclesiástica</div>
+                    <div class="contato-sede">Sede Administrativa: {{ $telefoneSedeAdministrativa }}</div>
+                    <div class="regiao_bottom">{{ $regiaoEclesiastica }}</div>
                     <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
                 </div>
             </div>
