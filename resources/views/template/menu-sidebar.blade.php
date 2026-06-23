@@ -133,7 +133,7 @@
             @endif
             @if (auth()->check() && auth()->user()->hasPerfilRegra('evento'))
                  <li class="menu {{ Request::is('eventos*') ? 'active' : '' }}">
-                     <a href="{{ route('eventos.index') }}" aria-expanded="false" class="dropdown-toggle">
+                     <a href="#eventos-menu" data-toggle="collapse" aria-expanded="{{ Request::is('eventos*') ? 'true' : 'false' }}" class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                  viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -146,7 +146,30 @@
                              </svg>
                              <span>Eventos</span>
                          </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
                      </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('eventos*') ? 'collapse show' : '' }}" id="eventos-menu" data-parent="#accordionExample">
+                         <li {!! Request::is('eventos') || Request::is('eventos/novo') || Request::is('eventos/detalhes*') || Request::is('eventos/editar*') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('eventos.index') }}">Eventos</a>
+                         </li>
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-funcao'))
+                             <li {!! Request::is('eventos/funcoes*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('eventos.funcoes.index') }}">Funções Eventos</a>
+                             </li>
+                         @endif
+                         <li class="submenu-fixo mt-3 mb-3">
+                             <span>Relatórios</span>
+                         </li>
+                         <li {!! Request::is('eventos/relatorio/eventos') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('eventos.relatorio') }}">Eventos</a>
+                         </li>
+                     </ul>
                  </li>
             @endif
             @if (auth()->check() && auth()->user()->hasPerfilRegra('categoria-comunicacao'))

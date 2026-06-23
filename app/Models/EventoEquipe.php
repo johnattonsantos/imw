@@ -16,6 +16,7 @@ class EventoEquipe extends Model implements Auditable
 
     protected $fillable = [
         'evento_id',
+        'evento_funcao_id',
         'nome',
         'funcao',
         'contato',
@@ -29,5 +30,10 @@ class EventoEquipe extends Model implements Auditable
     public function evento()
     {
         return $this->belongsTo(Evento::class, 'evento_id');
+    }
+
+    public function eventoFuncao()
+    {
+        return $this->belongsTo(EventoFuncao::class, 'evento_funcao_id');
     }
 }

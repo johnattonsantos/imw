@@ -94,7 +94,7 @@
                                 <td>{{ optional($evento->lider)->nome ?: '-' }}</td>
                                 <td>{{ $statusOptions[$evento->status] ?? $evento->status }}</td>
                                 <td class="table-action">
-                                    <a href="{{ route('eventos.show', $evento) }}" class="btn btn-sm btn-info btn-rounded bs-tooltip" title="Detalhes" aria-label="Detalhes">
+                                    <a href="{{ route('eventos.show', $evento) }}" class="btn btn-sm btn-info btn-rounded bs-tooltip btn-evento-detalhes" title="Detalhes" aria-label="Detalhes" data-url="{{ route('eventos.show', $evento) }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                             class="feather feather-eye">
@@ -143,4 +143,51 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="eventoDetalhesModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body" style="min-height: 180px;">Carregando...</div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('extras-scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = $('#eventoDetalhesModal');
+        const modalContent = modal.find('.modal-content');
+        const loadingHtml = '<div class="modal-body" style="min-height: 180px;">Carregando...</div>';
+
+        $(document).on('click', '.btn-evento-detalhes', function (event) {
+            event.preventDefault();
+
+            const url = $(this).data('url') || $(this).attr('href');
+            modalContent.html(loadingHtml);
+            modal.modal('show');
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                success: function (html) {
+                    modalContent.html(html);
+                },
+                error: function () {
+                    modalContent.html(
+                        '<div class="modal-header">' +
+                            '<h5 class="modal-title">Detalhes do Evento</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                        '</div>' +
+                        '<div class="modal-body"><div class="alert alert-danger mb-0">Não foi possível carregar os detalhes do evento.</div></div>' +
+                        '<div class="modal-footer"><button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button></div>'
+                    );
+                }
+            });
+        });
+    });
+</script>
 @endsection

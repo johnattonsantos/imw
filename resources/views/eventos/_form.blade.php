@@ -11,16 +11,17 @@
     } elseif ($evento->exists) {
         $equipeRows = $evento->equipe->map(fn ($membro) => [
             'nome' => $membro->nome,
+            'evento_funcao_id' => $membro->evento_funcao_id,
             'funcao' => $membro->funcao,
             'contato' => $membro->contato,
             'lider' => $membro->lider ? 1 : 0,
         ]);
     } else {
-        $equipeRows = collect([['nome' => '', 'funcao' => '', 'contato' => '', 'lider' => 1]]);
+        $equipeRows = collect([['nome' => '', 'evento_funcao_id' => '', 'contato' => '', 'lider' => 1]]);
     }
 
     if ($equipeRows->isEmpty()) {
-        $equipeRows = collect([['nome' => '', 'funcao' => '', 'contato' => '', 'lider' => 1]]);
+        $equipeRows = collect([['nome' => '', 'evento_funcao_id' => '', 'contato' => '', 'lider' => 1]]);
     }
 @endphp
 
@@ -114,11 +115,18 @@
             </div>
             <div class="col-md-3">
                 <label>Função</label>
-                <input type="text" name="equipe[{{ $index }}][funcao]" class="form-control" value="{{ data_get($membro, 'funcao') }}" placeholder="Coordenação, apoio, recepção...">
+                <select name="equipe[{{ $index }}][evento_funcao_id]" class="form-control">
+                    <option value="">Selecione</option>
+                    @foreach ($funcoesEventos as $funcaoEvento)
+                        <option value="{{ $funcaoEvento->id }}" {{ (string) data_get($membro, 'evento_funcao_id') === (string) $funcaoEvento->id ? 'selected' : '' }}>
+                            {{ $funcaoEvento->nome }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-3">
                 <label>Contato</label>
-                <input type="text" name="equipe[{{ $index }}][contato]" class="form-control" value="{{ data_get($membro, 'contato') }}">
+                <input type="text" name="equipe[{{ $index }}][contato]" class="form-control contato-celular" value="{{ data_get($membro, 'contato') }}" placeholder="(00) 00000-0000">
             </div>
             <div class="col-md-1">
                 <label>Líder</label>
@@ -142,11 +150,16 @@
         </div>
         <div class="col-md-3">
             <label>Função</label>
-            <input type="text" name="__name__[funcao]" class="form-control" placeholder="Coordenação, apoio, recepção...">
+            <select name="__name__[evento_funcao_id]" class="form-control">
+                <option value="">Selecione</option>
+                @foreach ($funcoesEventos as $funcaoEvento)
+                    <option value="{{ $funcaoEvento->id }}">{{ $funcaoEvento->nome }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="col-md-3">
             <label>Contato</label>
-            <input type="text" name="__name__[contato]" class="form-control">
+            <input type="text" name="__name__[contato]" class="form-control contato-celular" placeholder="(00) 00000-0000">
         </div>
         <div class="col-md-1">
             <label>Líder</label>

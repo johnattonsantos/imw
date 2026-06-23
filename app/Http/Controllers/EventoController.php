@@ -3,11 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
+use App\Models\EventoFuncao;
 use App\Models\EventoProposito;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -42,9 +49,10 @@ class EventoController extends Controller
             'data_inicio' => now()->toDateString(),
         ]);
         $propositos = $this->propositos();
+        $funcoesEventos = $this->funcoesEventos();
         $statusOptions = self::STATUS;
 
-        return view('eventos.create', compact('evento', 'propositos', 'statusOptions'));
+        return view('eventos.create', compact('evento', 'propositos', 'funcoesEventos', 'statusOptions'));
     }
 
     public function store(Request $request)
@@ -63,8 +71,12 @@ class EventoController extends Controller
     {
         $this->ensureSameInstituicao($evento);
 
-        $evento->load(['proposito', 'equipe']);
+        $evento->load(['proposito', 'equipe.eventoFuncao']);
         $statusOptions = self::STATUS;
+
+        if (request()->ajax()) {
+            return view('eventos._show_modal', compact('evento', 'statusOptions'));
+        }
 
         return view('eventos.show', compact('evento', 'statusOptions'));
     }
@@ -75,9 +87,10 @@ class EventoController extends Controller
 
         $evento->load('equipe');
         $propositos = $this->propositos();
+        $funcoesEventos = $this->funcoesEventos();
         $statusOptions = self::STATUS;
 
-        return view('eventos.edit', compact('evento', 'propositos', 'statusOptions'));
+        return view('eventos.edit', compact('evento', 'propositos', 'funcoesEventos', 'statusOptions'));
     }
 
     public function update(Request $request, Evento $evento)
@@ -100,6 +113,81 @@ class EventoController extends Controller
         $evento->delete();
 
         return redirect()->route('eventos.index')->with('success', 'Evento excluido com sucesso.');
+    }
+
+    public function relatorio(Request $request)
+    {
+        $eventos = $this->buildQuery($request)
+            ->with(['proposito', 'lider'])
+            ->orderBy('data_inicio')
+            ->orderBy('hora_inicio')
+            ->get();
+
+        $propositos = $this->propositos();
+        $statusOptions = self::STATUS;
+
+        return view('eventos.relatorio', compact('eventos', 'propositos', 'statusOptions'));
+    }
+
+    public function relatorioEventoPdf(Evento $evento)
+    {
+        $this->ensureSameInstituicao($evento);
+
+        $evento->load(['proposito', 'equipe.eventoFuncao']);
+        $statusOptions = self::STATUS;
+        $filename = 'evento-' . Str::slug($evento->titulo ?: 'relatorio') . '.pdf';
+
+        $pdf = FacadePdf::loadView('eventos.pdf.evento', compact('evento', 'statusOptions'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream($filename);
+    }
+
+    public function uploadEditorImage(Request $request)
+    {
+        $request->validate([
+            'file' => ['required', 'image', 'max:10240'],
+        ]);
+
+        $file = $request->file('file');
+        $extension = strtolower($file->getClientOriginalExtension() ?: 'jpg');
+        $filename = now()->format('Ymd_His') . '_' . Str::uuid() . '.' . $extension;
+        $path = 'eventos/editor/' . date('Y/m') . '/' . $filename;
+
+        $this->editorDisk()->put($path, file_get_contents($file));
+        $token = rtrim(strtr(base64_encode($path), '+/', '-_'), '=');
+
+        return response()->json([
+            'location' => URL::signedRoute('eventos.editor-image', ['token' => $token]),
+        ]);
+    }
+
+    public function editorImage(Request $request, string $token)
+    {
+        if (! $request->hasValidSignature()) {
+            abort(403);
+        }
+
+        $base64 = strtr($token, '-_', '+/');
+        $padding = strlen($base64) % 4;
+        if ($padding > 0) {
+            $base64 .= str_repeat('=', 4 - $padding);
+        }
+
+        $path = base64_decode($base64, true);
+        $disk = $this->editorDisk();
+
+        if (!is_string($path) || $path === '' || !$disk->exists($path)) {
+            abort(404);
+        }
+
+        $mimeType = $disk->mimeType($path) ?: 'application/octet-stream';
+        $content = $disk->get($path);
+
+        return response($content, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=86400',
+        ]);
     }
 
     private function buildQuery(Request $request): Builder
@@ -150,7 +238,7 @@ class EventoController extends Controller
             'observacoes' => ['nullable', 'string'],
             'equipe' => ['nullable', 'array'],
             'equipe.*.nome' => ['nullable', 'string', 'max:150'],
-            'equipe.*.funcao' => ['nullable', 'string', 'max:120'],
+            'equipe.*.evento_funcao_id' => ['nullable', 'integer', Rule::exists('evento_funcoes', 'id')->where('ativo', true)->whereNull('deleted_at')],
             'equipe.*.contato' => ['nullable', 'string', 'max:60'],
             'equipe.*.lider' => ['nullable', 'boolean'],
         ], [
@@ -198,6 +286,7 @@ class EventoController extends Controller
     {
         $evento->equipe()->delete();
         $liderDefinido = false;
+        $funcoesEventos = $this->funcoesEventos()->keyBy('id');
 
         foreach ($equipe as $membro) {
             $nome = trim((string) data_get($membro, 'nome', ''));
@@ -206,12 +295,15 @@ class EventoController extends Controller
                 continue;
             }
 
+            $eventoFuncaoId = (int) data_get($membro, 'evento_funcao_id', 0);
+            $funcaoEvento = $eventoFuncaoId > 0 ? $funcoesEventos->get($eventoFuncaoId) : null;
             $lider = !$liderDefinido && (bool) data_get($membro, 'lider', false);
             $liderDefinido = $liderDefinido || $lider;
 
             $evento->equipe()->create([
+                'evento_funcao_id' => $funcaoEvento?->id,
                 'nome' => $nome,
-                'funcao' => trim((string) data_get($membro, 'funcao', '')) ?: null,
+                'funcao' => $funcaoEvento?->nome,
                 'contato' => trim((string) data_get($membro, 'contato', '')) ?: null,
                 'lider' => $lider,
             ]);
@@ -221,6 +313,14 @@ class EventoController extends Controller
     private function propositos()
     {
         return EventoProposito::query()
+            ->where('ativo', true)
+            ->orderBy('nome')
+            ->get();
+    }
+
+    private function funcoesEventos()
+    {
+        return EventoFuncao::query()
             ->where('ativo', true)
             ->orderBy('nome')
             ->get();
@@ -242,5 +342,10 @@ class EventoController extends Controller
         abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
 
         return $instituicaoId;
+    }
+
+    private function editorDisk(): FilesystemAdapter
+    {
+        return Storage::disk((string) Config::get('filesystems.editor_disk', 's3'));
     }
 }
