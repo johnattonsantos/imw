@@ -159,23 +159,15 @@ class ListPerfilService
         return DB::table('pessoas_pessoas as pp')
             ->join('pessoas_nomeacoes as pn', 'pn.pessoa_id', '=', 'pp.id')
             ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
-            ->leftJoin('instituicoes_instituicoes as inst', 'inst.id', '=', 'pn.instituicao_id')
             ->select([
                 'pp.nome',
                 'pp.telefone_preferencial',
                 'pp.telefone_alternativo',
             ])
             ->where('pp.tipo', 'CLE')
-            ->where(function ($query) use ($instituicao) {
-                $query->where('pn.instituicao_id', $instituicao->id)
-                    ->orWhere('pn.hist_regiao_id', $instituicao->id)
-                    ->orWhere('inst.instituicao_pai_id', $instituicao->id)
-                    ->orWhere('inst.regiao_id', $instituicao->id);
-            })
-            ->where(function ($query) {
-                $query->where('pf.funcao', 'Superintendente Regional')
-                    ->orWhere('pf.id', 3);
-            })
+            ->where('pp.situacao_id', 1)
+            ->where('pp.regiao_id', $instituicao->id)
+            ->where('pf.funcao', 'Superintendente Regional')
             ->whereNull('pn.data_termino')
             ->whereNull('pn.deleted_at')
             ->whereNull('pp.deleted_at')
