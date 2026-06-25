@@ -9,20 +9,18 @@ class RegrasPatrimonioTableSeeder extends Seeder
 {
     public function run(): void
     {
-        $regras = [
-            'patrimonio.visualizar',
-            'patrimonio.criar',
-            'patrimonio.editar',
-            'patrimonio.excluir',
-            'patrimonio.documentos',
-            'patrimonio.juridico',
-            'patrimonio.baixa',
-            'patrimonio.relatorios',
+        $regrasPorPerfil = [
+            'patrimonio-dashboard' => [7],
+            'patrimonio-bens-imoveis' => [7],
+            'patrimonio-bens-moveis' => [7],
+            'patrimonio-documentos' => [7],
+            'patrimonio-benfeitoria' => [7],
+            'patrimonio-baixa' => [7],
+            'patrimonio-relatorios' => [7],
+            'regiao-menu-relatorio-patrimonio' => [3],
         ];
 
-        $perfilIdsPadrao = [1, 4, 7];
-
-        foreach ($regras as $nomeRegra) {
+        foreach ($regrasPorPerfil as $nomeRegra => $perfilIds) {
             DB::table('regras')->updateOrInsert(
                 ['nome' => $nomeRegra],
                 ['updated_at' => now(), 'created_at' => now()]
@@ -30,7 +28,7 @@ class RegrasPatrimonioTableSeeder extends Seeder
 
             $regraId = DB::table('regras')->where('nome', $nomeRegra)->value('id');
 
-            foreach ($perfilIdsPadrao as $perfilId) {
+            foreach ($perfilIds as $perfilId) {
                 DB::table('perfil_regra')->updateOrInsert(
                     ['perfil_id' => $perfilId, 'regra_id' => $regraId],
                     ['updated_at' => now(), 'created_at' => now()]

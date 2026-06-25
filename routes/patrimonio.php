@@ -92,7 +92,7 @@ Route::middleware(['auth'])->prefix('patrimonio')->name('patrimonio.')->group(fu
         ->only(['destroy'])
         ->names('bens-moveis')
         ->parameters(['bens-moveis' => 'bemMovel'])
-        ->middleware(['seguranca:ppatrimonio-bens-moveis']);
+        ->middleware(['seguranca:patrimonio-bens-moveis']);
 
     Route::get('documentos/{documento}/download', [PatrimonioDocumentosController::class, 'download'])
         ->name('documentos.download')

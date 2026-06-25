@@ -115,9 +115,6 @@
                                 <a href="{{ route($routeRelatorioExportPdf, $filters) }}" class="patrimonio-action-pill" title="Exportar PDF" aria-label="Exportar PDF">
                                     <span class="pill-icon"><i class="fas fa-file-pdf"></i></span> PDF
                                 </a>
-                                <button type="button" onclick="window.print()" class="patrimonio-action-pill" title="Imprimir" aria-label="Imprimir">
-                                    <span class="pill-icon"><i class="fas fa-print"></i></span> Imprimir
-                                </button>
                             </div>
                         </form>
                     </div>

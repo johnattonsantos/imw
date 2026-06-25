@@ -12,7 +12,7 @@ class PatrimonioDashboardController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('seguranca:patrimonio.visualizar');
+        $this->middleware('seguranca:patrimonio-dashboard');
     }
 
     public function index()

@@ -941,7 +941,6 @@
                             <li {!! Request::is('regiao/relatorio/patrimonio/bens_por_igreja_unidade') ? 'class="active"' : '' !!}>
                                 <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">Bens por igreja/unidade</a>
                             </li>
-
                         @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
                             <li class="submenu-fixo mt-3 mb-3">
@@ -1398,26 +1397,24 @@
                          </div>
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('patrimonio*') ? 'collapse show' : '' }}" id="patrimonio" data-parent="#patrimonio">
-                         
-                             <li {!! Request::is('patrimonio') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('patrimonio.dashboard') }}">Dashboard</a>
-                             </li>
-                             @if (auth()->user()->hasPerfilRegra('patrimonio-bens-imoveis'))
+                         <li {!! Request::is('patrimonio') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('patrimonio.dashboard') }}">Dashboard</a>
+                         </li>
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-bens-imoveis'))
                              <li {!! Request::is('patrimonio/bens-imoveis*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.bens-imoveis.index') }}">Bens Imóveis</a>
                              </li>
-                             @endif
-                             @if (auth()->user()->hasPerfilRegra('patrimonio-bens-moveis'))
+                         @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-bens-moveis'))
                              <li {!! Request::is('patrimonio/bens-moveis*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.bens-moveis.index') }}">Bens Móveis</a>
                              </li>
-                             @endif
-                             @if (auth()->user()->hasPerfilRegra('patrimonio-benfeitoria'))
+                         @endif
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-benfeitoria'))
                              <li {!! Request::is('patrimonio/benfeitorias*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.benfeitorias.index') }}">Benfeitorias</a>
                              </li>
-                             @endif
-                         
+                         @endif
                          @if (auth()->user()->hasPerfilRegra('patrimonio-documentos'))
                              <li {!! Request::is('patrimonio/documentos*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('patrimonio.documentos.index') }}">Documentos</a>
@@ -1428,39 +1425,39 @@
                                  <a href="{{ route('patrimonio.baixas.index') }}">Baixas</a>
                              </li>
                          @endif
-                        @if (auth()->user()->hasPerfilRegra('patrimonio-relatorios'))
-                            <li class="submenu-fixo mt-3 mb-3">
-                                <span>Relatórios</span>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/imoveis_cadastrados') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'imoveis_cadastrados']) }}">Imóveis cadastrados</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/bens_moveis_cadastrados') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_moveis_cadastrados']) }}">Bens móveis cadastrados</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/imoveis_regularizacao_pendente') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'imoveis_regularizacao_pendente']) }}">Regularização pendente</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/documentos_vencidos') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'documentos_vencidos']) }}">Documentos vencidos</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/avcb_vencido') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'avcb_vencido']) }}">AVCB vencido</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/bens_depreciados') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_depreciados']) }}">Bens depreciados</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/baixas_patrimoniais') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'baixas_patrimoniais']) }}">Baixas patrimoniais</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/valor_total_por_categoria') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'valor_total_por_categoria']) }}">Valor total por categoria</a>
-                            </li>
-                            <li {!! Request::is('patrimonio/relatorios/bens_por_igreja_unidade') ? 'class="active"' : '' !!}>
-                                <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">Bens por igreja/unidade</a>
-                            </li>
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-relatorios'))
+                             <li class="submenu-fixo mt-3 mb-3">
+                                 <span>Relatórios</span>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/imoveis_cadastrados') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'imoveis_cadastrados']) }}">Imóveis cadastrados</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/bens_moveis_cadastrados') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_moveis_cadastrados']) }}">Bens móveis cadastrados</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/imoveis_regularizacao_pendente') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'imoveis_regularizacao_pendente']) }}">Regularização pendente</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/documentos_vencidos') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'documentos_vencidos']) }}">Documentos vencidos</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/avcb_vencido') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'avcb_vencido']) }}">AVCB vencido</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/bens_depreciados') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_depreciados']) }}">Bens depreciados</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/baixas_patrimoniais') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'baixas_patrimoniais']) }}">Baixas patrimoniais</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/valor_total_por_categoria') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'valor_total_por_categoria']) }}">Valor total por categoria</a>
+                             </li>
+                             <li {!! Request::is('patrimonio/relatorios/bens_por_igreja_unidade') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('patrimonio.relatorios.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">Bens por igreja/unidade</a>
+                             </li>
                          @endif
-                         @if (auth()->user()->hasPerfilRegra('patrimonio.visualizar'))
+                         @if (auth()->user()->hasPerfilRegra('patrimonio-dashboard'))
                              <li class="submenu-fixo mt-3 mb-3">
                                  <span>Configurações</span>
                              </li>
@@ -1471,8 +1468,7 @@
                                     class="dropdown-toggle">
                                      Configurações
                                  </a>
-                                 <ul class="collapse list-unstyled sub-submenu {{ Request::is('patrimonio/configuracoes*') ? 'collapse show' : '' }}"
-                                     id="patrimonio-configuracoes">
+                                 <ul class="collapse list-unstyled sub-submenu {{ Request::is('patrimonio/configuracoes*') ? 'collapse show' : '' }}" id="patrimonio-configuracoes">
                                      <li {!! Request::is('patrimonio/configuracoes/natureza*') ? 'class="active"' : '' !!}>
                                          <a href="{{ route('patrimonio.configuracoes.tipos.index', ['tipo' => 'natureza']) }}">Natureza</a>
                                      </li>
@@ -1495,7 +1491,6 @@
                              </li>
                          @endif
                      </ul>
-                     
                  </li>
              @endif
 

@@ -79,7 +79,6 @@ Route::post('/redefinir-senha', [AuthController::class, 'reset'])->name('passwor
 
 require base_path('routes/patrimonio.php');
 
-
 // Rotas protegidas por autenticação
 Route::middleware(['auth'])->group(function () {
     Route::middleware([VerificaPerfil::class])->group(function () {
@@ -386,10 +385,10 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/carta-pastoral/visualizar-html/{id}', [GceuController::class, 'cartaPastoralVisualizarHtmlRegiao'])->name('carta-pastoral-visualizar-html');
             Route::get('/carta-pastoral/visualizar-pdf/{id}', [GceuController::class, 'cartaPastoralPdfRegiao'])->name('carta-pastoral.pdf');
 
-            //PATRIMONIO
-            Route::get('/patrimonio', [PatrimonioRelatoriosController::class, 'indexRegiao'])->name('relatorio.patrimonio.index')->middleware(['seguranca:regiao-menu-relatorio']);
-            Route::get('/patrimonio/export/xlsx', [PatrimonioRelatoriosController::class, 'exportXlsxRegiao'])->name('relatorio.patrimonio.export.xlsx')->middleware(['seguranca:regiao-menu-relatorio']);
-            Route::get('/patrimonio/export/pdf', [PatrimonioRelatoriosController::class, 'exportPdfRegiao'])->name('relatorio.patrimonio.export.pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            // Patrimônio
+            Route::get('/patrimonio', [PatrimonioRelatoriosController::class, 'indexRegiao'])->name('relatorio.patrimonio.index')->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
+            Route::get('/patrimonio/export/xlsx', [PatrimonioRelatoriosController::class, 'exportXlsxRegiao'])->name('relatorio.patrimonio.export.xlsx')->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
+            Route::get('/patrimonio/export/pdf', [PatrimonioRelatoriosController::class, 'exportPdfRegiao'])->name('relatorio.patrimonio.export.pdf')->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
             Route::get('/patrimonio/{relatorio}', [PatrimonioRelatoriosController::class, 'listaRegiao'])
                 ->name('relatorio.patrimonio.lista')
                 ->whereIn('relatorio', [
@@ -403,7 +402,7 @@ Route::middleware(['auth'])->group(function () {
                     'valor_total_por_categoria',
                     'bens_por_igreja_unidade',
                 ])
-                ->middleware(['seguranca:regiao-menu-relatorio']);
+                ->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
         });
 
         // Relatórios Região Clérigos

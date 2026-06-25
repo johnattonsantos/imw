@@ -21,13 +21,13 @@ class PatrimonioRelatoriosController extends Controller
 {
     public function __construct(private readonly DepreciacaoService $depreciacaoService)
     {
-        $this->middleware('seguranca:patrimonio.relatorios')->except([
+        $this->middleware('seguranca:patrimonio-relatorios')->except([
             'indexRegiao',
             'listaRegiao',
             'exportXlsxRegiao',
             'exportPdfRegiao',
         ]);
-        $this->middleware('seguranca:regiao-menu-relatorio')->only([
+        $this->middleware('seguranca:regiao-menu-relatorio-patrimonio')->only([
             'indexRegiao',
             'listaRegiao',
             'exportXlsxRegiao',
