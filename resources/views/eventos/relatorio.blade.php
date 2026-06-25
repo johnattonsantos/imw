@@ -54,11 +54,25 @@
         </div>
         <div class="widget-content widget-content-area">
             <form method="GET" class="mb-3 no-print">
-                <div class="row">
-                    <div class="col-md-3 mb-2">
+                <div class="row align-items-center">
+                    <div class="col-lg-2 mb-2">
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Pesquisar evento, local ou descrição">
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-lg-3 mb-2">
+                        <select name="instituicao_id" class="form-control form-control-sm">
+                            <option value="">Todas as igrejas/congregações</option>
+                            @foreach ($instituicoesEvento->groupBy('grupo') as $grupo => $instituicoesGrupo)
+                                <optgroup label="{{ $grupo }}">
+                                    @foreach ($instituicoesGrupo as $instituicaoEvento)
+                                        <option value="{{ $instituicaoEvento->id }}" {{ (string) request('instituicao_id') === (string) $instituicaoEvento->id ? 'selected' : '' }}>
+                                            {{ $instituicaoEvento->label }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-lg-2 mb-2">
                         <select name="evento_proposito_id" class="form-control form-control-sm">
                             <option value="">Todos os propósitos</option>
                             @foreach ($propositos as $proposito)
@@ -66,7 +80,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-lg-1 mb-2">
                         <select name="status" class="form-control form-control-sm">
                             <option value="">Todos os status</option>
                             @foreach ($statusOptions as $value => $label)
@@ -74,14 +88,14 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-lg-1 mb-2">
                         <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="form-control form-control-sm" title="A partir de">
                     </div>
-                    <div class="col-md-2 mb-2">
+                    <div class="col-lg-1 mb-2">
                         <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="form-control form-control-sm" title="Até">
                     </div>
-                    <div class="col-md-1 mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm btn-block">Filtrar</button>
+                    <div class="col-lg-2 mb-2">
+                        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
                     </div>
                 </div>
             </form>
@@ -91,9 +105,16 @@
                     <thead>
                         <tr>
                             <th>EVENTO</th>
+                            @if ($escopoEvento === 'regiao')
+                                <th>DISTRITO</th>
+                            @endif
+                            @if (in_array($escopoEvento, ['regiao', 'distrito'], true))
+                                <th>IGREJA</th>
+                            @endif
+                            <th>SEDE/CONGREGAÇÃO</th>
                             <th>PROPÓSITO</th>
                             <th>AGENDA</th>
-                            <th>LOCAL</th>
+                            <th>LOCAL INFORMADO</th>
                             <th>LÍDER</th>
                             <th>STATUS</th>
                             <th class="no-export">AÇÕES</th>
@@ -115,6 +136,13 @@
                             @endphp
                             <tr>
                                 <td>{{ $evento->titulo }}</td>
+                                @if ($escopoEvento === 'regiao')
+                                    <td>{{ $evento->evento_distrito_nome }}</td>
+                                @endif
+                                @if (in_array($escopoEvento, ['regiao', 'distrito'], true))
+                                    <td>{{ $evento->evento_igreja_nome }}</td>
+                                @endif
+                                <td>{{ $evento->evento_local_nome }}</td>
                                 <td>{{ optional($evento->proposito)->nome ?: '-' }}</td>
                                 <td>{{ $agenda }}</td>
                                 <td>{{ $evento->local ?: '-' }}</td>

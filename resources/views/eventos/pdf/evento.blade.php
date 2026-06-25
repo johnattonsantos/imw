@@ -120,12 +120,28 @@
                 <th>Propósito</th>
                 <td>{{ optional($evento->proposito)->nome ?: '-' }}</td>
             </tr>
+            @if (($evento->evento_distrito_nome ?? '-') !== '-')
+                <tr>
+                    <th>Distrito</th>
+                    <td>{{ $evento->evento_distrito_nome }}</td>
+                </tr>
+            @endif
+            @if (($evento->evento_igreja_nome ?? '-') !== '-')
+                <tr>
+                    <th>Igreja</th>
+                    <td>{{ $evento->evento_igreja_nome }}</td>
+                </tr>
+            @endif
+            <tr>
+                <th>Sede/Congregação</th>
+                <td>{{ $evento->evento_local_nome ?? '-' }}</td>
+            </tr>
             <tr>
                 <th>Agenda</th>
                 <td>{{ $agenda ?: '-' }}</td>
             </tr>
             <tr>
-                <th>Local</th>
+                <th>Local informado</th>
                 <td>{{ $evento->local ?: '-' }}</td>
             </tr>
             <tr>

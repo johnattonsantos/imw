@@ -28,6 +28,23 @@
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
+            <label for="instituicao_id">* Igreja / Congregação</label>
+            <select name="instituicao_id" id="instituicao_id" class="form-control @error('instituicao_id') is-invalid @enderror" required>
+                <option value="">Selecione</option>
+                @foreach ($instituicoesEvento->groupBy('grupo') as $grupo => $instituicoesGrupo)
+                    <optgroup label="{{ $grupo }}">
+                        @foreach ($instituicoesGrupo as $instituicaoEvento)
+                            <option value="{{ $instituicaoEvento->id }}" {{ (string) old('instituicao_id', $evento->instituicao_id) === (string) $instituicaoEvento->id ? 'selected' : '' }}>
+                                {{ $instituicaoEvento->label }}
+                            </option>
+                        @endforeach
+                    </optgroup>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="form-group">
             <label for="evento_proposito_id">* Propósito</label>
             <select name="evento_proposito_id" id="evento_proposito_id" class="form-control @error('evento_proposito_id') is-invalid @enderror" required>
                 <option value="">Selecione</option>
@@ -39,12 +56,15 @@
             </select>
         </div>
     </div>
-    <div class="col-md-5">
+    <div class="col-md-4">
         <div class="form-group">
             <label for="titulo">* Nome do Evento</label>
             <input type="text" name="titulo" id="titulo" class="form-control @error('titulo') is-invalid @enderror" value="{{ old('titulo', $evento->titulo) }}" required>
         </div>
     </div>
+</div>
+
+<div class="row">
     <div class="col-md-3">
         <div class="form-group">
             <label for="status">* Status</label>

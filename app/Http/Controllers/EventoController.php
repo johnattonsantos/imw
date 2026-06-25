@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Evento;
 use App\Models\EventoFuncao;
 use App\Models\EventoProposito;
+use App\Models\InstituicoesInstituicao;
+use App\Models\InstituicoesTipoInstituicao;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,16 +32,20 @@ class EventoController extends Controller
     public function index(Request $request)
     {
         $eventos = $this->buildQuery($request)
-            ->with(['proposito', 'lider'])
+            ->with(['proposito', 'lider', 'instituicao.instituicaoPai.instituicaoPai'])
             ->orderBy('data_inicio')
             ->orderBy('hora_inicio')
             ->paginate(15)
             ->withQueryString();
 
+        $this->appendInstitutionMeta($eventos->getCollection());
+
         $propositos = $this->propositos();
+        $instituicoesEvento = $this->instituicoesEventoOptions();
+        $escopoEvento = $this->eventScopeType();
         $statusOptions = self::STATUS;
 
-        return view('eventos.index', compact('eventos', 'propositos', 'statusOptions'));
+        return view('eventos.index', compact('eventos', 'propositos', 'instituicoesEvento', 'escopoEvento', 'statusOptions'));
     }
 
     public function create()
@@ -50,9 +56,10 @@ class EventoController extends Controller
         ]);
         $propositos = $this->propositos();
         $funcoesEventos = $this->funcoesEventos();
+        $instituicoesEvento = $this->instituicoesEventoOptions();
         $statusOptions = self::STATUS;
 
-        return view('eventos.create', compact('evento', 'propositos', 'funcoesEventos', 'statusOptions'));
+        return view('eventos.create', compact('evento', 'propositos', 'funcoesEventos', 'instituicoesEvento', 'statusOptions'));
     }
 
     public function store(Request $request)
@@ -71,7 +78,8 @@ class EventoController extends Controller
     {
         $this->ensureSameInstituicao($evento);
 
-        $evento->load(['proposito', 'equipe.eventoFuncao']);
+        $evento->load(['proposito', 'equipe.eventoFuncao', 'instituicao.instituicaoPai.instituicaoPai']);
+        $this->appendInstitutionMeta(collect([$evento]));
         $statusOptions = self::STATUS;
 
         if (request()->ajax()) {
@@ -88,9 +96,10 @@ class EventoController extends Controller
         $evento->load('equipe');
         $propositos = $this->propositos();
         $funcoesEventos = $this->funcoesEventos();
+        $instituicoesEvento = $this->instituicoesEventoOptions();
         $statusOptions = self::STATUS;
 
-        return view('eventos.edit', compact('evento', 'propositos', 'funcoesEventos', 'statusOptions'));
+        return view('eventos.edit', compact('evento', 'propositos', 'funcoesEventos', 'instituicoesEvento', 'statusOptions'));
     }
 
     public function update(Request $request, Evento $evento)
@@ -118,22 +127,27 @@ class EventoController extends Controller
     public function relatorio(Request $request)
     {
         $eventos = $this->buildQuery($request)
-            ->with(['proposito', 'lider'])
+            ->with(['proposito', 'lider', 'instituicao.instituicaoPai.instituicaoPai'])
             ->orderBy('data_inicio')
             ->orderBy('hora_inicio')
             ->get();
 
+        $this->appendInstitutionMeta($eventos);
+
         $propositos = $this->propositos();
+        $instituicoesEvento = $this->instituicoesEventoOptions();
+        $escopoEvento = $this->eventScopeType();
         $statusOptions = self::STATUS;
 
-        return view('eventos.relatorio', compact('eventos', 'propositos', 'statusOptions'));
+        return view('eventos.relatorio', compact('eventos', 'propositos', 'instituicoesEvento', 'escopoEvento', 'statusOptions'));
     }
 
     public function relatorioEventoPdf(Evento $evento)
     {
         $this->ensureSameInstituicao($evento);
 
-        $evento->load(['proposito', 'equipe.eventoFuncao']);
+        $evento->load(['proposito', 'equipe.eventoFuncao', 'instituicao.instituicaoPai.instituicaoPai']);
+        $this->appendInstitutionMeta(collect([$evento]));
         $statusOptions = self::STATUS;
         $filename = 'evento-' . Str::slug($evento->titulo ?: 'relatorio') . '.pdf';
 
@@ -193,7 +207,7 @@ class EventoController extends Controller
     private function buildQuery(Request $request): Builder
     {
         $query = Evento::query()
-            ->where('instituicao_id', $this->instituicaoId());
+            ->whereIn('instituicao_id', $this->allowedEventInstitutionIds());
 
         if ($request->filled('search')) {
             $search = trim((string) $request->input('search'));
@@ -206,6 +220,13 @@ class EventoController extends Controller
 
         if ($request->filled('evento_proposito_id')) {
             $query->where('evento_proposito_id', (int) $request->input('evento_proposito_id'));
+        }
+
+        if ($request->filled('instituicao_id')) {
+            $instituicaoId = (int) $request->input('instituicao_id');
+            if (in_array($instituicaoId, $this->allowedEventInstitutionIds(), true)) {
+                $query->where('instituicao_id', $instituicaoId);
+            }
         }
 
         if ($request->filled('status')) {
@@ -226,6 +247,7 @@ class EventoController extends Controller
     private function validateEvento(Request $request): array
     {
         $validated = $request->validate([
+            'instituicao_id' => ['required', 'integer', Rule::in($this->allowedEventInstitutionIds())],
             'evento_proposito_id' => ['required', 'integer', Rule::exists('evento_propositos', 'id')->where('ativo', true)],
             'titulo' => ['required', 'string', 'max:180'],
             'descricao' => ['nullable', 'string'],
@@ -242,6 +264,8 @@ class EventoController extends Controller
             'equipe.*.contato' => ['nullable', 'string', 'max:60'],
             'equipe.*.lider' => ['nullable', 'boolean'],
         ], [
+            'instituicao_id.required' => 'Selecione a igreja ou congregação do evento.',
+            'instituicao_id.in' => 'A instituição selecionada não está disponível para o perfil logado.',
             'evento_proposito_id.required' => 'Selecione o propósito do evento.',
             'titulo.required' => 'Informe o nome do evento.',
             'data_inicio.required' => 'Informe a data inicial da agenda.',
@@ -268,7 +292,7 @@ class EventoController extends Controller
     private function eventoData(array $validated): array
     {
         return [
-            'instituicao_id' => $this->instituicaoId(),
+            'instituicao_id' => $validated['instituicao_id'],
             'evento_proposito_id' => $validated['evento_proposito_id'],
             'titulo' => $validated['titulo'],
             'descricao' => $validated['descricao'] ?? null,
@@ -333,7 +357,7 @@ class EventoController extends Controller
 
     private function ensureSameInstituicao(Evento $evento): void
     {
-        abort_if((int) $evento->instituicao_id !== $this->instituicaoId(), 403);
+        abort_if(!in_array((int) $evento->instituicao_id, $this->allowedEventInstitutionIds(), true), 403);
     }
 
     private function instituicaoId(): int
@@ -342,6 +366,232 @@ class EventoController extends Controller
         abort_if($instituicaoId <= 0, 403, 'Instituicao nao encontrada na sessao.');
 
         return $instituicaoId;
+    }
+
+    private function currentInstitution(): ?InstituicoesInstituicao
+    {
+        return InstituicoesInstituicao::query()
+            ->select(['id', 'nome', 'tipo_instituicao_id', 'instituicao_pai_id', 'regiao_id', 'ativo'])
+            ->find($this->instituicaoId());
+    }
+
+    private function eventScopeType(): string
+    {
+        $instituicao = $this->currentInstitution();
+        $tipo = (int) optional($instituicao)->tipo_instituicao_id;
+
+        if ($tipo === InstituicoesTipoInstituicao::REGIAO || $this->isRegionalInstitutionType($tipo)) {
+            return 'regiao';
+        }
+
+        if ($tipo === InstituicoesTipoInstituicao::DISTRITO) {
+            return 'distrito';
+        }
+
+        return 'local';
+    }
+
+    private function allowedEventInstitutionIds(): array
+    {
+        return $this->instituicoesEventoOptions()
+            ->pluck('id')
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function instituicoesEventoOptions()
+    {
+        $instituicao = $this->currentInstitution();
+        if (!$instituicao) {
+            return collect();
+        }
+
+        $tipo = (int) $instituicao->tipo_instituicao_id;
+
+        if ($tipo === InstituicoesTipoInstituicao::REGIAO || $this->isRegionalInstitutionType($tipo)) {
+            $regiaoId = $this->resolveRegiaoId((int) $instituicao->id);
+
+            return $regiaoId > 0 ? $this->instituicoesEventoRegiao($regiaoId) : collect();
+        }
+
+        if ($tipo === InstituicoesTipoInstituicao::DISTRITO) {
+            return $this->instituicoesEventoDistrito((int) $instituicao->id);
+        }
+
+        $igrejaId = (int) data_get(session('session_perfil'), 'instituicoes.igrejaLocal.id', 0);
+        if ($igrejaId <= 0 && $tipo === InstituicoesTipoInstituicao::IGREJA_LOCAL) {
+            $igrejaId = (int) $instituicao->id;
+        }
+        if ($igrejaId <= 0 && $tipo === InstituicoesTipoInstituicao::CONGREGACAO) {
+            $igrejaId = (int) $instituicao->instituicao_pai_id;
+        }
+
+        return $igrejaId > 0 ? $this->instituicoesEventoIgreja($igrejaId) : collect();
+    }
+
+    private function instituicoesEventoRegiao(int $regiaoId)
+    {
+        $distritos = InstituicoesInstituicao::query()
+            ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where(function ($query) use ($regiaoId) {
+                $query->where('instituicao_pai_id', $regiaoId)
+                    ->orWhere('regiao_id', $regiaoId);
+            })
+            ->where('ativo', 1)
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
+
+        return $distritos->flatMap(function ($distrito) use ($regiaoId) {
+            return $this->instituicoesEventoDistrito((int) $distrito->id, $distrito->nome, $regiaoId);
+        })->values();
+    }
+
+    private function instituicoesEventoDistrito(int $distritoId, ?string $distritoNome = null, ?int $regiaoId = null)
+    {
+        $igrejas = InstituicoesInstituicao::query()
+            ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->where('instituicao_pai_id', $distritoId)
+            ->when($regiaoId, fn ($query) => $query->where('regiao_id', $regiaoId))
+            ->where('ativo', 1)
+            ->orderBy('nome')
+            ->get(['id', 'nome']);
+
+        return $igrejas->flatMap(function ($igreja) use ($distritoId, $distritoNome) {
+            return $this->instituicoesEventoIgreja((int) $igreja->id, $igreja->nome, $distritoId, $distritoNome);
+        })->values();
+    }
+
+    private function instituicoesEventoIgreja(int $igrejaId, ?string $igrejaNome = null, ?int $distritoId = null, ?string $distritoNome = null)
+    {
+        $igreja = InstituicoesInstituicao::query()
+            ->with('instituicaoPai')
+            ->find($igrejaId);
+
+        if (!$igreja) {
+            return collect();
+        }
+
+        $igrejaNome = $igrejaNome ?: $igreja->nome;
+        $distritoId = $distritoId ?: (int) $igreja->instituicao_pai_id;
+        $distritoNome = $distritoNome ?: optional($igreja->instituicaoPai)->nome;
+
+        $options = collect([
+            (object) [
+                'id' => (int) $igreja->id,
+                'nome' => 'Sede',
+                'label' => 'Sede - ' . $igrejaNome,
+                'grupo' => $distritoNome ? $distritoNome . ' / ' . $igrejaNome : $igrejaNome,
+                'igreja_id' => (int) $igreja->id,
+                'igreja_nome' => $igrejaNome,
+                'distrito_id' => $distritoId,
+                'distrito_nome' => $distritoNome,
+                'tipo_instituicao_id' => (int) $igreja->tipo_instituicao_id,
+            ],
+        ]);
+
+        $congregacoes = InstituicoesInstituicao::query()
+            ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::CONGREGACAO)
+            ->where('instituicao_pai_id', $igreja->id)
+            ->where('ativo', 1)
+            ->orderBy('nome')
+            ->get(['id', 'nome', 'tipo_instituicao_id']);
+
+        return $options->merge($congregacoes->map(fn ($congregacao) => (object) [
+            'id' => (int) $congregacao->id,
+            'nome' => $congregacao->nome,
+            'label' => 'Congregação - ' . $congregacao->nome,
+            'grupo' => $distritoNome ? $distritoNome . ' / ' . $igrejaNome : $igrejaNome,
+            'igreja_id' => (int) $igreja->id,
+            'igreja_nome' => $igrejaNome,
+            'distrito_id' => $distritoId,
+            'distrito_nome' => $distritoNome,
+            'tipo_instituicao_id' => (int) $congregacao->tipo_instituicao_id,
+        ]));
+    }
+
+    private function isRegionalInstitutionType(int $tipo): bool
+    {
+        return in_array($tipo, [
+            InstituicoesTipoInstituicao::SECRETARIA_REGIONAL,
+            InstituicoesTipoInstituicao::CONTABILIDADE,
+            InstituicoesTipoInstituicao::ESTATISTICA,
+        ], true);
+    }
+
+    private function resolveRegiaoId(int $fallbackInstituicaoId = 0): int
+    {
+        $sessionPerfil = session('session_perfil');
+        $regiaoId = (int) data_get($sessionPerfil, 'instituicoes.regiao.id', 0);
+
+        if ($regiaoId > 0) {
+            return $regiaoId;
+        }
+
+        $instituicaoId = $fallbackInstituicaoId ?: (int) data_get($sessionPerfil, 'instituicao_id', 0);
+        if ($instituicaoId <= 0) {
+            return 0;
+        }
+
+        return $this->resolveRegiaoByInstituicaoId($instituicaoId);
+    }
+
+    private function resolveRegiaoByInstituicaoId(int $instituicaoId): int
+    {
+        $currentId = $instituicaoId;
+        $maxDepth = 10;
+
+        while ($currentId > 0 && $maxDepth-- > 0) {
+            $instituicao = InstituicoesInstituicao::query()
+                ->select(['id', 'tipo_instituicao_id', 'instituicao_pai_id', 'regiao_id'])
+                ->find($currentId);
+
+            if (!$instituicao) {
+                return 0;
+            }
+
+            if ((int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::REGIAO) {
+                return (int) $instituicao->id;
+            }
+
+            if (!empty($instituicao->regiao_id)) {
+                return (int) $instituicao->regiao_id;
+            }
+
+            $currentId = (int) ($instituicao->instituicao_pai_id ?? 0);
+        }
+
+        return 0;
+    }
+
+    private function appendInstitutionMeta($eventos): void
+    {
+        foreach ($eventos as $evento) {
+            $instituicao = $evento->instituicao;
+            $igreja = null;
+            $distrito = null;
+            $local = optional($instituicao)->nome ?: '-';
+
+            if ($instituicao && (int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::CONGREGACAO) {
+                $igreja = $instituicao->instituicaoPai;
+                $distrito = optional($igreja)->instituicaoPai;
+                $local = $instituicao->nome;
+            } elseif ($instituicao && (int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::IGREJA_LOCAL) {
+                $igreja = $instituicao;
+                $distrito = $instituicao->instituicaoPai;
+                $local = 'Sede';
+            } elseif ($instituicao && (int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::DISTRITO) {
+                $distrito = $instituicao;
+            }
+
+            $evento->evento_distrito_nome = optional($distrito)->nome ?: '-';
+            $evento->evento_igreja_nome = optional($igreja)->nome ?: '-';
+            $evento->evento_local_nome = $local ?: '-';
+            $evento->evento_instituicao_nome = $instituicao
+                ? trim(($evento->evento_igreja_nome !== '-' ? $evento->evento_igreja_nome . ' / ' : '') . $evento->evento_local_nome)
+                : '-';
+        }
     }
 
     private function editorDisk(): FilesystemAdapter
