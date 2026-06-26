@@ -20,53 +20,6 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form method="GET" class="mb-3">
-                <div class="row align-items-center">
-                    <div class="col-lg-2 mb-2">
-                        <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Pesquisar evento, local ou descrição">
-                    </div>
-                    <div class="col-lg-3 mb-2">
-                        <select name="instituicao_id" class="form-control form-control-sm">
-                            <option value="">Todas as igrejas/congregações</option>
-                            @foreach ($instituicoesEvento->groupBy('grupo') as $grupo => $instituicoesGrupo)
-                                <optgroup label="{{ $grupo }}">
-                                    @foreach ($instituicoesGrupo as $instituicaoEvento)
-                                        <option value="{{ $instituicaoEvento->id }}" {{ (string) request('instituicao_id') === (string) $instituicaoEvento->id ? 'selected' : '' }}>
-                                            {{ $instituicaoEvento->label }}
-                                        </option>
-                                    @endforeach
-                                </optgroup>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-lg-2 mb-2">
-                        <select name="evento_proposito_id" class="form-control form-control-sm">
-                            <option value="">Todos os propósitos</option>
-                            @foreach ($propositos as $proposito)
-                                <option value="{{ $proposito->id }}" {{ (string) request('evento_proposito_id') === (string) $proposito->id ? 'selected' : '' }}>{{ $proposito->nome }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-lg-1 mb-2">
-                        <select name="status" class="form-control form-control-sm">
-                            <option value="">Todos os status</option>
-                            @foreach ($statusOptions as $value => $label)
-                                <option value="{{ $value }}" {{ request('status') === $value ? 'selected' : '' }}>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-lg-1 mb-2">
-                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="form-control form-control-sm" title="A partir de">
-                    </div>
-                    <div class="col-lg-1 mb-2">
-                        <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="form-control form-control-sm" title="Até">
-                    </div>
-                    <div class="col-lg-2 mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
-                    </div>
-                </div>
-            </form>
-
             <div class="mb-3">
                 @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-novo'))
                     <a href="{{ route('eventos.create') }}" class="btn btn-primary btn-sm">Novo</a>
