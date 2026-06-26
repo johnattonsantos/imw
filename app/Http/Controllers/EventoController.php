@@ -29,23 +29,21 @@ class EventoController extends Controller
         'cancelado' => 'Cancelado',
     ];
 
-    public function index(Request $request)
+    public function index()
     {
-        $eventos = $this->buildQuery($request)
+        $eventos = Evento::query()
+            ->whereIn('instituicao_id', $this->allowedEventInstitutionIds())
             ->with(['proposito', 'lider', 'instituicao.instituicaoPai.instituicaoPai'])
             ->orderBy('data_inicio')
             ->orderBy('hora_inicio')
-            ->paginate(15)
-            ->withQueryString();
+            ->paginate(15);
 
         $this->appendInstitutionMeta($eventos->getCollection());
 
-        $propositos = $this->propositos();
-        $instituicoesEvento = $this->instituicoesEventoOptions();
         $escopoEvento = $this->eventScopeType();
         $statusOptions = self::STATUS;
 
-        return view('eventos.index', compact('eventos', 'propositos', 'instituicoesEvento', 'escopoEvento', 'statusOptions'));
+        return view('eventos.index', compact('eventos', 'escopoEvento', 'statusOptions'));
     }
 
     public function create()
