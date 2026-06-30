@@ -158,6 +158,9 @@
                          <li {!! Request::is('eventos') || Request::is('eventos/novo') || Request::is('eventos/detalhes*') || Request::is('eventos/editar*') ? 'class="active"' : '' !!}>
                              <a href="{{ route('eventos.index') }}">Eventos</a>
                          </li>
+                         <li {!! Request::is('eventos/agenda') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('eventos.agenda') }}">Agenda de Eventos</a>
+                         </li>
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-funcao'))
                              <li {!! Request::is('eventos/funcoes*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('eventos.funcoes.index') }}">Funções Eventos</a>
