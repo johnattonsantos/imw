@@ -172,6 +172,9 @@
                          <li {!! Request::is('eventos/relatorio/eventos') ? 'class="active"' : '' !!}>
                              <a href="{{ route('eventos.relatorio') }}">Eventos</a>
                          </li>
+                         <li {!! Request::is('eventos/relatorio/pessoas') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('eventos.relatorio.pessoas') }}">Pessoas do Evento</a>
+                         </li>
                      </ul>
                  </li>
             @endif
