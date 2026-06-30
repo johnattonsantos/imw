@@ -46,6 +46,61 @@ class EventoController extends Controller
         return view('eventos.index', compact('eventos', 'escopoEvento', 'statusOptions'));
     }
 
+    public function agenda()
+    {
+        $eventos = Evento::query()
+            ->whereIn('instituicao_id', $this->allowedEventInstitutionIds())
+            ->with(['proposito', 'lider', 'instituicao.instituicaoPai.instituicaoPai'])
+            ->orderBy('data_inicio')
+            ->orderBy('hora_inicio')
+            ->get();
+
+        $this->appendInstitutionMeta($eventos);
+
+        $statusOptions = self::STATUS;
+        $agendaEventos = $eventos->map(function (Evento $evento) use ($statusOptions) {
+            $hasTime = !empty($evento->hora_inicio) || !empty($evento->hora_fim);
+            $startDate = $evento->data_inicio->toDateString();
+            $start = $hasTime
+                ? $startDate . 'T' . substr((string) ($evento->hora_inicio ?: '00:00:00'), 0, 8)
+                : $startDate;
+            $end = null;
+
+            if (!$hasTime && $evento->data_fim) {
+                // O FullCalendar usa o fim exclusivo para eventos de dia inteiro.
+                $end = $evento->data_fim->copy()->addDay()->toDateString();
+            } elseif ($hasTime && ($evento->data_fim || $evento->hora_fim)) {
+                $endDate = optional($evento->data_fim)->toDateString() ?: $startDate;
+                $endTime = substr((string) ($evento->hora_fim ?: '23:59:59'), 0, 8);
+                $end = $endDate . 'T' . $endTime;
+            }
+
+            $colors = $this->eventStatusColors((string) $evento->status);
+            $startTime = $evento->hora_inicio
+                ? substr((string) $evento->hora_inicio, 0, 5)
+                : null;
+
+            return [
+                'id' => (int) $evento->id,
+                'title' => trim(($startTime ? $startTime . ' - ' : '') . $evento->titulo),
+                'eventName' => $evento->titulo,
+                'start' => $start,
+                'end' => $end,
+                'allDay' => !$hasTime,
+                'backgroundColor' => $colors['background'],
+                'borderColor' => $colors['border'],
+                'textColor' => '#ffffff',
+                'detailsUrl' => route('eventos.show', $evento),
+                'statusLabel' => $statusOptions[$evento->status] ?? $evento->status,
+                'purpose' => optional($evento->proposito)->nome ?: '-',
+                'institution' => $evento->evento_instituicao_nome,
+                'location' => $evento->local ?: '-',
+            ];
+        })->values();
+
+        return view('eventos.agenda', compact('agendaEventos', 'statusOptions'));
+    }
+
     public function create()
     {
         $evento = new Evento([
@@ -590,6 +645,16 @@ class EventoController extends Controller
                 ? trim(($evento->evento_igreja_nome !== '-' ? $evento->evento_igreja_nome . ' / ' : '') . $evento->evento_local_nome)
                 : '-';
         }
+    }
+
+    private function eventStatusColors(string $status): array
+    {
+        return match ($status) {
+            'confirmado' => ['background' => '#1976d2', 'border' => '#125ca4'],
+            'realizado' => ['background' => '#27865d', 'border' => '#1d6748'],
+            'cancelado' => ['background' => '#c44343', 'border' => '#963131'],
+            default => ['background' => '#d48624', 'border' => '#a5661a'],
+        };
     }
 
     private function editorDisk(): FilesystemAdapter

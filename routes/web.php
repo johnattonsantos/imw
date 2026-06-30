@@ -192,6 +192,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('eventos')->name('eventos.')->controller(EventoController::class)->middleware(['seguranca:evento'])->group(function () {
             Route::get('/', 'index')->name('index');
+            Route::get('/agenda', 'agenda')->name('agenda');
             Route::get('/novo', 'create')->name('create')->middleware(['seguranca:evento-novo']);
             Route::post('/store', 'store')->name('store')->middleware(['seguranca:evento-novo']);
             Route::post('/upload-image', 'uploadEditorImage')->name('upload-image');
