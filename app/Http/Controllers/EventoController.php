@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Evento;
+use App\Models\EventoEquipe;
 use App\Models\EventoFuncao;
 use App\Models\EventoProposito;
 use App\Models\InstituicoesInstituicao;
@@ -193,6 +194,63 @@ class EventoController extends Controller
         $statusOptions = self::STATUS;
 
         return view('eventos.relatorio', compact('eventos', 'propositos', 'instituicoesEvento', 'escopoEvento', 'statusOptions'));
+    }
+
+    public function relatorioPessoas(Request $request)
+    {
+        $allowedInstitutionIds = $this->allowedEventInstitutionIds();
+
+        $pessoas = EventoEquipe::query()
+            ->join('eventos', 'eventos.id', '=', 'evento_equipes.evento_id')
+            ->whereNull('eventos.deleted_at')
+            ->whereIn('eventos.instituicao_id', $allowedInstitutionIds)
+            ->when($request->filled('evento_id'), fn ($query) =>
+                $query->where('eventos.id', (int) $request->input('evento_id')))
+            ->when($request->filled('instituicao_id'), fn ($query) =>
+                $query->where('eventos.instituicao_id', (int) $request->input('instituicao_id')))
+            ->when($request->filled('evento_funcao_id'), fn ($query) =>
+                $query->where('evento_equipes.evento_funcao_id', (int) $request->input('evento_funcao_id')))
+            ->when($request->filled('lider'), fn ($query) =>
+                $query->where('evento_equipes.lider', (int) $request->input('lider')))
+            ->when($request->filled('status'), fn ($query) =>
+                $query->where('eventos.status', (string) $request->input('status')))
+            ->when($request->filled('data_inicio'), fn ($query) =>
+                $query->whereDate('eventos.data_inicio', '>=', $request->input('data_inicio')))
+            ->when($request->filled('data_fim'), fn ($query) =>
+                $query->whereDate('eventos.data_inicio', '<=', $request->input('data_fim')))
+            ->with([
+                'evento.proposito',
+                'evento.instituicao.instituicaoPai.instituicaoPai',
+                'eventoFuncao',
+            ])
+            ->select('evento_equipes.*')
+            ->orderBy('eventos.data_inicio')
+            ->orderBy('eventos.hora_inicio')
+            ->orderBy('eventos.titulo')
+            ->orderBy('evento_equipes.nome')
+            ->get();
+
+        $eventos = $pessoas->pluck('evento')->filter()->unique('id')->values();
+        $this->appendInstitutionMeta($eventos);
+
+        $eventOptions = Evento::query()
+            ->whereIn('instituicao_id', $allowedInstitutionIds)
+            ->orderByDesc('data_inicio')
+            ->orderBy('titulo')
+            ->get(['id', 'titulo', 'data_inicio']);
+        $instituicoesEvento = $this->instituicoesEventoOptions();
+        $funcoesEventos = $this->funcoesEventos();
+        $escopoEvento = $this->eventScopeType();
+        $statusOptions = self::STATUS;
+
+        return view('eventos.relatorio-pessoas', compact(
+            'pessoas',
+            'eventOptions',
+            'instituicoesEvento',
+            'funcoesEventos',
+            'escopoEvento',
+            'statusOptions'
+        ));
     }
 
     public function relatorioEventoPdf(Evento $evento)

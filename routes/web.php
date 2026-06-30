@@ -199,6 +199,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/editor-image/{token}', 'editorImage')->name('editor-image')->middleware('signed');
             Route::get('/relatorio/eventos', 'relatorio')->name('relatorio');
             Route::get('/relatorio/eventos/{evento}/pdf', 'relatorioEventoPdf')->name('relatorio.evento-pdf');
+            Route::get('/relatorio/pessoas', 'relatorioPessoas')->name('relatorio.pessoas');
             Route::get('/detalhes/{evento}', 'show')->name('show');
             Route::get('/editar/{evento}', 'edit')->name('edit')->middleware(['seguranca:evento-editar']);
             Route::put('/update/{evento}', 'update')->name('update')->middleware(['seguranca:evento-editar']);
