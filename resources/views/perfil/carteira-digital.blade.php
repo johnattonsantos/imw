@@ -98,7 +98,7 @@
         }
         .dt-ordenacao{
             position: absolute; top:737px; left:620px; z-index: 1;
-        }        
+        }
         .dt-consagracao{
             position: absolute; top:737px; left: 346px; z-index: 1;
         }

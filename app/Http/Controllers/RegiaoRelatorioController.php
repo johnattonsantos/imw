@@ -13,6 +13,7 @@ use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroPorcentagemService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticasGceuService;
 use App\Services\ServiceRegiaoRelatorios\AspirantesIgrejasService;
+use App\Services\ServiceRegiaoRelatorios\AcompanhamentoValidacoesService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaTotalMembrosService;
 use App\Services\ServiceRegiaoRelatorios\LancamentoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\LivroRazaoGeralService;
@@ -164,6 +165,13 @@ class RegiaoRelatorioController extends Controller
         return view('relatorios.conjuges-hierarquia', $data + [
             'breadcrumbGrupo' => 'Relatórios Regionais',
         ]);
+    }
+
+    public function acompanhamentoValidacoes()
+    {
+        $data = app(AcompanhamentoValidacoesService::class)->execute();
+
+        return view('regiao.relatorios.acompanhamento-validacoes', $data);
     }
 
     //Escorlaridade

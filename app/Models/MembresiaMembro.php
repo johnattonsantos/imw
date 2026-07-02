@@ -92,6 +92,16 @@ class MembresiaMembro extends Model implements Auditable
         return $this->belongsTo(CongregacoesCongregacao::class, 'congregacao_id');
     }
 
+    public function distrito()
+    {
+        return $this->belongsTo(InstituicoesInstituicao::class, 'distrito_id');
+    }
+
+    public function igreja()
+    {
+        return $this->belongsTo(InstituicoesInstituicao::class, 'igreja_id');
+    }
+
     public function gceu()
     {
         return $this->belongsTo(GCeu::class, 'gceu_id');

@@ -36,11 +36,9 @@
 
     <div class="row mb-4">
       <div class="col-xl-12">
-        <label>Filhos</label>
-        <input type="text" class="form-control" id="filhos" name="filhos" value="{{ old('filhos', optional($pessoa->familiar)->filhos) }}" maxlength="1000">
-          @error('filhos')
-            <span class="help-block text-danger">{{ $message }}</span>
-          @enderror
+        @include('membros.partials.filhos-inputs', [
+          'filhosValor' => old('filhos', optional($pessoa->familiar)->filhos),
+        ])
       </div>
     </div>
 

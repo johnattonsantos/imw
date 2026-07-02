@@ -279,6 +279,11 @@
                                  <a href="{{ route('relatorio.conjuges') }}">Cônjuges</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/familia') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-familia'))
+                                 <a href="{{ route('relatorio.familia') }}">Família</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('secretaria/relatorio/membros-por-ministerios') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-historico-eclesiastico'))
                                  <a href="{{ route('relatorio.membros-por-ministerios') }}">Membros por Ministérios</a>
@@ -749,7 +754,73 @@
                         </li>
                         @endif
 
-                
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboardo'))
+                        <li {!! Request::is('regiao/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.dashboard') }}">Dashboard</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-estatisticas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/estatisticas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.estatisticas') }}">Estatísticas EBD</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-turmas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/turmas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.turmas') }}">EBDs</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-alunos'))
+                        <li {!! Request::is('regiao/relatorio/ebd/alunos') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.alunos') }}">Alunos</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-professores'))
+                        <li {!! Request::is('regiao/relatorio/ebd/professores') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.professores') }}">Professores</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-liderancas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/liderancas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.liderancas') }}">Liderança</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-classes'))
+                        <li {!! Request::is('regiao/relatorio/ebd/classes') ? 'class="active"' : '' !!}>
+                         
+                                <a href="{{ route('regiao.relatorio.ebd.classes') }}">Classes</a>                           
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-diarios'))
+                        <li {!! Request::is('regiao/relatorio/ebd/diarios') ? 'class="active"' : '' !!}>                     
+                                <a href="{{ route('regiao.relatorio.ebd.diarios') }}">Diário</a>                           
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-agendas'))
+                        <li {!! Request::is('regiao/relatorio/ebd/agendas') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.agendas') }}">Agenda</a>
+                            
+                        </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-geral'))
+                        <li {!! Request::is('regiao/relatorio/ebd/geral') ? 'class="active"' : '' !!}>
+                            
+                                <a href="{{ route('regiao.relatorio.ebd.geral') }}">Relatório Geral EBD</a>
+                            
+                        </li>
+                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
                          <li class="submenu-fixo mt-3 mb-3">
                              
@@ -777,6 +848,11 @@
                              
                                  <a href="{{ route('regiao.relatorio.conjuges') }}">Cônjuges</a>
                              
+                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-acompanhamento-validacoes'))
+                         <li {!! Request::is('regiao/relatorio/acompanhamento-validacoes') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('regiao.relatorio.acompanhamento-validacoes') }}">Acompanhamento Igrejas</a>
                          </li>
                         @endif
                           @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-estatistica-genero'))
@@ -956,11 +1032,12 @@
                             </li>
                             @endif
                         @endif
-                     </ul>
-                 </li>
-             @endif
+	                     </ul>
+	                 </li>
+	             @endif
+	             
 
-             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
+	             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                  <li class="menu">
                     <a href="#estatistica-regiao" data-toggle="collapse" aria-expanded="{{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu') || Request::is('regiao/relatorio/aspirantes-por-igrejas')) ? 'true' : 'false' }}"
                          class="dropdown-toggle">

@@ -121,7 +121,21 @@
             $('#cartaPastoral').DataTable(
                 {
                     language: {
-                        url:"https://cdn.datatables.net/plug-ins/1.11.3/i18n/pt_br.json"
+                        emptyTable: "Nenhum registro encontrado",
+                        info: "Mostrando _START_ até _END_ de _TOTAL_ registros",
+                        infoEmpty: "Mostrando 0 até 0 de 0 registros",
+                        infoFiltered: "(filtrado de _MAX_ registros no total)",
+                        lengthMenu: "Mostrar _MENU_ registros",
+                        loadingRecords: "Carregando...",
+                        processing: "Processando...",
+                        search: "Pesquisar:",
+                        zeroRecords: "Nenhum registro correspondente encontrado",
+                        paginate: {
+                            first: "Primeiro",
+                            last: "Último",
+                            next: "Próximo",
+                            previous: "Anterior"
+                        }
                     }
                 }
             );
