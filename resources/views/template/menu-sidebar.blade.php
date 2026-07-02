@@ -279,6 +279,11 @@
                                  <a href="{{ route('relatorio.conjuges') }}">Cônjuges</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/familia') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-familia'))
+                                 <a href="{{ route('relatorio.familia') }}">Família</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('secretaria/relatorio/membros-por-ministerios') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-historico-eclesiastico'))
                                  <a href="{{ route('relatorio.membros-por-ministerios') }}">Membros por Ministérios</a>

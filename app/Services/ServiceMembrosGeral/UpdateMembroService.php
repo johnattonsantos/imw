@@ -148,10 +148,21 @@ class UpdateMembroService
             'pai_nome' => $data['pai_nome'],
             'conjuge_nome' => $data['conjuge_nome'],
             'data_casamento' => $data['data_casamento'] ?? null,
-            'filhos' => $data['filhos'],
+            'filhos' => $this->normalizeFilhos($data['filhos'] ?? null),
             'historico_familiar' => $data['historico_familiar'],
             'membro_id' => $data['membro_id'],
         ];
+    }
+
+    private function normalizeFilhos($filhos): ?string
+    {
+        $filhos = is_array($filhos) ? $filhos : [$filhos];
+        $filhos = array_values(array_filter(
+            array_map(fn ($filho) => trim((string) $filho), $filhos),
+            fn ($filho) => $filho !== ''
+        ));
+
+        return $filhos ? implode('; ', $filhos) : null;
     }
 
     private function prepareFormacoesData(array $data): array
