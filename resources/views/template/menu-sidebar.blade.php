@@ -850,6 +850,11 @@
                              
                          </li>
                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-acompanhamento-validacoes'))
+                         <li {!! Request::is('regiao/relatorio/acompanhamento-validacoes') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('regiao.relatorio.acompanhamento-validacoes') }}">Acompanhamento Igrejas</a>
+                         </li>
+                        @endif
                           @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-estatistica-genero'))
                          <li {!! Request::is('regiao/relatorio/estatisticagenero') ? 'class="active"' : '' !!}>
                             
