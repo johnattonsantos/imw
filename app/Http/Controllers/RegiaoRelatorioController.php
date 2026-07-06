@@ -22,6 +22,8 @@ use App\Services\ServiceRegiaoRelatorios\IgrejasPorClerigosService;
 use App\Services\ServiceRegiaoRelatorios\IgrejasPorPastoresService;
 use App\Services\ServiceRegiaoRelatorios\MembrosMinisterioService;
 use App\Services\ServiceRegiaoRelatorios\OrcamentoService;
+use App\Services\ServiceRegiaoRelatorios\PerfilMembrosExcluidosService;
+use App\Services\ServiceRegiaoRelatorios\PerfilMembrosRecebidosService;
 use App\Services\ServiceRegiaoRelatorios\QuantidadeMembrosService;
 use App\Services\ServiceRegiaoRelatorios\SaldoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\VariacaoFinanceiraService;
@@ -172,6 +174,49 @@ class RegiaoRelatorioController extends Controller
         $data = app(AcompanhamentoValidacoesService::class)->execute();
 
         return view('regiao.relatorios.acompanhamento-validacoes', $data);
+    }
+
+    public function perfilMembrosRecebidos(Request $request)
+    {
+        $request->merge([
+            'data_inicial' => $request->input('data_inicial') ?: now()->startOfYear()->toDateString(),
+            'data_final' => $request->input('data_final') ?: now()->toDateString(),
+        ]);
+
+        $validated = $request->validate([
+            'data_inicial' => ['required', 'date'],
+            'data_final' => ['required', 'date', 'after_or_equal:data_inicial'],
+        ], [
+            'data_final.after_or_equal' => 'A data final deve ser igual ou posterior à data inicial.',
+        ]);
+
+        $dataInicial = $validated['data_inicial'];
+        $dataFinal = $validated['data_final'];
+        $data = app(PerfilMembrosRecebidosService::class)->execute($dataInicial, $dataFinal);
+
+        return view('regiao.relatorios.perfil-membros-recebidos', $data);
+    }
+
+    public function perfilMembrosExcluidos(Request $request)
+    {
+        $request->merge([
+            'data_inicial' => $request->input('data_inicial') ?: now()->startOfYear()->toDateString(),
+            'data_final' => $request->input('data_final') ?: now()->toDateString(),
+        ]);
+
+        $validated = $request->validate([
+            'data_inicial' => ['required', 'date'],
+            'data_final' => ['required', 'date', 'after_or_equal:data_inicial'],
+        ], [
+            'data_final.after_or_equal' => 'A data final deve ser igual ou posterior à data inicial.',
+        ]);
+
+        $data = app(PerfilMembrosExcluidosService::class)->execute(
+            $validated['data_inicial'],
+            $validated['data_final']
+        );
+
+        return view('regiao.relatorios.perfil-membros-excluidos', $data);
     }
 
     //Escorlaridade

@@ -380,6 +380,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/quantidademembros/pdf', [RegiaoRelatorioController::class, 'quantidademembrosPdf'])->name('relatorio.quantidademembros-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/conjuges', [RegiaoRelatorioController::class, 'conjuges'])->name('relatorio.conjuges')->middleware(['seguranca:regiao-menu-relatorio-conjuges']);
             Route::get('/acompanhamento-validacoes', [RegiaoRelatorioController::class, 'acompanhamentoValidacoes'])->name('relatorio.acompanhamento-validacoes')->middleware(['seguranca:regiao-relatorio-acompanhamento-validacoes']);
+            Route::get('/perfil-membros-recebidos', [RegiaoRelatorioController::class, 'perfilMembrosRecebidos'])->name('relatorio.perfil-membros-recebidos')->middleware(['seguranca:regiao-relatorio-perfil-membros-recebidos']);
+            Route::get('/perfil-membros-excluidos', [RegiaoRelatorioController::class, 'perfilMembrosExcluidos'])->name('relatorio.perfil-membros-excluidos')->middleware(['seguranca:regiao-relatorio-perfil-membros-excluidos']);
 
             Route::get('/estatisticagenero', [RegiaoRelatorioController::class, 'estatisticagenero'])->name('relatorio.estatisticagenero')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/estatisticagenero/pdf', [RegiaoRelatorioController::class, 'estatisticageneroPdf'])->name('relatorio.estatisticagenero-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
