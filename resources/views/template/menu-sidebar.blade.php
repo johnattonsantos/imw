@@ -855,6 +855,16 @@
                                  <a href="{{ route('regiao.relatorio.acompanhamento-validacoes') }}">Validação de Membros</a>
                          </li>
                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-perfil-membros-recebidos'))
+                         <li {!! Request::is('regiao/relatorio/perfil-membros-recebidos') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('regiao.relatorio.perfil-membros-recebidos') }}">Perfil dos Membros Recebidos</a>
+                         </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-perfil-membros-excluidos'))
+                         <li {!! Request::is('regiao/relatorio/perfil-membros-excluidos') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('regiao.relatorio.perfil-membros-excluidos') }}">Perfil dos Membros Excluídos</a>
+                         </li>
+                        @endif
                           @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-estatistica-genero'))
                          <li {!! Request::is('regiao/relatorio/estatisticagenero') ? 'class="active"' : '' !!}>
                             
