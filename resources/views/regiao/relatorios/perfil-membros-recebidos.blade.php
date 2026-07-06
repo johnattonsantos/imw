@@ -86,6 +86,13 @@
               </tr>
             @endforeach
           </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2">TOTAL DA REGIÃO</th>
+              <th>{{ number_format($membros->count(), 0, ',', '.') }}</th>
+              <th colspan="7"></th>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
