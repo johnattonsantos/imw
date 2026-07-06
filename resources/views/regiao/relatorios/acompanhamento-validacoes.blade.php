@@ -4,7 +4,7 @@
 <x-breadcrumb :breadcrumbs="[
     ['text' => 'Home', 'url' => '/', 'active' => false],
     ['text' => 'Relatórios Regionais', 'url' => '#', 'active' => false],
-    ['text' => 'Acompanhamento das Validações', 'url' => route('regiao.relatorio.acompanhamento-validacoes'), 'active' => true],
+    ['text' => 'Validação de Membros', 'url' => route('regiao.relatorio.acompanhamento-validacoes'), 'active' => true],
 ]"></x-breadcrumb>
 @endsection
 
@@ -37,7 +37,7 @@
 
 @section('content')
 @php
-  $tituloRelatorio = 'ACOMPANHAMENTO DAS VALIDAÇÕES - ' . $regiao->nome;
+  $tituloRelatorio = 'VALIDAÇÃO DE MEMBROS - ' . $regiao->nome;
 @endphp
 
 <div class="col-lg-12 col-12 layout-spacing">
@@ -45,7 +45,7 @@
     <div class="widget-header">
       <div class="row">
         <div class="col-12">
-          <h4>Acompanhamento das Validações</h4>
+          <h4>Validação de Membros</h4>
           <p class="pl-3 mb-0">Região: {{ $regiao->nome }}</p>
           <p class="pl-3">Igrejas encontradas: {{ $igrejas->count() }}</p>
         </div>
