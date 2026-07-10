@@ -39,6 +39,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PrebendaController;
 use App\Http\Controllers\PrebendasClerigosController;
 use App\Http\Controllers\RegiaoEstatisticasController;
+use App\Http\Controllers\RegiaoJuridicoController;
 use App\Http\Controllers\RegiaoRelatorioController;
 use App\Http\Controllers\RegiaoEbdRelatorioController;
 use App\Http\Controllers\RelatorioClerigoPrebendasController;
@@ -422,6 +423,25 @@ Route::middleware(['auth'])->group(function () {
                     'bens_por_igreja_unidade',
                 ])
                 ->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
+        });
+
+        Route::prefix('regiao/juridico')->name('regiao.juridico.')->group(function () {
+            Route::get('/acoes', [RegiaoJuridicoController::class, 'indexAcoes'])->name('acoes.index')->middleware(['seguranca:juridico-regiao-acoes']);
+            Route::get('/acoes/novo', [RegiaoJuridicoController::class, 'createAcao'])->name('acoes.create')->middleware(['seguranca:juridico-regiao-acoes-novo']);
+            Route::post('/acoes', [RegiaoJuridicoController::class, 'storeAcao'])->name('acoes.store')->middleware(['seguranca:juridico-regiao-acoes-novo']);
+            Route::get('/acoes/{acao}', [RegiaoJuridicoController::class, 'showAcao'])->name('acoes.show')->middleware(['seguranca:juridico-regiao-acoes']);
+            Route::get('/acoes/{acao}/editar', [RegiaoJuridicoController::class, 'editAcao'])->name('acoes.edit')->middleware(['seguranca:juridico-regiao-acoes-editar']);
+            Route::put('/acoes/{acao}', [RegiaoJuridicoController::class, 'updateAcao'])->name('acoes.update')->middleware(['seguranca:juridico-regiao-acoes-editar']);
+            Route::delete('/acoes/{acao}', [RegiaoJuridicoController::class, 'destroyAcao'])->name('acoes.destroy')->middleware(['seguranca:juridico-regiao-acoes-excluir']);
+
+            Route::get('/advogados', [RegiaoJuridicoController::class, 'indexAdvogados'])->name('advogados.index')->middleware(['seguranca:juridico-regiao-advogados']);
+            Route::get('/advogados/novo', [RegiaoJuridicoController::class, 'createAdvogado'])->name('advogados.create')->middleware(['seguranca:juridico-regiao-advogados-novo']);
+            Route::post('/advogados', [RegiaoJuridicoController::class, 'storeAdvogado'])->name('advogados.store')->middleware(['seguranca:juridico-regiao-advogados-novo']);
+            Route::get('/advogados/{advogado}/editar', [RegiaoJuridicoController::class, 'editAdvogado'])->name('advogados.edit')->middleware(['seguranca:juridico-regiao-advogados-editar']);
+            Route::put('/advogados/{advogado}', [RegiaoJuridicoController::class, 'updateAdvogado'])->name('advogados.update')->middleware(['seguranca:juridico-regiao-advogados-editar']);
+            Route::delete('/advogados/{advogado}', [RegiaoJuridicoController::class, 'destroyAdvogado'])->name('advogados.destroy')->middleware(['seguranca:juridico-regiao-advogados-excluir']);
+
+            Route::get('/relatorios', [RegiaoJuridicoController::class, 'relatorios'])->name('relatorios')->middleware(['seguranca:juridico-regiao-relatorios']);
         });
 
         // Relatórios Região Clérigos

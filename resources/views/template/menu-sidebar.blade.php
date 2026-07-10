@@ -1047,6 +1047,54 @@
 	             @endif
 	             
 
+             @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao'))
+                 <li class="menu">
+                     <a href="#juridico-regiao" data-toggle="collapse" aria-expanded="{{ Request::is('regiao/juridico*') ? 'true' : 'false' }}"
+                         class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase">
+                                 <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                 <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                             </svg>
+                             <span>Jurídico</span>
+                         </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
+                     </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('regiao/juridico*') ? 'collapse show' : '' }}" id="juridico-regiao"
+                         data-parent="#juridico-regiao">
+                         <li {!! Request::is('regiao/juridico/acoes*') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-acoes'))
+                                 <a href="{{ route('regiao.juridico.acoes.index') }}">Ações Judiciais</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('regiao/juridico/advogados*') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-advogados'))
+                                 <a href="{{ route('regiao.juridico.advogados.index') }}">Advogados</a>
+                             @endif
+                         </li>
+                         <li class="submenu-fixo mt-3 mb-3">
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-relatorios'))
+                                 <span>Relatórios</span>
+                             @endif
+                         </li>
+                         <li {!! Request::is('regiao/juridico/relatorios*') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-relatorios'))
+                                 <a href="{{ route('regiao.juridico.relatorios') }}">Relatórios</a>
+                             @endif
+                         </li>
+                     </ul>
+                 </li>
+             @endif
+
 	             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                  <li class="menu">
                     <a href="#estatistica-regiao" data-toggle="collapse" aria-expanded="{{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu') || Request::is('regiao/relatorio/aspirantes-por-igrejas')) ? 'true' : 'false' }}"
