@@ -14,3 +14,11 @@
     };
 </script>
 @endif
+
+@if(session('warning'))
+<script>
+    window.onload = function(e) {
+        toastr.warning(@json(session('warning')));
+    };
+</script>
+@endif

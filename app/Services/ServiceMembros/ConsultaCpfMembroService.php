@@ -1,0 +1,133 @@
+<?php
+
+namespace App\Services\ServiceMembros;
+
+use App\Models\MembresiaMembro;
+use App\Models\MembresiaRolPermanente;
+use App\Traits\Identifiable;
+use Illuminate\Support\Facades\DB;
+
+class ConsultaCpfMembroService
+{
+    use Identifiable;
+
+    public function findMembroDuplicado(?string $cpf, ?string $ignoreMembroId = null): ?MembresiaMembro
+    {
+        $cpf = $this->normalizeCpf($cpf);
+        if ($cpf === '') {
+            return null;
+        }
+
+        return MembresiaMembro::withTrashed()
+            ->where('cpf', $cpf)
+            ->where('vinculo', MembresiaMembro::VINCULO_MEMBRO)
+            ->when($ignoreMembroId, fn ($query) => $query->where('id', '!=', $ignoreMembroId))
+            ->first();
+    }
+
+    public function findMembroAtivo(?string $cpf, ?string $ignoreMembroId = null): ?MembresiaMembro
+    {
+        $cpf = $this->normalizeCpf($cpf);
+        if ($cpf === '') {
+            return null;
+        }
+
+        return MembresiaMembro::withTrashed()
+            ->where('cpf', $cpf)
+            ->where('vinculo', MembresiaMembro::VINCULO_MEMBRO)
+            ->where('status', MembresiaMembro::STATUS_ATIVO)
+            ->whereNull('deleted_at')
+            ->when($ignoreMembroId, fn ($query) => $query->where('id', '!=', $ignoreMembroId))
+            ->first();
+    }
+
+    public function findMembroInativo(?string $cpf, ?string $ignoreMembroId = null): ?MembresiaMembro
+    {
+        $cpf = $this->normalizeCpf($cpf);
+        if ($cpf === '') {
+            return null;
+        }
+
+        return MembresiaMembro::withTrashed()
+            ->where('cpf', $cpf)
+            ->where('vinculo', MembresiaMembro::VINCULO_MEMBRO)
+            ->where(function ($query) {
+                $query->where('status', '<>', MembresiaMembro::STATUS_ATIVO)
+                    ->orWhereNotNull('deleted_at');
+            })
+            ->when($ignoreMembroId, fn ($query) => $query->where('id', '!=', $ignoreMembroId))
+            ->first();
+    }
+
+    public function isAtivo(MembresiaMembro $membro): bool
+    {
+        return $membro->status === MembresiaMembro::STATUS_ATIVO && $membro->deleted_at === null;
+    }
+
+    public function origemFormatada(MembresiaMembro $membro): string
+    {
+        $rol = $this->ultimoRol($membro);
+
+        $regiao = optional($rol)->regiao_id ?: $membro->regiao_id;
+        $distrito = optional($rol)->distrito_id ?: $membro->distrito_id;
+        $igreja = optional($rol)->igreja_id ?: $membro->igreja_id;
+
+        $nomes = DB::table('instituicoes_instituicoes')
+            ->whereIn('id', array_filter([$regiao, $distrito, $igreja]))
+            ->pluck('nome', 'id');
+
+        $partes = array_filter([
+            $regiao ? $nomes->get($regiao) : null,
+            $distrito ? $nomes->get($distrito) : null,
+            $igreja ? $nomes->get($igreja) : null,
+        ]);
+
+        return $partes ? implode(' / ', $partes) : 'igreja de origem não identificada';
+    }
+
+    public function dataDesligamentoFormatada(MembresiaMembro $membro): string
+    {
+        $rol = $this->ultimoRolInativo($membro) ?: $this->ultimoRol($membro);
+        $data = optional($rol)->dt_exclusao;
+
+        return $data ? $data->format('d/m/Y') : 'data não informada';
+    }
+
+    public function mensagemAtivo(MembresiaMembro $membro): string
+    {
+        return 'Este CPF pertence a um membro ativo em ' . $this->origemFormatada($membro) . '. A igreja de origem deve ser contactada para proceder com a transferência.';
+    }
+
+    public function mensagemInativo(MembresiaMembro $membro): string
+    {
+        return 'Este CPF pertence a um membro desligado de ' . $this->origemFormatada($membro) . ', em ' . $this->dataDesligamentoFormatada($membro) . '. Se desejar, confirme a reintegração nesta igreja. Apenas os dados pessoais serão preservados; funções, ministérios e vínculos eclesiásticos locais não serão transferidos.';
+    }
+
+    private function ultimoRol(MembresiaMembro $membro): ?MembresiaRolPermanente
+    {
+        return MembresiaRolPermanente::withTrashed()
+            ->where('membro_id', $membro->id)
+            ->orderByDesc('lastrec')
+            ->orderByDesc('dt_recepcao')
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    private function ultimoRolInativo(MembresiaMembro $membro): ?MembresiaRolPermanente
+    {
+        return MembresiaRolPermanente::withTrashed()
+            ->where('membro_id', $membro->id)
+            ->where(function ($query) {
+                $query->where('status', MembresiaRolPermanente::STATUS_EXCLUSAO)
+                    ->orWhereNotNull('dt_exclusao');
+            })
+            ->orderByDesc('dt_exclusao')
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    private function normalizeCpf(?string $cpf): string
+    {
+        return preg_replace('/[^0-9]/', '', (string) $cpf);
+    }
+}
