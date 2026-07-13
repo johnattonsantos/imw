@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\RangeDateRule;
 use App\Rules\ValidaCPF;
+use App\Services\ServiceMembros\ConsultaCpfMembroService;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
@@ -89,10 +90,29 @@ class StoreCongregadoRequest extends FormRequest
                 'nullable',
                 new ValidaCPF,
                 function ($attribute, $value, $fail) use ($membroId) {
-                    // Remove todos os caracteres que não são números
-                    $cpf = preg_replace('/[^0-9]/', '', $value);
+                    if (empty($value)) {
+                        return;
+                    }
 
-                    // Verifica se o CPF já existe na tabela membresia_membros, ignorando o membro atual
+                    $cpf = preg_replace('/[^0-9]/', '', $value);
+                    $consultaCpf = app(ConsultaCpfMembroService::class);
+
+                    $membroAtivo = $consultaCpf->findMembroAtivo($cpf, $membroId);
+                    if ($membroAtivo) {
+                        $fail($consultaCpf->mensagemAtivo($membroAtivo));
+                        return;
+                    }
+
+                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
+                    if ($membroDuplicado) {
+                        if (!$membroId && !$consultaCpf->isAtivo($membroDuplicado)) {
+                            return;
+                        }
+
+                        $fail('Este CPF já está sendo utilizado por outra pessoa');
+                        return;
+                    }
+
                     $query = DB::table('membresia_membros')->where('cpf', $cpf);
 
                     if ($membroId) {

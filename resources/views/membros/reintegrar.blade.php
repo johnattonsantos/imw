@@ -27,6 +27,15 @@
     <div class="widget-content widget-content-area">
       <form class="form-vertical" method="POST" action="{{ route('membro.reintegrar.store', ['id' => $pessoa->id]) }}" enctype="multipart/form-data">
         @csrf
+        @if(session('warning'))
+          <div class="row">
+            <div class="col-md-12">
+              <div class="alert alert-warning border-0 mb-4" role="alert">
+                {{ session('warning') }}
+              </div>
+            </div>
+          </div>
+        @endif
         <div class="row">
           <div class="col-md-12">
             <div class="alert alert-warning border-0 mb-4" role="alert">
