@@ -62,7 +62,7 @@ class PrebendaController extends Controller
     public function store(StorePrebendaRequest $request)
     {
         app(StorePrebendasService::class)->execute($request);
-        return redirect()->route('clerigos.perfil.prebendas.index')->with('success', 'Prebenda criada com sucesso');
+        return redirect()->route('clerigos.perfil.prebendas.index')->with('success', __('Prebenda criada com sucesso'));
     }
 
     /**
@@ -100,7 +100,7 @@ class PrebendaController extends Controller
     {
         app(UpdatePrebendaService::class)->execute($request, $id);
 
-        return redirect()->route('clerigos.perfil.prebendas.index')->with('success', 'Prebenda atualizada com sucesso');
+        return redirect()->route('clerigos.perfil.prebendas.index')->with('success', __('Prebenda atualizada com sucesso'));
     }
 
     /**
@@ -113,6 +113,6 @@ class PrebendaController extends Controller
     {
         app(DeletePrebendaService::class)->execute($id);
 
-        return redirect()->route('clerigos.perfil.prebendas.index')->with('success', 'Prebenda deletada com sucesso');
+        return redirect()->route('clerigos.perfil.prebendas.index')->with('success', __('Prebenda deletada com sucesso'));
     }
 }

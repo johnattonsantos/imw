@@ -116,7 +116,7 @@ class ComunicacaoController extends Controller
             ]);
         }
 
-        return redirect()->route('comunicacao.create')->with('success', 'Comunicacao cadastrada com sucesso.');
+        return redirect()->route('comunicacao.create')->with('success', __('Comunicacao cadastrada com sucesso.'));
     }
 
     public function show(Comunicacao $comunicacao)
@@ -200,7 +200,7 @@ class ComunicacaoController extends Controller
             ]);
         }
 
-        return redirect()->route('comunicacao.index')->with('success', 'Comunicacao atualizada com sucesso.');
+        return redirect()->route('comunicacao.index')->with('success', __('Comunicacao atualizada com sucesso.'));
     }
 
     public function destroy(Comunicacao $comunicacao)
@@ -219,7 +219,7 @@ class ComunicacaoController extends Controller
             ]);
         }
 
-        return redirect()->route('comunicacao.index')->with('success', 'Comunicacao excluida com sucesso.');
+        return redirect()->route('comunicacao.index')->with('success', __('Comunicacao excluida com sucesso.'));
     }
 
     public function download(Comunicacao $comunicacao)

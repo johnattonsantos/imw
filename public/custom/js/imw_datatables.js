@@ -15,12 +15,12 @@ function initDataTable(selector = '#datatable', userOptions = {}, fnDrawCallback
             + "<'table-responsive'tr>" 
             + "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
         "oLanguage": {
-            "sProcessing": '<div class="load-datatable text-primary"><div class="spinner-border mr-2 align-self-center loader-sm "></div>Carregando...</div>',
-            "sInfo": "Exibindo página _PAGE_ de _PAGES_",
-            "sZeroRecords": "Nenhum registro encontrado",
+            "sProcessing": '<div class="load-datatable text-primary"><div class="spinner-border mr-2 align-self-center loader-sm "></div>' + __('Carregando...') + '</div>',
+            "sInfo": __('Exibindo página _PAGE_ de _PAGES_'),
+            "sZeroRecords": __('Nenhum registro encontrado'),
             "oPaginate": { 
-                "sPrevious": 'Anterior', 
-                "sNext": 'Próxima',
+                "sPrevious": __('Anterior'), 
+                "sNext": __('Próxima'),
             },
         },
     }

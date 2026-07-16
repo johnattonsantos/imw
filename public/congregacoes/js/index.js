@@ -12,12 +12,12 @@ $(document).ready(function() {
         $('.btn-confirm-delete').on('click', function() {
             const formId = $(this).data('form-id')
             swal({
-                title: 'Deseja realmente desativar a congregação?',
+                title: __('Deseja realmente desativar a congregação?'),
                 type: 'error',
                 showCancelButton: true,
-                confirmButtonText: "Desativar",
+                confirmButtonText: __('Desativar'),
                 confirmButtonColor: "#d33",
-                cancelButtonText: "Cancelar",
+                cancelButtonText: __('Cancelar'),
                 cancelButtonColor: "#3085d6",
                 padding: '2em'
             }).then(function(result) {
@@ -29,12 +29,12 @@ $(document).ready(function() {
         $('.btn-confirm-restore').on('click', function() {
             const formId = $(this).data('form-id')
             swal({
-                title: 'Deseja realmente restaurar a congregação?',
+                title: __('Deseja realmente restaurar a congregação?'),
                 type: 'success',
                 showCancelButton: true,
-                confirmButtonText: "Restaurar",
+                confirmButtonText: __('Restaurar'),
                 confirmButtonColor: "#1abc9c",
-                cancelButtonText: "Cancelar",
+                cancelButtonText: __('Cancelar'),
                 cancelButtonColor: "#3085d6",
                 padding: '2em'
             }).then(function(result) {

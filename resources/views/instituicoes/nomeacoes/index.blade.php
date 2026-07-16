@@ -59,16 +59,16 @@
                             <div class="row mb-4">
                                 <div class="col-2">
                                     <select name="status" id="" class="form-control">
-                                        <option value="">Todos</option>
+                                        <option value="">{{ __('Todos') }}</option>
                                         <option value="ativo"
-                                            {{ !empty($status) && $status === 'ativo' ? 'selected' : '' }}>Ativo</option>
+                                            {{ !empty($status) && $status === 'ativo' ? 'selected' : '' }}>{{ __('Ativo') }}</option>
                                         <option value="inativo"
-                                            {{ !empty($status) && $status === 'inativo' ? 'selected' : '' }}>Inativo
+                                            {{ !empty($status) && $status === 'inativo' ? 'selected' : '' }}>{{ __('Inativo') }}
                                         </option>
                                     </select>
                                 </div>
                                 <div class="col-auto" style="margin-left: -19px;">
-                                    <button type="submit" class="btn btn-primary btn-rounded">Pesquisar</button>
+                                    <button type="submit" class="btn btn-primary btn-rounded">{{ __('Pesquisar') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -76,13 +76,13 @@
                 </div>
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h5 class="mb-0">Listagem de Nomeações</h5>
+                        <h5 class="mb-0">{{ __('Listagem de Nomeações') }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
                                 <a href="{{ route('instituicoes-regiao.nomeacoes.novo', ['instituicao' => $instituicao->id]) }}"
-                                    title="Inserir um novo registro" class="btn btn-primary right btn-rounded"> <svg
+                                    title="{{ __('Inserir um novo registro') }}" class="btn btn-primary right btn-rounded"> <svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                         stroke-linejoin="round" class="feather feather-plus-square">
@@ -90,16 +90,16 @@
                                         </rect>
                                         <line x1="12" y1="8" x2="12" y2="16"></line>
                                         <line x1="8" y1="12" x2="16" y2="12"></line>
-                                    </svg> Novo </a>
+                                    </svg> {{ __('Novo') }} </a>
                                 <div class="table-responsive">
                                     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th>Nome</th>
-                                                <th>Função ministerial</th>
-                                                <th>Nomeação</th>
-                                                <th>Término</th>
-                                                <th width="120px">Ações</th>
+                                                <th>{{ __('Nome') }}</th>
+                                                <th>{{ __('Função ministerial') }}</th>
+                                                <th>{{ __('Nomeação') }}</th>
+                                                <th>{{ __('Término') }}</th>
+                                                <th width="120px">{{ __('Ações') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -160,9 +160,9 @@
         <div class="modal-dialog modal-xl">
             <div class="modal-content"  style="max-width: 500px; margin: 0 auto">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalFinalizarLabel">Finalizar Nomeação</h5>
+                    <h5 class="modal-title" id="modalFinalizarLabel">{{ __('Finalizar Nomeação') }}</h5>
 
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close') }}"></button>
                 </div>
                 <div class="modal-body">
                     <p id="funcao" class="form-control-plaintext">{{ old('nome') }}</p>
@@ -170,7 +170,7 @@
                         @csrf
                         <meta name="csrf-token" content="{{ csrf_token() }}">
                         <div class="mb-3">
-                            <label for="data_termino" class="form-label">Data de Término</label>
+                            <label for="data_termino" class="form-label">{{ __('Data de Término') }}</label>
                             <input type="date" class="form-control" id="data_termino" name="data_termino" required
                                 value="{{ old('data_termino') }}" @error('data_termino') is-invalid @enderror>
                             @error('data_termino')
@@ -179,8 +179,8 @@
                         </div>
                          <input type="hidden" id="nomeacao_id" name="nomeacao_id" value="{{ old('nomeacao_id') }}">
                         <div class="modal-footer">
-                            <button type="button" class="btn" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Finalizar</button>
+                            <button type="button" class="btn" data-bs-dismiss="modal">{{ __('Cancelar') }}</button>
+                            <button type="submit" class="btn btn-primary">{{ __('Finalizar') }}</button>
                         </div>
                     </form>
                 </div>

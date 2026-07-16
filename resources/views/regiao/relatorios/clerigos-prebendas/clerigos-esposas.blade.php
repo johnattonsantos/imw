@@ -38,7 +38,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Relatório Esposas Clérigos</h4>
+              <h4>{{ __('Relatório Esposas Clérigos') }}</h4>
           </div>
       </div>
   </div>
@@ -51,10 +51,10 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="esposas-clerigos">
             <thead>
                 <tr>
-                    <th>NOME</th>
-                    <th>ESPOSA</th>
-                    <th>TELEFONE</th>
-                    <th>INSTITUIÇÃO</th>
+                    <th>{{ __('NOME') }}</th>
+                    <th>{{ __('ESPOSA') }}</th>
+                    <th>{{ __('TELEFONE') }}</th>
+                    <th>{{ __('INSTITUIÇÃO') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,7 +67,7 @@
                       
                   </tr>
                 @empty
-                <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
+                <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
                 @endforelse
             </tbody>
           </table>            

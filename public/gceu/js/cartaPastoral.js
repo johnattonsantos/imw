@@ -3,12 +3,12 @@ $(document).ready(function() {
     $('.btn-confirm-delete').on('click', function() {
         const formId = $(this).data('form-id')
         swal({
-            title: 'Deseja realmente apagar os registros desta Carta Pastoral?',
+            title: __('Deseja realmente apagar os registros desta Carta Pastoral?'),
             type: 'error',
             showCancelButton: true,
-            confirmButtonText: "Deletar",
+            confirmButtonText: __('Deletar'),
             confirmButtonColor: "#d33",
-            cancelButtonText: "Cancelar",
+            cancelButtonText: __('Cancelar'),
             cancelButtonColor: "#3085d6",
             padding: '2em'
         }).then(function(result) {
@@ -44,7 +44,7 @@ $(document).ready(function() {
             },
             error: function (error) {
                 $('#visualizarGCEUCartaPastoralModal').modal('hide');
-                toastr.error('Erro ao visualizar dados dessa carta pastoral.');
+                toastr.error(__('Erro ao visualizar dados dessa carta pastoral.'));
             },
             complete: function () {
                 $('.loadable').unblock();

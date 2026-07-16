@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Histórico de Nomeações - IMW PGA</title>
+    <title>{{ __('Relatório de Histórico de Nomeações - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +90,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">Histórico de Nomeações - {{ $lancamentos[0]->instituicao }}</div>
         </div>
@@ -111,11 +111,11 @@
                                     <table class="table table-striped" style="font-size: 90%;">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>Nome</th>
-                                                <th>Distrito</th>
-                                                <th>Igreja</th>
-                                                <th>Data Início</th>
-                                                <th>Data Termino</th>
+                                                <th>{{ __('Nome') }}</th>
+                                                <th>{{ __('Distrito') }}</th>
+                                                <th>{{ __('Igreja') }}</th>
+                                                <th>{{ __('Data Início') }}</th>
+                                                <th>{{ __('Data Termino') }}</th>
 
                                             </tr>
                                         </thead>
@@ -145,8 +145,7 @@
                                     </table>
                                 </div>
 
-                                <p class="text-center text-muted">Nenhum resultado encontrado para o período
-                                    selecionado.</p>
+                                <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
 
                             </div>
                         @elseif (request('visao') == 2)
@@ -155,11 +154,11 @@
                                     <table class="table table-striped" style="font-size: 90%;">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>Nome</th>
-                                                <th>Clérigo</th>
-                                                <th>Distrito</th>
-                                                <th>Data Início</th>
-                                                <th>Data Termino</th>
+                                                <th>{{ __('Nome') }}</th>
+                                                <th>{{ __('Clérigo') }}</th>
+                                                <th>{{ __('Distrito') }}</th>
+                                                <th>{{ __('Data Início') }}</th>
+                                                <th>{{ __('Data Termino') }}</th>
 
                                             </tr>
                                         </thead>
@@ -189,8 +188,7 @@
                                     </table>
                                 </div>
 
-                                <p class="text-center text-muted">Nenhum resultado encontrado para o período
-                                    selecionado.</p>
+                                <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
 
                             </div>
                         @endif

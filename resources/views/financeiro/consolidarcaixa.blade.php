@@ -49,17 +49,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mt-3">Composição de Saldos por Caixa</h5>
+                            <h5 class="mt-3">{{ __('Composição de Saldos por Caixa') }}</h5>
                             <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>CAIXA</th>
+                                        <th>{{ __('CAIXA') }}</th>
                                         <th width="300" style="text-align: right">ÚLTIMO SALDO CONSOLIDADO EM {{ \Carbon\Carbon::parse($ultimoCaixa)->isoFormat('MMMM [de] YYYY') }}</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE SAÍDAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. SAÍDAS</th>
-                                        <th width="120" style="text-align: right">SALDO ATUAL</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('SALDO ATUAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -106,7 +106,7 @@
 
                                     {{-- Total de cada caixa --}}
                                     <tr>
-                                        <td style="text-align: left"><strong>Total dos Caixas</strong></td>
+                                        <td style="text-align: left"><strong>{{ __('Total dos Caixas') }}</strong></td>
                                         <td style="text-align: right">
                                             <strong>{{ 'R$ ' . number_format($totalSaldoFinal, 2, ',', '.') }}</strong>
                                         </td>
@@ -130,16 +130,16 @@
                             </table>
                         </div>
                         <div class="col-12 mt-3">
-                            <h5>Discriminação dos Lançamentos por Conta</h5>
+                            <h5>{{ __('Discriminação dos Lançamentos por Conta') }}</h5>
                         </div>
 
                         <div class="col-12">
                             <table class="table" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>CONTA</th>
-                                        <th>CAIXA</th>
-                                        <th width="100">TOTAL</th>
+                                        <th>{{ __('CONTA') }}</th>
+                                        <th>{{ __('CAIXA') }}</th>
+                                        <th width="100">{{ __('TOTAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -171,7 +171,7 @@
                         <div id="alertContainer" class="mt-3" style="text-align: left;"></div>
                         @if($essenciais->isNotEmpty())
                         <div id="alertEssenciais" class="mt-3" style="text-align: left;">
-                            <h6 class="mb-3"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i> Atenção, as contas abaixo estão sem lançamentos!</h6>
+                            <h6 class="mb-3"><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red;"></i> {{ __('Atenção, as contas abaixo estão sem lançamentos!') }}</h6>
                             @foreach($essenciais as $essencial)
                             <div class="alert alert-warning" role="alert">{{$essencial->numeracao}} - {{$essencial->nome}}</div>
                             @endforeach

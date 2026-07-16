@@ -25,7 +25,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Balancete</h4>
+                    <h4>{{ __('Relatório Balancete') }}</h4>
                 </div>
             </div>
         </div>
@@ -33,25 +33,25 @@
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Período (Inicial e Final):</label>
+                        <label class="control-label">{{ __('* Período (Inicial e Final):') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
                 
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
                 </div>
 
                 {{-- Congregação --}}
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">Igrejas:</label>
+                        <label class="control-label">{{ __('Igrejas:') }}</label>
                     </div>
                     <div class="col-lg-6">
                         <select id="instituicao_id" name="instituicao_id" class="form-control @error('instituicao_id') is-invalid @enderror">
-                            <option value="0" {{ request()->input('instituicao_id') == 'all' ? 'selected' : '' }}>Todas
+                            <option value="0" {{ request()->input('instituicao_id') == 'all' ? 'selected' : '' }}>{{ __('Todas') }}
                             </option>
                             @foreach ($igrejas as $igreja)
                             <option value="{{ $igreja->id }}" {{ request()->input('instituicao_id') == $igreja->id ? 'selected' : '' }}>
@@ -64,11 +64,11 @@
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
-                        <!-- <button id="btn_relatorio" type="button" name="action" value="relatorio" title="Gerar Relatório" class="btn btn-secondary btn">
-                            Relatório
+                        <!-- <button id="btn_relatorio" type="button" name="action" value="relatorio" title="{{ __('Gerar Relatório') }}" class="btn btn-secondary btn">
+                            {{ __('Relatório') }}
                         </button> -->
                     </div>
                 </div>
@@ -91,9 +91,9 @@
                             <table class="table"  id="contabilidade-irrf">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>CONTA</th>
-                                        <th>CAIXA</th>
-                                        <th width="200" style="text-align: right;">TOTAL</th>
+                                        <th>{{ __('CONTA') }}</th>
+                                        <th>{{ __('CAIXA') }}</th>
+                                        <th width="200" style="text-align: right;">{{ __('TOTAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -144,42 +144,42 @@
                                         @foreach ($caixas as $caixa)
                                         <tr>
                                             <td>-</td>
-                                            <td style="font-weight: bold;">Saldo Anterior</td>
+                                            <td style="font-weight: bold;">{{ __('Saldo Anterior') }}</td>
                                             <td style="text-align: right; font-weight: bold;">
                                                 {{ 'R$ ' . number_format($caixa->saldo_final, 2, ',', '.') }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>-</td>
-                                            <td style="font-weight: bold;">Total de entradas</td>
+                                            <td style="font-weight: bold;">{{ __('Total de entradas') }}</td>
                                             <td style="text-align: right; font-weight: bold;">
                                                 {{ 'R$ ' . number_format($caixa->total_entradas, 2, ',', '.') }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>-</td>
-                                            <td style="font-weight: bold;">Total de saídas</td>
+                                            <td style="font-weight: bold;">{{ __('Total de saídas') }}</td>
                                             <td style="text-align: right; font-weight: bold;">
                                                 {{ 'R$ ' . ($caixa->total_saidas > 0 ? '-' : '') . number_format(abs($caixa->total_saidas), 2, ',', '.') }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>-</td>
-                                            <td style="font-weight: bold;">Total de transferências entradas</td>
+                                            <td style="font-weight: bold;">{{ __('Total de transferências entradas') }}</td>
                                             <td style="text-align: right; font-weight: bold;">
                                                 {{ 'R$ ' . number_format($caixa->total_transferencias_entrada, 2, ',', '.') }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>-</td>
-                                            <td style="font-weight: bold;">Total de transferências saídas</td>
+                                            <td style="font-weight: bold;">{{ __('Total de transferências saídas') }}</td>
                                             <td style="text-align: right; font-weight: bold;">
                                                 {{ 'R$ ' . ($caixa->total_transferencias_saida > 0 ? '-' : '') . number_format(abs($caixa->total_transferencias_saida), 2, ',', '.') }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>-</td>
-                                            <td style="font-weight: bold;">Saldo final</td>
+                                            <td style="font-weight: bold;">{{ __('Saldo final') }}</td>
                                             <td style="text-align: right; font-weight: bold;">
                                                 {{ 'R$ ' . number_format($caixa->saldo_atual, 2, ',', '.') }}
                                             </td>
@@ -194,7 +194,7 @@
                 </div>
                 <!-- <div class="row">
                     <div class="col-12 text-center">
-                        <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                        <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                     </div>
                 </div> -->
                 <!-- Fim do Conteúdo -->

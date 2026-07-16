@@ -40,7 +40,7 @@
 
                     <div class="form-group row mb-4" id="filtros_data_inicial">
                         <div class="col-lg-3 text-right">
-                            <label class="control-label">* Data Inicial:</label>
+                            <label class="control-label">{{ __('* Data Inicial:') }}</label>
                         </div>
                         <div class="col-lg-3">
                             <input type="date" class="form-control @error('data_inicial') is-invalid @enderror"
@@ -50,7 +50,7 @@
                     </div>
                     <div class="form-group row mb-4" id="filtros_data_final">
                         <div class="col-lg-3 text-right">
-                            <label class="control-label">* Data Final:</label>
+                            <label class="control-label">{{ __('* Data Final:') }}</label>
                         </div>
                         <div class="col-lg-3">
                             <input type="date" class="form-control @error('data_final') is-invalid @enderror"
@@ -62,8 +62,8 @@
                         <div class="col-lg-2"></div>
                         <div class="col-lg-6">
                             <button id="btn_buscar" type="submit" name="action" value="buscar"
-                                title="Buscar dados do Relatório" class="btn btn-primary btn">
-                                <x-bx-search /> Buscar
+                                title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                                <x-bx-search /> {{ __('Buscar') }}
                             </button>
                         </div>
                     </div>
@@ -88,9 +88,9 @@
                                             style="font-size: 90%; margin-top: 15px; width: 100%;">
                                             <thead class="thead-dark">
                                                 <tr>
-                                                    <th style="text-align: left;">Distrito</th>
-                                                    <th style="text-align: center;">Quantide de Batismo</th>
-                                                    <th style="text-align: center;">Percentual</th>
+                                                    <th style="text-align: left;">{{ __('Distrito') }}</th>
+                                                    <th style="text-align: center;">{{ __('Quantide de Batismo') }}</th>
+                                                    <th style="text-align: center;">{{ __('Percentual') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -105,7 +105,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th style="text-align: left;">Total Geral</th>
+                                                    <th style="text-align: left;">{{ __('Total Geral') }}</th>
                                                     <th style="text-align: center;">{{ $lancamentos->sum('total') }}</th>
                                                     <th style="text-align: center;">100%</th>
                                                 </tr>
@@ -135,7 +135,7 @@
     <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('.selectpicker').selectpicker();
+            $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
 
             $('#filter_form').submit(function(event) {
                 var data_inicial = $('#data_inicial').val();

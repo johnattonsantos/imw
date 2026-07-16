@@ -15,7 +15,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Editar GCEU</h4>
+                    <h4>{{ __('Editar GCEU') }}</h4>
                 </div>
             </div>
         </div>
@@ -25,16 +25,16 @@
                 @csrf
                 <div class="row">
                     <div class="form-group mb-4 col-8">
-                        <label class="control-label" for="nome">* Nome do GCEU</label>
-                        <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" id="nome" required placeholder="Nome do GCEU" minlength="4" value="{{ $gceu->nome }}" maxlength="150">
+                        <label class="control-label" for="nome">{{ __('* Nome do GCEU') }}</label>
+                        <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" id="nome" required placeholder="{{ __('Nome do GCEU') }}" minlength="4" value="{{ $gceu->nome }}" maxlength="150">
                         @error('nome')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">* Congregação</label>
+                        <label class="control-label">{{ __('* Congregação') }}</label>
                         <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" required>
-                            <option value="sede" {{ $gceu->congregacao_id == '' ? 'selected' : '' }}>SEDE</option>
+                            <option value="sede" {{ $gceu->congregacao_id == '' ? 'selected' : '' }}>{{ __('SEDE') }}</option>
                             @foreach ($congregacoes as $congregacao)
                                 <option value="{{ $congregacao->id }}" {{ $gceu->congregacao_id == $congregacao->id ? 'selected' : '' }}>{{ $congregacao->nome }}</option>
                             @endforeach
@@ -44,8 +44,8 @@
                         @enderror
                     </div>
                     <!-- <div class="form-group mb-4 col-6">
-                        <label class="control-label" for="anfitriao">* Anfitrião</label>
-                        <input type="text" name="anfitriao" id="anfitriao" class="form-control @error('anfitriao') is-invalid @enderror" placeholder="Nome do Anfitrião" minlength="4" value="{{ $gceu->anfitriao }}" required maxlength="100">
+                        <label class="control-label" for="anfitriao">{{ __('* Anfitrião') }}</label>
+                        <input type="text" name="anfitriao" id="anfitriao" class="form-control @error('anfitriao') is-invalid @enderror" placeholder="{{ __('Nome do Anfitrião') }}" minlength="4" value="{{ $gceu->anfitriao }}" required maxlength="100">
                         @error('anfitriao')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -53,25 +53,25 @@
                 </div>
                 <!-- <div class="row">
                     <div class="form-group mb-4 col-md-5">
-                        <label class="control-label" for="email">E-mail</label>
-                        <input id="email" name="email" type="email" placeholder="E-mail" class="form-control @error('email') is-invalid @enderror" value="{{ $gceu->email }}" maxlength="100">
+                        <label class="control-label" for="email">{{ __('E-mail') }}</label>
+                        <input id="email" name="email" type="email" placeholder="{{ __('E-mail') }}" class="form-control @error('email') is-invalid @enderror" value="{{ $gceu->email }}" maxlength="100">
                         @error('email')
                         <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                     <div class="form-group mb-4 col-md-3">
-                        <label class="control-label" for="contato">* Contato</label>
+                        <label class="control-label" for="contato">{{ __('* Contato') }}</label>
                         <input id="contato" name="contato" type="text" class="form-control @error('contato') is-invalid @enderror" required placeholder="(00) 0000-0000" value="{{ $gceu->contato }}" maxlength="15">
                         @error('contato')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">* Congregação</label>
+                        <label class="control-label">{{ __('* Congregação') }}</label>
                         <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" required>
-                            <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>Selecione</option>
-                            <option value="sede" {{ $gceu->congregacao_id == null ? 'selected' : '' }}>SEDE</option>
+                            <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
+                            <option value="sede" {{ $gceu->congregacao_id == null ? 'selected' : '' }}>{{ __('SEDE') }}</option>
                             @foreach ($congregacoes as $congregacao)
                                 <option value="{{ $congregacao->id }}" {{ $gceu->congregacao_id == $congregacao->id ? 'selected' : '' }}>{{ $congregacao->nome }}</option>
                             @endforeach
@@ -83,45 +83,45 @@
                 </div> -->
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Endereço GCEU</h4>
+                        <h4>{{ __('Endereço GCEU') }}</h4>
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">* CEP</label>
+                        <label class="control-label">{{ __('* CEP') }}</label>
                         <input id="cep" name="cep" type="text" maxlength="10" class="form-control @error('cep') is-invalid @enderror" placeholder="00000-000" value="{{ $gceu->cep }}" required>
                         @error('cep')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-6 col-md-6">
-                        <label class="control-label">Endereco</label>
+                        <label class="control-label">{{ __('Endereco') }}</label>
                         <input id="endereco" name="endereco" type="text" class="form-control @error('rua') is-invalid @enderror" placeholder="Endereco" maxlength="120" value="{{ $gceu->endereco }}">
                         @error('endereco')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-2 col-md-2">
-                        <label class="control-label">Número</label>
-                        <input id="numero" name="numero" type="text" maxlength="11" class="form-control @error('numero') is-invalid @enderror" placeholder="Nº" value="{{ $gceu->numero }}">
+                        <label class="control-label">{{ __('Número') }}</label>
+                        <input id="numero" name="numero" type="text" maxlength="11" class="form-control @error('numero') is-invalid @enderror" placeholder="{{ __('Nº') }}" value="{{ $gceu->numero }}">
                         @error('numero')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">Bairro</label>
+                        <label class="control-label">{{ __('Bairro') }}</label>
                         <input id="bairro" name="bairro" type="text" maxlength="50" class="form-control @error('bairro') is-invalid @enderror" placeholder="Bairro" value="{{ $gceu->bairro }}">
                         @error('bairro')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">Cidade</label>
+                        <label class="control-label">{{ __('Cidade') }}</label>
                         <input id="cidade" name="cidade" type="text" maxlength="50" class="form-control @error('cidade') is-invalid @enderror" placeholder="Cidade" value="{{ $gceu->cidade }}">
                         @error('cidade')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">Estado</label>
+                        <label class="control-label">{{ __('Estado') }}</label>
                         <input id="estado" name="estado" type="text" maxlength="30" class="form-control @error('estado') is-invalid @enderror" placeholder="Estado" value="{{ $gceu->uf }}">
                         @error('estado')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -133,7 +133,7 @@
             </form>
             @else
             <div class="alert alert-warning" role="alert">
-                CGEU não encontrado.
+                {{ __('CGEU não encontrado.') }}
             </div>
             @endif
         </div>

@@ -4,12 +4,12 @@
             <table class="table table-bordered table-striped table-hover mb-4">
                 <thead>
                     <tr>
-                        <th>DATA</th>
-                        <th>OCORRÊNCIA</th>
-                        <th>MODO/FORMA</th>
-                        <th>IGREJA</th>
-                        <th>CONGREGAÇÃO</th>
-                        <th>PASTOR</th>
+                        <th>{{ __('DATA') }}</th>
+                        <th>{{ __('OCORRÊNCIA') }}</th>
+                        <th>{{ __('MODO/FORMA') }}</th>
+                        <th>{{ __('IGREJA') }}</th>
+                        <th>{{ __('CONGREGAÇÃO') }}</th>
+                        <th>{{ __('PASTOR') }}</th>
                     </tr>
                 </thead>
                 <tbody id="historico-tbody">
@@ -63,19 +63,19 @@
             <div class="col-12">
                 @if(! $pessoa->notificacaoTransferenciaAtiva)
                     <a href="{{ route('membro.exclusao_transferencia', ['id' => $pessoa->id]) }}" class="btn btn-secondary">
-                        <x-bx-transfer-alt/> Transferir
+                        <x-bx-transfer-alt/> {{ __('Transferir') }}
                     </a>
                 @endif
                 <a href="{{ route('membro.disciplinar', ['id' => $pessoa->id]) }}" class="btn btn-warning">
-                    <x-bx-block/> Disciplinar
+                    <x-bx-block/> {{ __('Disciplinar') }}
                 </a>
                 @if($pessoa->status === \App\Models\MembresiaMembro::STATUS_ATIVO)
                     <a href="{{ route('membro.exclusao', ['id' => $pessoa->id]) }}" class="btn btn-danger">
-                        <x-bx-minus-circle/> Excluir
+                        <x-bx-minus-circle/> {{ __('Excluir') }}
                     </a>
                 @endif
                 <!-- <a href="{{ route('membro.transferencia_interna', ['id' => $pessoa->id]) }}" class="btn btn-primary">
-                    <x-bx-transfer-alt/> Transferir Internamente
+                    <x-bx-transfer-alt/> {{ __('Transferir Internamente') }}
                 </a> -->
             </div>
         </div>

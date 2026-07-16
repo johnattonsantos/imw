@@ -33,7 +33,7 @@
                     <line x1="12" y1="8" x2="12" y2="16"></line>
                     <line x1="8" y1="12" x2="16" y2="12"></line>
                 </svg>
-                <span class="ml-2">INCLUIR CONGREGADO</span>
+                <span class="ml-2">{{ __('INCLUIR CONGREGADO') }}</span>
             </a>
         </div>
 
@@ -61,7 +61,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Lista de Congregados</h4>
+                        <h4>{{ __('Lista de Congregados') }}</h4>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                     <input type="radio" name="status" value="ativo" class="new-control-input"
                                         {{ request()->input('status') == 'ativo' || request()->input('status') == null ? 'checked' : '' }}>
-                                    <span class="new-control-indicator"></span>Ativos
+                                    <span class="new-control-indicator"></span>{{ __('Ativos') }}
                                 </label>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                     <input type="radio" name="status" value="inativo" class="new-control-input"
                                         {{ request()->input('status') == 'inativo' ? 'checked' : '' }}>
-                                    <span class="new-control-indicator"></span>Inativos
+                                    <span class="new-control-indicator"></span>{{ __('Inativos') }}
                                 </label>
                             </div>
                         </div>
@@ -91,18 +91,18 @@
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                     <input type="radio" name="status" value="has_errors" class="new-control-input"
                                         {{ request()->input('status') == 'has_errors' ? 'checked' : '' }}>
-                                    <span class="new-control-indicator"></span>Erros de Cadastro
+                                    <span class="new-control-indicator"></span>{{ __('Erros de Cadastro') }}
                                 </label>
                             </div>
                         </div>
                     </div>
                     <div class="col-4">
                         <input type="text" name="search" id="searchInput" class="form-control form-control-sm"
-                            placeholder="Pesquisar..." value="{{ request()->input('search') }}">
+                            placeholder="{{ __('Pesquisar...') }}" value="{{ request()->input('search') }}">
                     </div>
                     <div class="col-auto" style="margin-left: -19px;">
                         <button type="submit" id="searchButton" class="btn btn-primary btn-rounded"><x-bx-search />
-                            Pesquisar</button>
+                            {{ __('Pesquisar') }}</button>
                     </div>
                 </form>
                 <div class="table-responsive">
@@ -110,8 +110,8 @@
                         data-url="{{ route('congregado.list') }}">
                         <thead>
                             <tr>
-                                <th>NOME</th>
-                                <th>CONGREGAÇÃO</th>
+                                <th>{{ __('NOME') }}</th>
+                                <th>{{ __('CONGREGAÇÃO') }}</th>
                                 <th></th>
                             </tr>
                         </thead>

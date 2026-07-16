@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório Variação Financeira - IMW PGA</title>
+    <title>{{ __('Relatório Variação Financeira - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,7 +86,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">VARIAÇÃO FINANCEIRA - {{ session('session_perfil')->instituicao_nome }}</div>
             <div class="period">
@@ -100,13 +100,13 @@
     <table>
         <thead>
             <tr>
-                <th width="120px" style="text-align: left">IGREJA</th>
-                <th width="50px" style="text-align: right">SALDO ANTERIOR</th>
-                <th width="50px" style="text-align: right">ENTRADAS</th>
-                <th width="50px" style="text-align: right">TRANSF. ENTRADAS</th>
-                <th width="50px" style="text-align: right">SAÍDAS</th>
-                <th width="50px" style="text-align: right">TRANSF. SAÍDAS</th>
-                <th width="50px" style="text-align: right">SALDO FINAL</th>
+                <th width="120px" style="text-align: left">{{ __('IGREJA') }}</th>
+                <th width="50px" style="text-align: right">{{ __('SALDO ANTERIOR') }}</th>
+                <th width="50px" style="text-align: right">{{ __('ENTRADAS') }}</th>
+                <th width="50px" style="text-align: right">{{ __('TRANSF. ENTRADAS') }}</th>
+                <th width="50px" style="text-align: right">{{ __('SAÍDAS') }}</th>
+                <th width="50px" style="text-align: right">{{ __('TRANSF. SAÍDAS') }}</th>
+                <th width="50px" style="text-align: right">{{ __('SALDO FINAL') }}</th>
             </tr>
         </thead>
         <tbody>

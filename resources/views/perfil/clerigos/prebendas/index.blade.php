@@ -34,7 +34,7 @@
                     <line x1="12" y1="8" x2="12" y2="16"></line>
                     <line x1="8" y1="12" x2="16" y2="12"></line>
                 </svg>
-                <span class="ml-2">INCLUIR PREBENDA</span>
+                <span class="ml-2">{{ __('INCLUIR PREBENDA') }}</span>
             </a>
         </div>
     </div>
@@ -45,7 +45,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Lista de Prebendas</h4>
+                        <h4>{{ __('Lista de Prebendas') }}</h4>
                     </div>
                 </div>
             </div>
@@ -54,8 +54,8 @@
                     <table class="table table-bordered table-striped table-hover mb-4" id="datatable">
                         <thead>
                             <tr>
-                                <th>Ano</th>
-                                <th>Valor</th>
+                                <th>{{ __('Ano') }}</th>
+                                <th>{{ __('Valor') }}</th>
                                 <th width='120px'></th>
                             </tr>
                         </thead>
@@ -66,7 +66,7 @@
                                     <td>{{ $prebenda->valor }}</td>
                                     <td>
                                         <a href="{{ route('clerigos.perfil.prebendas.edit', $prebenda->id) }}"
-                                            class="btn btn-primary btn-sm btn-rounded bs-tooltip" title="Editar prebenda">
+                                            class="btn btn-primary btn-sm btn-rounded bs-tooltip" title="{{ __('Editar prebenda') }}">
                                             <x-bx-edit />
                                         </a>
                                         <form action="{{ route('clerigos.perfil.prebendas.delete', $prebenda) }}"
@@ -76,7 +76,7 @@
                                             @method('DELETE')
                                             <button type="button"
                                                 class="btn btn-danger btn-sm btn-rounded bs-tooltip btn-confirm-delete"
-                                                title="Excluir prebenda"
+                                                title="{{ __('Excluir prebenda') }}"
                                                 data-form-id="form_delete_prebenda_{{ $prebenda->id }}">
                                                 <x-bx-trash />
                                             </button>

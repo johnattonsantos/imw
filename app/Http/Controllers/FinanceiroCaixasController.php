@@ -30,7 +30,7 @@ class FinanceiroCaixasController extends Controller
             DB::beginTransaction();
             app(StoreFinanceiroCaixasService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('financeiro.caixas')->with('success', 'Caixa cadastrado com sucesso.');
+            return redirect()->route('financeiro.caixas')->with('success', __('Caixa cadastrado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('financeiro.caixas.novo')->with('error', $e->getMessage());
@@ -43,7 +43,7 @@ class FinanceiroCaixasController extends Controller
             DB::beginTransaction();
             app(DeletarFinanceiroCaixasService::class)->execute($id);
             DB::commit();
-            return redirect()->route('financeiro.caixas')->with('success', 'Caixa excluído com sucesso.');
+            return redirect()->route('financeiro.caixas')->with('success', __('Caixa excluído com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->route('financeiro.caixas')->with('error', $e->getMessage());
@@ -57,10 +57,10 @@ class FinanceiroCaixasController extends Controller
             $caixa = FinanceiroCaixa::findOrFail($id);
             return view('financeiro.caixas.editar', compact('caixa', 'id'));    
         }  catch(FinanceiroCaixaNotFoundException $e) {
-            return redirect()->route('financeiro.caixas')->with('error', 'Registro não encontrado.');
+            return redirect()->route('financeiro.caixas')->with('error', __('Registro não encontrado.'));
         }
         catch (\Exception $e) {
-            return redirect()->route('financeiro.caixas')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('financeiro.caixas')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -70,10 +70,10 @@ class FinanceiroCaixasController extends Controller
             DB::beginTransaction();
             app(UpdateFinanceiroCaixasService::class)->execute($request->all(), $id);
             DB::commit();
-            return redirect()->route('financeiro.caixas')->with('success', 'Caixa atualizado com sucesso.');
+            return redirect()->route('financeiro.caixas')->with('success', __('Caixa atualizado com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
-            return redirect()->action([FinanceiroCaixasController::class, 'editar'], ['id' => $id])->with('error', 'Falha na atualização do registro.');
+            return redirect()->action([FinanceiroCaixasController::class, 'editar'], ['id' => $id])->with('error', __('Falha na atualização do registro.'));
         }
     }
 

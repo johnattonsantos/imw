@@ -13,7 +13,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Novo Visitante</h4>
+                    <h4>{{ __('Novo Visitante') }}</h4>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 @csrf
                 <div class="row">
                     <div class="form-group mb-4 col-12">
-                        <label class="control-label">* Nome</label>
+                        <label class="control-label">{{ __('* Nome') }}</label>
                         <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror"  minlength="4" value="{{ old('nome') }}" maxlength="100">
                         @error('nome')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -31,26 +31,26 @@
                 </div>
                 <div class="row">
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">* Sexo</label>
+                        <label class="control-label">{{ __('* Sexo') }}</label>
                         <select name="sexo" class="form-control @error('sexo') is-invalid @enderror" >
-                            <option value="" {{ old('sexo') == '' ? 'selected' : '' }}>Selecione</option>
-                            <option value="M" {{ old('sexo') == 'M' ? 'selected' : '' }}>Masculino</option>
-                            <option value="F" {{ old('sexo') == 'F' ? 'selected' : '' }}>Feminino</option>
+                            <option value="" {{ old('sexo') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
+                            <option value="M" {{ old('sexo') == 'M' ? 'selected' : '' }}>{{ __('Masculino') }}</option>
+                            <option value="F" {{ old('sexo') == 'F' ? 'selected' : '' }}>{{ __('Feminino') }}</option>
                         </select>
                         @error('sexo')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">Data de Nascimento</label>
-                        <input type="date" class="form-control @error('data_nascimento') is-invalid @enderror" id="data_nascimento" name="data_nascimento" value="{{ old('data_nascimento') }}" placeholder="ex: 31/12/2000">
+                        <label class="control-label">{{ __('Data de Nascimento') }}</label>
+                        <input type="date" class="form-control @error('data_nascimento') is-invalid @enderror" id="data_nascimento" name="data_nascimento" value="{{ old('data_nascimento') }}" placeholder="{{ __('ex: 31/12/2000') }}">
                         @error('data_nascimento')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">Data de Conversão</label>
-                        <input type="date" class="form-control @error('data_conversao') is-invalid @enderror" id="data_conversao" name="data_conversao" value="{{ old('data_conversao') }}" placeholder="ex: 31/12/2000">
+                        <label class="control-label">{{ __('Data de Conversão') }}</label>
+                        <input type="date" class="form-control @error('data_conversao') is-invalid @enderror" id="data_conversao" name="data_conversao" value="{{ old('data_conversao') }}" placeholder="{{ __('ex: 31/12/2000') }}">
                         @error('data_conversao')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -58,15 +58,15 @@
                 </div>
                 <div class="row">
                     <!-- <div class="form-group mb-4 col-md-4">
-                        <label class="control-label">Telefone Alternativo</label>
-                        <input id="telefone_alternativo" name="telefone_alternativo" type="text" class="form-control @error('telefone_alternativo') is-invalid @enderror" placeholder="ex: (00) 0000-0000" value="{{ old('telefone_alternativo') }}">
+                        <label class="control-label">{{ __('Telefone Alternativo') }}</label>
+                        <input id="telefone_alternativo" name="telefone_alternativo" type="text" class="form-control @error('telefone_alternativo') is-invalid @enderror" placeholder="{{ __('ex: (00) 0000-0000') }}" value="{{ old('telefone_alternativo') }}">
                         @error('telefone_alternativo')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div> -->
                     <!-- div class="form-group mb-4 col-md-4">
-                        <label class="control-label">Whatsapp</label>
-                        <input id="telefone_whatsapp" name="telefone_whatsapp" type="text" class="form-control @error('telefone_whatsapp') is-invalid @enderror" placeholder="ex: (00) 00000-0000" value="{{ old('telefone_whatsapp') }}">
+                        <label class="control-label">{{ __('Whatsapp') }}</label>
+                        <input id="telefone_whatsapp" name="telefone_whatsapp" type="text" class="form-control @error('telefone_whatsapp') is-invalid @enderror" placeholder="{{ __('ex: (00) 00000-0000') }}" value="{{ old('telefone_whatsapp') }}">
                         @error('telefone_whatsapp')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -74,7 +74,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group mb-4 col-md-6">
-                        <label class="control-label">E-mail</label>
+                        <label class="control-label">{{ __('E-mail') }}</label>
                         <input id="email_preferencial" name="email_preferencial" type="email" class="form-control @error('email_preferencial') is-invalid @enderror" value="{{ old('email_preferencial') }}" maxlength="100">
                         @error('email_preferencial')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -82,8 +82,8 @@
                     </div>
 
                     <div class="form-group mb-4 col-md-6">
-                        <label class="control-label">Telefone</label>
-                        <input id="telefone_preferencial" name="telefone_preferencial" type="text" class="form-control @error('telefone_preferencial') is-invalid @enderror" placeholder="ex: +55 (00) 0000-0000" value="{{ old('telefone_preferencial') }}">
+                        <label class="control-label">{{ __('Telefone') }}</label>
+                        <input id="telefone_preferencial" name="telefone_preferencial" type="text" class="form-control @error('telefone_preferencial') is-invalid @enderror" placeholder="{{ __('ex: +55 (00) 0000-0000') }}" value="{{ old('telefone_preferencial') }}">
                         @error('telefone_preferencial')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -91,9 +91,9 @@
                 </div>
                 <div class="row">
                     <div class="form-group mb-4 col-md-6">
-                        <label class="control-label">Congregação</label>
+                        <label class="control-label">{{ __('Congregação') }}</label>
                         <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" >
-                            <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>Selecione</option>
+                            <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
                             @foreach ($congregacoes as $congregacao)
                                 <option value="{{ $congregacao->id }}" {{ old('congregacao_id') == $congregacao->id ? 'selected' : '' }}>{{ $congregacao->nome }}</option>
                             @endforeach
@@ -103,9 +103,9 @@
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-md-6">
-                        <label class="control-label">GCEU</label>
+                        <label class="control-label">{{ __('GCEU') }}</label>
                         <select id="gceu_id" name="gceu_id" class="form-control @error('gceu_id') is-invalid @enderror" >
-                            <option value="" {{ old('gceu_id') == '' ? 'selected' : '' }}>Selecione</option>
+                            <option value="" {{ old('gceu_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
                             @foreach ($gceus as $gceu)
                                 <option value="{{ $gceu->id }}" {{ old('gceu_id') == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
                             @endforeach

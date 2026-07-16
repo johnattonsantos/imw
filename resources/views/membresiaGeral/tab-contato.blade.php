@@ -31,60 +31,60 @@
                     <span class="text-center d-block" style="font-weight: bold">
                         {{ $membro->contato->email_preferencial ?? 'Sem informação de e-mail' }}
                     </span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">E-mail</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('E-mail') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">
                         {{ $telefoneContato ? formatStr($telefoneContato, '## (##) #####-####') : 'Sem informação de telefone' }}
                     </span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Telefone</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Telefone') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">
                         {{ $membro->contato->cep ?? 'Sem informação de CEP' }}
                     </span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">CEP</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('CEP') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">
                         {{ $membro->contato->endereco ?? 'Sem informação de endereço' }}
                     </span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Endereço</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Endereço') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">
                         {{ $membro->contato->numero ?? 'Sem informação de número' }}
                     </span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Número</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Número') }}</span>
                 </p>
 
                 <p class="card-text">
                     <span class="text-center d-block"
                         style="font-weight: bold">{{ $membro->contato->complemento ?? 'Não informado' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Complemento </span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Complemento') }} </span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block"
                         style="font-weight: bold">{{ $membro->contato->bairro ?? 'Não informado' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Bairro</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Bairro') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block"
                         style="font-weight: bold">{{ $membro->contato->cidade ?? 'Não informado' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Cidade</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Cidade') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block"
                         style="font-weight: bold">{{ $membro->contato->estado ?? 'Não informado' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">UF</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('UF') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block"
                         style="font-weight: bold">{{ $membro->contato->observacoes ?? 'Não informado' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Observações</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Observações') }}</span>
                 </p>
             @else
-                <span class="card-text">Sem informações</span>
+                <span class="card-text">{{ __('Sem informações') }}</span>
             @endif
         </div>
     </div>

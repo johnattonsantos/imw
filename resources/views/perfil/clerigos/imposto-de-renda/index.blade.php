@@ -27,7 +27,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Imposto de Renda</h4>
+                        <h4>{{ __('Imposto de Renda') }}</h4>
                     </div>
                 </div>
             </div>
@@ -44,7 +44,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <button class="btn btn-primary" id="btn-calcular">Calcular</button>
+                            <button class="btn btn-primary" id="btn-calcular">{{ __('Calcular') }}</button>
                         </div>
 
                     </form>

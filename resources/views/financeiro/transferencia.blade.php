@@ -39,7 +39,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Transferência</h4>
+                        <h4>{{ __('Transferência') }}</h4>
                     </div>
                 </div>
             </div>
@@ -48,9 +48,9 @@
                 @csrf
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <label for="caixa_origem_id">* Caixa Origem</label>
+                            <label for="caixa_origem_id">{{ __('* Caixa Origem') }}</label>
                             <select class="form-control @error('caixa_origem_id') is-invalid @enderror" id="caixa_origem_id" name="caixa_origem_id" required>
-                                <option value="" hidden disabled>Selecione</option>
+                                <option value="" hidden disabled>{{ __('Selecione') }}</option>
                                 @foreach ($caixas as $caixa)
                                     @if ($caixa->id == old('caixa_origem_id'))
                                         <option value="{{ $caixa->id }}" selected>{{ $caixa->descricao }}</option>
@@ -64,9 +64,9 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label for="caixa_destino_id">* Caixa Destino</label>
+                            <label for="caixa_destino_id">{{ __('* Caixa Destino') }}</label>
                             <select class="form-control @error('caixa_destino_id') is-invalid @enderror" id="caixa_destino_id" name="caixa_destino_id" required>
-                                <option value="" hidden disabled>Selecione</option>
+                                <option value="" hidden disabled>{{ __('Selecione') }}</option>
                                 @foreach ($caixas as $caixa)
                                     @if ($caixa->id == old('caixa_destino_id'))
                                         <option value="{{ $caixa->id }}" selected>{{ $caixa->descricao }}</option>
@@ -85,10 +85,10 @@
 
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="plano_conta_id">* Plano de contas</label>
+                        <label for="plano_conta_id">{{ __('* Plano de contas') }}</label>
                         <select class="form-control @error('plano_conta_id') is-invalid @enderror" id="plano_conta_id"
                             name="plano_conta_id" required>
-                            <option value="" hidden selected disabled>Selecione</option>
+                            <option value="" hidden selected disabled>{{ __('Selecione') }}</option>
                             @foreach ($planoContas as $pc)
                                 <option {{ !$pc->selecionavel ? 'disabled' : '' }} value="{{ $pc->id }}">
                                     {{ $pc->numeracao }} - {{ $pc->nome }}</option>
@@ -100,7 +100,7 @@
                     </div>
 
                     <div class="col-md-3">
-                        <label for="valor">* Valor</label>
+                        <label for="valor">{{ __('* Valor') }}</label>
                         <input type="text" class="form-control @error('valor') is-invalid @enderror" id="valor"
                             name="valor" required autofocus>
                         @error('valor')
@@ -108,7 +108,7 @@
                         @enderror
                     </div>
                     <div class="col-md-3">
-                        <label for="data_movimento">* Data do Movimento</label>
+                        <label for="data_movimento">{{ __('* Data do Movimento') }}</label>
                         <input type="date" class="form-control @error('data_movimento') is-invalid @enderror"
                             id="data_movimento" name="data_movimento" value="{{ old('data_movimento', date('Y-m-d')) }}"
                             required>
@@ -121,7 +121,7 @@
 
                 <div class="row mb-4">
                     <div class="col-12">
-                        <label for="descricao">* Descrição</label>
+                        <label for="descricao">{{ __('* Descrição') }}</label>
                         <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao"
                             value="{{ old('descricao') }}" rows="3" required></textarea>
                         @error('descricao')
@@ -131,8 +131,8 @@
                 </div>
 
                 <div class="row mb-4 justify-content-center">
-                    <button type="submit" title="Salvar nova movimentação de entrada" class="btn btn-success btn-lg ml-4">
-                        <x-bx-save /> Salvar
+                    <button type="submit" title="{{ __('Salvar nova movimentação de entrada') }}" class="btn btn-success btn-lg ml-4">
+                        <x-bx-save /> {{ __('Salvar') }}
                     </button>
                 </div>
         </div>

@@ -26,7 +26,7 @@
                         {{ $rol->status == 'A' ? ($rol->dt_recepcao ? \Carbon\Carbon::parse($rol->dt_recepcao)->format('d/m/Y') : 'Sem informações') : ($rol->dt_exclusao ? \Carbon\Carbon::parse($rol->dt_exclusao)->format('d/m/Y') : 'Sem informações') }}
                         </span>
                         </span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d" >Data</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d" >{{ __('Data') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">
@@ -40,28 +40,28 @@
                                 Sem informações
                             @endif
                         </span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Ocorrência</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Ocorrência') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">{{ $rol->modoRecepcao->nome ?? 'Sem informações' }}</span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Modo/Forma</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Modo/Forma') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">{{ $rol->igreja->nome ?? 'Sem informações' }}</span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Igreja</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Igreja') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">{{ $rol->congregacao->nome ?? 'Sem informações' }}</span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Congregação</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Congregação') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">{{ $rol->clerigo->nome ?? 'Sem informações' }}</span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Pastor</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Pastor') }}</span>
                     </p>
                 </div>
             @endforeach
         @else
-            <span class="card-text">Sem informações</span>
+            <span class="card-text">{{ __('Sem informações') }}</span>
         @endif
     </div>
 </div>

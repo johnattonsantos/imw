@@ -22,7 +22,7 @@ class StoreUsuarioLocalRequest extends FormRequest
             function ($attribute, $value, $fail) {
                 $cpfSemMascara = $this->removeMascaraCPF($value);
                 if (User::where('cpf', $cpfSemMascara)->exists()) {
-                    $fail('O CPF já está sendo utilizado por outra pessoa.');
+                    $fail(__('O CPF já está sendo utilizado por outra pessoa.'));
                 }
             },
             new ValidaCPF,
@@ -34,7 +34,7 @@ class StoreUsuarioLocalRequest extends FormRequest
             function ($attribute, $value, $fail) {
                 $telefoneSemMascara = $this->removeMascaraTelefone($value);
                 if (User::where('telefone', $telefoneSemMascara)->exists()) {
-                    $fail('O telefone já está sendo utilizado por outra pessoa.');
+                    $fail(__('O telefone já está sendo utilizado por outra pessoa.'));
                 }
             },
             'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/',

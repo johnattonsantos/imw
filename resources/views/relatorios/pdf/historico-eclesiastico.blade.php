@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HISTÓRICO ECLESIÁSTICO - IMW PGA</title>
+    <title>{{ __('HISTÓRICO ECLESIÁSTICO - IMW PGA') }}</title>
 
     <style>
         * {
@@ -55,13 +55,13 @@
             <table>
                 <thead>
                     <tr>
-                    <th style="width: 5%">ROL</th>
-                    <th style="width: 30%">NOME</th>
-                    <th style="width: 15.5%">CELULAR</th>
-                    <th style="width: 20%">MINISTERIO</th>
-                    <th style="width: 20%">FUNÇÃO</th>
-                    <th style="width: 11.5%">NOMEAÇÃO</th>
-                    <th style="width: 11.5%">EXONERAÇÃO</th>
+                    <th style="width: 5%">{{ __('ROL') }}</th>
+                    <th style="width: 30%">{{ __('NOME') }}</th>
+                    <th style="width: 15.5%">{{ __('CELULAR') }}</th>
+                    <th style="width: 20%">{{ __('MINISTERIO') }}</th>
+                    <th style="width: 20%">{{ __('FUNÇÃO') }}</th>
+                    <th style="width: 11.5%">{{ __('NOMEAÇÃO') }}</th>
+                    <th style="width: 11.5%">{{ __('EXONERAÇÃO') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -77,7 +77,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" style="text-align: center">Não existem registros para esta função ministerial</td>
+                        <td colspan="7" style="text-align: center">{{ __('Não existem registros para esta função ministerial') }}</td>
                     </tr>
                     @endforelse
                 </tbody>

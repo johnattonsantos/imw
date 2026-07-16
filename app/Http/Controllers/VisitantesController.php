@@ -39,10 +39,10 @@ class VisitantesController extends Controller
             DB::beginTransaction();
             app(EditarVisitanteService::class)->execute($id, $request->all());
             DB::commit();
-            return redirect()->route('visitante.editar', ['id' => $id])->with('success', 'Visitante atualizado com sucesso.');
+            return redirect()->route('visitante.editar', ['id' => $id])->with('success', __('Visitante atualizado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('visitante.editar', ['id' => $id])->with('error', 'Falha ao atualizar o visitante.');
+            return redirect()->route('visitante.editar', ['id' => $id])->with('error', __('Falha ao atualizar o visitante.'));
         }
     }
 
@@ -52,7 +52,7 @@ class VisitantesController extends Controller
         $data['gceus']= Identifiable::fetchGceus();
         $data['congregacoes'] = Identifiable::fetchCongregacoes();
         if (!$data['visitante']) {
-            return redirect()->route('visitante.index')->with('error', 'Visitante não encontrado.');
+            return redirect()->route('visitante.index')->with('error', __('Visitante não encontrado.'));
         }
         return view('visitantes.editar', $data);
     }
@@ -61,9 +61,9 @@ class VisitantesController extends Controller
     {
         try {
             app(DeletarVisitanteService::class)->execute($id);
-            return redirect()->route('visitante.index')->with('success', 'Visitante deletado com sucesso.');
+            return redirect()->route('visitante.index')->with('success', __('Visitante deletado com sucesso.'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Falha ao deletar o visitante.');
+            return back()->with('error', __('Falha ao deletar o visitante.'));
         }
     }
 
@@ -74,7 +74,7 @@ class VisitantesController extends Controller
             $data['congregacoes'] = Identifiable::fetchCongregacoes();
             return view('visitantes.create', $data);
         } catch (\Exception $e) {
-            return back()->with('error', 'Falha ao abrir a página de novo visitante');
+            return back()->with('error', __('Falha ao abrir a página de novo visitante'));
         }
     }
 
@@ -84,7 +84,7 @@ class VisitantesController extends Controller
             DB::beginTransaction();
             app(StoreVisitanteService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('visitante.index')->with('success', 'Visitante cadastrado com sucesso.');
+            return redirect()->route('visitante.index')->with('success', __('Visitante cadastrado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('visitante.index')->with('error', $e->getMessage());

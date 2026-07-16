@@ -38,7 +38,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Relatório Aniversariantes Clérigos</h4>
+              <h4>{{ __('Relatório Aniversariantes Clérigos') }}</h4>
           </div>
       </div>
   </div>
@@ -47,12 +47,12 @@
       
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
-          <label class="control-label">Clérigos:</label>
+          <label class="control-label">{{ __('Clérigos:') }}</label>
         </div>
         <div class="col-lg-6">
           <select class="form-control" id="buscar" name="buscar" required>
               <option value="todos" {{ request()->input('buscar') == 'buscar' ? 'selected' : '' }}>
-                  Todos 
+                  {{ __('Todos') }} 
               </option>
           </select>
         </div>
@@ -61,23 +61,23 @@
       {{-- Meses --}}
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
-          <label class="control-label">Meses:</label>
+          <label class="control-label">{{ __('Meses:') }}</label>
         </div>
         <div class="col-lg-6">
           <select id="mes" name="mes" class="form-control @error('mes') is-invalid @enderror" >
-            <option value="" {{ request()->get('mes') == '' ? 'selected hidden' : '' }}>Todos</option>
-            <option value="1" {{ request()->get('mes') == '1' ? 'selected' : '' }}>JANEIRO</option>
-            <option value="2" {{ request()->get('mes') == '2' ? 'selected' : '' }}>FEVEREIRO</option>
-            <option value="3" {{ request()->get('mes') == '3' ? 'selected' : '' }}>MARÇO</option>
-            <option value="4" {{ request()->get('mes') == '4' ? 'selected' : '' }}>ABRIL</option>
-            <option value="5" {{ request()->get('mes') == '5' ? 'selected' : '' }}>MAIO</option>
-            <option value="6" {{ request()->get('mes') == '6' ? 'selected' : '' }}>JUNHO</option>
-            <option value="7" {{ request()->get('mes') == '7' ? 'selected' : '' }}>JULHO</option>
-            <option value="8" {{ request()->get('mes') == '8' ? 'selected' : '' }}>AGOSTO</option>
-            <option value="9" {{ request()->get('mes') == '9' ? 'selected' : '' }}>SETEMBRO</option>
-            <option value="10" {{ request()->get('mes') == '10' ? 'selected' : '' }}>OUTUBRO</option>
-            <option value="11" {{ request()->get('mes') == '11' ? 'selected' : '' }}>NOVEMBRO</option>
-            <option value="12" {{ request()->get('mes') == '12' ? 'selected' : '' }}>DEZEMBRO</option>
+            <option value="" {{ request()->get('mes') == '' ? 'selected hidden' : '' }}>{{ __('Todos') }}</option>
+            <option value="1" {{ request()->get('mes') == '1' ? 'selected' : '' }}>{{ __('JANEIRO') }}</option>
+            <option value="2" {{ request()->get('mes') == '2' ? 'selected' : '' }}>{{ __('FEVEREIRO') }}</option>
+            <option value="3" {{ request()->get('mes') == '3' ? 'selected' : '' }}>{{ __('MARÇO') }}</option>
+            <option value="4" {{ request()->get('mes') == '4' ? 'selected' : '' }}>{{ __('ABRIL') }}</option>
+            <option value="5" {{ request()->get('mes') == '5' ? 'selected' : '' }}>{{ __('MAIO') }}</option>
+            <option value="6" {{ request()->get('mes') == '6' ? 'selected' : '' }}>{{ __('JUNHO') }}</option>
+            <option value="7" {{ request()->get('mes') == '7' ? 'selected' : '' }}>{{ __('JULHO') }}</option>
+            <option value="8" {{ request()->get('mes') == '8' ? 'selected' : '' }}>{{ __('AGOSTO') }}</option>
+            <option value="9" {{ request()->get('mes') == '9' ? 'selected' : '' }}>{{ __('SETEMBRO') }}</option>
+            <option value="10" {{ request()->get('mes') == '10' ? 'selected' : '' }}>{{ __('OUTUBRO') }}</option>
+            <option value="11" {{ request()->get('mes') == '11' ? 'selected' : '' }}>{{ __('NOVEMBRO') }}</option>
+            <option value="12" {{ request()->get('mes') == '12' ? 'selected' : '' }}>{{ __('DEZEMBRO') }}</option>
           </select>
         </div>
       </div>
@@ -85,8 +85,8 @@
       <div class="form-group row mb-4">
         <div class="col-lg-2"></div>
         <div class="col-lg-6">
-          <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-            <x-bx-search /> Buscar 
+          <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+            <x-bx-search /> {{ __('Buscar') }} 
           </button>
         </div>
       </div>
@@ -102,12 +102,12 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aniversariantes-clerigos">
             <thead>
                 <tr>
-                    <th>NOME</th>
-                    <th>ANIVERSÁRIO</th>
-                    <th>NASCIMENTO</th>
-                    <th>IDADE</th>
-                    <th>TELEFONE</th>
-                    <th>INSTITUIÇÃO</th>
+                    <th>{{ __('NOME') }}</th>
+                    <th>{{ __('ANIVERSÁRIO') }}</th>
+                    <th>{{ __('NASCIMENTO') }}</th>
+                    <th>{{ __('IDADE') }}</th>
+                    <th>{{ __('TELEFONE') }}</th>
+                    <th>{{ __('INSTITUIÇÃO') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -131,7 +131,7 @@
                       </td>
                   </tr>
                 @empty
-                <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
+                <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
                 @endforelse
             </tbody>
           </table>            

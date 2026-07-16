@@ -22,7 +22,7 @@
       <div class="widget-header">
         <div class="row">
             <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                <h4>Cônjuges</h4>
+                <h4>{{ __('Cônjuges') }}</h4>
                 <p class="pl-3 mb-0">{{ $nivel === 'regiao' ? 'Região' : 'Distrito' }}: {{ $instituicaoNome }}</p>
                 <p class="pl-3">Registros Encontrados: {{ $membros->count() }}</p>
             </div>
@@ -36,7 +36,7 @@
     <div class="widget-header">
       <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Cônjuges por Distritos</h4>
+          <h4>{{ __('Cônjuges por Distritos') }}</h4>
         </div>
       </div>
     </div>
@@ -46,13 +46,13 @@
           <thead>
             <tr>
               @if ($nivel === 'regiao')
-                <th>DISTRITO</th>
+                <th>{{ __('DISTRITO') }}</th>
               @endif
-              <th>IGREJA</th>
-              <th>NOME DO MEMBRO</th>
-              <th>NOME DO CÔNJUGE</th>
-              <th>DATA DO CASAMENTO</th>
-              <th>CONTATO</th>
+              <th>{{ __('IGREJA') }}</th>
+              <th>{{ __('NOME DO MEMBRO') }}</th>
+              <th>{{ __('NOME DO CÔNJUGE') }}</th>
+              <th>{{ __('DATA DO CASAMENTO') }}</th>
+              <th>{{ __('CONTATO') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -70,7 +70,7 @@
             @empty
               <tr>
                 @if ($nivel === 'regiao')
-                  <td>Nenhum registro encontrado</td>
+                  <td>{{ __('Nenhum registro encontrado') }}</td>
                 @endif
                 <td>{{ $nivel === 'regiao' ? '-' : 'Nenhum registro encontrado' }}</td>
                 <td>-</td>

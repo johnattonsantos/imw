@@ -38,7 +38,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Relatório Documentação dos Clérigos</h4>
+              <h4>{{ __('Relatório Documentação dos Clérigos') }}</h4>
           </div>
       </div>
   </div>
@@ -48,26 +48,26 @@
         <input type="hidden" name="buscar" value="todos">
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Status:</label>
+            <label class="control-label">{{ __('Status:') }}</label>
           </div>
           <div class="col-lg-6">
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input {{ request()->get('status') == '' ? 'checked' : 'checked' }} type="radio" name="status" value="" class="new-control-input">
-                  <span class="new-control-indicator"></span>Todos
+                  <span class="new-control-indicator"></span>{{ __('Todos') }}
                 </label>
               </div>
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input {{ request()->get('status') == '1' ? 'checked' : '' }} type="radio" name="status" value="1" class="new-control-input">
-                  <span class="new-control-indicator"></span>Ativos
+                  <span class="new-control-indicator"></span>{{ __('Ativos') }}
                 </label>
               </div>
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input {{ request()->get('status') == '0' ? 'checked' : '' }} type="radio" name="status" value="0" class="new-control-input">
-                  <span class="new-control-indicator"></span>Inativos
+                  <span class="new-control-indicator"></span>{{ __('Inativos') }}
                 </label>
               </div>
             </div>
@@ -76,8 +76,8 @@
         <div class="form-group row mb-4">
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
-            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-              <x-bx-search /> Buscar 
+            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+              <x-bx-search /> {{ __('Buscar') }} 
             </button>
           </div>
         </div>
@@ -93,12 +93,12 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="dados-clerigos">
             <thead>
               <tr>
-                  <th>NOME</th>
-                  <th>E-MAIL</th>
-                  <th>IDENTIDADE</th>
-                  <th>ORGÃO</th>
-                  <th>DATA EMISSÃO</th>
-                  <th>CPF</th>
+                  <th>{{ __('NOME') }}</th>
+                  <th>{{ __('E-MAIL') }}</th>
+                  <th>{{ __('IDENTIDADE') }}</th>
+                  <th>{{ __('ORGÃO') }}</th>
+                  <th>{{ __('DATA EMISSÃO') }}</th>
+                  <th>{{ __('CPF') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -112,7 +112,7 @@
                       <td>{{ formatStr($item->cpf, '###.###.###-##') }}</td>
                   </tr>
                 @empty
-                  <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
+                  <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
                 @endforelse
             </tbody>
           </table>              

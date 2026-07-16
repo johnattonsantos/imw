@@ -14,7 +14,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Nova carta pastoral da Igreja: <u>{{ $instituicao }}</u></h4>
+                    <h4>{{ __('Nova carta pastoral da Igreja:') }} <u>{{ $instituicao }}</u></h4>
                 </div>
             </div>
         </div>
@@ -23,9 +23,9 @@
                 @csrf
                 <div class="row">
                     <div class="form-group mb-4 col-12">
-                        <label class="control-label" for="pessoa_id">* Pastor</label>
-                        <select id="pessoa_id" name="pessoa_id" class="form-control " required=""  class="form-control @error('pessoa_id') is-invalid @enderror" id="pessoa_id" required placeholder="pessoa_id" value="{{ old('pessoa_id') }}">
-                            <option value="" selected="">Selecione</option>
+                        <label class="control-label" for="pessoa_id">{{ __('* Pastor') }}</label>
+                        <select id="pessoa_id" name="pessoa_id" class="form-control " required=""  class="form-control @error('pessoa_id') is-invalid @enderror" id="pessoa_id" required placeholder="{{ __('pessoa_id') }}" value="{{ old('pessoa_id') }}">
+                            <option value="" selected="">{{ __('Selecione') }}</option>
                                 @foreach($pastores as $pastor)
                                 <option value="{{ $pastor->id }}">{{ $pastor->nome }}</option>
                                 @endforeach
@@ -35,15 +35,15 @@
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-12">
-                        <label class="control-label" for="titulo">* Título</label>
-                        <input type="text" name="titulo" class="form-control @error('titulo') is-invalid @enderror" id="titulo" required placeholder="Título" minlength="4" value="{{ old('titulo') }}" maxlength="150">
+                        <label class="control-label" for="titulo">{{ __('* Título') }}</label>
+                        <input type="text" name="titulo" class="form-control @error('titulo') is-invalid @enderror" id="titulo" required placeholder="{{ __('Título') }}" minlength="4" value="{{ old('titulo') }}" maxlength="150">
                         @error('titulo')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="form-group mb-4 col-12">
-                        <label class="control-label" for="conteudo">* Carta Pastoral</label>
-                        <textarea name="conteudo" id="conteudo" class="form-control @error('conteudo') is-invalid @enderror" placeholder="Introdução" value="{{ old('conteudo') }}"></textarea>
+                        <label class="control-label" for="conteudo">{{ __('* Carta Pastoral') }}</label>
+                        <textarea name="conteudo" id="conteudo" class="form-control @error('conteudo') is-invalid @enderror" placeholder="{{ __('Introdução') }}" value="{{ old('conteudo') }}"></textarea>
                         @error('conteudo')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror

@@ -25,7 +25,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Funções Eclesiásticas</h4>
+              <h4>{{ __('Funções Eclesiásticas') }}</h4>
           </div>
       </div>
   </div>
@@ -35,11 +35,11 @@
         {{-- Congregação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Função:</label>
+            <label class="control-label">{{ __('Função:') }}</label>
           </div>
           <div class="col-lg-6">
             <select class="form-control select2 @error('funcao_eclesiastica_id') is-invalid @enderror" data-bs-toggle="select2" name="funcao_eclesiastica_id" id="funcao_eclesiastica_id">              
-              <option value="todas" {{ $select == 'todas' ? 'selected' : '' }} >TODAS</option>
+              <option value="todas" {{ $select == 'todas' ? 'selected' : '' }} >{{ __('TODAS') }}</option>
               @foreach ($funcoes_eclesiasticas as $funcao)
                 <option value="{{ $funcao->id }}" {{ $select == $funcao->id  ? 'selected' : '' }} >{{ $funcao->descricao }}</option>
               @endforeach
@@ -50,14 +50,14 @@
         {{-- Nomeação --}}
         <!-- <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Nomeação:</label>
+            <label class="control-label">{{ __('Nomeação:') }}</label>
           </div>
           <div class="col-lg-6">
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input type="radio" name="nomeacao_ativa" value="0" class="new-control-input" checked>
-                  <span class="new-control-indicator"></span>Todas as Nomeações
+                  <span class="new-control-indicator"></span>{{ __('Todas as Nomeações') }}
                 </label>
               </div>
             </div>
@@ -65,7 +65,7 @@
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input type="radio" name="nomeacao_ativa" value="1" class="new-control-input">
-                  <span class="new-control-indicator"></span>Nomeação Ativa
+                  <span class="new-control-indicator"></span>{{ __('Nomeação Ativa') }}
                 </label>
               </div>
             </div>
@@ -75,11 +75,11 @@
         <div class="form-group row mb-4">
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
-            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-              <x-bx-search /> Buscar 
+            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+              <x-bx-search /> {{ __('Buscar') }} 
             </button>
-            <!-- <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="Gerar Relatório PDF" class="btn btn-secondary btn ml-4">
-              <x-bx-file /> Relatório
+            <!-- <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="{{ __('Gerar Relatório PDF') }}" class="btn btn-secondary btn ml-4">
+              <x-bx-file /> {{ __('Relatório') }}
             </button> -->
           </div>
         </div>
@@ -105,11 +105,11 @@
                   <table class="table table-bordered table-striped table-hover mb-4" id="membros-por-ministerio">
                       <thead>
                           <tr>
-                              <th>ROL</th>
-                              <th>NOME</th>
-                              <th>CELULAR</th>
-                              <th>FUNÇÃO ECLESIÁSTICA</th>
-                              <th>IGREJA</th>
+                              <th>{{ __('ROL') }}</th>
+                              <th>{{ __('NOME') }}</th>
+                              <th>{{ __('CELULAR') }}</th>
+                              <th>{{ __('FUNÇÃO ECLESIÁSTICA') }}</th>
+                              <th>{{ __('IGREJA') }}</th>
                           </tr>
                       </thead>
                       <tbody>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Relatório de Aniversariantes - IMW PGA</title>
+    <title>{{ __('Relatório de Aniversariantes - IMW PGA') }}</title>
 
     <style>
         * {
@@ -57,12 +57,12 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 30%">NOME</th>
-                <th style="width: 15%">ANIVERSÁRIO</th>
-                <th style="width: 15%">NASCIMENTO</th>
-                <th style="width: 10%">IDADE</th>
-                <th style="width: 15%">TELEFONE</th>
-                <th style="width: 15%">ONDE CONGREGA</th>
+                <th style="width: 30%">{{ __('NOME') }}</th>
+                <th style="width: 15%">{{ __('ANIVERSÁRIO') }}</th>
+                <th style="width: 15%">{{ __('NASCIMENTO') }}</th>
+                <th style="width: 10%">{{ __('IDADE') }}</th>
+                <th style="width: 15%">{{ __('TELEFONE') }}</th>
+                <th style="width: 15%">{{ __('ONDE CONGREGA') }}</th>
             </tr>
         </thead>
         <tbody>

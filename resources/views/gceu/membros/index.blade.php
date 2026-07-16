@@ -36,7 +36,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>GCEU Membros da igreja: <u id="instituicao">{{ $instituicao }}</u></h4>
+                        <h4>{{ __('GCEU Membros da igreja:') }} <u id="instituicao">{{ $instituicao }}</u></h4>
                     </div>
                 </div>
             </div>
@@ -45,17 +45,17 @@
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="widget-content-area row">
                         <div class="mb-3 col-lg-5 col-md-6 col-sm-12">
-                            <label class="control-label">Membros:</label>
+                            <label class="control-label">{{ __('Membros:') }}</label>
                             <select id="membro_id" name="membro_id" class="form-control @error('membro_id') is-invalid @enderror" required>
-                                <option value="" {{ request()->input('membro_id') == '' ? 'selected' : '' }}>Selecione</option>
+                                <option value="" {{ request()->input('membro_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
                                 @foreach($membros as $membro)
                                     <option value="{{ $membro->id }}" {{ request()->input('membro_id') == $membro->id ? 'selected' : '' }}>{{ $membro->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3 col-lg-3 col-md-6 col-sm-12" style="margin-top: 30px;">
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar GCEU" class="btn btn-primary btn">
-                                <x-bx-plus /> Adicionar Membro ao GCEU
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar GCEU') }}" class="btn btn-primary btn">
+                                <x-bx-plus /> {{ __('Adicionar Membro ao GCEU') }}
                             </button>
                         </div>
                     </div>
@@ -67,9 +67,9 @@
                                 <div class="card-body">
                                     
                                     <p>
-                                        <b>ATENÇÃO:</b>
+                                        <b>{{ __('ATENÇÃO:') }}</b>
                                         </p>
-                                    A função <b><u>{{$total->funcao}}</u></b> aparece em mais de um GCEU.
+                                    {{ __('A função') }} <b><u>{{$total->funcao}}</u></b> {{ __('aparece em mais de um GCEU.') }}
                                 </div>
                             </div>
                         @endif
@@ -82,13 +82,13 @@
                     @csrf
                     <div class="widget-content-area">
                         <blockquote class="blockquote">
-                            <h4>Adicione o GCEU e a Função para o membro escolhido </h4>
+                            <h4>{{ __('Adicione o GCEU e a Função para o membro escolhido') }} </h4>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover mb-4">
                                     <thead>
                                         <tr>
-                                            <th>GCEU</th>
-                                            <th>FUNÇÃO</th>
+                                            <th>{{ __('GCEU') }}</th>
+                                            <th>{{ __('FUNÇÃO') }}</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -97,7 +97,7 @@
                                         <tr>
                                             <td>
                                                 <select class="form-control gceu" name="gceu[]">
-                                                    <option value="">Selecione</option>
+                                                    <option value="">{{ __('Selecione') }}</option>
                                                     @foreach ($gceus as $gceu)
                                                     <option value="{{ $gceu->id }}" {{ $gceuMembro->gceu_cadastro_id == $gceu->id ? 'selected' : '' }}>
                                                         {{ $gceu->nome }}
@@ -107,7 +107,7 @@
                                             </td>
                                             <td>
                                                 <select class="form-control gceu-funcao" name="gceu-funcao[]">
-                                                    <option value="">Selecione</option>
+                                                    <option value="">{{ __('Selecione') }}</option>
                                                     @foreach ($gceuFuncoes as $funcao)
                                                         @if($funcao->id != 6)
                                                             <option value="{{ $funcao->id }}" {{ $gceuMembro->gceu_funcao_id == $funcao->id ? 'selected' : '' }}>
@@ -120,7 +120,7 @@
                                             <td style="width: 200px;">
                                                 <div class="centralizado">
                                                     <!-- Botão Adicionar -->
-                                                    <button type="button" title="Adicionar Linha" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-gceuIndex">
+                                                    <button type="button" title="{{ __('Adicionar Linha') }}" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-gceuIndex">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
                                                             <circle cx="12" cy="12" r="10"></circle>
                                                             <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -128,7 +128,7 @@
                                                         </svg>
                                                     </button>
                                                     <!-- Botão Apagar -->
-                                                    <button type="button" title="Apagar Linha" class="btn btn-sm btn-danger btn-rounded apagar-linha-gceuIndex">
+                                                    <button type="button" title="{{ __('Apagar Linha') }}" class="btn btn-sm btn-danger btn-rounded apagar-linha-gceuIndex">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                                                             <polyline points="3 6 5 6 21 6"></polyline>
                                                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
@@ -144,7 +144,7 @@
                                         <tr>
                                             <td>
                                                 <select class="form-control gceu" name="gceu[]">
-                                                    <option value="">Selecione</option>
+                                                    <option value="">{{ __('Selecione') }}</option>
                                                     @foreach ($gceus as $gceu)
                                                     <option value="{{ $gceu->id }}">{{ $gceu->nome }}</option>
                                                     @endforeach
@@ -152,7 +152,7 @@
                                             </td>
                                             <td>
                                                 <select class="form-control gceu-funcao" name="gceu-funcao[]">
-                                                    <option value="">Selecione</option>
+                                                    <option value="">{{ __('Selecione') }}</option>
                                                     @foreach ($gceuFuncoes as $funcao)
                                                     <option value="{{ $funcao->id }}">{{ $funcao->funcao }}</option>
                                                     @endforeach
@@ -161,7 +161,7 @@
                                             <td style="width: 200px;">
                                                 <div class="centralizado">
                                                     <!-- Botão Adicionar -->
-                                                    <button type="button" title="Adicionar Linha" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-gceuIndex">
+                                                    <button type="button" title="{{ __('Adicionar Linha') }}" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-gceuIndex">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
                                                             <circle cx="12" cy="12" r="10"></circle>
                                                             <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -169,7 +169,7 @@
                                                         </svg>
                                                     </button>
                                                     <!-- Botão Apagar -->
-                                                    <button type="button" title="Apagar Linha" class="btn btn-sm btn-danger btn-rounded apagar-linha-gceuIndex">
+                                                    <button type="button" title="{{ __('Apagar Linha') }}" class="btn btn-sm btn-danger btn-rounded apagar-linha-gceuIndex">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                                                             <polyline points="3 6 5 6 21 6"></polyline>
                                                             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
@@ -188,7 +188,7 @@
                         </blockquote>
                     </div>
                     <div class="form-group mt-4" style="margin-top: -25px !important;">
-                        <button type="submit" title="Salvar" class="btn btn-primary btn-lg ml-4">Atualizar</button>
+                        <button type="submit" title="{{ __('Salvar') }}" class="btn btn-primary btn-lg ml-4">{{ __('Atualizar') }}</button>
                     </div>
                 </form>
                 @endif
@@ -202,7 +202,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/i18n/pt-BR.js"></script>
 <script>
-    $.fn.select2.defaults.set("language", "pt-BR");
+    1fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
     $('#membro_id').select2({
         width: '100%',
         placeholder: 'Selecione',

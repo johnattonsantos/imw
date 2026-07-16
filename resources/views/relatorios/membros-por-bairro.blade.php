@@ -29,7 +29,7 @@
     <div class="widget-header">
       <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Membros por Bairro</h4>
+          <h4>{{ __('Membros por Bairro') }}</h4>
           <p class="pl-3 mb-0">Igreja Local: {{ $igrejaNome }}</p>
           <p class="pl-3 mb-0">Filtro: {{ $localidadeTexto }}</p>
           <p class="pl-3">Registros Encontrados: {{ $membros->count() }}</p>
@@ -44,7 +44,7 @@
     <div class="widget-header">
       <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Filtros</h4>
+          <h4>{{ __('Filtros') }}</h4>
         </div>
       </div>
     </div>
@@ -52,9 +52,9 @@
       <form method="GET" action="{{ route('relatorio.membros-por-bairro') }}">
         <div class="row align-items-end">
           <div class="col-md-4 form-group">
-            <label for="localidade">Sede/Congregação</label>
+            <label for="localidade">{{ __('Sede/Congregação') }}</label>
             <select id="localidade" name="localidade" class="form-control">
-              <option value="sede" {{ $localidade === 'sede' ? 'selected' : '' }}>Sede</option>
+              <option value="sede" {{ $localidade === 'sede' ? 'selected' : '' }}>{{ __('Sede') }}</option>
               @foreach (($congregacoes ?? collect()) as $congregacao)
                 <option value="{{ $congregacao->id }}" {{ (string) $localidade === (string) $congregacao->id ? 'selected' : '' }}>
                   {{ $congregacao->nome }}
@@ -63,8 +63,8 @@
             </select>
           </div>
           <div class="col-md-4 form-group">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-            <a href="{{ route('relatorio.membros-por-bairro') }}" class="btn btn-secondary">Limpar</a>
+            <button type="submit" class="btn btn-primary">{{ __('Filtrar') }}</button>
+            <a href="{{ route('relatorio.membros-por-bairro') }}" class="btn btn-secondary">{{ __('Limpar') }}</a>
           </div>
         </div>
       </form>
@@ -77,7 +77,7 @@
     <div class="widget-header">
       <div class="row">
         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-          <h4>Membros por Bairro</h4>
+          <h4>{{ __('Membros por Bairro') }}</h4>
         </div>
       </div>
     </div>
@@ -86,13 +86,13 @@
         <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="membros-bairro-detalhe-table">
           <thead>
             <tr>
-              <th>NOME DO MEMBRO</th>
-              <th>CONGREGAÇÃO/SEDE</th>
-              <th>BAIRRO</th>
-              <th>CEP</th>
-              <th>ENDEREÇO</th>
-              <th>CIDADE/UF</th>
-              <th>CONTATO</th>
+              <th>{{ __('NOME DO MEMBRO') }}</th>
+              <th>{{ __('CONGREGAÇÃO/SEDE') }}</th>
+              <th>{{ __('BAIRRO') }}</th>
+              <th>{{ __('CEP') }}</th>
+              <th>{{ __('ENDEREÇO') }}</th>
+              <th>{{ __('CIDADE/UF') }}</th>
+              <th>{{ __('CONTATO') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -116,7 +116,7 @@
               </tr>
             @empty
               <tr>
-                <td>Nenhum registro encontrado</td>
+                <td>{{ __('Nenhum registro encontrado') }}</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>

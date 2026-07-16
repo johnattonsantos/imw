@@ -99,10 +99,10 @@ class MembrosController extends Controller
                 'gceuMembros'          => $pessoa['gceuMembros']
             ]);
         } catch(MembroNotFoundException $e) {
-            return redirect()->route('membro.index')->with('error', 'Registro não encontrado.');
+            return redirect()->route('membro.index')->with('error', __('Registro não encontrado.'));
         } catch(\Exception $e) {
             report($e);
-            return redirect()->route('membro.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('membro.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
     public function editarRecadastramento($id)
@@ -127,10 +127,10 @@ class MembrosController extends Controller
                 'gceuMembros'          => $pessoa['gceuMembros']
             ]);
         } catch(MembroNotFoundException $e) {
-            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', 'Registro não encontrado.');
+            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', __('Registro não encontrado.'));
         } catch(\Exception $e) {
             report($e);
-            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -149,7 +149,7 @@ class MembrosController extends Controller
             DB::beginTransaction();
             app(UpdateMembroService::class)->execute($request->all(), MembresiaMembro::VINCULO_MEMBRO);
             DB::commit();
-            return redirect()->action([MembrosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('success', 'Registro atualizado.');
+            return redirect()->action([MembrosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('success', __('Registro atualizado.'));
         } catch(\Exception $e) {
             DB::rollback();
             report($e);
@@ -166,7 +166,7 @@ class MembrosController extends Controller
             DB::beginTransaction();
             app(UpdateMembroRecadastramentoService::class)->execute($request->all(), MembresiaMembro::VINCULO_MEMBRO);
             DB::commit();
-            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('success', 'Registro validado com sucesso.');
+            return redirect()->route('recadastramento-membro.indexRecadastramento')->with('success', __('Registro validado com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
             report($e);
@@ -189,9 +189,9 @@ class MembrosController extends Controller
             $congregacoes = $data['congregacoes'];
             return view('membros.receber_novo', compact('pessoa', 'sugestaoRol', 'pastores', 'modos', 'congregacoes'));
         } catch(ReceberNovoMembroException $e) {
-            return redirect()->back()->with('error', 'Esta pessoa não existe na base de dados ou não pode ser recebida como Membro');
+            return redirect()->back()->with('error', __('Esta pessoa não existe na base de dados ou não pode ser recebida como Membro'));
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao exibir a página solicitada');
+            return redirect()->back()->with('error', __('Erro ao exibir a página solicitada'));
         }
     }
 
@@ -200,12 +200,12 @@ class MembrosController extends Controller
         try {   
             $data = app(StoreReceberNovoMembroService::class)->execute($request->all(), $id);
             if($data == 'idade'){
-                return redirect()->back()->with('error', 'Não pode ser membro, pois a idade desse congregado é menor que 11 anos');
+                return redirect()->back()->with('error', __('Não pode ser membro, pois a idade desse congregado é menor que 11 anos'));
             }else{
-                return redirect()->route('membro.editar', ['id' => $id])->with('success', 'Novo membro recebido com sucesso!');
+                return redirect()->route('membro.editar', ['id' => $id])->with('success', __('Novo membro recebido com sucesso!'));
             }
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao tentar receber novo membro');
+            return redirect()->back()->with('error', __('Erro ao tentar receber novo membro'));
         }
     }
 
@@ -219,9 +219,9 @@ class MembrosController extends Controller
 
             return view('membros.exclusao', compact('pessoa',  'pastores', 'modos'));
         } catch(IdentificaDadosExcluirMembroException $e) {
-            return redirect()->back()->with('error', 'Erro ao tentar abrir a tela de exclusão de membro');
+            return redirect()->back()->with('error', __('Erro ao tentar abrir a tela de exclusão de membro'));
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao tentar abrir a tela de exclusão de membro');
+            return redirect()->back()->with('error', __('Erro ao tentar abrir a tela de exclusão de membro'));
         }
     }
 
@@ -230,9 +230,9 @@ class MembrosController extends Controller
         try {
             app(DeletarMembroService::class)->execute($request->all(), $id);
 
-            return redirect()->route('membro.index')->with('success', 'Membro excluído com sucesso!');
+            return redirect()->route('membro.index')->with('success', __('Membro excluído com sucesso!'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Houve um erro tentar excluir este membro');
+            return redirect()->back()->with('error', __('Houve um erro tentar excluir este membro'));
         }
     }
 
@@ -249,9 +249,9 @@ class MembrosController extends Controller
 
             return view('membros.reintegrar', compact('pessoa', 'sugestaoRol', 'pastores', 'modos', 'congregacoes'));
         } catch (ReintegrarMembroException $e) {
-            return redirect()->back()->with('error', 'Membro não identificado ou é um membro excluído');
+            return redirect()->back()->with('error', __('Membro não identificado ou é um membro excluído'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao abrir a página de reintegrar membro desligado');
+            return redirect()->back()->with('error', __('Erro ao abrir a página de reintegrar membro desligado'));
         }
     }
 
@@ -260,9 +260,9 @@ class MembrosController extends Controller
         try {
             app(StoreReintegracaoService::class)->execute($request->all(), $id);
 
-            return redirect()->route('membro.editar', ['id' => $id])->with('success', 'Membro reintegrado com sucesso!');
+            return redirect()->route('membro.editar', ['id' => $id])->with('success', __('Membro reintegrado com sucesso!'));
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao tentar reintegrar o membro');
+            return redirect()->back()->with('error', __('Erro ao tentar reintegrar o membro'));
         }
     }
 
@@ -277,7 +277,7 @@ class MembrosController extends Controller
 
             return view('membros.transferencia_interna', compact('pessoa', 'congregacoes', 'pastores'));
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao abrir a página de Transferência Interna');
+            return redirect()->back()->with('error', __('Erro ao abrir a página de Transferência Interna'));
         }
     }
 
@@ -287,10 +287,10 @@ class MembrosController extends Controller
             DB::beginTransaction();
             app(StoreTransferenciaInternaService::class)->execute($request->all(), $id);
             DB::commit();
-            return(redirect()->route('membro.editar', ['id'=> $id])->with('success', 'Transferência Interna realizada com sucesso.'));
+            return(redirect()->route('membro.editar', ['id'=> $id])->with('success', __('Transferência Interna realizada com sucesso.')));
         } catch(\Exception $e) {
             DB::rollback();
-            return(redirect()->route('membro.transferencia_interna', ['id'=> $id])->with('error', 'Erro ao realizar a tranferência interna.'));
+            return(redirect()->route('membro.transferencia_interna', ['id'=> $id])->with('error', __('Erro ao realizar a tranferência interna.')));
         }
     }
 
@@ -301,7 +301,7 @@ class MembrosController extends Controller
 
             return view('membros.exclusao_transferencia', $data);
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao abrir a página de Transferência Por Exclusão');
+            return redirect()->back()->with('error', __('Erro ao abrir a página de Transferência Por Exclusão'));
         }
     }
 
@@ -311,9 +311,9 @@ class MembrosController extends Controller
             DB::beginTransaction();
             app(StoreNotificacaoExclusaoPorTransferenciaService::class)->execute($request->all(), $id);
             DB::commit();
-            return redirect()->route('membro.editar', ['id' => $id])->with('success', 'Exclusão por transferência registrada com sucesso!');
+            return redirect()->route('membro.editar', ['id' => $id])->with('success', __('Exclusão por transferência registrada com sucesso!'));
         } catch (\Exception $e) {
-            return redirect()->route('membro.exclusao_transferencia', ['id' => $id])->with('error', 'Erro ao registrar a transferência.');
+            return redirect()->route('membro.exclusao_transferencia', ['id' => $id])->with('error', __('Erro ao registrar a transferência.'));
         }
     }
 
@@ -323,10 +323,10 @@ class MembrosController extends Controller
             DB::beginTransaction();
             $notificacaoTransferencia->delete();
             DB::commit();
-            return redirect()->route('membro.index')->with('success', 'Transferência cancelada com sucesso!');
+            return redirect()->route('membro.index')->with('success', __('Transferência cancelada com sucesso!'));
         } catch(\Exception $e) {
             DB::rollback();
-            return redirect()->route('membro.index')->with('error', 'Erro ao cancelar a transferência.');
+            return redirect()->route('membro.index')->with('error', __('Erro ao cancelar a transferência.'));
         }
     }
 
@@ -341,7 +341,7 @@ class MembrosController extends Controller
 
             return view('membros.disciplinar', compact('pessoa', 'pastores', 'modos'));
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao abrir a página de Disciplinar');
+            return redirect()->back()->with('error', __('Erro ao abrir a página de Disciplinar'));
         }
     }
 
@@ -351,10 +351,10 @@ class MembrosController extends Controller
             DB::beginTransaction();
             app(StoreDiciplinaService::class)->execute($request->all(), $id);
             DB::commit();
-            return(redirect()->route('membro.editar', ['id'=> $id])->with('success', 'Membro diciplinado com sucesso.'));
+            return(redirect()->route('membro.editar', ['id'=> $id])->with('success', __('Membro diciplinado com sucesso.')));
         } catch(\Exception $e) {
             DB::rollback();
-            return(redirect()->route('membro.editar', ['id'=> $id])->with('error', 'Falha ao diciplinar o membro.'));
+            return(redirect()->route('membro.editar', ['id'=> $id])->with('error', __('Falha ao diciplinar o membro.')));
         }
     }
 
@@ -378,7 +378,7 @@ class MembrosController extends Controller
 
             return view('membros.receber_membro_externo', $data);
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Erro ao abrir a página de recebimento de membro externo');
+            return redirect()->back()->with('error', __('Erro ao abrir a página de recebimento de membro externo'));
         }
     }
 
@@ -388,9 +388,9 @@ class MembrosController extends Controller
             DB::beginTransaction();
             app(StoreReceberMembroExternoService::class)->execute($request->all(), $notificacao);
             DB::commit();
-            return redirect()->route('membro.editar', ['id' => $notificacao->membro_id])->with('success', 'Membro externo recebido com sucesso!');
+            return redirect()->route('membro.editar', ['id' => $notificacao->membro_id])->with('success', __('Membro externo recebido com sucesso!'));
         } catch (\Exception $e) {
-            return redirect()->route('membro.receber_membro_externo', ['notificacao' => $notificacao->id])->with('error', 'Erro ao finalizar o recebimento do membro externo');
+            return redirect()->route('membro.receber_membro_externo', ['notificacao' => $notificacao->id])->with('error', __('Erro ao finalizar o recebimento do membro externo'));
         }
     }
 }

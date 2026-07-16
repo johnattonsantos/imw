@@ -25,7 +25,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Relatório Movimento Bancário</h4>
+                        <h4>{{ __('Relatório Movimento Bancário') }}</h4>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                     <div class="row col-md-12">
                         <div class="form-group mb-4 col-md-3" id="filtros_data">
                             <div class="col-md-12">
-                                <label class="control-label">* Data Inicial:</label>
+                                <label class="control-label">{{ __('* Data Inicial:') }}</label>
                             </div>
                             <div class="col-md-12">
                                 <input type="date" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" required>
@@ -42,7 +42,7 @@
                         </div>
                         <div class="for-group mb-4 col-md-3">
                             <div class="col-md-12">
-                                <label class="control-label">* Data Final:</label>
+                                <label class="control-label">{{ __('* Data Final:') }}</label>
                             </div>
                             <div class="col-md-12">
                                 <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" required>
@@ -51,8 +51,8 @@
                         <div class="form-group mb-1 col-md-4">
                             <div class="col-lg-2"></div>
                             <div class="col-lg-6">
-                                <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório"  style="margin-top: 30px;" class="btn btn-primary">
-                                    <x-bx-search /> Buscar
+                                <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}"  style="margin-top: 30px;" class="btn btn-primary">
+                                    <x-bx-search /> {{ __('Buscar') }}
                                 </button>
                             </div>
                         </div>
@@ -77,12 +77,12 @@
                         <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="movimento-bancario">
                             <thead>
                             <tr>
-                                <th>Data</th>
-                                <th>Caixa </th>
-                                <th>Nome</th>
-                                <th>Descrição</th>
-                                <th>Entrada</th>
-                                <th>Saída</th>
+                                <th>{{ __('Data') }}</th>
+                                <th>{{ __('Caixa') }} </th>
+                                <th>{{ __('Nome') }}</th>
+                                <th>{{ __('Descrição') }}</th>
+                                <th>{{ __('Entrada') }}</th>
+                                <th>{{ __('Saída') }}</th>
                             </tr>
                             </thead>
                             <tbody>
