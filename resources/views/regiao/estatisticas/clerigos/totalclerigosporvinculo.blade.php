@@ -48,9 +48,9 @@
                                     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th style="text-align: left;">Status</th>
-                                                <th style="text-align: center;">Total</th>
-                                                <th style="text-align: center;">Percentual</th>
+                                                <th style="text-align: left;">{{ __('Status') }}</th>
+                                                <th style="text-align: center;">{{ __('Total') }}</th>
+                                                <th style="text-align: center;">{{ __('Percentual') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -67,7 +67,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th style="text-align: left;">Total Geral</th>
+                                                <th style="text-align: left;">{{ __('Total Geral') }}</th>
                                                 <th style="text-align: center;">{{ $lancamentos->sum('total') }}</th>
                                                 <th style="text-align: center;">100%</th>
                                             </tr>
@@ -81,7 +81,7 @@
                 <div class="row">
                     <div class="col-12 text-center">
                         <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i
-                                class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                                class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                     </div>
                 </div>
                 <!-- Fim do Conteúdo -->

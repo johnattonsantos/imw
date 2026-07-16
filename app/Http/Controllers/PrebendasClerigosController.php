@@ -68,7 +68,7 @@ class PrebendasClerigosController extends Controller
     {
         app(StorePrebendasClerigosService::class)->execute($request);
 
-        return redirect()->route('clerigos.prebendas.index')->with('success', 'Prebenda criada com sucesso');
+        return redirect()->route('clerigos.prebendas.index')->with('success', __('Prebenda criada com sucesso'));
     }
 
 
@@ -84,7 +84,7 @@ class PrebendasClerigosController extends Controller
     {
         app(UpdateFuncaoMinisterialClerigosService::class)->execute($request, $id);
 
-        return redirect()->route('clerigos.prebendas.index')->with('success', 'Valor da prebenda alterado com sucesso')->withInput();
+        return redirect()->route('clerigos.prebendas.index')->with('success', __('Valor da prebenda alterado com sucesso'))->withInput();
     }
 
     /**
@@ -112,12 +112,12 @@ class PrebendasClerigosController extends Controller
     public function storePrebenda(StorePrebendaClerigosRequest $request)
     {
         app(StorePrebendasClerigosService::class)->execute($request);
-        return redirect()->route('clerigos.prebendas.index')->with('success', 'Prebenda criada com sucesso');
+        return redirect()->route('clerigos.prebendas.index')->with('success', __('Prebenda criada com sucesso'));
     }
 
     public function updatePrebenda(Request $request)
     {
         app(UpdatePrebendaClerigosService::class)->execute($request);
-        return redirect()->route('clerigos.prebendas.index')->with('success', 'Valor da prebenda alterado com sucesso')->withInput();
+        return redirect()->route('clerigos.prebendas.index')->with('success', __('Valor da prebenda alterado com sucesso'))->withInput();
     }
 }

@@ -22,7 +22,7 @@ class PerfilController extends Controller
 
     public function update(UpdatePerfilRequest $request, $id) {
         app(UpdatePerfilService::class)->execute($request, $id);
-        return redirect()->route('perfil.index')->with('success', 'Perfil atualizado!');
+        return redirect()->route('perfil.index')->with('success', __('Perfil atualizado!'));
     }
 
     public function carteiraDigital(Request $request) {

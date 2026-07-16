@@ -21,7 +21,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Movimento Diário</h4>
+                    <h4>{{ __('Relatório Movimento Diário') }}</h4>
                 </div>
             </div>
         </div>
@@ -29,24 +29,24 @@
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Período (Inicial e Final):</label>
+                        <label class="control-label">{{ __('* Período (Inicial e Final):') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="date" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" required placeholder="ex: 31/12/2000">
+                        <input type="date" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" required placeholder="{{ __('ex: 31/12/2000') }}">
                     </div>
                     <div class="col-lg-3">
-                        <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="ex: 31/12/2000" required>
+                        <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="{{ __('ex: 31/12/2000') }}" required>
                     </div>
                 </div>
 
                 {{-- Congregação --}}
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">Caixa:</label>
+                        <label class="control-label">{{ __('Caixa:') }}</label>
                     </div>
                     <div class="col-lg-6">
                         <select id="caixa_id" name="caixa_id" class="form-control @error('caixa_id') is-invalid @enderror">
-                            <option value="all" {{ request()->input('caixa_id') == '99' ? 'selected' : '' }}>Todos
+                            <option value="all" {{ request()->input('caixa_id') == '99' ? 'selected' : '' }}>{{ __('Todos') }}
                             </option>
                             @foreach ($caixas as $caixa)
                             <option value="{{ $caixa->id }}" {{ request()->input('caixa_id') == $caixa->id ? 'selected' : '' }}>
@@ -59,11 +59,11 @@
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
                         <button id="btn_relatorio" type="button" class="btn btn-secondary btn ml-4">
-                            <i class="fa fa-file-pdf"></i> Relatório
+                            <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -91,12 +91,12 @@
                 <table class="table table-bordered table-hover mb-4">
                     <thead>
                         <tr>
-                            <th>DATA</th>
-                            <th>PLANO DE CONTA</th>
-                            <th>ENTRADA</th>
-                            <th>SAÍDA</th>
-                            <th>ORIGEM/DESTINO</th>
-                            <th>PAGANTE/FAVORECIDO</th>
+                            <th>{{ __('DATA') }}</th>
+                            <th>{{ __('PLANO DE CONTA') }}</th>
+                            <th>{{ __('ENTRADA') }}</th>
+                            <th>{{ __('SAÍDA') }}</th>
+                            <th>{{ __('ORIGEM/DESTINO') }}</th>
+                            <th>{{ __('PAGANTE/FAVORECIDO') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -157,7 +157,7 @@
     </div>
     <div class="row mt-4">
         <div class="col-12 text-center">
-            <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+            <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
         </div>
     </div>
 </div>

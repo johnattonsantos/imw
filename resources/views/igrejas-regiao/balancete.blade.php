@@ -29,26 +29,26 @@
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Período (Inicial e Final):</label>
+                        <label class="control-label">{{ __('* Período (Inicial e Final):') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
                 
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
                 </div>
 
                 {{-- Caixa --}}
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">Caixa:</label>
+                        <label class="control-label">{{ __('Caixa:') }}</label>
                     </div>
                     <div class="col-lg-6">
                         <select id="caixa_id" name="caixa_id" class="form-control @error('caixa_id') is-invalid @enderror">
                             <option value="all" {{ request()->input('caixa_id') == '99' ? 'selected' : '' }}>
-                              Todos
+                              {{ __('Todos') }}
                             </option>
                             @foreach ($caixasSelect as $cx)
                             <option value="{{ $cx->id }}" {{ request()->input('caixa_id') == $cx->id ? 'selected' : '' }}>
@@ -61,11 +61,11 @@
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
-                        <button id="btn_relatorio" data-url="{{ route('igrejas.regiao.balancete-pdf', ['igreja' => $instituicao->id]) }}" type="button" name="action" value="relatorio" title="Gerar Relatório" class="btn btn-secondary btn">
-                            Relatório
+                        <button id="btn_relatorio" data-url="{{ route('igrejas.regiao.balancete-pdf', ['igreja' => $instituicao->id]) }}" type="button" name="action" value="relatorio" title="{{ __('Gerar Relatório') }}" class="btn btn-secondary btn">
+                            {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -83,17 +83,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mt-3">Discriminação de saldos por caixa</h5>
+                            <h5 class="mt-3">{{ __('Discriminação de saldos por caixa') }}</h5>
                             <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>CAIXA</th>
-                                        <th width="300" style="text-align: right">SALDO ANTERIOR</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE SAÍDAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. SAÍDAS</th>
-                                        <th width="120" style="text-align: right">SALDO ATUAL</th>
+                                        <th>{{ __('CAIXA') }}</th>
+                                        <th width="300" style="text-align: right">{{ __('SALDO ANTERIOR') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('SALDO ATUAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -140,7 +140,7 @@
 
                                     {{-- Total de cada caixa --}}
                                     <tr>
-                                        <td style="text-align: left"><strong>Total dos Caixas</strong></td>
+                                        <td style="text-align: left"><strong>{{ __('Total dos Caixas') }}</strong></td>
                                         <td style="text-align: right">
                                             <strong>{{ 'R$ ' . number_format($totalSaldoFinal, 2, ',', '.') }}</strong>
                                         </td>
@@ -166,15 +166,15 @@
                     </div>
 
                     <div class="col-12 mt-3">
-                        <h5>Discriminação dos Lançamentos por Conta</h5>
+                        <h5>{{ __('Discriminação dos Lançamentos por Conta') }}</h5>
                     </div>
                     <div class="col-12">
                         <table class="table" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>CONTA</th>
-                                    <th>CAIXA</th>
-                                    <th width="100" style="text-align: right;">TOTAL</th>
+                                    <th>{{ __('CONTA') }}</th>
+                                    <th>{{ __('CAIXA') }}</th>
+                                    <th width="100" style="text-align: right;">{{ __('TOTAL') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -221,7 +221,7 @@
             </div>
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                 </div>
             </div>
             <!-- Fim do Conteúdo -->

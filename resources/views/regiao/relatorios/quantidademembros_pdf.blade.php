@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Quantidade de Membros - IMW PGA</title>
+    <title>{{ __('Relatório de Quantidade de Membros - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +90,7 @@ use Carbon\Carbon;
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">QUANTIDADE DE MEMBROS - {{ optional($instituicao)->nome ?? optional($regiao)->nome }}</div>
             <div class="period">
@@ -104,8 +104,8 @@ use Carbon\Carbon;
     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
         <thead class="thead-dark">
             <tr>
-                <th style="width: 17%" style="text-align: distrito">DISTRITO</th>
-                <th style="text-align: left" rowspan="2">IGREJA</th>
+                <th style="width: 17%" style="text-align: distrito">{{ __('DISTRITO') }}</th>
+                <th style="text-align: left" rowspan="2">{{ __('IGREJA') }}</th>
                 <th width="100px" style="text-align: left" rowspan="2">
                     TOTAL EM {{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}
                 </th>
@@ -134,7 +134,7 @@ use Carbon\Carbon;
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="2" style="text-align: left;">Total Geral</th>
+                <th colspan="2" style="text-align: left;">{{ __('Total Geral') }}</th>
                 <th style="text-align: left;">{{ $totalGeralInicial }}</th>
                 <th style="text-align: left;">{{ $totalGeralFinal }}</th>
             </tr>

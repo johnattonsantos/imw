@@ -1,16 +1,121 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.' . app()->getLocale() . '.html_lang', str_replace('_', '-', app()->getLocale())) }}">
 
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @php
+        $browserTranslationsPath = base_path('lang/' . app()->getLocale() . '.json');
+        $browserTranslations = file_exists($browserTranslationsPath)
+            ? json_decode(file_get_contents($browserTranslationsPath), true)
+            : [];
+    @endphp
+    <script>
+        window.IMW_TRANSLATIONS = @json($browserTranslations ?: []);
+        window.IMW_LOCALE = @json(app()->getLocale());
+        window.__ = function(key) {
+            return (window.IMW_TRANSLATIONS && window.IMW_TRANSLATIONS[key]) ? window.IMW_TRANSLATIONS[key] : key;
+        };
+        window.IMW_SELECTPICKER_OPTIONS = {
+            noneSelectedText: window.__('Nenhum item selecionado'),
+            selectAllText: window.__('Selecionar todos'),
+            deselectAllText: window.__('Remover seleção'),
+            liveSearchPlaceholder: window.__('Pesquisar'),
+            noneResultsText: window.__('Nenhum resultado para') + ' {0}',
+            countSelectedText: function(numSelected) {
+                return numSelected + ' ' + window.__('itens selecionados');
+            }
+        };
+        window.IMW_DATATABLE_LANGUAGE = {
+            decimal: '',
+            emptyTable: window.__('Nenhum registro encontrado'),
+            info: window.__('Mostrando _START_ até _END_ de _TOTAL_ registros'),
+            infoEmpty: window.__('Mostrando 0 até 0 de 0 registros'),
+            infoFiltered: window.__('(filtrado de _MAX_ registros no total)'),
+            lengthMenu: window.__('Mostrar _MENU_ registros'),
+            loadingRecords: window.__('Carregando...'),
+            processing: window.__('Processando...'),
+            search: window.__('Pesquisar:'),
+            zeroRecords: window.__('Nenhum registro encontrado'),
+            paginate: {
+                first: window.__('Primeiro'),
+                last: window.__('Último'),
+                next: window.__('Próxima'),
+                previous: window.__('Anterior')
+            },
+            aria: {
+                orderable: window.__('Ordenar por esta coluna'),
+                orderableReverse: window.__('Ordenar de forma inversa por esta coluna')
+            }
+        };
+        window.IMW_DATEPICKER_REGIONAL = {
+            closeText: window.__('Aplicar'),
+            prevText: window.__('Anterior'),
+            nextText: window.__('Próximo'),
+            currentText: window.__('Hoje'),
+            monthNames: [
+                window.__('Janeiro'), window.__('Fevereiro'), window.__('Março'), window.__('Abril'),
+                window.__('Maio'), window.__('Junho'), window.__('Julho'), window.__('Agosto'),
+                window.__('Setembro'), window.__('Outubro'), window.__('Novembro'), window.__('Dezembro')
+            ],
+            monthNamesShort: [
+                window.__('Jan'), window.__('Fev'), window.__('Mar'), window.__('Abr'),
+                window.__('Mai'), window.__('Jun'), window.__('Jul'), window.__('Ago'),
+                window.__('Set'), window.__('Out'), window.__('Nov'), window.__('Dez')
+            ],
+            dayNames: [
+                window.__('Domingo'), window.__('Segunda-feira'), window.__('Terça-feira'),
+                window.__('Quarta-feira'), window.__('Quinta-feira'), window.__('Sexta-feira'),
+                window.__('Sábado')
+            ],
+            dayNamesShort: [
+                window.__('Dom'), window.__('Seg'), window.__('Ter'), window.__('Qua'),
+                window.__('Qui'), window.__('Sex'), window.__('Sab')
+            ],
+            dayNamesMin: [
+                window.__('Dom'), window.__('Seg'), window.__('Ter'), window.__('Qua'),
+                window.__('Qui'), window.__('Sex'), window.__('Sab')
+            ],
+            weekHeader: window.__('Sm'),
+            dateFormat: 'dd/mm/yy',
+            firstDay: 0,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        window.IMW_SELECT2_LANGUAGE = {
+            errorLoading: function() {
+                return window.__('Os resultados não puderam ser carregados.');
+            },
+            inputTooLong: function(args) {
+                return window.__('Remova') + ' ' + (args.input.length - args.maximum) + ' ' + window.__('caracteres');
+            },
+            inputTooShort: function(args) {
+                return window.__('Digite') + ' ' + (args.minimum - args.input.length) + ' ' + window.__('ou mais caracteres');
+            },
+            loadingMore: function() {
+                return window.__('Carregando mais resultados...');
+            },
+            maximumSelected: function(args) {
+                return window.__('Você só pode selecionar') + ' ' + args.maximum + ' ' + window.__('itens');
+            },
+            noResults: function() {
+                return window.__('Nenhum resultado encontrado');
+            },
+            searching: function() {
+                return window.__('Pesquisando...');
+            },
+            removeAllItems: function() {
+                return window.__('Remover todos os itens');
+            }
+        };
+    </script>
     <title>{{ config('app.name') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('theme/assets/img/favicon.ico') }}" />
     <link href="{{ asset('theme/assets/css/loader.css') }}" rel="stylesheet" type="text/css" />
-    <script src="{{ asset('theme/assets/js/loader.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/libs/jquery-3.1.1.js') }}"></script>
+    <script src="{{ asset('theme/assets/js/loader.js') }}"></script> <script src="{{ asset('theme/assets/js/libs/jquery-3.1.1.js') }}"></script>
 
     <!-- DATEPICKER -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
@@ -188,24 +293,11 @@
         </div>
 
         <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
-        <script src="{{ asset('theme/bootstrap/js/popper.min.js') }}"></script>
-        <script src="{{ asset('theme/bootstrap/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('theme/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
-        <script src="{{ asset('theme/assets/js/app.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
-        <script>
+        <script src="{{ asset('theme/bootstrap/js/popper.min.js') }}"></script> <script src="{{ asset('theme/bootstrap/js/bootstrap.min.js') }}"></script> <script src="{{ asset('theme/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script> <script src="{{ asset('theme/assets/js/app.js') }}"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script> <script>
             $(document).ready(function() {
                 App.init();
             });
-        </script>
-        <script src="{{ asset('theme/assets/js/custom.js') }}"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="{{ asset('theme/assets/js/elements/tooltip.js') }}"></script>
-
-        <script src="{{ asset('theme/plugins/blockui/jquery.blockUI.min.js') }}"></script>
-        <script src="{{ asset('theme/plugins/blockui/custom-blockui.js') }}"></script>
-
-        <script>
+        </script> <script src="{{ asset('theme/assets/js/custom.js') }}"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> <script src="{{ asset('theme/assets/js/elements/tooltip.js') }}"></script> <script src="{{ asset('theme/plugins/blockui/jquery.blockUI.min.js') }}"></script> <script src="{{ asset('theme/plugins/blockui/custom-blockui.js') }}"></script> <script>
             (function() {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
                 const sessionExpiredMessage = 'Sua sessão expirou (erro 419). A página será atualizada para você tentar novamente.';
@@ -262,6 +354,132 @@
 
         <!-- END GLOBAL MANDATORY SCRIPTS -->
         @yield('extras-scripts')
+        <script>
+            (function() {
+                const ignoredTags = new Set(['SCRIPT', 'STYLE', 'TEXTAREA', 'CODE', 'PRE']);
+                const translatedMark = 'imwTranslated';
+                const translatableAttributes = ['placeholder', 'title', 'alt', 'aria-label'];
+
+                function translatedValue(value) {
+                    if (typeof value !== 'string') return value;
+                    const normalized = value.replace(/\s+/g, ' ').trim();
+                    if (!normalized || !window.IMW_TRANSLATIONS || !window.IMW_TRANSLATIONS[normalized]) {
+                        return value;
+                    }
+
+                    return value.replace(normalized, window.IMW_TRANSLATIONS[normalized]);
+                }
+
+                function translateTextNode(node) {
+                    if (!node || !node.nodeValue || !node.parentElement) return;
+                    if (ignoredTags.has(node.parentElement.tagName)) return;
+                    const translated = translatedValue(node.nodeValue);
+                    if (translated !== node.nodeValue) {
+                        node.nodeValue = translated;
+                    }
+                }
+
+                function translateAttributes(element) {
+                    if (!element || !element.getAttribute) return;
+                    translatableAttributes.forEach(function(attribute) {
+                        const value = element.getAttribute(attribute);
+                        if (value) {
+                            const translated = translatedValue(value);
+                            if (translated !== value) {
+                                element.setAttribute(attribute, translated);
+                            }
+                        }
+                    });
+                }
+
+                function translateTree(root) {
+                    if (!root) return;
+
+                    if (root.nodeType === Node.TEXT_NODE) {
+                        translateTextNode(root);
+                        return;
+                    }
+
+                    if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_NODE) return;
+
+                    if (root.nodeType === Node.ELEMENT_NODE) {
+                        translateAttributes(root);
+                    }
+
+                    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                        acceptNode: function(node) {
+                            return node.parentElement && ignoredTags.has(node.parentElement.tagName)
+                                ? NodeFilter.FILTER_REJECT
+                                : NodeFilter.FILTER_ACCEPT;
+                        }
+                    });
+
+                    while (walker.nextNode()) {
+                        translateTextNode(walker.currentNode);
+                    }
+
+                    if (root.querySelectorAll) {
+                        root.querySelectorAll('[placeholder], [title], [alt], [aria-label]').forEach(translateAttributes);
+                    }
+                }
+
+                function applyPluginDefaults() {
+                    if (window.jQuery && jQuery.fn && jQuery.fn.selectpicker && jQuery.fn.selectpicker.Constructor) {
+                        Object.assign(jQuery.fn.selectpicker.Constructor.DEFAULTS, window.IMW_SELECTPICKER_OPTIONS || {});
+                    }
+
+                    if (window.jQuery && jQuery.fn && jQuery.fn.dataTable && jQuery.fn.dataTable.defaults) {
+                        jQuery.extend(true, jQuery.fn.dataTable.defaults, {
+                            language: window.IMW_DATATABLE_LANGUAGE || {}
+                        });
+                    }
+
+                    if (window.jQuery && jQuery.fn && jQuery.fn.select2 && jQuery.fn.select2.defaults) {
+                        jQuery.fn.select2.defaults.set('language', window.IMW_SELECT2_LANGUAGE || {});
+                    }
+
+                    if (window.DataTable && window.DataTable.defaults) {
+                        window.DataTable.defaults.language = Object.assign(
+                            {},
+                            window.DataTable.defaults.language || {},
+                            window.IMW_DATATABLE_LANGUAGE || {}
+                        );
+                    }
+
+                    if (window.jQuery && jQuery.datepicker) {
+                        jQuery.datepicker.regional[window.IMW_LOCALE || 'imw'] = window.IMW_DATEPICKER_REGIONAL || {};
+                        jQuery.datepicker.setDefaults(jQuery.datepicker.regional[window.IMW_LOCALE || 'imw']);
+                    }
+                }
+
+                window.IMW_translatePage = function(root) {
+                    applyPluginDefaults();
+                    translateTree(root || document.body);
+                };
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    window.IMW_translatePage(document.body);
+
+                    const observer = new MutationObserver(function(mutations) {
+                        mutations.forEach(function(mutation) {
+                            mutation.addedNodes.forEach(function(node) {
+                                window.IMW_translatePage(node);
+                            });
+
+                            if (mutation.type === 'characterData') {
+                                translateTextNode(mutation.target);
+                            }
+                        });
+                    });
+
+                    observer.observe(document.body, {
+                        childList: true,
+                        subtree: true,
+                        characterData: true
+                    });
+                });
+            })();
+        </script>
         <script>
             (function() {
                 function limparValorDoCampo($campo) {

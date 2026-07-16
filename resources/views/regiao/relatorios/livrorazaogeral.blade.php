@@ -21,7 +21,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Livro Razão Geral</h4>
+                    <h4>{{ __('Relatório Livro Razão Geral') }}</h4>
                 </div>
             </div>
         </div>
@@ -29,11 +29,11 @@
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Distrito:</label>
+                        <label class="control-label">{{ __('* Distrito:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select class="form-control" id="distrito" name="distrito" required>
-                            <option value="">Selecione</option>
+                            <option value="">{{ __('Selecione') }}</option>
                             @foreach($distritos as $distrito)
                                 <option value="{{ $distrito->id }}" {{ request()->input('distrito') == $distrito->id ? 'selected' : '' }}>{{ $distrito->nome }}</option>
                             @endforeach
@@ -43,11 +43,11 @@
 
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Igreja:</label>
+                        <label class="control-label">{{ __('* Igreja:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select class="form-control" id="igreja" name="igreja" required>
-                            <option value="all">todas</option>
+                            <option value="all">{{ __('todas') }}</option>
                             @foreach($igrejas as $igreja)
                                 <option value="{{ $igreja->id }}" {{ request()->input('igreja') == $igreja->id ? 'selected' : '' }}>{{ $igreja->nome }}</option>
                             @endforeach
@@ -57,7 +57,7 @@
 
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Data Inicial:</label>
+                        <label class="control-label">{{ __('* Data Inicial:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <input type="date" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" required>
@@ -66,7 +66,7 @@
 
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Data Final:</label>
+                        <label class="control-label">{{ __('* Data Final:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" required>
@@ -75,11 +75,11 @@
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
-                        <button id="btn_relatorio" type="button" name="action" value="relatorio" title="Gerar Relatório" class="btn btn-secondary btn">
-                            Relatório
+                        <button id="btn_relatorio" type="button" name="action" value="relatorio" title="{{ __('Gerar Relatório') }}" class="btn btn-secondary btn">
+                            {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -109,10 +109,10 @@
                             <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th width="200" style="text-align: left">CONTAS</th>
-                                        <th width="100" style="text-align: right">ENTRADAS</th>
-                                        <th width="100" style="text-align: right">SAÍDAS</th>
-                                        <th width="100" style="text-align: right">TOTAL</th>
+                                        <th width="200" style="text-align: left">{{ __('CONTAS') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('ENTRADAS') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('SAÍDAS') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('TOTAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -141,7 +141,7 @@
             </div>
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                 </div>
             </div>
             <!-- Fim do Conteúdo -->

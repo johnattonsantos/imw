@@ -46,36 +46,36 @@
         {{-- Congregação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-3">
-            <label class="control-label">Função:</label>
+            <label class="control-label">{{ __('Função:') }}</label>
             <select id="funcao_id" name="funcao_id" class="form-control @error('funcao_id') is-invalid @enderror" >
-              <option value="" {{ request()->funcao_id == '' ? 'selected' : '' }}>TODAS</option>
+              <option value="" {{ request()->funcao_id == '' ? 'selected' : '' }}>{{ __('TODAS') }}</option>
               @foreach ($funcoes as $funcao)
                 <option value="{{ $funcao->id }}" {{ request()->funcao_id == $funcao->id ? 'selected' : '' }}>{{ $funcao->funcao }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-3">
-            <label class="control-label">Tipo:</label>
+            <label class="control-label">{{ __('Tipo:') }}</label>
             <select id="tipo" name="tipo" class="form-control">
-              <option value="" {{ request()->tipo == '' ? 'selected' : '' }}>TODOS</option>
-              <option value="M" {{ request()->tipo == 'M' ? 'selected' : '' }}>Membro</option>
-              <option value="C" {{ request()->tipo == 'C' ? 'selected' : '' }}>Congregado</option>
-              <option value="V" {{ request()->tipo == 'V' ? 'selected' : '' }}>Visitante</option>
-              <option value="N" {{ request()->tipo == 'N' ? 'selected' : '' }}>Novo Convertido</option>
+              <option value="" {{ request()->tipo == '' ? 'selected' : '' }}>{{ __('TODOS') }}</option>
+              <option value="M" {{ request()->tipo == 'M' ? 'selected' : '' }}>{{ __('Membro') }}</option>
+              <option value="C" {{ request()->tipo == 'C' ? 'selected' : '' }}>{{ __('Congregado') }}</option>
+              <option value="V" {{ request()->tipo == 'V' ? 'selected' : '' }}>{{ __('Visitante') }}</option>
+              <option value="N" {{ request()->tipo == 'N' ? 'selected' : '' }}>{{ __('Novo Convertido') }}</option>
             </select>
           </div>
           <div class="col-lg-4">
-            <label class="control-label">GCEU:</label>
+            <label class="control-label">{{ __('GCEU:') }}</label>
             <select id="gceu_id" name="gceu_id" class="form-control @error('gceu_id') is-invalid @enderror" >
-              <option value="" {{ request()->gceu_id == '' ? 'selected' : '' }}>TODOS</option>
+              <option value="" {{ request()->gceu_id == '' ? 'selected' : '' }}>{{ __('TODOS') }}</option>
               @foreach ($gceus as $gceu)
                 <option value="{{ $gceu->id }}" {{ request()->gceu_id == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-2">
-            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn" style="margin-top: 30px;">
-              <x-bx-search /> Buscar 
+            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn" style="margin-top: 30px;">
+              <x-bx-search /> {{ __('Buscar') }} 
             </button>
           </div>
         </div>
@@ -93,16 +93,16 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>MEMBRO</th>
-                            <th>TIPO</th>
-                            <th>NOVO CONVERTIDO</th>
-                            <th>DATA CADASTRO</th>
-                            <th>CONTATO</th>
-                            <th>FUNÇÃO</th>
-                            <th>GCEU</th>
-                            <th>ENDEREÇO GCEU</th>
-                            <th>ANFITRIAO</th>
-                            <th>CONTATO</th>
+                            <th>{{ __('MEMBRO') }}</th>
+                            <th>{{ __('TIPO') }}</th>
+                            <th>{{ __('NOVO CONVERTIDO') }}</th>
+                            <th>{{ __('DATA CADASTRO') }}</th>
+                            <th>{{ __('CONTATO') }}</th>
+                            <th>{{ __('FUNÇÃO') }}</th>
+                            <th>{{ __('GCEU') }}</th>
+                            <th>{{ __('ENDEREÇO GCEU') }}</th>
+                            <th>{{ __('ANFITRIAO') }}</th>
+                            <th>{{ __('CONTATO') }}</th>
                         </tr>
                     </thead>
                     <tbody>

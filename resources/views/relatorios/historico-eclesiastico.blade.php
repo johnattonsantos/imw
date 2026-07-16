@@ -25,7 +25,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Membros por Função Ministerial</h4>
+              <h4>{{ __('Membros por Função Ministerial') }}</h4>
           </div>
       </div>
   </div>
@@ -35,11 +35,11 @@
         {{-- Função Ministerial --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Função Ministerial:</label>
+            <label class="control-label">{{ __('Função Ministerial:') }}</label>
           </div>
           <div class="col-lg-6">
             <select class="form-control select2 @error('funcao_ministerial_id') is-invalid @enderror" data-bs-toggle="select2" name="funcao_ministerial_id" id="funcao_ministerial_id">
-              <option value="todos" {{ $select == 'todos' ? 'selected' : '' }} >TODOS</option>
+              <option value="todos" {{ $select == 'todos' ? 'selected' : '' }} >{{ __('TODOS') }}</option>
               @foreach ($funcoes as $funcao)
                 <option value="{{ $funcao->id }}" {{ (string) $select === (string) $funcao->id ? 'selected' : '' }} >{{ $funcao->descricao }}</option>
               @endforeach
@@ -50,14 +50,14 @@
         {{-- Nomeação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Nomeação:</label>
+            <label class="control-label">{{ __('Nomeação:') }}</label>
           </div>
           <div class="col-lg-6">
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input type="radio" name="nomeacao_ativa" value="0" class="new-control-input" checked>
-                  <span class="new-control-indicator"></span>Todas as Nomeações
+                  <span class="new-control-indicator"></span>{{ __('Todas as Nomeações') }}
                 </label>
               </div>
             </div>
@@ -65,7 +65,7 @@
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input type="radio" name="nomeacao_ativa" value="1" class="new-control-input">
-                  <span class="new-control-indicator"></span>Nomeação Ativa
+                  <span class="new-control-indicator"></span>{{ __('Nomeação Ativa') }}
                 </label>
               </div>
             </div>
@@ -75,8 +75,8 @@
         <div class="form-group row mb-4">
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
-            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-              <x-bx-search /> Buscar 
+            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+              <x-bx-search /> {{ __('Buscar') }} 
             </button>
           </div>
         </div>
@@ -103,13 +103,13 @@
                   <table class="table table-bordered table-striped table-hover mb-4" id="membros-por-ministerio">
                       <thead>
                           <tr>
-                              <th>ROL</th>
-                              <th>NOME</th>
-                              <th>CELULAR</th>
-                              <th>MINISTÉRIO</th>
-                              <th>FUNÇÃO</th>
-                              <th>NOMEAÇÃO</th>
-                              <th>EXONERAÇÃO</th>
+                              <th>{{ __('ROL') }}</th>
+                              <th>{{ __('NOME') }}</th>
+                              <th>{{ __('CELULAR') }}</th>
+                              <th>{{ __('MINISTÉRIO') }}</th>
+                              <th>{{ __('FUNÇÃO') }}</th>
+                              <th>{{ __('NOMEAÇÃO') }}</th>
+                              <th>{{ __('EXONERAÇÃO') }}</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -126,7 +126,7 @@
                         @empty
                           <tr>
                               <td>-</td>
-                              <td>Não existem registros para esta função ministerial</td>
+                              <td>{{ __('Não existem registros para esta função ministerial') }}</td>
                               <td>-</td>
                               <td>-</td>
                               <td>-</td>

@@ -45,11 +45,11 @@
                         <a  href="{{ route('financeiro.downloadAnexo', $anexo->id) }}" 
                             class="btn btn-secondary mr-2 rounded-circle bs-tooltip" 
                             target="_blank" 
-                            title="Baixar anexo">
+                            title="{{ __('Baixar anexo') }}">
                             <x-bx-download />
                         </a>
                         <button class="btn btn-danger mr-2 rounded-circle delete-anexo bs-tooltip" 
-                                title="Excluir anexo"
+                                title="{{ __('Excluir anexo') }}"
                                 data-url="{{ route('financeiro.anexo.delete', $anexo->id) }}">
                             <x-bx-trash />
                         </button>
@@ -63,8 +63,8 @@
                             <x-bx-plus />
                         </button>
                         <div>
-                            <p class="mb-0 mark-text text-primary">Adicione um novo anexo</p> 
-                            <p class="small-text mb-0">PDF, DOC, DOCX | 2 Mb max.</p>
+                            <p class="mb-0 mark-text text-primary">{{ __('Adicione um novo anexo') }}</p> 
+                            <p class="small-text mb-0">{{ __('PDF, DOC, DOCX | 2 Mb max.') }}</p>
                         </div>
                     </div>
                 </div>

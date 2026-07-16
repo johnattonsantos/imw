@@ -25,7 +25,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Membros Disciplinados</h4>
+              <h4>{{ __('Membros Disciplinados') }}</h4>
           </div>
       </div>
   </div>
@@ -35,12 +35,12 @@
         {{-- Congregação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Membro:</label>
+            <label class="control-label">{{ __('Membro:') }}</label>
           </div>
           <div class="col-lg-6">
             <select class="form-control select2 @error('membro_id') is-invalid @enderror" data-bs-toggle="select2" name="membro_id" id="membro_id">              
-              <!-- <option value="" {{ old('membro_id') == '' ? 'selected' : '' }} hidden disabled>selecione</option> -->
-              <option value="todos" {{ $select == 'todos' ? 'selected' : '' }} >TODOS</option>
+              <!-- <option value="" {{ old('membro_id') == '' ? 'selected' : '' }} hidden disabled>{{ __('selecione') }}</option> -->
+              <option value="todos" {{ $select == 'todos' ? 'selected' : '' }} >{{ __('TODOS') }}</option>
               <!-- @foreach ($membros as $membro)
                 <option value="{{ $membro->id }}" {{ $select == $membro->id  ? 'selected' : '' }} >{{ $membro->nome }}</option>
               @endforeach -->
@@ -51,14 +51,14 @@
         {{-- Nomeação --}}
         <!-- <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Nomeação:</label>
+            <label class="control-label">{{ __('Nomeação:') }}</label>
           </div>
           <div class="col-lg-6">
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input type="radio" name="nomeacao_ativa" value="0" class="new-control-input" checked>
-                  <span class="new-control-indicator"></span>Todas as Nomeações
+                  <span class="new-control-indicator"></span>{{ __('Todas as Nomeações') }}
                 </label>
               </div>
             </div>
@@ -66,7 +66,7 @@
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                   <input type="radio" name="nomeacao_ativa" value="1" class="new-control-input">
-                  <span class="new-control-indicator"></span>Nomeação Ativa
+                  <span class="new-control-indicator"></span>{{ __('Nomeação Ativa') }}
                 </label>
               </div>
             </div>
@@ -76,11 +76,11 @@
         <div class="form-group row mb-4">
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
-            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-              <x-bx-search /> Buscar 
+            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+              <x-bx-search /> {{ __('Buscar') }} 
             </button>
-            <!-- <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="Gerar Relatório PDF" class="btn btn-secondary btn ml-4">
-              <x-bx-file /> Relatório
+            <!-- <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="{{ __('Gerar Relatório PDF') }}" class="btn btn-secondary btn ml-4">
+              <x-bx-file /> {{ __('Relatório') }}
             </button> -->
           </div>
         </div>
@@ -107,13 +107,13 @@
                   <table class="table table-bordered table-striped table-hover mb-4" id="membros-disciplinados-table">
                       <thead>
                           <tr>
-                              <th>ROL</th>
-                              <th>NOME</th>
-                              <th>CELULAR</th>
-                              <th>MINISTÉRIO</th>
-                              <th>FUNÇÃO</th>
-                              <th>NOMEAÇÃO</th>
-                              <th>EXONERAÇÃO</th>
+                              <th>{{ __('ROL') }}</th>
+                              <th>{{ __('NOME') }}</th>
+                              <th>{{ __('CELULAR') }}</th>
+                              <th>{{ __('MINISTÉRIO') }}</th>
+                              <th>{{ __('FUNÇÃO') }}</th>
+                              <th>{{ __('NOMEAÇÃO') }}</th>
+                              <th>{{ __('EXONERAÇÃO') }}</th>
                           </tr>
                       </thead>
                       <tbody>
@@ -141,12 +141,12 @@
                   <table class="table table-bordered table-striped table-hover mb-4" id="membros-disciplinados-table">
                       <thead>
                           <tr>
-                              <th>ROL</th>
-                              <th>NOME</th>
-                              <th>CELULAR</th>
-                              <th>DATA INÍCIO</th>
-                              <th>DATA TÉRMINO</th>
-                              <th>DESCRIÇÃO</th>
+                              <th>{{ __('ROL') }}</th>
+                              <th>{{ __('NOME') }}</th>
+                              <th>{{ __('CELULAR') }}</th>
+                              <th>{{ __('DATA INÍCIO') }}</th>
+                              <th>{{ __('DATA TÉRMINO') }}</th>
+                              <th>{{ __('DESCRIÇÃO') }}</th>
                           </tr>
                       </thead>
                       <tbody>

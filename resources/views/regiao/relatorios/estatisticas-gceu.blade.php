@@ -19,7 +19,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Estatísticas GCEU</h4>
+                    <h4>{{ __('Relatório Estatísticas GCEU') }}</h4>
                 </div>
             </div>
         </div>
@@ -27,11 +27,11 @@
             <form method="GET" class="form-vertical" id="filtro-estatisticas-gceu">
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">Distrito:</label>
+                        <label class="control-label">{{ __('Distrito:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select name="distrito_id" id="distrito_id" class="form-control">
-                            <option value="">Todos</option>
+                            <option value="">{{ __('Todos') }}</option>
                             @foreach($distritos as $distrito)
                                 <option value="{{ $distrito->id }}" {{ (string) $distrito_id === (string) $distrito->id ? 'selected' : '' }}>
                                     {{ $distrito->nome }}
@@ -40,11 +40,11 @@
                         </select>
                     </div>
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">Igreja:</label>
+                        <label class="control-label">{{ __('Igreja:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select name="igreja_id" id="igreja_id" class="form-control">
-                            <option value="">Todas</option>
+                            <option value="">{{ __('Todas') }}</option>
                             @foreach($igrejas as $igreja)
                                 <option value="{{ $igreja->id }}" {{ (string) $igreja_id === (string) $igreja->id ? 'selected' : '' }}>
                                     {{ $igreja->nome }}
@@ -53,7 +53,7 @@
                         </select>
                     </div>
                     <div class="col-lg-2">
-                        <button type="submit" class="btn btn-primary"><x-bx-search /> Buscar</button>
+                        <button type="submit" class="btn btn-primary"><x-bx-search /> {{ __('Buscar') }}</button>
                     </div>
                 </div>
             </form>
@@ -62,12 +62,12 @@
                 <table class="table table-bordered table-striped display nowrap" id="estatisticas-gceu-regiao" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th>Distrito</th>
-                            <th>Igreja</th>
-                            <th>Quant. GCEUS</th>
-                            <th>% GCEUS</th>
-                            <th>Quant. Membros</th>
-                            <th>% Membros</th>
+                            <th>{{ __('Distrito') }}</th>
+                            <th>{{ __('Igreja') }}</th>
+                            <th>{{ __('Quant. GCEUS') }}</th>
+                            <th>{{ __('% GCEUS') }}</th>
+                            <th>{{ __('Quant. Membros') }}</th>
+                            <th>{{ __('% Membros') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,7 +92,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="2" style="text-align: right;">TOTAL GERAL:</th>
+                            <th colspan="2" style="text-align: right;">{{ __('TOTAL GERAL:') }}</th>
                             <th>{{ $totais['qtd_gceus'] ?? 0 }}</th>
                             <th>100,00%</th>
                             <th>{{ $totais['qtd_membros_gceu'] ?? 0 }}</th>

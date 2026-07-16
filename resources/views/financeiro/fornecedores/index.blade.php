@@ -34,7 +34,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Filtros para pesquisa</h4>
+                        <h4>{{ __('Filtros para pesquisa') }}</h4>
                     </div>
                 </div>
             </div>
@@ -49,10 +49,10 @@
                             <div class="row mb-4">
                                 <div class="col-4">
                                     <input type="text" name="search" id="searchInput"
-                                        class="form-control form-control-sm" placeholder="Pesquisar...">
+                                        class="form-control form-control-sm" placeholder="{{ __('Pesquisar...') }}">
                                 </div>
                                 <div class="col-auto" style="margin-left: -19px;">
-                                    <button type="submit" class="btn btn-primary btn-rounded">Pesquisar</button>
+                                    <button type="submit" class="btn btn-primary btn-rounded">{{ __('Pesquisar') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -60,12 +60,12 @@
                 </div>
                 <div class="card mb-3">
                     <div class="card-header">
-                        <h5 class="mb-0">Listagem de Registros</h5>
+                        <h5 class="mb-0">{{ __('Listagem de Registros') }}</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
-                                <a href="{{ route('fornecedor.novo') }}" title="Inserir um novo registro"
+                                <a href="{{ route('fornecedor.novo') }}" title="{{ __('Inserir um novo registro') }}"
                                 class="btn btn-primary right btn-rounded"> <svg xmlns="http://www.w3.org/2000/svg"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -74,17 +74,17 @@
                                     </rect>
                                     <line x1="12" y1="8" x2="12" y2="16"></line>
                                     <line x1="8" y1="12" x2="16" y2="12"></line>
-                                </svg> Novo </a>
+                                </svg> {{ __('Novo') }} </a>
                                 <div class="table-responsive">
                                     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                         <thead class="thead-light">
                                             <tr>
-                                                <th>Nome do Forncedor</th>
-                                                <th>Cidade/Estado</th>
-                                                <th>Telefone</th>
-                                                <th>Celular</th>
-                                                <th>E-mail</th>
-                                                <th>Ação</th>
+                                                <th>{{ __('Nome do Forncedor') }}</th>
+                                                <th>{{ __('Cidade/Estado') }}</th>
+                                                <th>{{ __('Telefone') }}</th>
+                                                <th>{{ __('Celular') }}</th>
+                                                <th>{{ __('E-mail') }}</th>
+                                                <th>{{ __('Ação') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -97,7 +97,7 @@
                                                     <td>{{$fornecedor->email}}</td>
                                                     <td class="table-action">
                                                             <a href="{{ route('fornecedor.editar', $fornecedor->id) }}"
-                                                                title="Editar" class="btn btn-sm btn-dark mr-2 btn-rounded">
+                                                                title="{{ __('Editar') }}" class="btn btn-sm btn-dark mr-2 btn-rounded">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                     height="24" viewBox="0 0 24 24" fill="none"
                                                                     stroke="currentColor" stroke-width="2"
@@ -113,7 +113,7 @@
                                                                 id="form_delete_fornecedor_{{ $index }}">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button type="button" title="Apagar"
+                                                                <button type="button" title="{{ __('Apagar') }}"
                                                                     class="btn btn-sm btn-danger mr-2 btn-rounded btn-confirm-delete"
                                                                     data-form-id="form_delete_fornecedor_{{ $index }}">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"

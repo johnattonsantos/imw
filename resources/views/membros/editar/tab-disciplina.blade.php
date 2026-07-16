@@ -4,11 +4,11 @@
             <table class="table table-bordered table-striped table-hover mb-4">
                 <thead>
                     <tr>
-                        <th>DATA INICIO</th>
-                        <th>DATA TERMINO</th>
-                        <th>IGREJA</th>
-                        <th>PASTOR</th>
-                        <th>AÇÕES</th>
+                        <th>{{ __('DATA INICIO') }}</th>
+                        <th>{{ __('DATA TERMINO') }}</th>
+                        <th>{{ __('IGREJA') }}</th>
+                        <th>{{ __('PASTOR') }}</th>
+                        <th>{{ __('AÇÕES') }}</th>
                     </tr>
                 </thead>
                 <tbody id="disciplina-tbody">
@@ -27,7 +27,7 @@
                         @if ($disciplina->dt_termino == null)
                         <td class="td_btn_encerrar">
                             <button type="button" class="btn btn-warning dt_termino_button" onclick="encerrarDisciplina(event, {{ $disciplina->id }})">
-                                <x-bx-block /> Encerrar Disciplina
+                                <x-bx-block /> {{ __('Encerrar Disciplina') }}
                             </button>
                         </td>
                         @endif

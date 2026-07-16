@@ -4,11 +4,11 @@
             <table class="table table-bordered table-striped table-hover mb-4">
                 <thead>
                     <tr>
-                        <th>MINISTÉRIOS</th>
-                        <th>FUNÇÃO</th>
-                        <th>NOMEAÇÃO</th>
-                        <th>EXONERAÇÃO</th>
-                        <th>OBSERVAÇÕES</th>
+                        <th>{{ __('MINISTÉRIOS') }}</th>
+                        <th>{{ __('FUNÇÃO') }}</th>
+                        <th>{{ __('NOMEAÇÃO') }}</th>
+                        <th>{{ __('EXONERAÇÃO') }}</th>
+                        <th>{{ __('OBSERVAÇÕES') }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -17,7 +17,7 @@
                     <tr>
                         <td>
                             <select class="form-control ministerial-departamento" name="ministerial-departamento[]">
-                                <option value="">Selecione</option>
+                                <option value="">{{ __('Selecione') }}</option>
                                 @foreach ($ministerios as $ministerio)
                                 <option value="{{ $ministerio->id }}" {{ $funcaoMinisterial->setor_id == $ministerio->id ? 'selected' : '' }}>
                                     {{ $ministerio->descricao }}
@@ -27,7 +27,7 @@
                         </td>
                         <td>
                             <select class="form-control ministerial-funcao" name="ministerial-funcao[]">
-                                <option value="">Selecione</option>
+                                <option value="">{{ __('Selecione') }}</option>
                                 @foreach ($funcoes as $funcao)
                                 <option value="{{ $funcao->id }}" {{ $funcaoMinisterial->tipoatuacao_id == $funcao->id ? 'selected' : '' }}>
                                     {{ $funcao->descricao }}
@@ -47,7 +47,7 @@
                         <td style="width: 200px;">
                             <div class="centralizado">
                                 <!-- Botão Adicionar -->
-                                <button type="button" title="Adicionar Linha" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-ministerial">
+                                <button type="button" title="{{ __('Adicionar Linha') }}" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-ministerial">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -55,7 +55,7 @@
                                     </svg>
                                 </button>
                                 <!-- Botão Apagar -->
-                                <button type="button" title="Apagar Linha" class="btn btn-sm btn-danger btn-rounded apagar-linha-ministerial">
+                                <button type="button" title="{{ __('Apagar Linha') }}" class="btn btn-sm btn-danger btn-rounded apagar-linha-ministerial">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
@@ -71,7 +71,7 @@
                     <tr>
                         <td>
                             <select class="form-control ministerial-departamento" name="ministerial-departamento[]">
-                                <option value="">Selecione</option>
+                                <option value="">{{ __('Selecione') }}</option>
                                 @foreach ($ministerios as $ministerio)
                                 <option value="{{ $ministerio->id }}">{{ $ministerio->descricao }}</option>
                                 @endforeach
@@ -79,7 +79,7 @@
                         </td>
                         <td>
                             <select class="form-control ministerial-funcao" name="ministerial-funcao[]">
-                                <option value="">Selecione</option>
+                                <option value="">{{ __('Selecione') }}</option>
                                 @foreach ($funcoes as $funcao)
                                 <option value="{{ $funcao->id }}">{{ $funcao->descricao }}</option>
                                 @endforeach
@@ -97,7 +97,7 @@
                         <td style="width: 200px;">
                             <div class="centralizado">
                                 <!-- Botão Adicionar -->
-                                <button type="button" title="Adicionar Linha" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-ministerial">
+                                <button type="button" title="{{ __('Adicionar Linha') }}" class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-linha-ministerial">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
                                         <circle cx="12" cy="12" r="10"></circle>
                                         <line x1="12" y1="8" x2="12" y2="16"></line>
@@ -105,7 +105,7 @@
                                     </svg>
                                 </button>
                                 <!-- Botão Apagar -->
-                                <button type="button" title="Apagar Linha" class="btn btn-sm btn-danger btn-rounded apagar-linha-ministerial">
+                                <button type="button" title="{{ __('Apagar Linha') }}" class="btn btn-sm btn-danger btn-rounded apagar-linha-ministerial">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                                         <polyline points="3 6 5 6 21 6"></polyline>
                                         <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">

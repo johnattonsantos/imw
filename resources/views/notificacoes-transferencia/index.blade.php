@@ -22,7 +22,7 @@
 
 @section('content')
     @include('extras.alerts')
-    <h1 class="col-md-12">Notificações de Transferências</h1>
+    <h1 class="col-md-12">{{ __('Notificações de Transferências') }}</h1>
 
     @if ($baseParams->notificacoesTransferencia && $baseParams->notificacoesTransferencia->count())
         @foreach ($baseParams->notificacoesTransferencia as $notificacao)
@@ -59,7 +59,7 @@
                                     </div>
                                 </div>
                                 <div class="post-content  text-sm-left text-center" style="padding: 16px;">
-                                    <h6 class="badge badge-success col-md-12" style="height: 64; font-size: 1.2rem;">Aceitar ou Rejeitar Transferência</h6>
+                                    <h6 class="badge badge-success col-md-12" style="height: 64; font-size: 1.2rem;">{{ __('Aceitar ou Rejeitar Transferência') }}</h6>
                                 </div>
                             </div>
                         </div>

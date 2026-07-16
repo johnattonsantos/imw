@@ -6,7 +6,7 @@
         <div class="col-12">
             <div class="statbox widget box box-shadow">
                 <div class="widget-content widget-content-area text-center py-5">
-                    <h4>Olá {{ $nomeUsuario }} bem-vindo ao seu perfil</h4>
+                    <h4>{{ __('Olá :name, bem-vindo ao seu perfil', ['name' => $nomeUsuario]) }}</h4>
                 </div>
             </div>
         </div>

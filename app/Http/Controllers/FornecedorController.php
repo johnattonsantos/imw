@@ -32,7 +32,7 @@ class FornecedorController extends Controller
             DB::beginTransaction();
             app(SalvarFornecedorService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('fornecedor.novo')->with('success', 'Fornecedor cadastrado com sucesso.');
+            return redirect()->route('fornecedor.novo')->with('success', __('Fornecedor cadastrado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('fornecedor.novo')->with('error', $e->getMessage());
@@ -45,7 +45,7 @@ class FornecedorController extends Controller
             DB::beginTransaction();
             app(DeletarFornecedorService::class)->execute($id);
             DB::commit();
-            return redirect()->route('fornecedor.index')->with('success', 'Fornecedor excluído com sucesso.');
+            return redirect()->route('fornecedor.index')->with('success', __('Fornecedor excluído com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->route('fornecedor.index')->with('error', $e->getMessage());
@@ -59,10 +59,10 @@ class FornecedorController extends Controller
             $fornecedor = FinanceiroFornecedores::findOrFail($id);
             return view('financeiro.fornecedores.editar', compact('fornecedor', 'id'));    
         }  catch(FornecedorNotFoundException $e) {
-            return redirect()->route('fornecedor.index')->with('error', 'Registro não encontrado.');
+            return redirect()->route('fornecedor.index')->with('error', __('Registro não encontrado.'));
         }
         catch (\Exception $e) {
-            return redirect()->route('fornecedor.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('fornecedor.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -72,10 +72,10 @@ class FornecedorController extends Controller
             DB::beginTransaction();
             app(UpdateFornecedorService::class)->execute($request->all(), $id);
             DB::commit();
-            return redirect()->route('fornecedor.index')->with('success', 'Fornecedor atualizado com sucesso.');
+            return redirect()->route('fornecedor.index')->with('success', __('Fornecedor atualizado com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
-            return redirect()->action([FornecedorController::class, 'editar'], ['id' => $id])->with('error', 'Falha na atualização do registro.');
+            return redirect()->action([FornecedorController::class, 'editar'], ['id' => $id])->with('error', __('Falha na atualização do registro.'));
         }
     }
 }

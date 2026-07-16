@@ -43,7 +43,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Comunicação</h4>
+                    <h4>{{ __('Comunicação') }}</h4>
                 </div>
             </div>
         </div>
@@ -52,33 +52,33 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm"
-                            placeholder="Pesquisar por título ou comentário...">
+                            placeholder="{{ __('Pesquisar por título ou comentário...') }}">
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-primary btn-sm">Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm">{{ __('Pesquisar') }}</button>
                     </div>
                 </div>
             </form>
 
             <div class="mb-3 d-flex" style="gap: 8px;">
                 @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao-novo'))
-                <button type="button" id="btn-open-create" class="btn btn-primary btn-sm">Novo</button>
+                <button type="button" id="btn-open-create" class="btn btn-primary btn-sm">{{ __('Novo') }}</button>
                 @endif
-                <a href="{{ route('comunicacao.export.xlsx', request()->query()) }}" class="btn btn-success btn-sm">Exportar XLSX</a>
-                <a href="{{ route('comunicacao.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm">Exportar PDF</a>
-                <a href="./uploads/formulario-cadastro-membresia.pdf" target="_blank" class="btn btn-warning btn-sm">Formulário Cadastro Membresia</a>
+                <a href="{{ route('comunicacao.export.xlsx', request()->query()) }}" class="btn btn-success btn-sm">{{ __('Exportar XLSX') }}</a>
+                <a href="{{ route('comunicacao.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm">{{ __('Exportar PDF') }}</a>
+                <a href="./uploads/formulario-cadastro-membresia.pdf" target="_blank" class="btn btn-warning btn-sm">{{ __('Formulário Cadastro Membresia') }}</a>
             </div>
 
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Categoria</th>
-                            <th>Título</th>
-                            <th>Comentário</th>
-                            <th>Arquivo</th>
-                            <th style="width:150px;">Criado em</th>
-                            <th style="width:240px;">Acoes</th>
+                            <th>{{ __('Categoria') }}</th>
+                            <th>{{ __('Título') }}</th>
+                            <th>{{ __('Comentário') }}</th>
+                            <th>{{ __('Arquivo') }}</th>
+                            <th style="width:150px;">{{ __('Criado em') }}</th>
+                            <th style="width:240px;">{{ __('Acoes') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,7 +91,7 @@
                                 <td>
                                     {{ $comunicacao->titulo }}
                                     @if ($isNovo)
-                                        <span class="badge-novo-comunicacao">Novo</span>
+                                        <span class="badge-novo-comunicacao">{{ __('Novo') }}</span>
                                     @endif
                                 </td>
                                 @php
@@ -122,7 +122,7 @@
                                                 $colorClass = 'text-warning';
                                             }
                                         @endphp
-                                        <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="Ver arquivo" class="btn-visualizar-arquivo" data-id="{{ $comunicacao->id }}">
+                                        <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="{{ __('Ver arquivo') }}" class="btn-visualizar-arquivo" data-id="{{ $comunicacao->id }}">
                                             <i class="fas {{ $iconClass }} {{ $colorClass }} fa-lg"></i>
                                         </a>
                                     @else
@@ -131,21 +131,21 @@
                                 </td>
                                 <td>{{ optional($comunicacao->created_at)->format('d/m/Y H:i') }}</td>
                                 <td class="table-action">
-                                    <button type="button" class="btn btn-sm btn-info btn-rounded btn-show bs-tooltip" data-id="{{ $comunicacao->id }}" title="Detalhes" aria-label="Detalhes">
+                                    <button type="button" class="btn btn-sm btn-info btn-rounded btn-show bs-tooltip" data-id="{{ $comunicacao->id }}" title="{{ __('Detalhes') }}" aria-label="{{ __('Detalhes') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
                                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                                             <circle cx="12" cy="12" r="3"></circle>
                                         </svg>
                                     </button>
                                     @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao-editar'))
-                                    <button type="button" class="btn btn-sm btn-dark btn-rounded btn-edit bs-tooltip" data-id="{{ $comunicacao->id }}" title="Editar" aria-label="Editar">
+                                    <button type="button" class="btn btn-sm btn-dark btn-rounded btn-edit bs-tooltip" data-id="{{ $comunicacao->id }}" title="{{ __('Editar') }}" aria-label="{{ __('Editar') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
                                             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                                         </svg>
                                     </button>
                                     @endif
                                     @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao-deletar'))
-                                    <button type="button" class="btn btn-sm btn-danger btn-rounded btn-delete bs-tooltip" data-id="{{ $comunicacao->id }}" title="Excluir" aria-label="Excluir">
+                                    <button type="button" class="btn btn-sm btn-danger btn-rounded btn-delete bs-tooltip" data-id="{{ $comunicacao->id }}" title="{{ __('Excluir') }}" aria-label="{{ __('Excluir') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path d="M19 6l-1 14H6L5 6"></path>
@@ -159,7 +159,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">Nenhum registro encontrado.</td>
+                                <td colspan="6" class="text-center">{{ __('Nenhum registro encontrado.') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -175,8 +175,8 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalComunicacaoFormTitle">Comunicação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="modalComunicacaoFormTitle">{{ __('Comunicação') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -185,9 +185,9 @@
                     <input type="hidden" id="comunicacao-id" name="id" value="">
 
                     <div class="form-group">
-                        <label for="comunicacao-categoria">* Categoria</label>
+                        <label for="comunicacao-categoria">{{ __('* Categoria') }}</label>
                         <select id="comunicacao-categoria" name="categoria_comunicacao_id" class="form-control" required>
-                            <option value="">Selecione</option>
+                            <option value="">{{ __('Selecione') }}</option>
                             @foreach ($categorias as $categoria)
                                 <option value="{{ $categoria->id }}">{{ $categoria->nome }}</option>
                             @endforeach
@@ -195,17 +195,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="comunicacao-titulo">* Título</label>
+                        <label for="comunicacao-titulo">{{ __('* Título') }}</label>
                         <input type="text" id="comunicacao-titulo" name="titulo" class="form-control" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="comunicacao-comentario">* Comentário</label>
+                        <label for="comunicacao-comentario">{{ __('* Comentário') }}</label>
                         <textarea id="comunicacao-comentario" name="comentario" class="form-control" rows="8"></textarea>
                     </div>
 
                     <div class="form-group">
-                        <label for="comunicacao-arquivo">Arquivo</label>
+                        <label for="comunicacao-arquivo">{{ __('Arquivo') }}</label>
                         <input type="file" id="comunicacao-arquivo" name="arquivo" class="form-control"
                             accept="{{ $arquivoAccept }}">
                         <small class="text-muted d-block mt-2">Formatos: {{ $arquivoFormatosTexto }}. Tamanho maximo: 10MB</small>
@@ -213,8 +213,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" id="btn-save-comunicacao">Salvar</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('Cancelar') }}</button>
+                    <button type="submit" class="btn btn-primary" id="btn-save-comunicacao">{{ __('Salvar') }}</button>
                 </div>
             </form>
         </div>
@@ -225,18 +225,18 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Detalhes da Comunicação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title">{{ __('Detalhes da Comunicação') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p><strong>Categoria:</strong> <span id="show-categoria"></span></p>
-                <p><strong>Título:</strong> <span id="show-titulo"></span></p>
-                <p><strong>Comentário:</strong></p>
+                <p><strong>{{ __('Categoria:') }}</strong> <span id="show-categoria"></span></p>
+                <p><strong>{{ __('Título:') }}</strong> <span id="show-titulo"></span></p>
+                <p><strong>{{ __('Comentário:') }}</strong></p>
                 <div id="show-comentario"></div>
-                <p><strong>Arquivo:</strong> <span id="show-arquivo"></span></p>
-                <p><strong>Criado em:</strong> <span id="show-created-at"></span></p>
+                <p><strong>{{ __('Arquivo:') }}</strong> <span id="show-arquivo"></span></p>
+                <p><strong>{{ __('Criado em:') }}</strong> <span id="show-created-at"></span></p>
             </div>
         </div>
     </div>

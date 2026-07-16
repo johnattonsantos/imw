@@ -27,7 +27,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>IRRF por mês/ano</h4>
+                        <h4>{{ __('IRRF por mês/ano') }}</h4>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <button class="btn btn-primary" id="btn-alcular">Buscar</button>
+                            <button class="btn btn-primary" id="btn-alcular">{{ __('Buscar') }}</button>
                         </div>
                     </form>
                 </div>
@@ -70,15 +70,15 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="contabilidade-irrf">
             <thead>
                 <tr>
-                    <th>NOME</th>
-                    <th>CPF</th>
-                    <th>PREBENDAS</th>
-                    <th>Nº DEPENDENTES</th>
-                    <th>BASE DE CÁLCULOS</th>
-                    <th>REDUTOR</th>
-                    <th>IRRF CALCULADO</th>
-                    <th>RETIDO</th>
-                    <th>REPASSADO</th>
+                    <th>{{ __('NOME') }}</th>
+                    <th>{{ __('CPF') }}</th>
+                    <th>{{ __('PREBENDAS') }}</th>
+                    <th>{{ __('Nº DEPENDENTES') }}</th>
+                    <th>{{ __('BASE DE CÁLCULOS') }}</th>
+                    <th>{{ __('REDUTOR') }}</th>
+                    <th>{{ __('IRRF CALCULADO') }}</th>
+                    <th>{{ __('RETIDO') }}</th>
+                    <th>{{ __('REPASSADO') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -141,7 +141,7 @@
                 @empty
                 <tr>
                     <td colspan="9">
-                        Não possui dados
+                        {{ __('Não possui dados') }}
                     </td>
                 </tr>
                 @endforelse
@@ -149,7 +149,7 @@
             <tfoot>
                 @if($possuiRegistros)
                     <tr style="font-weight: 700; background: #f8f9fa;">
-                        <th colspan="2">TOTAL</th>
+                        <th colspan="2">{{ __('TOTAL') }}</th>
                         <th>R$ {{ number_format($totalPrebendas, 2, ',', '.') }}</th>
                         <th>{{ $totalDependentes }}</th>
                         <th>R$ {{ number_format($totalBaseCalculos, 2, ',', '.') }}</th>

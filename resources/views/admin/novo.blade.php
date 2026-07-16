@@ -29,7 +29,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Novo Usuário</h4>
+                    <h4>{{ __('Novo Usuário') }}</h4>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
                 <div class="row mb-1">
                     <div class="col-lg-5">
                         <div class="form-group">
-                            <label>* Nome completo</label>
+                            <label>{{ __('* Nome completo') }}</label>
                             <div class="controls">
                                 <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" required minlength="4" autocomplete="off" value="{{ old('name') }}">
                                 @error('name')
@@ -50,7 +50,7 @@
                     </div>
                     <div class="col-lg-5">
                         <div class="form-group">
-                            <label>* E-mail</label>
+                            <label>{{ __('* E-mail') }}</label>
                             <div class="controls">
                                 <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" required autocomplete="off" value="{{ old('email') }}" />
                                 @error('email')
@@ -64,7 +64,7 @@
                 <div class="row mt-4" >
                     <div class="col-lg-5" id="col-cpf" >
                         <div class="form-group">
-                            <label>* CPF</label>
+                            <label>{{ __('* CPF') }}</label>
                             <div class="input-group">
                                 <input type="text" name="cpf" id="cpf" class="form-control @error('cpf') is-invalid @enderror" autocomplete="off" value="{{ old('cpf') }}"/>
                             </div>
@@ -76,7 +76,7 @@
 
                     <div class="col-lg-5" id="col-telefone">
                         <div class="form-group">
-                            <label>* Telefone</label>
+                            <label>{{ __('* Telefone') }}</label>
                             <div class="input-group">
                                 <input type="text" name="telefone" id="telefone" class="form-control @error('telefone') is-invalid @enderror" autocomplete="off" value="{{ old('telefone') }}" />
                             </div>
@@ -90,7 +90,7 @@
                 <div class="row mt-4">
                     <div class="col-lg-5">
                         <div class="form-group">
-                            <label>* Senha</label>
+                            <label>{{ __('* Senha') }}</label>
                             <div class="controls">
                                 <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror" required autocomplete="new-password" />
                                 @error('password')
@@ -101,7 +101,7 @@
                     </div>
                     <div class="col-lg-5">
                         <div class="form-group">
-                            <label>* Confirmar Senha</label>
+                            <label>{{ __('* Confirmar Senha') }}</label>
                             <div class="controls">
                                 <input type="password" name="password_confirmation" id="confirmPassword" class="form-control @error('password_confirmation') is-invalid @enderror" required autocomplete="new-password" />
                                 @error('password_confirmation')
@@ -124,8 +124,8 @@
                         <table class="table table-bordered" id="dynamicAddRemove">
                             <thead>
                                 <tr>
-                                    <th>* Perfil</th>
-                                    <th>* Instituição</th>
+                                    <th>{{ __('* Perfil') }}</th>
+                                    <th>{{ __('* Instituição') }}</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -134,7 +134,7 @@
                                     <td>
                                         <div class="form-group">
                                             <select class="form-control @error('perfil_id.*') is-invalid @enderror" name="perfil_id[]">
-                                                <option value="">Selecione um perfil</option>
+                                                <option value="">{{ __('Selecione um perfil') }}</option>
                                                 @foreach ($perfis as $perfil)
                                                 <option value="{{ $perfil->id }}">{{ $perfil->nome }}</option>
                                                 @endforeach
@@ -150,7 +150,7 @@
                                         <div class="input-group">
                                             <input type="text" class="form-control instituicao-nome @error('instituicao_id.*') is-invalid @enderror" name="instituicao_nome[]" readonly>
                                             <input type="hidden" name="instituicao_id[]">
-                                            <button type="button" class="btn btn-secondary abrirModalInstituicoes" data-bs-toggle="modal" data-bs-target="#modalInstituicoes">Selecionar</button>
+                                            <button type="button" class="btn btn-secondary abrirModalInstituicoes" data-bs-toggle="modal" data-bs-target="#modalInstituicoes">{{ __('Selecionar') }}</button>
 
                                         </div>
                                         @error('instituicao_id.*')
@@ -173,9 +173,9 @@
                             <div class="n-chk">
                                 <label class="new-control new-checkbox checkbox-outline-success ">
                                     <input id="chk_clerigo_id" data-clerigoId="{{ old('pessoa_id') }}" name="chk_clerigo_id" type="checkbox" class="new-control-input" {{ old('pessoa_id') ? 'checked' : '' }}>                                        <span class="new-control-indicator"></span> 
-                                    <p>Vincular Vincular Clérigo(a) <span id="clerigo_nome" class="font-weight-bold font-italic">
+                                    <p>{{ __('Vincular Vincular Clérigo(a)') }} <span id="clerigo_nome" class="font-weight-bold font-italic">
                                         {{ old('pessoa_id') ? \App\Models\PessoasPessoa::find(old('pessoa_id'))->nome : '' }}
-                                    </span> ao cadastro?</p>
+                                    </span> {{ __('ao cadastro?') }}</p>
                                 </label>
                                 <input type="hidden" name="pessoa_id" id="pessoa_id" value="{{ old('pessoa_id') }}">
                             </div>
@@ -187,7 +187,7 @@
                 @include('usuarios.modal-instituicoes')
 
                 <br><br>
-                <button type="submit" class="btn btn-primary btn-rounded" id="cadastrar">Salvar</button>
+                <button type="submit" class="btn btn-primary btn-rounded" id="cadastrar">{{ __('Salvar') }}</button>
             </form>
         </div>
     </div>

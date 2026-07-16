@@ -39,7 +39,7 @@
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Cota Orçamentária - {{ $instituicao }}</h4>
+                            <h4>{{ __('Cota Orçamentária') }} - {{ $instituicao }}</h4>
                         </div>
                     </div>
                 </div>                
@@ -48,7 +48,7 @@
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4" id="filtros_data">
                         <div class="col-lg-2 text-right">
-                            <label class="control-label">* Ano/Mês:</label>
+                            <label class="control-label">{{ __('* Ano/Mês:') }}</label>
                         </div>
                             <div class="col-lg-5 ano_mes">
                                 <div class="input-group">
@@ -66,7 +66,7 @@
                                         <select class="form-control " id="mes" name="mes" required="">
                                             @foreach($meses as $mes)
                                                 @if($mes->id != 13)
-                                                    <option value="{{ $mes->id }}" {{ request()->input('mes') == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ $mes->descricao }}</option>
+                                                    <option value="{{ $mes->id }}" {{ request()->input('mes') == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ __($mes->descricao) }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -84,7 +84,7 @@
                                         <select class="form-control " id="mes" name="mes" required="">
                                             @foreach($meses as $mes)
                                                 @if($mes->id != 13)
-                                                    <option value="{{ $mes->id }}" {{ $mesAtual == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ $mes->descricao }}</option>
+                                                    <option value="{{ $mes->id }}" {{ $mesAtual == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ __($mes->descricao) }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -94,8 +94,8 @@
                         
 
                             
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg> Buscar
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg> {{ __('Buscar') }}
                                 </button>
 
 
@@ -110,12 +110,12 @@
                             <table id="cota-orcamentaria" class="table table-striped" style="font-size: 90%; margin-top: 15px;">                                
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>IGREJA</th>
-                                        <th>TOTAL ARRECADADO</th>
-                                        <th>COTA 19%</th>
-                                        <th>DÍZIMO PASTORAL</th>
-                                        <th>IRRF</th>
-                                        <th>TOTAL DO MAPA</th>
+                                        <th>{{ __('IGREJA') }}</th>
+                                        <th>{{ __('TOTAL ARRECADADO') }}</th>
+                                        <th>{{ __('COTA 19%') }}</th>
+                                        <th>{{ __('DÍZIMO PASTORAL') }}</th>
+                                        <th>{{ __('IRRF') }}</th>
+                                        <th>{{ __('TOTAL DO MAPA') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -151,7 +151,7 @@
                                         </tr>
                                     @endforeach
                                     <tr>
-                                        <td><b>TOTAL</b></td>
+                                        <td><b>{{ __('TOTAL') }}</b></td>
                                         <td><b>R$ {{ number_format($totalDizimosOfertas, 2,",",".") }}</b></td>
                                         <td><b>R$ {{ number_format($totalCotaOrcamentariaTotal, 2,",",".") }}</b></td>
                                         <td><b>R$ {{ number_format($totalDizimosPastoralFiw, 2,",",".") }}</b></td>

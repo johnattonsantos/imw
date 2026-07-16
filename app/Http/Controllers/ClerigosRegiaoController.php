@@ -60,7 +60,7 @@ class ClerigosRegiaoController extends Controller
     {
         app(StoreClerigosService::class)->execute($request);
 
-        return redirect()->route('clerigos.index')->with('success', 'Clerigo criado com sucesso!');
+        return redirect()->route('clerigos.index')->with('success', __('Clerigo criado com sucesso!'));
     }
 
     /**
@@ -90,21 +90,21 @@ class ClerigosRegiaoController extends Controller
     {
         app(UpdateClerigosService::class)->execute($request, $id);
 
-        return redirect()->route('clerigos.index')->with('success', 'Clerigo editado com sucesso!');
+        return redirect()->route('clerigos.index')->with('success', __('Clerigo editado com sucesso!'));
     }
 
     public function deletar($id)
     {
         app(DeletarClerigoService::class)->execute($id);
 
-        return redirect()->route('clerigos.index')->with('success', 'Clerigo inativado com sucesso.');
+        return redirect()->route('clerigos.index')->with('success', __('Clerigo inativado com sucesso.'));
     }
 
     public function ativar($id)
     {
         app(AtivarClerigoService::class)->execute($id);
 
-        return redirect()->route('clerigos.index')->with('success', 'Clerigo ativado com sucesso.');
+        return redirect()->route('clerigos.index')->with('success', __('Clerigo ativado com sucesso.'));
     }
 
     public function detalhes($id)

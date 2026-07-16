@@ -17,7 +17,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Auditorias do Sistema</h4>
+                    <h4>{{ __('Auditorias do Sistema') }}</h4>
                 </div>
             </div>
         </div>
@@ -25,9 +25,9 @@
             <form method="GET" action="{{ route('auditorias.index') }}" class="mb-4">
                 <div class="row align-items-end">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
-                        <label for="user_id">Usuario</label>
+                        <label for="user_id">{{ __('Usuario') }}</label>
                         <select name="user_id" id="user_id" class="form-control form-control-sm">
-                            <option value="">Todos</option>
+                            <option value="">{{ __('Todos') }}</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}" @selected((string) request('user_id') === (string) $user->id)>
                                     {{ $user->name }} ({{ $user->email }})
@@ -37,9 +37,9 @@
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-2 mb-3">
-                        <label for="instituicao_id">Instituicao</label>
+                        <label for="instituicao_id">{{ __('Instituicao') }}</label>
                         <select name="instituicao_id" id="instituicao_id" class="form-control form-control-sm">
-                            <option value="">Todas</option>
+                            <option value="">{{ __('Todas') }}</option>
                             @foreach($instituicoes as $instituicao)
                                 <option value="{{ $instituicao->id }}" @selected((string) request('instituicao_id') === (string) $instituicao->id)>
                                     {{ $instituicao->nome }}
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="col-12 col-md-4 col-lg-2 mb-3">
-                        <label for="event">Evento</label>
+                        <label for="event">{{ __('Evento') }}</label>
                         @php
                             $eventLabels = [
                                 'login' => 'Login',
@@ -64,7 +64,7 @@
                             ];
                         @endphp
                         <select name="event" id="event" class="form-control form-control-sm">
-                            <option value="">Todos</option>
+                            <option value="">{{ __('Todos') }}</option>
                             @foreach($events as $event)
                                 <option value="{{ $event }}" @selected(request('event') === $event)>
                                     {{ $eventLabels[$event] ?? strtoupper($event) }}
@@ -74,9 +74,9 @@
                     </div>
 
                     <div class="col-12 col-md-4 col-lg-1 mb-3">
-                        <label for="auditable_type">Entidade</label>
+                        <label for="auditable_type">{{ __('Entidade') }}</label>
                         <select name="auditable_type" id="auditable_type" class="form-control form-control-sm">
-                            <option value="">Todas</option>
+                            <option value="">{{ __('Todas') }}</option>
                             @foreach($entidades as $entidade)
                                 <option value="{{ $entidade }}" @selected(request('auditable_type') === $entidade)>
                                     {{ class_basename($entidade) }}
@@ -86,42 +86,42 @@
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-2 mb-3">
-                        <label for="periodo_inicio">Periodo inicio</label>
+                        <label for="periodo_inicio">{{ __('Periodo inicio') }}</label>
                         <input type="date" name="periodo_inicio" id="periodo_inicio" class="form-control form-control-sm"
                             value="{{ request('periodo_inicio') }}">
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-2 mb-3">
-                        <label for="periodo_fim">Periodo fim</label>
+                        <label for="periodo_fim">{{ __('Periodo fim') }}</label>
                         <input type="date" name="periodo_fim" id="periodo_fim" class="form-control form-control-sm"
                             value="{{ request('periodo_fim') }}">
                     </div>
                 </div>
 
                 <div class="mt-2 d-flex flex-wrap" style="gap: 8px;">
-                    <button type="submit" class="btn btn-primary btn-sm ">Filtrar</button>
-                    <a href="{{ route('auditorias.index') }}" class="btn btn-light btn-sm">Limpar filtros</a>
-                    <a href="{{ route('auditorias.export.xlsx', request()->query()) }}" class="btn btn-success btn-sm">Exportar XLSX</a>
-                    <a href="{{ route('auditorias.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm">Exportar PDF</a>
+                    <button type="submit" class="btn btn-primary btn-sm ">{{ __('Filtrar') }}</button>
+                    <a href="{{ route('auditorias.index') }}" class="btn btn-light btn-sm">{{ __('Limpar filtros') }}</a>
+                    <a href="{{ route('auditorias.export.xlsx', request()->query()) }}" class="btn btn-success btn-sm">{{ __('Exportar XLSX') }}</a>
+                    <a href="{{ route('auditorias.export.pdf', request()->query()) }}" class="btn btn-danger btn-sm">{{ __('Exportar PDF') }}</a>
                 </div>
             </form>
 
             <div class="mb-3">
-                <strong>Total:</strong> {{ $audits->total() }} registro(s)
+                <strong>{{ __('Total:') }}</strong> {{ $audits->total() }} registro(s)
             </div>
 
             <div class="table-responsive">
                 <table class="table table-bordered mb-4">
                     <thead>
                         <tr>
-                            <th>Data/Hora</th>
-                            <th>Usuario</th>
-                            <th>Instituicao</th>
-                            <th>Evento</th>
-                            <th>Entidade</th>
-                            <th>Registro</th>
-                            <th>IP</th>
-                            <th>Detalhes</th>
+                            <th>{{ __('Data/Hora') }}</th>
+                            <th>{{ __('Usuario') }}</th>
+                            <th>{{ __('Instituicao') }}</th>
+                            <th>{{ __('Evento') }}</th>
+                            <th>{{ __('Entidade') }}</th>
+                            <th>{{ __('Registro') }}</th>
+                            <th>{{ __('IP') }}</th>
+                            <th>{{ __('Detalhes') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -155,7 +155,7 @@
                                     <button class="btn btn-sm btn-outline-primary" type="button" data-toggle="collapse"
                                         data-target="#audit-{{ $audit->id }}" aria-expanded="false"
                                         aria-controls="audit-{{ $audit->id }}">
-                                        Ver
+                                        {{ __('Ver') }}
                                     </button>
                                 </td>
                             </tr>
@@ -165,11 +165,11 @@
                                         <div class="p-3">
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <h6>Antes</h6>
+                                                    <h6>{{ __('Antes') }}</h6>
                                                     <pre class="mb-0" style="max-height: 240px; overflow:auto;">{{ json_encode($oldValues, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <h6>Depois</h6>
+                                                    <h6>{{ __('Depois') }}</h6>
                                                     <pre class="mb-0" style="max-height: 240px; overflow:auto;">{{ json_encode($newValues, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre>
                                                 </div>
                                             </div>
@@ -179,7 +179,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center">Nenhum registro encontrado para os filtros informados.</td>
+                                <td colspan="8" class="text-center">{{ __('Nenhum registro encontrado para os filtros informados.') }}</td>
                             </tr>
                         @endforelse
                     </tbody>

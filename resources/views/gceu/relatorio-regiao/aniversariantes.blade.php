@@ -46,35 +46,35 @@
         {{-- Congregação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-3">
-            <label class="control-label">Distrito:</label>
+            <label class="control-label">{{ __('Distrito:') }}</label>
             <select id="regiao_id" name="distrito_id" class="form-control @error('distrito_id') is-invalid @enderror" >
-              <option value="" {{ request()->distrito_id == '' ? 'selected' : '' }}>TODOS</option>
+              <option value="" {{ request()->distrito_id == '' ? 'selected' : '' }}>{{ __('TODOS') }}</option>
               @foreach($distritos as $distrito)
                 <option value="{{ $distrito->id }}" {{ request()->distrito_id == $distrito->id ? 'selected' : '' }}>{{ $distrito->distrito_nome }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-4">
-            <label class="control-label">Igreja:</label>
+            <label class="control-label">{{ __('Igreja:') }}</label>
             <select id="igreja_id" name="igreja_id" class="form-control @error('igreja_id') is-invalid @enderror" >
-              <option value="" {{ request()->igreja_id == '' ? 'selected' : '' }}>TODAS</option>
+              <option value="" {{ request()->igreja_id == '' ? 'selected' : '' }}>{{ __('TODAS') }}</option>
               @foreach($igrejas as $igreja)
                 <option value="{{ $igreja->id_igreja }}" {{ request()->igreja_id == $igreja->id_igreja ? 'selected' : '' }}>{{ $igreja->igreja_nome }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-3">
-            <label class="control-label">GCEU:</label>
+            <label class="control-label">{{ __('GCEU:') }}</label>
             <select id="gceu_id" name="gceu_id" class="form-control @error('gceu_id') is-invalid @enderror" >
-              <option value="" {{ request()->gceu_id == '' ? 'selected' : '' }}>TODOS</option>
+              <option value="" {{ request()->gceu_id == '' ? 'selected' : '' }}>{{ __('TODOS') }}</option>
               @foreach ($gceus as $gceu)
                 <option value="{{ $gceu->id }}" {{ request()->gceu_id == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-2">
-            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn" style="margin-top: 30px;">
-              <x-bx-search /> Buscar 
+            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn" style="margin-top: 30px;">
+              <x-bx-search /> {{ __('Buscar') }} 
             </button>
           </div>
         </div>
@@ -91,15 +91,15 @@
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aniversariantes">
                     <thead>
                         <tr>
-                          <th>Nº</th>
-                          <th>DISTRITO</th>
-                          <th>IGREJA</th>
-                          <th>NOME</th>
-                          <th>ANIVERSÁRIO</th>
-                          <th>NASCIMENTO</th>
-                          <th>IDADE</th>
-                          <th>CONTATO</th>
-                          <th>GCEU</th>
+                          <th>{{ __('Nº') }}</th>
+                          <th>{{ __('DISTRITO') }}</th>
+                          <th>{{ __('IGREJA') }}</th>
+                          <th>{{ __('NOME') }}</th>
+                          <th>{{ __('ANIVERSÁRIO') }}</th>
+                          <th>{{ __('NASCIMENTO') }}</th>
+                          <th>{{ __('IDADE') }}</th>
+                          <th>{{ __('CONTATO') }}</th>
+                          <th>{{ __('GCEU') }}</th>
                         </tr>
                     </thead>
                     <tbody>

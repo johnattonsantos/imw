@@ -32,14 +32,14 @@
 @section('content')
     <div class="container-fluid" style="background: #fff">
         <div class="widget-header">
-            <h4>Nova Prebenda</h4>
+            <h4>{{ __('Nova Prebenda') }}</h4>
         </div>
 
         <form class="py-2 px-3" method="POST" action="{{ route('clerigos.prebendas.storePrebenda') }}">
             @csrf
             <div class="row">
                 <div class="col-12 mt-3 col-md-4">
-                    <label for="ano">* Ano</label>
+                    <label for="ano">{{ __('* Ano') }}</label>
                     <input class="form-control @error('ano') is-invalid @enderror" type="number" id="ano"
                         name="ano" value="{{ old('ano') }}">
 
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="col-12 mt-3 col-md-4">
-                    <label for="valor">* Valor</label>
+                    <label for="valor">{{ __('* Valor') }}</label>
                     <input class="form-control @error('valor') is-invalid @enderror" type="text" id="valor"
                         name="valor" step="0.01" value="{{ old('valor') }}">
                     @error('valor')
@@ -60,7 +60,7 @@
 
 
 
-            <button class="btn btn-primary my-4">Salvar</button>
+            <button class="btn btn-primary my-4">{{ __('Salvar') }}</button>
         </form>
     </div>
 @endsection

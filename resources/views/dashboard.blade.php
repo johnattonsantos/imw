@@ -134,7 +134,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h6 class="card-title"><b>Membros</b></h6>
+                    <h6 class="card-title"><b>{{ __('Membros') }}</b></h6>
                     <p class="card-text">Total: {{ $activeMembrosCount }}</p>
                 </div>
             </div>
@@ -143,7 +143,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h6 class="card-title"><b>Congregados</b></h6>
+                    <h6 class="card-title"><b>{{ __('Congregados') }}</b></h6>
                     <p class="card-text">Total: {{ $activeCongregadosCount }}</p>
                 </div>
             </div>
@@ -152,7 +152,7 @@
         <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h6 class="card-title"><b>Visitantes</b></h6>
+                    <h6 class="card-title"><b>{{ __('Visitantes') }}</b></h6>
                     <p class="card-text">Total: {{ $activeVisitantesCount }}</p>
                 </div>
             </div>
@@ -166,8 +166,8 @@
             <div class="card h-100" id="card-membros-chart">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                        <h6 class="card-title mb-0">Gráfico de Membros Ativos vs Inativos</h6>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-membros-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <h6 class="card-title mb-0">{{ __('Gráfico de Membros Ativos vs Inativos') }}</h6>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-membros-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                     <div class="chart-container">
                         <canvas id="membrosChart"></canvas>
@@ -181,29 +181,29 @@
             <div class="card h-100" id="card-visitantes-chart">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                        <h6 class="card-title mb-0">Membresia (<span id="ano-visitantes-text">{{ $anoVisitantes }}</span>)</h6>
+                        <h6 class="card-title mb-0">{{ __('Membresia (') }}<span id="ano-visitantes-text">{{ $anoVisitantes }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="sexo-membresia-select" class="form-control form-control-sm" style="width: 120px;">
-                                <option value="" {{ empty($sexoMembresia) ? 'selected' : '' }}>Sexo</option>
-                                <option value="M" {{ $sexoMembresia === 'M' ? 'selected' : '' }}>Masculino</option>
-                                <option value="F" {{ $sexoMembresia === 'F' ? 'selected' : '' }}>Feminino</option>
+                                <option value="" {{ empty($sexoMembresia) ? 'selected' : '' }}>{{ __('Sexo') }}</option>
+                                <option value="M" {{ $sexoMembresia === 'M' ? 'selected' : '' }}>{{ __('Masculino') }}</option>
+                                <option value="F" {{ $sexoMembresia === 'F' ? 'selected' : '' }}>{{ __('Feminino') }}</option>
                             </select>
                             <select id="status-membresia-select" class="form-control form-control-sm" style="width: 120px;">
-                                <option value="A" {{ $statusMembresia === 'A' ? 'selected' : '' }}>Ativo</option>
-                                <option value="I" {{ $statusMembresia === 'I' ? 'selected' : '' }}>Inativo</option>
+                                <option value="A" {{ $statusMembresia === 'A' ? 'selected' : '' }}>{{ __('Ativo') }}</option>
+                                <option value="I" {{ $statusMembresia === 'I' ? 'selected' : '' }}>{{ __('Inativo') }}</option>
                             </select>
                             <select id="ano-visitantes-select" class="form-control form-control-sm" style="width: 100px;">
                                 @foreach($anosDisponiveis as $ano)
                                     <option value="{{ $ano }}" {{ (int) $anoVisitantes === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                                 @endforeach
                             </select>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-visitantes-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-visitantes-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                         </div>
                     </div>
                     <div class="chart-container">
                         <div id="loading-visitantes" class="chart-loading">
                             <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                            Carregando...
+                            {{ __('Carregando...') }}
                         </div>
                         <canvas id="visitantesChart"></canvas>
                     </div>
@@ -218,20 +218,20 @@
             <div class="card h-100" id="card-rol-es-chart">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                        <h6 class="card-title mb-0">Entradas x Saidas do Rol (<span id="ano-rol-es-text">{{ $anoRol }}</span>)</h6>
+                        <h6 class="card-title mb-0">{{ __('Entradas x Saídas do Rol') }} (<span id="ano-rol-es-text">{{ $anoRol }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="ano-rol-es-select" class="form-control form-control-sm" style="width: 100px;">
                                 @foreach($anosDisponiveis as $ano)
                                     <option value="{{ $ano }}" {{ (int) $anoRol === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                                 @endforeach
                             </select>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-rol-es-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-rol-es-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                         </div>
                     </div>
                     <div class="chart-container">
                         <div id="loading-rol-es" class="chart-loading">
                             <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                            Carregando...
+                            {{ __('Carregando...') }}
                         </div>
                         <canvas id="rolEntradasSaidasChart"></canvas>
                     </div>
@@ -243,20 +243,20 @@
             <div class="card h-100" id="card-rol-cresc-chart">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                        <h6 class="card-title mb-0">Crescimento Liquido do Rol (<span id="ano-rol-cresc-text">{{ $anoRol }}</span>)</h6>
+                        <h6 class="card-title mb-0">{{ __('Crescimento Liquido do Rol (') }}<span id="ano-rol-cresc-text">{{ $anoRol }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="ano-rol-cresc-select" class="form-control form-control-sm" style="width: 100px;">
                                 @foreach($anosDisponiveis as $ano)
                                     <option value="{{ $ano }}" {{ (int) $anoRol === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                                 @endforeach
                             </select>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-rol-cresc-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-rol-cresc-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                         </div>
                     </div>
                     <div class="chart-container">
                         <div id="loading-rol-cresc" class="chart-loading">
                             <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                            Carregando...
+                            {{ __('Carregando...') }}
                         </div>
                         <canvas id="rolCrescimentoLiquidoChart"></canvas>
                     </div>
@@ -271,20 +271,20 @@
             <div class="card h-100" id="card-financeiro-chart">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                        <h6 class="card-title mb-0">Financeiro: Entradas x Saidas (<span id="ano-financeiro-text">{{ $anoFinanceiro }}</span>)</h6>
+                        <h6 class="card-title mb-0">{{ __('Financeiro: Entradas x Saídas') }} (<span id="ano-financeiro-text">{{ $anoFinanceiro }}</span>)</h6>
                         <div class="d-flex" style="gap: 8px;">
                             <select id="ano-financeiro-select" class="form-control form-control-sm" style="width: 100px;">
                                 @foreach($anosDisponiveis as $ano)
                                     <option value="{{ $ano }}" {{ (int) $anoFinanceiro === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                                 @endforeach
                             </select>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-financeiro-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-financeiro-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                         </div>
                     </div>
                     <div class="chart-container">
                         <div id="loading-financeiro" class="chart-loading">
                             <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                            Carregando...
+                            {{ __('Carregando...') }}
                         </div>
                         <canvas id="financeiroEntradasSaidasChart"></canvas>
                     </div>
@@ -297,8 +297,8 @@
     <div class="row flex-fill mt-4">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="card-title mb-0"><b>{{ session('session_perfil')->instituicao_nome }} - Indicadores Regionais</b></h6>
-                <small class="text-muted">Gráficos por ano e distrito da região logada</small>
+                <h6 class="card-title mb-0"><b>{{ session('session_perfil')->instituicao_nome }} - {{ __('Indicadores Regionais') }}</b></h6>
+                <small class="text-muted">{{ __('Gráficos por ano e distrito da região logada') }}</small>
             </div>
         </div>
     </div>
@@ -331,17 +331,17 @@
                 <div class="card h-100" id="card-{{ $config['id'] }}-chart">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                            <h6 class="card-title mb-0">{{ $config['title'] }} (<span id="ano-{{ $config['id'] }}-text">{{ $anoDistrito }}</span>)</h6>
+                            <h6 class="card-title mb-0">{{ __($config['title']) }} (<span id="ano-{{ $config['id'] }}-text">{{ $anoDistrito }}</span>)</h6>
                             <div class="d-flex" style="gap: 8px;">
                                 <div class="regional-chart-filters @if(!$showRegionalFilters) d-none @endif">
                                     <select id="distrito-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
-                                        <option value="">Todos distritos</option>
+                                        <option value="">{{ __('Todos distritos') }}</option>
                                         @foreach($regiaoDistritos as $distrito)
                                             <option value="{{ $distrito->id }}">{{ $distrito->nome }}</option>
                                         @endforeach
                                     </select>
                                     <select id="igreja-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 220px;">
-                                        <option value="">Todas igrejas</option>
+                                        <option value="">{{ __('Todas igrejas') }}</option>
                                     </select>
                                     <select id="ano-{{ $config['id'] }}-select" class="form-control form-control-sm" style="width: 100px;">
                                         @foreach($anosDisponiveis as $ano)
@@ -349,13 +349,13 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-{{ $config['id'] }}-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-{{ $config['id'] }}-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                             </div>
                         </div>
                         <div class="chart-container">
                             <div id="loading-{{ $config['id'] }}" class="chart-loading">
                                 <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                                Carregando...
+                                {{ __('Carregando...') }}
                             </div>
                             <canvas id="{{ $config['canvas'] }}"></canvas>
                         </div>
@@ -369,8 +369,8 @@
 <div class="row flex-fill mt-4">
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h6 class="card-title mb-0"><b>{{ session('session_perfil')->instituicao_nome }} - Indicadores Distritais</b></h6>
-            <small class="text-muted">Filtros por gráfico (AJAX)</small>
+            <h6 class="card-title mb-0"><b>{{ session('session_perfil')->instituicao_nome }} - {{ __('Indicadores Distritais') }}</b></h6>
+            <small class="text-muted">{{ __('Filtros por gráfico (AJAX)') }}</small>
         </div>
     </div>
 </div>
@@ -380,10 +380,10 @@
         <div class="card h-100" id="card-distrito-evolucao-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 1 - Evolução de Membros (Ativos + Inativos) por Igreja (<span id="ano-distrito-evolucao-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 1 - Evolução de Membros (Ativos + Inativos) por Igreja') }} (<span id="ano-distrito-evolucao-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-evolucao-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -393,13 +393,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-evolucao-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-evolucao-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-evolucao" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoEvolucaoChart"></canvas>
                 </div>
@@ -411,10 +411,10 @@
         <div class="card h-100" id="card-distrito-es-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 2 - Entradas x Saídas de Membros (<span id="ano-distrito-es-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 2 - Entradas x Saídas de Membros') }} (<span id="ano-distrito-es-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-es-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -424,13 +424,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-es-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-es-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-es" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoEntradasSaidasChart"></canvas>
                 </div>
@@ -445,10 +445,10 @@
         <div class="card h-100" id="card-distrito-top-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 3 - Top 10 Igrejas por Total de Membros (Ativos + Inativos) (<span id="ano-distrito-top-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 3 - Top 10 Igrejas por Total de Membros (Ativos + Inativos)') }} (<span id="ano-distrito-top-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-top-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -458,13 +458,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-top-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-top-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-top" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoTopIgrejasChart"></canvas>
                 </div>
@@ -476,10 +476,10 @@
         <div class="card h-100" id="card-distrito-vinculos-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 4 - Distribuição por Vínculo (<span id="ano-distrito-vinculos-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 4 - Distribuição por Vínculo') }} (<span id="ano-distrito-vinculos-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-vinculos-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -489,13 +489,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-vinculos-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-vinculos-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-vinculos" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoVinculosChart"></canvas>
                 </div>
@@ -510,10 +510,10 @@
         <div class="card h-100" id="card-distrito-sexo-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 5 - Membros Ativos por Sexo (<span id="ano-distrito-sexo-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 5 - Membros Ativos por Sexo') }} (<span id="ano-distrito-sexo-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-sexo-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -523,13 +523,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-sexo-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-sexo-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-sexo" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoSexoChart"></canvas>
                 </div>
@@ -541,10 +541,10 @@
         <div class="card h-100" id="card-distrito-status-rol-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 6 - Funções Eclesiásticas dos Membros (<span id="ano-distrito-status-rol-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 6 - Funções Eclesiásticas dos Membros') }} (<span id="ano-distrito-status-rol-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-status-rol-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -554,13 +554,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-status-rol-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-status-rol-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-status-rol" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoStatusRolChart"></canvas>
                 </div>
@@ -575,10 +575,10 @@
         <div class="card h-100" id="card-distrito-crescimento-acumulado-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 7 - Crescimento Líquido Acumulado (<span id="ano-distrito-crescimento-acumulado-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 7 - Crescimento Líquido Acumulado') }} (<span id="ano-distrito-crescimento-acumulado-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-crescimento-acumulado-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -588,13 +588,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-crescimento-acumulado-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-crescimento-acumulado-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-crescimento-acumulado" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoCrescimentoAcumuladoChart"></canvas>
                 </div>
@@ -606,10 +606,10 @@
         <div class="card h-100" id="card-distrito-crescimento-igrejas-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 8 - Ranking de Crescimento por Igreja (<span id="ano-distrito-crescimento-igrejas-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 8 - Ranking de Crescimento por Igreja') }} (<span id="ano-distrito-crescimento-igrejas-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-crescimento-igrejas-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -619,13 +619,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-crescimento-igrejas-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-crescimento-igrejas-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-crescimento-igrejas" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoCrescimentoIgrejasChart"></canvas>
                 </div>
@@ -640,10 +640,10 @@
         <div class="card h-100" id="card-distrito-entradas-igrejas-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 9 - Ranking de Entradas por Igreja (<span id="ano-distrito-entradas-igrejas-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 9 - Ranking de Entradas por Igreja') }} (<span id="ano-distrito-entradas-igrejas-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-entradas-igrejas-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -653,13 +653,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-entradas-igrejas-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-entradas-igrejas-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-entradas-igrejas" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoEntradasIgrejasChart"></canvas>
                 </div>
@@ -671,10 +671,10 @@
         <div class="card h-100" id="card-distrito-saidas-igrejas-chart">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-2 chart-header-stack">
-                    <h6 class="card-title mb-0">Gráfico 10 - Ranking de Saídas por Igreja (<span id="ano-distrito-saidas-igrejas-text">{{ $anoDistrito }}</span>)</h6>
+                    <h6 class="card-title mb-0">{{ __('Gráfico 10 - Ranking de Saídas por Igreja') }} (<span id="ano-distrito-saidas-igrejas-text">{{ $anoDistrito }}</span>)</h6>
                     <div class="d-flex" style="gap: 8px;">
                         <select id="igreja-distrito-saidas-igrejas-select" class="form-control form-control-sm" style="width: 220px;">
-                            <option value="">Todas igrejas</option>
+                            <option value="">{{ __('Todas igrejas') }}</option>
                             @foreach($distritoIgrejas as $igreja)
                                 <option value="{{ $igreja->id }}">{{ $igreja->nome }}</option>
                             @endforeach
@@ -684,13 +684,13 @@
                                 <option value="{{ $ano }}" {{ (int) $anoDistrito === (int) $ano ? 'selected' : '' }}>{{ $ano }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-saidas-igrejas-chart" title="Tela cheia" aria-label="Tela cheia"><i class="fas fa-expand"></i></button>
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-chart-fullscreen" data-target="card-distrito-saidas-igrejas-chart" title="{{ __('Tela cheia') }}" aria-label="{{ __('Tela cheia') }}"><i class="fas fa-expand"></i></button>
                     </div>
                 </div>
                 <div class="chart-container">
                     <div id="loading-distrito-saidas-igrejas" class="chart-loading">
                         <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-                        Carregando...
+                        {{ __('Carregando...') }}
                     </div>
                     <canvas id="distritoSaidasIgrejasChart"></canvas>
                 </div>
@@ -704,17 +704,17 @@
     <div class="col-12 text-center">
         <div class="card h-100 shadow-sm">
             <div class="card-body">
-                <h6 class="card-title mb-3"><b>Bem-vindo(a) à Área Geral!</b></h6>
+                <h6 class="card-title mb-3"><b>{{ __('Bem-vindo(a) à Área Geral!') }}</b></h6>
                 <p class="card-text mb-4">
-                    Você está acessando a área geral da instituição. Aqui você pode gerenciar informações globais, acessar relatórios gerais e muito mais.
+                    {{ __('Você está acessando a área geral da instituição. Aqui você pode gerenciar informações globais, acessar relatórios gerais e muito mais.') }}
                 </p>
                 <div class="row">
                     <div class="col-md-4 mb-3">
                         <div class="feature-box d-flex align-items-center">
                             <i class="fas fa-cogs fa-2x text-primary mr-3"></i>
                             <div>
-                                <h6 class="feature-title mb-0">Gerenciar Informações</h6>
-                                <small class="text-muted">Administre dados essenciais</small>
+                                <h6 class="feature-title mb-0">{{ __('Gerenciar Informações') }}</h6>
+                                <small class="text-muted">{{ __('Administre dados essenciais') }}</small>
                             </div>
                         </div>
                     </div>
@@ -722,8 +722,8 @@
                         <div class="feature-box d-flex align-items-center">
                             <i class="fas fa-chart-pie fa-2x text-success mr-3"></i>
                             <div>
-                                <h6 class="feature-title mb-0">Relatórios Gerais</h6>
-                                <small class="text-muted">Acesse dados detalhados</small>
+                                <h6 class="feature-title mb-0">{{ __('Relatórios Gerais') }}</h6>
+                                <small class="text-muted">{{ __('Acesse dados detalhados') }}</small>
                             </div>
                         </div>
                     </div>
@@ -731,13 +731,13 @@
                         <div class="feature-box d-flex align-items-center">
                             <i class="fas fa-users fa-2x text-info mr-3"></i>
                             <div>
-                                <h6 class="feature-title mb-0">Gerenciamento de Usuários</h6>
-                                <small class="text-muted">Controle de acessos</small>
+                                <h6 class="feature-title mb-0">{{ __('Gerenciamento de Usuários') }}</h6>
+                                <small class="text-muted">{{ __('Controle de acessos') }}</small>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button class="btn btn-primary mt-3">Explorar Mais</button>
+                <button class="btn btn-primary mt-3">{{ __('Explorar Mais') }}</button>
             </div>
         </div>
     </div>
@@ -748,9 +748,9 @@
         <div class="col-12 text-center">
             <div class="card h-100">
                 <div class="card-body">
-                    <h6 class="card-title"><b>Bem-vindo(a) ao Órgão Geral!</b></h6>
+                    <h6 class="card-title"><b>{{ __('Bem-vindo(a) ao Órgão Geral!') }}</b></h6>
                     <p class="card-text">
-                        Você está acessando a área do órgão geral da instituição. Aqui você pode gerenciar atividades e recursos a nível de órgão.
+                        {{ __('Você está acessando a área do órgão geral da instituição. Aqui você pode gerenciar atividades e recursos a nível de órgão.') }}
                     </p>
                 </div>
             </div>
@@ -761,9 +761,9 @@
         <div class="col-12 text-center">
             <div class="card h-100">
                 <div class="card-body">
-                    <h6 class="card-title"><b>Bem-vindo(a) à Área de Estatísticas!</b></h6>
+                    <h6 class="card-title"><b>{{ __('Bem-vindo(a) à Área de Estatísticas!') }}</b></h6>
                     <p class="card-text">
-                        Aqui você pode visualizar e analisar estatísticas detalhadas sobre a instituição. Acesse gráficos, relatórios e mais.
+                        {{ __('Aqui você pode visualizar e analisar estatísticas detalhadas sobre a instituição. Acesse gráficos, relatórios e mais.') }}
                     </p>
                 </div>
             </div>
@@ -774,9 +774,9 @@
         <div class="col-12 text-center">
             <div class="card h-100">
                 <div class="card-body">
-                    <h6 class="card-title"><b>Bem-vindo(a) à Secretaria!</b></h6>
+                    <h6 class="card-title"><b>{{ __('Bem-vindo(a) à Secretaria!') }}</b></h6>
                     <p class="card-text">
-                        Você está acessando a área da secretaria. Aqui você pode gerenciar documentos, comunicados e outras informações importantes.
+                        {{ __('Você está acessando a área da secretaria. Aqui você pode gerenciar documentos, comunicados e outras informações importantes.') }}
                     </p>
                 </div>
             </div>
@@ -787,9 +787,9 @@
         <div class="col-12 text-center">
             <div class="card h-100">
                 <div class="card-body">
-                    <h6 class="card-title"><b>Bem-vindo(a)!</b></h6>
+                    <h6 class="card-title"><b>{{ __('Bem-vindo(a)!') }}</b></h6>
                     <p class="card-text">
-                        Bem-vindo(a) ao nosso sistema. Navegue pelos menus para acessar as diferentes funcionalidades disponíveis.
+                        {{ __('Bem-vindo(a) ao nosso sistema. Navegue pelos menus para acessar as diferentes funcionalidades disponíveis.') }}
                     </p>
                 </div>
             </div>
@@ -861,8 +861,14 @@
     Chart.overrides.line.plugins = Chart.overrides.line.plugins || {};
     Chart.overrides.line.plugins.datalabels = { display: false };
 
-    const labelsMeses = @json($labelsMeses);
+    const labelsMeses = @json(collect($labelsMeses)->map(fn ($label) => __($label))->values());
     const chartDataUrl = "{{ route('dashboard.chart-data') }}";
+    const t = (text) => (typeof window.__ === 'function' ? window.__(text) : text);
+    const traduzirLista = (items) => (items || []).map((item) => typeof item === 'string' ? t(item) : item);
+    const traduzirDatasets = (datasets) => (datasets || []).map((dataset) => ({
+        ...dataset,
+        label: typeof dataset.label === 'string' ? t(dataset.label) : dataset.label,
+    }));
 
     function getChartFromCard(cardEl) {
         if (!cardEl) return null;
@@ -974,19 +980,19 @@
                     data-bs-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
-                    title="Ações do gráfico"
-                    aria-label="Ações do gráfico">
+                    title="${t('Ações do gráfico')}"
+                    aria-label="${t('Ações do gráfico')}">
                     <i class="fas fa-ellipsis-v"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right">
                     <a href="#" class="dropdown-item js-chart-action" data-action="fullscreen" data-target="${cardId}">
-                        <i class="fas fa-expand mr-2"></i>Tela cheia
+                        <i class="fas fa-expand mr-2"></i>${t('Tela cheia')}
                     </a>
                     <a href="#" class="dropdown-item js-chart-action" data-action="image" data-target="${cardId}">
-                        <i class="fas fa-image mr-2"></i>Exportar imagem
+                        <i class="fas fa-image mr-2"></i>${t('Exportar imagem')}
                     </a>
                     <a href="#" class="dropdown-item js-chart-action" data-action="pdf" data-target="${cardId}">
-                        <i class="fas fa-file-pdf mr-2"></i>Exportar PDF
+                        <i class="fas fa-file-pdf mr-2"></i>${t('Exportar PDF')}
                     </a>
                 </div>
             `;
@@ -1019,11 +1025,11 @@
     const distritoSaidasPorMes = @json(array_values($distritoSaidasPorMes));
     const distritoTopIgrejasLabels = @json($distritoTopIgrejasLabels);
     const distritoTopIgrejasTotais = @json($distritoTopIgrejasTotais);
-    const distritoVinculosLabels = ['Membros', 'Congregados', 'Visitantes'];
+    const distritoVinculosLabels = traduzirLista(['Membros', 'Congregados', 'Visitantes']);
     const distritoVinculosTotais = @json($distritoVinculosTotais);
-    const distritoSexoLabels = ['Masculino', 'Feminino', 'Não informado'];
+    const distritoSexoLabels = traduzirLista(['Masculino', 'Feminino', 'Não informado']);
     const distritoSexoTotais = @json($distritoSexoTotais);
-    const distritoStatusRolLabels = ['Ativos', 'Inativos'];
+    const distritoStatusRolLabels = traduzirLista(['Ativos', 'Inativos']);
     const distritoStatusRolTotais = @json($distritoStatusRolTotais);
     const distritoCrescimentoAcumulado = @json(array_values($distritoCrescimentoAcumulado));
     const distritoCrescimentoIgrejasLabels = @json($distritoCrescimentoIgrejasLabels);
@@ -1037,9 +1043,9 @@
     const regiaoSaidasPorMes = @json(array_values($regiaoSaidasPorMes));
     const regiaoTopDistritosLabels = @json($regiaoTopDistritosLabels);
     const regiaoTopDistritosTotais = @json($regiaoTopDistritosTotais);
-    const regiaoVinculosLabels = ['Membros', 'Congregados', 'Visitantes'];
+    const regiaoVinculosLabels = traduzirLista(['Membros', 'Congregados', 'Visitantes']);
     const regiaoVinculosTotais = @json($regiaoVinculosTotais);
-    const regiaoSexoLabels = ['Masculino', 'Feminino', 'Nao informado'];
+    const regiaoSexoLabels = traduzirLista(['Masculino', 'Feminino', 'Não informado']);
     const regiaoSexoTotais = @json($regiaoSexoTotais);
     const regiaoStatusRolLabels = @json($regiaoStatusRolLabels);
     const regiaoStatusRolTotais = @json($regiaoStatusRolTotais);
@@ -1057,7 +1063,7 @@
         new Chart(membrosChartCanvas.getContext('2d'), {
             type: 'pie',
             data: {
-                labels: ['Inativos', 'Ativos'],
+                labels: traduzirLista(['Inativos', 'Ativos']),
                 datasets: [{
                     data: [{{ $totalInativos }}, {{ $totalAtivos }}],
                     backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
@@ -1174,14 +1180,14 @@
                 labels: labelsMeses,
                 datasets: [
                     {
-                        label: 'Entradas',
+                        label: t('Entradas'),
                         data: entradasRolPorMes,
                         backgroundColor: 'rgba(54, 162, 235, 0.3)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     },
                     {
-                        label: 'Saidas',
+                        label: t('Saídas'),
                         data: saidasRolPorMes,
                         backgroundColor: 'rgba(255, 99, 132, 0.3)',
                         borderColor: 'rgba(255, 99, 132, 1)',
@@ -1229,14 +1235,14 @@
                 labels: labelsMeses,
                 datasets: [
                     {
-                        label: 'Entradas (R$)',
+                        label: t('Entradas (R$)'),
                         data: entradasFinanceiroPorMes,
                         backgroundColor: 'rgba(40, 167, 69, 0.3)',
                         borderColor: 'rgba(40, 167, 69, 1)',
                         borderWidth: 1
                     },
                     {
-                        label: 'Saidas (R$)',
+                        label: t('Saídas (R$)'),
                         data: saidasFinanceiroPorMes,
                         backgroundColor: 'rgba(220, 53, 69, 0.3)',
                         borderColor: 'rgba(220, 53, 69, 1)',
@@ -1335,8 +1341,8 @@
             data: {
                 labels: labelsMeses,
                 datasets: [
-                    datasetBar('Entradas', distritoEntradasPorMes, 'rgba(40, 167, 69, 0.3)', 'rgba(40, 167, 69, 1)'),
-                    datasetBar('Saídas', distritoSaidasPorMes, 'rgba(220, 53, 69, 0.3)', 'rgba(220, 53, 69, 1)')
+                    datasetBar(t('Entradas'), distritoEntradasPorMes, 'rgba(40, 167, 69, 0.3)', 'rgba(40, 167, 69, 1)'),
+                    datasetBar(t('Saídas'), distritoSaidasPorMes, 'rgba(220, 53, 69, 0.3)', 'rgba(220, 53, 69, 1)')
                 ]
             },
             options: optionsEixoYComZeroEDatalabels()
@@ -1349,7 +1355,7 @@
             type: 'bar',
             data: {
                 labels: distritoTopIgrejasLabels,
-                datasets: [datasetBar('Membros (Ativos + Inativos)', distritoTopIgrejasTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
+                datasets: [datasetBar(t('Membros (Ativos + Inativos)'), distritoTopIgrejasTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1362,7 +1368,7 @@
             data: {
                 labels: distritoVinculosLabels,
                 datasets: [datasetCircular(
-                    'Cadastros',
+                    t('Cadastros'),
                     distritoVinculosTotais,
                     ['rgba(54, 162, 235, 0.35)', 'rgba(255, 193, 7, 0.35)', 'rgba(40, 167, 69, 0.35)'],
                     ['rgba(54, 162, 235, 1)', 'rgba(255, 193, 7, 1)', 'rgba(40, 167, 69, 1)']
@@ -1378,7 +1384,7 @@
             data: {
                 labels: distritoSexoLabels,
                 datasets: [datasetCircular(
-                    'Membros (Ativos + Inativos)',
+                    t('Membros (Ativos + Inativos)'),
                     distritoSexoTotais,
                     ['rgba(54, 162, 235, 0.35)', 'rgba(255, 99, 132, 0.35)', 'rgba(108, 117, 125, 0.35)'],
                     ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(108, 117, 125, 1)']
@@ -1395,7 +1401,7 @@
             data: {
                 labels: distritoStatusRolLabels,
                 datasets: [datasetCircular(
-                    'Membros no Rol',
+                    t('Membros no Rol'),
                     distritoStatusRolTotais,
                     ['rgba(40, 167, 69, 0.35)', 'rgba(220, 53, 69, 0.35)'],
                     ['rgba(40, 167, 69, 1)', 'rgba(220, 53, 69, 1)']
@@ -1411,7 +1417,7 @@
             data: {
                 labels: labelsMeses,
                 datasets: [{
-                    label: 'Crescimento Líquido Acumulado',
+                    label: t('Crescimento Líquido Acumulado'),
                     data: distritoCrescimentoAcumulado,
                     borderColor: 'rgba(111, 66, 193, 1)',
                     backgroundColor: 'rgba(111, 66, 193, 0.2)',
@@ -1430,7 +1436,7 @@
             type: 'bar',
             data: {
                 labels: distritoCrescimentoIgrejasLabels,
-                datasets: [datasetBar('Saldo', distritoCrescimentoIgrejasTotais, 'rgba(0, 123, 255, 0.35)', 'rgba(0, 123, 255, 1)')]
+                datasets: [datasetBar(t('Saldo'), distritoCrescimentoIgrejasTotais, 'rgba(0, 123, 255, 0.35)', 'rgba(0, 123, 255, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1442,7 +1448,7 @@
             type: 'bar',
             data: {
                 labels: distritoEntradasIgrejasLabels,
-                datasets: [datasetBar('Entradas', distritoEntradasIgrejasTotais, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)')]
+                datasets: [datasetBar(t('Entradas'), distritoEntradasIgrejasTotais, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1454,7 +1460,7 @@
             type: 'bar',
             data: {
                 labels: distritoSaidasIgrejasLabels,
-                datasets: [datasetBar('Saídas', distritoSaidasIgrejasTotais, 'rgba(253, 126, 20, 0.35)', 'rgba(253, 126, 20, 1)')]
+                datasets: [datasetBar(t('Saídas'), distritoSaidasIgrejasTotais, 'rgba(253, 126, 20, 0.35)', 'rgba(253, 126, 20, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1494,8 +1500,8 @@
             data: {
                 labels: labelsMeses,
                 datasets: [
-                    datasetBar('Entradas', regiaoEntradasPorMes, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)'),
-                    datasetBar('Saidas', regiaoSaidasPorMes, 'rgba(220, 53, 69, 0.35)', 'rgba(220, 53, 69, 1)')
+                    datasetBar(t('Entradas'), regiaoEntradasPorMes, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)'),
+                    datasetBar(t('Saídas'), regiaoSaidasPorMes, 'rgba(220, 53, 69, 0.35)', 'rgba(220, 53, 69, 1)')
                 ]
             },
             options: optionsEixoYComZero()
@@ -1508,7 +1514,7 @@
             type: 'bar',
             data: {
                 labels: regiaoTopDistritosLabels,
-                datasets: [datasetBar('Membros Ativos', regiaoTopDistritosTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
+                datasets: [datasetBar(t('Membros Ativos'), regiaoTopDistritosTotais, 'rgba(23, 162, 184, 0.35)', 'rgba(23, 162, 184, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1521,7 +1527,7 @@
             data: {
                 labels: regiaoVinculosLabels,
                 datasets: [datasetCircular(
-                    'Cadastros',
+                    t('Cadastros'),
                     regiaoVinculosTotais,
                     ['rgba(54, 162, 235, 0.35)', 'rgba(255, 193, 7, 0.35)', 'rgba(40, 167, 69, 0.35)'],
                     ['rgba(54, 162, 235, 1)', 'rgba(255, 193, 7, 1)', 'rgba(40, 167, 69, 1)']
@@ -1537,7 +1543,7 @@
             data: {
                 labels: regiaoSexoLabels,
                 datasets: [datasetCircular(
-                    'Membros (Ativos + Inativos)',
+                    t('Membros (Ativos + Inativos)'),
                     regiaoSexoTotais,
                     ['rgba(54, 162, 235, 0.35)', 'rgba(255, 99, 132, 0.35)', 'rgba(108, 117, 125, 0.35)'],
                     ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(108, 117, 125, 1)']
@@ -1555,7 +1561,7 @@
             data: {
                 labels: regiaoStatusRolLabels,
                 datasets: [datasetCircular(
-                    'Funções Eclesiásticas',
+                    t('Funções Eclesiásticas'),
                     regiaoStatusRolTotais,
                     pieColors.backgrounds,
                     pieColors.borders
@@ -1571,7 +1577,7 @@
             data: {
                 labels: labelsMeses,
                 datasets: [{
-                    label: 'Crescimento Liquido Acumulado',
+                    label: t('Crescimento Líquido Acumulado'),
                     data: regiaoCrescimentoAcumulado,
                     borderColor: 'rgba(111, 66, 193, 1)',
                     backgroundColor: 'rgba(111, 66, 193, 0.2)',
@@ -1590,7 +1596,7 @@
             type: 'bar',
             data: {
                 labels: regiaoCrescimentoDistritosLabels,
-                datasets: [datasetBar('Saldo', regiaoCrescimentoDistritosTotais, 'rgba(0, 123, 255, 0.35)', 'rgba(0, 123, 255, 1)')]
+                datasets: [datasetBar(t('Saldo'), regiaoCrescimentoDistritosTotais, 'rgba(0, 123, 255, 0.35)', 'rgba(0, 123, 255, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1602,7 +1608,7 @@
             type: 'bar',
             data: {
                 labels: regiaoEntradasIgrejasLabels,
-                datasets: [datasetBar('Entradas', regiaoEntradasIgrejasTotais, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)')]
+                datasets: [datasetBar(t('Entradas'), regiaoEntradasIgrejasTotais, 'rgba(25, 135, 84, 0.35)', 'rgba(25, 135, 84, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1614,7 +1620,7 @@
             type: 'bar',
             data: {
                 labels: regiaoSaidasIgrejasLabels,
-                datasets: [datasetBar('Saidas', regiaoSaidasIgrejasTotais, 'rgba(253, 126, 20, 0.35)', 'rgba(253, 126, 20, 1)')]
+                datasets: [datasetBar(t('Saídas'), regiaoSaidasIgrejasTotais, 'rgba(253, 126, 20, 0.35)', 'rgba(253, 126, 20, 1)')]
             },
             options: optionsHorizontalComZero()
         });
@@ -1699,7 +1705,7 @@
         const url = `${chartDataUrl}?chart=${encodeURIComponent(chart)}&ano=${encodeURIComponent(ano)}&sexo=${encodeURIComponent(sexo)}&status=${encodeURIComponent(status)}&igreja_id=${encodeURIComponent(igreja)}&distrito_id=${encodeURIComponent(distrito)}`;
         const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
         if (!response.ok) {
-            throw new Error('Falha ao buscar dados do grafico.');
+            throw new Error(t('Falha ao buscar dados do gráfico.'));
         }
         return response.json();
     }
@@ -1739,11 +1745,11 @@
         setLoading(cfg.loadingId, true);
         try {
             const payload = await carregarDadosGrafico(chart, ano);
-            cfg.chartInstance.data.labels = payload.labels;
+            cfg.chartInstance.data.labels = traduzirLista(payload.labels);
             if (chart === 'distrito_evolucao' || chart === 'regiao_evolucao_distritos') {
-                cfg.chartInstance.data.datasets = buildDistritoEvolucaoDatasets(payload.datasets || []);
+                cfg.chartInstance.data.datasets = buildDistritoEvolucaoDatasets(traduzirDatasets(payload.datasets || []));
             } else {
-                cfg.chartInstance.data.datasets = (payload.datasets || []).map((dataset, idx) => ({
+                cfg.chartInstance.data.datasets = traduzirDatasets(payload.datasets || []).map((dataset, idx) => ({
                     ...(cfg.chartInstance.data.datasets[idx] || {}),
                     ...dataset,
                 }));
@@ -1761,10 +1767,10 @@
             }
         } catch (error) {
             console.error(error);
-            const message = 'Nao foi possivel atualizar este grafico. Tente novamente.';
+            const message = t('Não foi possível atualizar este gráfico. Tente novamente.');
             setChartError(cfg.errorId, message);
             if (typeof window.swal === 'function') {
-                window.swal('Erro', message, 'error');
+                window.swal(t('Erro'), message, 'error');
             }
         } finally {
             setLoading(cfg.loadingId, false);
@@ -1986,7 +1992,7 @@
                 ? regiaoIgrejasPorDistrito[distritoId]
                 : [];
 
-            igrejaSelect.innerHTML = '<option value="">Todas igrejas</option>';
+            igrejaSelect.innerHTML = `<option value="">${t('Todas igrejas')}</option>`;
             igrejas.forEach(function (igreja) {
                 const option = document.createElement('option');
                 option.value = igreja.id;

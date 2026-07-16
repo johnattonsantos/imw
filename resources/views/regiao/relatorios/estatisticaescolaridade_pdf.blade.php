@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Estatística por Escolaridade - IMW PGA</title>
+    <title>{{ __('Relatório de Estatística por Escolaridade - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +90,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">ESTATÍSTICA POR Escolaridade - {{$lancamentos[0]->instituicao }}</div>
         </div>
@@ -109,8 +109,8 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th style="text-align: left;"></th>
-                                    <th style="text-align: center;">Total</th>
-                                    <th style="text-align: center;">Percentual</th>
+                                    <th style="text-align: center;">{{ __('Total') }}</th>
+                                    <th style="text-align: center;">{{ __('Percentual') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -125,7 +125,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th style="text-align: left;">Total Geral</th>
+                                    <th style="text-align: left;">{{ __('Total Geral') }}</th>
                                     <th style="text-align: center;">{{ $lancamentos->sum('total') }}</th>
                                     <th style="text-align: center;">100%</th>
                                 </tr>

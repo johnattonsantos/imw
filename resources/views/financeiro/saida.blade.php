@@ -39,7 +39,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Novo Registro de Saída</h4>
+                        <h4>{{ __('Novo Registro de Saída') }}</h4>
                     </div>
                 </div>
             </div>
@@ -49,10 +49,10 @@
                 @csrf
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="caixa_id">* Caixa</label>
+                        <label for="caixa_id">{{ __('* Caixa') }}</label>
                         <select class="form-control @error('caixa_id') is-invalid @enderror" id="caixa_id" name="caixa_id"
                             required>
-                            <option value="" hidden disabled>Selecione</option>
+                            <option value="" hidden disabled>{{ __('Selecione') }}</option>
                             @foreach ($caixas as $caixa)
                                 @if ($caixa->id == old('caixa_id'))
                                     <option value="{{ $caixa->id }}" selected>{{ $caixa->descricao }}</option>
@@ -69,10 +69,10 @@
 
 
                     <div class="col-md-6">
-                        <label for="plano_conta_id">* Plano de contas</label>
+                        <label for="plano_conta_id">{{ __('* Plano de contas') }}</label>
                         <select class="form-control @error('plano_conta_id') is-invalid @enderror" id="plano_conta_id"
                             name="plano_conta_id" required>
-                            <option value="" hidden disabled>Selecione</option>
+                            <option value="" hidden disabled>{{ __('Selecione') }}</option>
                             @foreach ($planoContas as $pc)
                                 <option
                                     {{ !$pc->selecionavel ? 'disabled' : '' }}
@@ -91,7 +91,7 @@
 
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label for="valor">* Valor</label>
+                        <label for="valor">{{ __('* Valor') }}</label>
                         <input type="text" class="form-control @error('valor') is-invalid @enderror" id="valor"
                             name="valor" required autofocus>
                         @error('valor')
@@ -99,7 +99,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="data_movimento">* Data do Movimento</label>
+                        <label for="data_movimento">{{ __('* Data do Movimento') }}</label>
                         <input type="date" class="form-control @error('data_movimento') is-invalid @enderror"
                             id="data_movimento" name="data_movimento" value="{{ old('data_movimento', date('Y-m-d')) }}"
                             required>
@@ -108,10 +108,10 @@
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="tipo_pagante_favorecido_id">* Tipo de Beneficiário</label>
+                        <label for="tipo_pagante_favorecido_id">{{ __('* Tipo de Beneficiário') }}</label>
                         <select class="form-control @error('tipo_pagante_favorecido_id') is-invalid @enderror"
                             id="tipo_pagante_favorecido_id" name="tipo_pagante_favorecido_id" required>
-                            <option value="" hidden>Selecione</option>
+                            <option value="" hidden>{{ __('Selecione') }}</option>
                             @foreach ($tiposPagantesFavorecidos as $tipoPaganteFavorecido)
                                 @if ($tipoPaganteFavorecido->id == 2 || $tipoPaganteFavorecido->id == 3 || $tipoPaganteFavorecido->id == 99)
                                     <option value="{{ $tipoPaganteFavorecido->id }}">
@@ -128,7 +128,7 @@
 
                 <div class="row mb-4 d-none" id="show_pagante_favorecido">
                     <div class="col-6">
-                        <label for="pagante_favorecido">Beneficiário</label>
+                        <label for="pagante_favorecido">{{ __('Beneficiário') }}</label>
                         <input type="text" class="form-control @error('pagante_favorecido') is-invalid @enderror"
                             id="pagante_favorecido" name="pagante_favorecido" value="{{ old('pagante_favorecido') }}">
 
@@ -140,7 +140,7 @@
 
                 <div class="row mb-4">
                     <div class="col-12">
-                        <label for="descricao">Descrição</label>
+                        <label for="descricao">{{ __('Descrição') }}</label>
                         <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao"
                             value="{{ old('descricao') }}" rows="3"></textarea>
                         @error('descricao')
@@ -152,9 +152,8 @@
 
                 <div class="row mb-4">
                     <div class="col-md-12">
-                        <h4><b>Anexos</b></h4>
-                        <p>Utilize este espaço para anexar boletos, comprovantes de pagamento, contratos ou qualquer
-                            documento que julgue necessário armazenar no sistema.</p>
+                        <h4><b>{{ __('Anexos') }}</b></h4>
+                        <p>{{ __('Utilize este espaço para anexar boletos, comprovantes de pagamento, contratos ou qualquer documento que julgue necessário armazenar no sistema.') }}</p>
                     </div>
                 </div>
 
@@ -162,10 +161,10 @@
 
                 <div class="row mb-4">
                     <div class="col-md-12">
-                        <label for="anexo1">Anexo 1</label>
+                        <label for="anexo1">{{ __('Anexo 1') }}</label>
                         <input type="file" class="mb-3 form-control-file @error('anexo1') is-invalid @enderror"
                             id="anexo1" name="anexo1">
-                        <label for="descricao_anexo1">Descrição do Anexo</label>
+                        <label for="descricao_anexo1">{{ __('Descrição do Anexo') }}</label>
                         <textarea class="form-control @error('descricao_anexo1') is-invalid @enderror" id="descricao_anexo1"
                             name="descricao_anexo1" rows="1"></textarea>
                         @error('anexo1')
@@ -179,10 +178,10 @@
 
                 <div class="row mb-4">
                     <div class="col-md-12">
-                        <label for="anexo2">Anexo 2</label>
+                        <label for="anexo2">{{ __('Anexo 2') }}</label>
                         <input type="file" class="mb-3 form-control-file @error('anexo2') is-invalid @enderror"
                             id="anexo2" name="anexo2">
-                        <label for="descricao_anexo2">Descrição do Anexo</label>
+                        <label for="descricao_anexo2">{{ __('Descrição do Anexo') }}</label>
                         <textarea class="form-control @error('descricao_anexo2') is-invalid @enderror" id="descricao_anexo2"
                             name="descricao_anexo2" rows="1"></textarea>
                         @error('anexo2')
@@ -196,10 +195,10 @@
 
                 <div class="row mb-4">
                     <div class="col-md-12">
-                        <label for="anexo3">Anexo 3</label>
+                        <label for="anexo3">{{ __('Anexo 3') }}</label>
                         <input type="file" class="mb-3 form-control-file @error('anexo3') is-invalid @enderror"
                             id="anexo3" name="anexo3">
-                        <label for="descricao_anexo3">Descrição do Anexo 3</label>
+                        <label for="descricao_anexo3">{{ __('Descrição do Anexo 3') }}</label>
                         <textarea class="form-control @error('descricao_anexo3') is-invalid @enderror" id="descricao_anexo3"
                             name="descricao_anexo3" rows="1"></textarea>
                         @error('anexo3')
@@ -212,9 +211,9 @@
                 </div>
 
                 <div class="row mb-4 justify-content-center">
-                    <button type="submit" title="Salvar nova movimentação de entrada" class="btn btn-success btn-lg ml-4"
+                    <button type="submit" title="{{ __('Salvar nova movimentação de entrada') }}" class="btn btn-success btn-lg ml-4"
                         id="submitButton">
-                        <x-bx-save /> Salvar
+                        <x-bx-save /> {{ __('Salvar') }}
                     </button>
                 </div>
         </div>
@@ -265,7 +264,7 @@
         });
 
         // definir o idioma padrão do Select2 para português
-        $.fn.select2.defaults.set("language", "pt-BR");
+        3fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
 
         $('#caixa_id').select2({
            placeholder: 'Selecione',

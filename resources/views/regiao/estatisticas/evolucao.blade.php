@@ -136,7 +136,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Evolução de Membros</h4>
+                    <h4>{{ __('Evolução de Membros') }}</h4>
                 </div>
             </div>
         </div>
@@ -151,7 +151,7 @@
 
                 <div class="form-group row mb-4">
                     <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
-                        <label class="control-label">* Ano Inicial:</label>
+                        <label class="control-label">{{ __('* Ano Inicial:') }}</label>
                         <select class="form-control" id="anoinicio" name="anoinicio" required>
                             @for ($ano = $anoInicio; $ano <= $anoAtual; $ano++)
                                 <option value="{{ $ano }}" {{ request()->input('anoinicio') == $ano ? 'selected' : '' }}>
@@ -162,7 +162,7 @@
                     </div>
 
                     <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
-                        <label class="control-label">* Ano Final:</label>
+                        <label class="control-label">{{ __('* Ano Final:') }}</label>
                         <select class="form-control" id="anofinal" name="anofinal" required>
                             @for ($ano = date('Y') - 10; $ano <= date('Y'); $ano++)
                                 <option value="{{ $ano }}" {{ request()->input('anofinal') == $ano ? 'selected' : '' }}>
@@ -173,9 +173,9 @@
                     </div>
 
                     <div class="col-lg-3 col-md-6 mb-3 mb-lg-0">
-                        <label class="control-label">Distrito:</label>
+                        <label class="control-label">{{ __('Distrito:') }}</label>
                         <select class="form-control" id="distrito_id" name="distrito_id">
-                            <option value="all" {{ (string) $distritoId === 'all' ? 'selected' : '' }}>Todos</option>
+                            <option value="all" {{ (string) $distritoId === 'all' ? 'selected' : '' }}>{{ __('Todos') }}</option>
                             @foreach($distritos as $distrito)
                                 <option value="{{ $distrito->id }}" {{ (string) $distritoId === (string) $distrito->id ? 'selected' : '' }}>
                                     {{ $distrito->nome }}
@@ -185,12 +185,12 @@
                     </div>
 
                     <div class="col-lg-3 col-md-6">
-                        <label class="control-label">Igreja:</label>
+                        <label class="control-label">{{ __('Igreja:') }}</label>
                         <select class="form-control" id="igreja_id" name="igreja_id" {{ (string) $distritoId === 'all' ? 'disabled' : '' }}>
                             @if((string) $distritoId === 'all')
-                                <option value="all">Selecione um distrito</option>
+                                <option value="all">{{ __('Selecione um distrito') }}</option>
                             @else
-                                <option value="all">Todas</option>
+                                <option value="all">{{ __('Todas') }}</option>
                             @endif
                             @foreach($igrejas as $igreja)
                                 <option value="{{ $igreja->id }}" {{ (string) $igrejaId === (string) $igreja->id ? 'selected' : '' }}>
@@ -204,7 +204,7 @@
                 <div class="form-group row mb-4">
                     <div class="col-lg-12">
                         <button id="btn_buscar" type="submit" class="btn btn-primary">
-                            <x-bx-search /> Buscar
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
                     </div>
                 </div>
@@ -217,12 +217,12 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Nome</th>
+                            <th>{{ __('Nome') }}</th>
                             @foreach (range($anoinicio, $anofinal) as $ano)
                             <th>{{ $ano }}</th>
                             @endforeach
-                            <th>Evolução</th>
-                            <th>Percentual</th>
+                            <th>{{ __('Evolução') }}</th>
+                            <th>{{ __('Percentual') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -284,7 +284,7 @@
                             : ($totalAnoFinalPais > 0 ? 100 * $totalAnoFinalPais : 0);
                         @endphp
                         <tr style="font-weight: bold; background-color: #e9ecef;">
-                            <td>Total de Membros da Região</td>
+                            <td>{{ __('Total de Membros da Região') }}</td>
                             @foreach (range($anoinicio, $anofinal) as $ano)
                             <td>{{ $totaisPais[$ano] ?? 0 }}</td>
                             @endforeach
@@ -295,7 +295,7 @@
                 </table>
             </div>
             @else
-            <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
+            <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
             @endif
             @endif
         </div>

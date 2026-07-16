@@ -93,7 +93,7 @@
             {{-- Congregação --}}
             <div class="form-group row mb-4">              
               <div class="col-lg-4">
-                <label class="control-label">Vínculo:</label>
+                <label class="control-label">{{ __('Vínculo:') }}</label>
                 <div>
                   <input type="hidden" id="vinculoEscolhido">
                   <div class="form-check form-check-inline">
@@ -101,7 +101,7 @@
                       <label class="new-control new-checkbox checkbox-outline-success">
                         <input {{ request()->get('vinculo') == 'M' ? 'checked' : '' }}
                               type="radio" name="vinculo" value="M" class="new-control-input vinculoMembro vinculo">
-                        <span class="new-control-indicator"></span>Membro
+                        <span class="new-control-indicator"></span>{{ __('Membro') }}
                       </label>
                     
                     </div>
@@ -111,7 +111,7 @@
                       <label class="new-control new-checkbox checkbox-outline-success">
                         <input {{ request()->get('vinculo') == 'C' ? 'checked' : '' }}
                               type="radio" name="vinculo" value="C" class="new-control-input vinculo">
-                        <span class="new-control-indicator"></span>Congregado
+                        <span class="new-control-indicator"></span>{{ __('Congregado') }}
                       </label>
                     </div>
                   </div>
@@ -120,16 +120,16 @@
                       <label class="new-control new-checkbox checkbox-outline-success">
                         <input {{ request()->get('vinculo') == 'V' ? 'checked' : '' }}
                               type="radio" name="vinculo" value="V" class="new-control-input vinculo">
-                        <span class="new-control-indicator"></span>Visitante
+                        <span class="new-control-indicator"></span>{{ __('Visitante') }}
                       </label>
                     </div>
                   </div>
                 </div>
               </div>
               <div class="col-lg-8">
-                <label class="control-label">Distrito:</label>
+                <label class="control-label">{{ __('Distrito:') }}</label>
                 <select id="distritoId" name="distrito_id" class="form-control @error('distrito_id') is-invalid @enderror" >
-                  <option value="" {{ !request()->get('distrito_id') ? 'selected' : '' }}>TODOS</option>
+                  <option value="" {{ !request()->get('distrito_id') ? 'selected' : '' }}>{{ __('TODOS') }}</option>
                   @foreach ($distritos as $distrito)
                     <option value="{{ $distrito->id }}" {{ request()->get('distrito_id') == $distrito->id ? 'selected' : '' }}>{{ $distrito->nome }}</option>
                   @endforeach
@@ -140,7 +140,7 @@
             <div class="form-group row mb-4">
               
               <div class="col-lg-4"> 
-                <label class="control-label">Situação:</label>
+                <label class="control-label">{{ __('Situação:') }}</label>
                 <div>
                   <input type="hidden" id="situacaoEscolhida">
                   <div class="form-check form-check-inline">
@@ -148,7 +148,7 @@
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('situacao') == 'ativos' ? 'checked' : '' }}
                               type="radio" name="situacao" value="ativos" class="new-control-input situacaoAtivo situacao">
-                        <span class="new-control-indicator"></span>Ativos
+                        <span class="new-control-indicator"></span>{{ __('Ativos') }}
                       </label>
                     </div>
                   </div>
@@ -157,7 +157,7 @@
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('situacao') == 'inativos' ? 'checked' : '' }}
                               type="radio" name="situacao" value="inativos" class="new-control-input situacao">
-                        <span class="new-control-indicator"></span>Inativos
+                        <span class="new-control-indicator"></span>{{ __('Inativos') }}
                       </label>
                     </div>
                   </div>
@@ -166,7 +166,7 @@
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('situacao') == 'todos' || !request()->get('situacao') ? 'checked' : '' }} 
                               type="radio" name="situacao" value="todos" class="new-control-input situacaoTodos situacao">
-                        <span class="new-control-indicator"></span>Todos
+                        <span class="new-control-indicator"></span>{{ __('Todos') }}
                       </label>
                     </div>
                   </div>
@@ -175,7 +175,7 @@
               
 
               <div class="col-lg-6">
-                <label class="control-label">Filtro:</label>
+                <label class="control-label">{{ __('Filtro:') }}</label>
                 <div>
                   <input type="hidden" id="filtroEscolhido">
                   <div class="form-check form-check-inline">
@@ -183,7 +183,7 @@
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ !request()->get('dt_filtro') ? 'checked' : '' }}
                               type="radio" name="dt_filtro" value="" class="new-control-input filtro" >
-                        <span class="new-control-indicator"></span>Nenhuma
+                        <span class="new-control-indicator"></span>{{ __('Nenhuma') }}
                       </label>
                     </div>
                   </div>
@@ -192,7 +192,7 @@
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('dt_filtro') == 'data_nascimento' ? 'checked' : '' }} 
                               type="radio" name="dt_filtro" value="data_nascimento" class="new-control-input filtro">
-                        <span class="new-control-indicator"></span>Nascimento
+                        <span class="new-control-indicator"></span>{{ __('Nascimento') }}
                       </label>
                     </div>
                   </div>
@@ -201,7 +201,7 @@
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('dt_filtro') == 'dt_recepcao' ? 'checked' : '' }} 
                               type="radio" name="dt_filtro" value="dt_recepcao" class="new-control-input filtro">
-                        <span class="new-control-indicator"></span>Recepção
+                        <span class="new-control-indicator"></span>{{ __('Recepção') }}
                       </label>
                     </div>
                   </div>
@@ -210,7 +210,7 @@
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('dt_filtro') == 'dt_exclusao' ? 'checked' : '' }} 
                               type="radio" name="dt_filtro" value="dt_exclusao" class="new-control-input filtro">
-                        <span class="new-control-indicator"></span>Exclusão
+                        <span class="new-control-indicator"></span>{{ __('Exclusão') }}
                       </label>
                     </div>
                   </div>
@@ -228,13 +228,13 @@
             {{-- Inserção de data --}}
             <div class="form-group row mb-4 {{ !request()->get('dt_filtro') ? 'd-none' : '' }}" id="filtros_data">
               <div class="col-lg-2 text-right">
-                <label class="control-label">Período (Inicial e Final):</label>
+                <label class="control-label">{{ __('Período (Inicial e Final):') }}</label>
               </div>
               <div class="col-lg-3">
-                <input type="date" class="form-control @error('dt_inical') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->get('dt_inicial') }}" placeholder="ex: 31/12/2000">
+                <input type="date" class="form-control @error('dt_inical') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->get('dt_inicial') }}" placeholder="{{ __('ex: 31/12/2000') }}">
               </div>
               <div class="col-lg-3">
-                <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->get('dt_final') }}" placeholder="ex: 31/12/2000">
+                <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->get('dt_final') }}" placeholder="{{ __('ex: 31/12/2000') }}">
               </div>
             </div>
           </form>

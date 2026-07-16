@@ -37,9 +37,9 @@ class CongregadosController extends Controller
 
             return view('congregados.novo.index', $data);
         } catch(MembroNotFoundException $e) {
-            return redirect()->route('congregado.index')->with('error', 'Registro não encontrado.');
+            return redirect()->route('congregado.index')->with('error', __('Registro não encontrado.'));
         } catch(\Exception $e) {
-            return redirect()->route('congregado.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('congregado.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -58,7 +58,7 @@ class CongregadosController extends Controller
             DB::beginTransaction();
             $membroID = app(SalvarCongregadoService::class)->execute($request->all());
             DB::commit();
-            return redirect()->action([CongregadosController::class, 'editar'], ['id' => $membroID])->with('success', 'Registro atualizado.');
+            return redirect()->action([CongregadosController::class, 'editar'], ['id' => $membroID])->with('success', __('Registro atualizado.'));
         } catch(\Exception $e) {
             DB::rollback();
             report($e);
@@ -75,7 +75,7 @@ class CongregadosController extends Controller
             DB::beginTransaction();
             app(UpdateMembroService::class)->execute($request->all(), MembresiaMembro::VINCULO_CONGREGADO);
             DB::commit();
-            return redirect()->action([CongregadosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('success', 'Registro atualizado.');
+            return redirect()->action([CongregadosController::class, 'editar'], ['id' => $request->input('membro_id')])->with('success', __('Registro atualizado.'));
         } catch(\Exception $e) {
             DB::rollback();
             report($e);
@@ -93,9 +93,9 @@ class CongregadosController extends Controller
 
             return view('congregados.editar.index', $data);
         } catch(MembroNotFoundException $e) {
-            return redirect()->route('visitante.index')->with('error', 'Registro não encontrado.');
+            return redirect()->route('visitante.index')->with('error', __('Registro não encontrado.'));
         } catch(\Exception $e) {
-            return redirect()->route('visitante.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('visitante.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -103,9 +103,9 @@ class CongregadosController extends Controller
     {
         try {
             app(DeletarMembroService::class)->execute($id);
-            return redirect()->route('congregado.index')->with('success', 'Registro deletado com sucesso.');
+            return redirect()->route('congregado.index')->with('success', __('Registro deletado com sucesso.'));
         } catch(\Exception $e) {
-            return back()->with('error', 'Falha ao deletar o registro.');
+            return back()->with('error', __('Falha ao deletar o registro.'));
         }
     }
 

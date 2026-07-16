@@ -17,10 +17,10 @@
             <div class="row">
                 <div class="col-md-6">
                     <blockquote class="blockquote">
-                        <h6 class="mb-2 text-center font-weight-bold">MEU PERFIL</h6>
+                        <h6 class="mb-2 text-center font-weight-bold">{{ __('MEU PERFIL') }}</h6>
                         <div class="row mb-4">
                             <div class="col-xl-12">
-                                <label for="name">* Nome</label>
+                                <label for="name">{{ __('* Nome') }}</label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
                                     id="name" name="name" value="{{ old('name', $usuario->name) }}">
                                 @error('name')
@@ -31,7 +31,7 @@
 
                         <div class="row mb-4">
                             <div class="col-xl-12">
-                                <label for="email">* E-mail</label>
+                                <label for="email">{{ __('* E-mail') }}</label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
                                     id="email" name="email" value="{{ old('email', $usuario->email) }}">
                                 @error('email')
@@ -42,22 +42,21 @@
 
                         <div class="row mb-4">
                             <div class="col-xl-6">
-                                <label for="password">Nova Senha</label>
+                                <label for="password">{{ __('Nova Senha') }}</label>
                                 <input type="password" class="form-control @error('password') is-invalid @enderror"
                                     id="password" name="password">
-                                <span class="help-block text-muted">Deixe em branco para manter a senha atual.</span>
+                                <span class="help-block text-muted">{{ __('Deixe em branco para manter a senha atual.') }}</span>
                                 @error('password')
                                     <span class="help-block text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
 
                             <div class="col-xl-6">
-                                <label for="password_confirmation">Confirmar Nova Senha</label>
+                                <label for="password_confirmation">{{ __('Confirmar Nova Senha') }}</label>
                                 <input type="password"
                                     class="form-control @error('password_confirmation') is-invalid @enderror"
                                     id="password_confirmation" name="password_confirmation">
-                                <span class="help-block text-muted">Confirme a nova senha. Necessário apenas se estiver
-                                    alterando a senha.</span>
+                                <span class="help-block text-muted">{{ __('Confirme a nova senha. Necessário apenas se estiver alterando a senha.') }}</span>
                                 @error('password_confirmation')
                                     <span class="help-block text-danger">{{ $message }}</span>
                                 @enderror
@@ -65,7 +64,7 @@
                         </div>
 
                         <div class="form-group mt-4">
-                            <button type="submit" title="atualizar" class="btn btn-primary btn-lg">Atualizar</button>
+                            <button type="submit" title="{{ __('atualizar') }}" class="btn btn-primary btn-lg">{{ __('Atualizar') }}</button>
                         </div>
 
                     </blockquote>
@@ -73,15 +72,15 @@
 
                 <div class="col-md-6">
                     <blockquote class="blockquote">
-                        <h6 class="mb-4 text-center font-weight-bold">NÍVEIS DE ACESSO</h6>
+                        <h6 class="mb-4 text-center font-weight-bold">{{ __('NÍVEIS DE ACESSO') }}</h6>
                         <div class="row mb-4">
                             <div class="col-xl-12">
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Instituição</th>
-                                            <th>Tipo</th>
-                                            <th>Perfil</th>
+                                            <th>{{ __('Instituição') }}</th>
+                                            <th>{{ __('Tipo') }}</th>
+                                            <th>{{ __('Perfil') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
