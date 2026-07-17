@@ -37,7 +37,7 @@
                 <line x1="12" y1="8" x2="12" y2="16"></line>
                 <line x1="8" y1="12" x2="16" y2="12"></line>
             </svg>
-            <span class="ml-2">INCLUIR USUÁRIO</span>
+            <span class="ml-2">{{ __('INCLUIR USUÁRIO') }}</span>
         </a>
     </div>
     <!-- TABELA -->
@@ -46,7 +46,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Lista de Usuários</h4>
+                        <h4>{{ __('Lista de Usuários') }}</h4>
                     </div>
                 </div>
             </div>
@@ -55,10 +55,10 @@
                     <div class="row mb-4">
                         <div class="col-4">
                             <input type="text" name="search" id="searchInput" class="form-control form-control-sm"
-                                placeholder="Pesquisar...">
+                                placeholder="{{ __('Pesquisar...') }}">
                         </div>
                         <div class="col-auto" style="margin-left: -19px;">
-                            <button type="submit" class="btn btn-primary btn-rounded"><x-bx-search /> Pesquisar</button>
+                            <button type="submit" class="btn btn-primary btn-rounded"><x-bx-search /> {{ __('Pesquisar') }}</button>
                         </div>
                     </div>
                 </form>
@@ -66,9 +66,9 @@
                     <table class="table table-bordered mb-4">
                         <thead>
                             <tr>
-                                <th>E-MAIL</th>
-                                <th>NOME</th>
-                                <th>NÍVEIS DE ACESSO</th>
+                                <th>{{ __('E-MAIL') }}</th>
+                                <th>{{ __('NOME') }}</th>
+                                <th>{{ __('NÍVEIS DE ACESSO') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -83,8 +83,8 @@
                                                 <table class="table">
                                                     <thead>
                                                         <tr>
-                                                            <th>Instituição</th>
-                                                            <th>Perfil</th>
+                                                            <th>{{ __('Instituição') }}</th>
+                                                            <th>{{ __('Perfil') }}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -114,7 +114,7 @@
                                         </div>
                                     </td>
             <td class="text-center">
-                <a href="{{ route('admin.editar', $usuario->id) }}" title="Editar"
+                <a href="{{ route('admin.editar', $usuario->id) }}" title="{{ __('Editar') }}"
                     class="btn btn-sm btn-dark mr-2 btn-rounded">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -126,7 +126,7 @@
                     id="form_delete_usuario_{{ $index }}">
                     @csrf
                     @method('DELETE')
-                    <button type="button" title="Apagar" class="btn btn-sm btn-danger mr-2 btn-rounded btn-confirm-delete"
+                    <button type="button" title="{{ __('Apagar') }}" class="btn btn-sm btn-danger mr-2 btn-rounded btn-confirm-delete"
                         data-form-id="form_delete_usuario_{{ $index }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

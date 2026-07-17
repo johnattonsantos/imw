@@ -48,7 +48,7 @@
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4" id="filtros_data">
                         <div class="col-lg-2 text-right">
-                            <label class="control-label">* Ano/Mês:</label>
+                            <label class="control-label">{{ __('* Ano/Mês:') }}</label>
                         </div>
                             <div class="col-lg-5 ano_mes">
                                 <div class="input-group">
@@ -92,8 +92,8 @@
                         
 
                             
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg> Buscar
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg> {{ __('Buscar') }}
                                 </button>
 
 
@@ -126,7 +126,7 @@
                                                 </tr>
                                             @endforeach
                                                 <tr>
-                                                    <td><b>Total</b></td> <td><b>R$ {{ number_format($total, 2,",",".") }}</b></td>
+                                                    <td><b>{{ __('Total') }}</b></td> <td><b>R$ {{ number_format($total, 2,",",".") }}</b></td>
                                                 </tr>
                                         @endforeach
                                 </tbody>

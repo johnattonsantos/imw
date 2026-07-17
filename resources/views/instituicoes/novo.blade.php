@@ -38,7 +38,7 @@
 @section('content')
     <div class="container-fluid" style="background: #fff">
         <div class="widget-header">
-            <h4>Dados da instituição</h4>
+            <h4>{{ __('Dados da instituição') }}</h4>
         </div>
 
         @if ($errors->any())
@@ -57,7 +57,7 @@
             <!-- Dados da Instituição -->
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="nome"><span>*</span> Nome</label>
+                    <label for="nome"><span>*</span> {{ __('Nome') }}</label>
                     <input class="form-control @error('nome') is-invalid @enderror" type="text" id="nome"
                         name="nome" value="{{ old('nome') }}">
                     @error('nome')
@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="col-md-3 form-group">
-                    <label for="cnpj"><span>*</span> CNPJ <small>(aceita alfanumérico)</small></label>
+                    <label for="cnpj"><span>*</span> {{ __('CNPJ') }} <small>{{ __('(aceita alfanumérico)') }}</small></label>
                     <input class="form-control @error('cnpj') is-invalid @enderror" type="text" id="cnpj"
                         name="cnpj" value="{{ old('cnpj') }}" maxlength="18" style="text-transform: uppercase;">
                     @error('cnpj')
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="col-md-3 form-group">
-                    <label for="data_abertura"><span>*</span> Data de Abertura</label>
+                    <label for="data_abertura"><span>*</span> {{ __('Data de Abertura') }}</label>
                     <input class="form-control @error('data_abertura') is-invalid @enderror" type="date"
                         id="data_abertura" name="data_abertura" value="{{ old('data_abertura') }}"
                         min="1967-01-05"
@@ -86,10 +86,10 @@
                 </div>
 
                 <div class="col-md-3 form-group">
-                    <label for="ativo"><span>*</span> Status</label>
+                    <label for="ativo"><span>*</span> {{ __('Status') }}</label>
                     <select class="form-control @error('ativo') is-invalid @enderror" id="ativo" name="ativo">
-                        <option value="1" {{ old('ativo', '1') == '1' ? 'selected' : '' }}>Ativo</option>
-                        <option value="0" {{ old('ativo') == '0' ? 'selected' : '' }}>Inativo</option>
+                        <option value="1" {{ old('ativo', '1') == '1' ? 'selected' : '' }}>{{ __('Ativo') }}</option>
+                        <option value="0" {{ old('ativo') == '0' ? 'selected' : '' }}>{{ __('Inativo') }}</option>
                     </select>
                     @error('ativo')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -100,7 +100,7 @@
 
             <div class="row">
                 <div class="col-md-3 form-group">
-                    <label for="data_encerramento">Data de Encerramento</label>
+                    <label for="data_encerramento">{{ __('Data de Encerramento') }}</label>
                     <input class="form-control @error('data_encerramento') is-invalid @enderror" type="date"
                         id="data_encerramento" name="data_encerramento" value="{{ old('data_encerramento') }}"
                         min="2023-01-01" max="{{ date('Y-m-d') }}">
@@ -113,14 +113,14 @@
             <!-- Tipo e Instituição Pai -->
             <div class="row">
                 <div class="col-md-3 form-group">
-                    <label for="tipo_instituicao_id"><span>*</span> Tipo da Instituição</label>
+                    <label for="tipo_instituicao_id"><span>*</span> {{ __('Tipo da Instituição') }}</label>
                     <select name="tipo_instituicao_id" id="tipo_instituicao_id"
                         class="form-control @error('tipo_instituicao_id') is-invalid @enderror">
-                        <option value="" disabled {{ !request('tipo_instituicao_id') ? 'selected' : '' }}>Selecione
+                        <option value="" disabled {{ !request('tipo_instituicao_id') ? 'selected' : '' }}>{{ __('Selecione') }}
                         </option>
-                        <option value="1" {{ old('tipo_instituicao_id') == 1 ? 'selected' : '' }}>Igreja</option>
-                        <option value="2" {{ old('tipo_instituicao_id') == 2 ? 'selected' : '' }}>Distrito</option>
-                        <option value="5" {{ old('tipo_instituicao_id') == 5 ? 'selected' : '' }}>Secretaria Regional
+                        <option value="1" {{ old('tipo_instituicao_id') == 1 ? 'selected' : '' }}>{{ __('Igreja') }}</option>
+                        <option value="2" {{ old('tipo_instituicao_id') == 2 ? 'selected' : '' }}>{{ __('Distrito') }}</option>
+                        <option value="5" {{ old('tipo_instituicao_id') == 5 ? 'selected' : '' }}>{{ __('Secretaria Regional') }}
                         </option>
                     </select>
                     @error('tipo_instituicao_id')
@@ -129,10 +129,10 @@
                 </div>
 
                 <div class="col-md-4 form-group">
-                    <label for="instituicao_pai_id"><span>*</span> Instituição Pai</label>
+                    <label for="instituicao_pai_id"><span>*</span> {{ __('Instituição Pai') }}</label>
                     <select name="instituicao_pai_id" id="instituicao_pai_id"
                         class="form-control @error('instituicao_pai_id') is-invalid @enderror">
-                        <option value="" disabled selected>Selecione</option>
+                        <option value="" disabled selected>{{ __('Selecione') }}</option>
                         <!-- As opções serão preenchidas dinamicamente pelo JavaScript -->
                     </select>
                     @error('instituicao_pai_id')
@@ -147,7 +147,7 @@
             <!-- Endereço -->
             <div class="row">
                 <div class="col-md-3 form-group">
-                    <label for="cep"><span>*</span> CEP</label>
+                    <label for="cep"><span>*</span> {{ __('CEP') }}</label>
                     <input type="text" class="form-control @error('cep') is-invalid @enderror" id="cep"
                         name="cep" value="{{ old('cep') }}">
                     @error('cep')
@@ -156,7 +156,7 @@
                 </div>
 
                 <div class="col-md-7 form-group">
-                    <label for="endereco"><span>*</span> Logradouro (Rua/Av/Beco)</label>
+                    <label for="endereco"><span>*</span> {{ __('Logradouro (Rua/Av/Beco)') }}</label>
                     <input type="text" class="form-control @error('endereco') is-invalid @enderror" id="endereco"
                         name="endereco" value="{{ old('endereco') }}">
                     @error('endereco')
@@ -165,7 +165,7 @@
                 </div>
 
                 <div class="col-md-2 form-group">
-                    <label for="numero"><span>*</span>Número</label>
+                    <label for="numero"><span>*</span>{{ __('Número') }}</label>
                     <input type="number" class="form-control @error('numero') is-invalid @enderror" id="numero"
                         name="numero" value="{{ old('numero') }}">
                     @error('numero')
@@ -176,7 +176,7 @@
 
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="bairro"><span>*</span> Bairro</label>
+                    <label for="bairro"><span>*</span> {{ __('Bairro') }}</label>
                     <input type="text" class="form-control @error('bairro') is-invalid @enderror" id="bairro"
                         name="bairro" value="{{ old('bairro') }}">
                     @error('bairro')
@@ -185,7 +185,7 @@
                 </div>
 
                 <div class="col-md-6 form-group">
-                    <label for="complemento">Complemento</label>
+                    <label for="complemento">{{ __('Complemento') }}</label>
                     <input type="text" class="form-control @error('complemento') is-invalid @enderror" maxlength="30"
                         id="complemento" name="complemento" value="{{ old('complemento') }}">
                     @error('complemento')
@@ -196,7 +196,7 @@
 
             <div class="row">
                 <div class="col-md-8 form-group">
-                    <label for="cidade"><span>*</span>Cidade</label>
+                    <label for="cidade"><span>*</span>{{ __('Cidade') }}</label>
                     <input type="text" class="form-control @error('cidade') is-invalid @enderror" id="cidade"
                         name="cidade" value="{{ old('cidade') }}">
                     @error('cidade')
@@ -205,9 +205,9 @@
                 </div>
 
                 <div class="col-md-4 form-group">
-                    <label for="uf"><span>*</span> Estado</label>
+                    <label for="uf"><span>*</span> {{ __('Estado') }}</label>
                     <select class="form-control @error('uf') is-invalid @enderror" id="estado" name="uf">
-                        <option value="">Selecione</option>
+                        <option value="">{{ __('Selecione') }}</option>
                         @foreach ($ufs as $key => $value)
                             <option value="{{ $key }}" {{ old('uf') == $key ? 'selected' : '' }}>
                                 {{ $value }}</option>
@@ -222,7 +222,7 @@
 
             <div class="row">
                 <div class="col-md-3 form-group">
-                    <label for="pais"><span>*</span> País</label>
+                    <label for="pais"><span>*</span> {{ __('País') }}</label>
                     <input type="text" class="form-control @error('pais') is-invalid @enderror" id="pais"
                         name="pais" value="{{ old('pais') }}">
                     @error('pais')
@@ -231,7 +231,7 @@
                 </div>
 
                 <div class="col-md-1 form-group">
-                    <label for="DDD"><span>*</span> DDD</label>
+                    <label for="DDD"><span>*</span> {{ __('DDD') }}</label>
                     <input type="text" maxlength="3" class="form-control p-2 @error('ddd') is-invalid @enderror"
                         id="ddd" name="ddd" value="{{ old('ddd') }}">
                     @error('ddd')
@@ -240,7 +240,7 @@
                 </div>
 
                 <div class="col-md-3 form-group">
-                    <label for="Telefone"><span>*</span> Telefone</label>
+                    <label for="Telefone"><span>*</span> {{ __('Telefone') }}</label>
                     <input type="text" class="form-control @error('telefone') is-invalid @enderror" id="telefone"
                         name="telefone" value="{{ old('telefone') }}">
                     @error('telefone')
@@ -249,7 +249,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-primary">Salvar</button>
+            <button class="btn btn-primary">{{ __('Salvar') }}</button>
         </form>
     </div>
 

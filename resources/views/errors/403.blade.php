@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acesso negado</title>
+    <title>{{ __('Acesso negado') }}</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('theme/assets/img/favicon.ico') }}" />
     <link href="{{ asset('theme/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
     <style>
@@ -49,14 +49,14 @@
     <div class="card error-card">
         <div class="card-body p-5 text-center">
             <div class="error-code mb-3">403</div>
-            <h1 class="error-title mb-3">Acesso negado</h1>
+            <h1 class="error-title mb-3">{{ __('Acesso negado') }}</h1>
             <p class="error-description mb-4">
-                Você não tem permissão para acessar este recurso.
+                {{ __('Você não tem permissão para acessar este recurso.') }}
             </p>
 
             <div class="d-flex justify-content-center flex-wrap" style="gap: 12px;">
-                <a href="{{ url('/') }}" class="btn btn-primary">Ir para início</a>
-                <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Voltar</button>
+                <a href="{{ url('/') }}" class="btn btn-primary">{{ __('Ir para início') }}</a>
+                <button type="button" class="btn btn-outline-secondary" onclick="history.back()">{{ __('Voltar') }}</button>
             </div>
         </div>
     </div>

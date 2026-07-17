@@ -30,6 +30,7 @@ use App\Http\Controllers\InstituicaoRegiaoController;
 use App\Http\Controllers\InstituicaoRegiaoDistritosController;
 use App\Http\Controllers\InstituicaoRegiaoIgrejasController;
 use App\Http\Controllers\InstituicaoRegiaoSecretariasController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MembresiaGeralController;
 use App\Http\Controllers\MembrosController;
 use App\Http\Controllers\NomeacoesClerigosController;
@@ -53,6 +54,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/idioma', [LocaleController::class, 'update'])->name('locale.update');
 
 // Rota para mostrar o formulário de esqueci a senha
 Route::get('/esqueci-senha', [AuthController::class, 'showResetRequestForm'])->name('password.request');

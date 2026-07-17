@@ -52,12 +52,12 @@
                     <thead>
                         <tr>
                           <th>#</th>
-                          <th>NOME</th>
-                          <th>ANIVERSÁRIO</th>
-                          <th>NASCIMENTO</th>
-                          <th>IDADE</th>
-                          <th>CONTATO</th>
-                          <th>GCEU</th>
+                          <th>{{ __('NOME') }}</th>
+                          <th>{{ __('ANIVERSÁRIO') }}</th>
+                          <th>{{ __('NASCIMENTO') }}</th>
+                          <th>{{ __('IDADE') }}</th>
+                          <th>{{ __('CONTATO') }}</th>
+                          <th>{{ __('GCEU') }}</th>
                         </tr>
                     </thead>
                     <tbody>

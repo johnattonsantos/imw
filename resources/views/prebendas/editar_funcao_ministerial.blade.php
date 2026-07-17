@@ -39,7 +39,7 @@
             @csrf
             <div class="row">
                 <div class="col-12 mt-3 col-md-4">
-                    <label for="qtd_prebendas">* Quantidade de Prebendas</label>
+                    <label for="qtd_prebendas">{{ __('* Quantidade de Prebendas') }}</label>
                     <input class="form-control" type="text" id="qtd_prebendas" name="qtd_prebendas"
                         value="{{ old('qtd_prebendas', $funcao->qtd_prebendas) }}"
                         @error('qtd_prebendas') is-invalid @enderror>
@@ -50,7 +50,7 @@
             </div>
             <div class="row">
 
-                <button class="btn btn-primary m-3 " type="submit">Salvar</button>
+                <button class="btn btn-primary m-3 " type="submit">{{ __('Salvar') }}</button>
             </div>
 
 

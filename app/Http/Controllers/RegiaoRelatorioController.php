@@ -118,7 +118,7 @@ class RegiaoRelatorioController extends Controller
 
             return view('relatorios.esposas-de-pastores', compact('esposas'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de esposas de pastores');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de esposas de pastores'));
         }
     }
 

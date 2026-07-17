@@ -1,35 +1,35 @@
-<p><strong>Nome:</strong> {{ $evento->titulo }}</p>
-<p><strong>Propósito:</strong> {{ optional($evento->proposito)->nome ?: '-' }}</p>
-<p><strong>Status:</strong> {{ $statusOptions[$evento->status] ?? $evento->status }}</p>
+<p><strong>{{ __('Nome') }}:</strong> {{ $evento->titulo }}</p>
+<p><strong>{{ __('Propósito') }}:</strong> {{ optional($evento->proposito)->nome ?: '-' }}</p>
+<p><strong>{{ __('Status') }}:</strong> {{ $statusOptions[$evento->status] ?? $evento->status }}</p>
 @if (($evento->evento_distrito_nome ?? '-') !== '-')
-    <p><strong>Distrito:</strong> {{ $evento->evento_distrito_nome }}</p>
+    <p><strong>{{ __('Distrito') }}:</strong> {{ $evento->evento_distrito_nome }}</p>
 @endif
 @if (($evento->evento_igreja_nome ?? '-') !== '-')
-    <p><strong>Igreja:</strong> {{ $evento->evento_igreja_nome }}</p>
+    <p><strong>{{ __('Igreja') }}:</strong> {{ $evento->evento_igreja_nome }}</p>
 @endif
-<p><strong>Sede/Congregação:</strong> {{ $evento->evento_local_nome ?? '-' }}</p>
-<p><strong>Agenda:</strong>
+<p><strong>{{ __('Sede/Congregação') }}:</strong> {{ $evento->evento_local_nome ?? '-' }}</p>
+<p><strong>{{ __('Agenda') }}:</strong>
     {{ optional($evento->data_inicio)->format('d/m/Y') }}
     {{ $evento->hora_inicio ? substr((string) $evento->hora_inicio, 0, 5) : '' }}
     @if ($evento->data_fim)
-        até {{ optional($evento->data_fim)->format('d/m/Y') }} {{ $evento->hora_fim ? substr((string) $evento->hora_fim, 0, 5) : '' }}
+        {{ __('até') }} {{ optional($evento->data_fim)->format('d/m/Y') }} {{ $evento->hora_fim ? substr((string) $evento->hora_fim, 0, 5) : '' }}
     @endif
 </p>
-<p><strong>Local informado:</strong> {{ $evento->local ?: '-' }}</p>
-<p><strong>Descrição / Agenda:</strong></p>
+<p><strong>{{ __('Local informado') }}:</strong> {{ $evento->local ?: '-' }}</p>
+<p><strong>{{ __('Descrição / Agenda') }}:</strong></p>
 <div class="mb-3">{!! $evento->descricao ?: '-' !!}</div>
-<p><strong>Observações:</strong></p>
+<p><strong>{{ __('Observações') }}:</strong></p>
 <div class="mb-3">{!! $evento->observacoes ?: '-' !!}</div>
 
-<h5>Equipe de Coordenação</h5>
+<h5>{{ __('Equipe de Coordenação') }}</h5>
 <div class="table-responsive mb-3">
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>Função</th>
-                <th>Contato</th>
-                <th>Líder</th>
+                <th>{{ __('Nome') }}</th>
+                <th>{{ __('Função') }}</th>
+                <th>{{ __('Contato') }}</th>
+                <th>{{ __('Líder') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -38,11 +38,11 @@
                     <td>{{ $membro->nome }}</td>
                     <td>{{ $membro->funcao ?: '-' }}</td>
                     <td>{{ $membro->contato ?: '-' }}</td>
-                    <td>{{ $membro->lider ? 'Sim' : 'Não' }}</td>
+                    <td>{{ $membro->lider ? __('Sim') : __('Não') }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="text-center">Nenhuma pessoa cadastrada na equipe.</td>
+                    <td colspan="4" class="text-center">{{ __('Nenhuma pessoa cadastrada na equipe.') }}</td>
                 </tr>
             @endforelse
         </tbody>

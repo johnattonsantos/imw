@@ -1,6 +1,6 @@
 <div class="modal-header">
-    <h5 class="modal-title">Detalhes do Evento</h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    <h5 class="modal-title">{{ __('Detalhes do Evento') }}</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Fechar') }}">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
@@ -9,7 +9,7 @@
 </div>
 <div class="modal-footer">
     @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-editar'))
-        <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-dark">Editar</a>
+        <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-dark">{{ __('Editar') }}</a>
     @endif
-    <button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button>
+    <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('Fechar') }}</button>
 </div>

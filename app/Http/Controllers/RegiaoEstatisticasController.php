@@ -206,7 +206,7 @@ class RegiaoEstatisticasController extends Controller
 
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
 
@@ -220,7 +220,7 @@ class RegiaoEstatisticasController extends Controller
             return Excel::download(new MembresiaExport($params), slugDoc($txt).".xlsx");
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
 
@@ -238,7 +238,7 @@ class RegiaoEstatisticasController extends Controller
             //return Excel::download(new MembresiaExport($params), slugDoc($txt).".xlsx");
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
     

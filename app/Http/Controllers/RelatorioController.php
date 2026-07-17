@@ -30,7 +30,7 @@ class RelatorioController extends Controller
             return $pdf->inline('RELATORIO_MEMBROS_' . date('YmdHis') . '.pdf');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
 
@@ -46,7 +46,7 @@ class RelatorioController extends Controller
             return $pdf->inline('RELATORIO_MEMBROS_' . date('YmdHis') . '.pdf');
 
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de aniversariantes');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de aniversariantes'));
         }
     }
 
@@ -56,7 +56,7 @@ class RelatorioController extends Controller
             $data = app(IdentificaDadosRelatorioConjugesService::class)->execute();
             return view('relatorios.conjuges', $data);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página do relatório de cônjuges');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página do relatório de cônjuges'));
         }
     }
 
@@ -66,7 +66,7 @@ class RelatorioController extends Controller
             $data = app(IdentificaDadosRelatorioMembrosPorBairroService::class)->execute($request->all());
             return view('relatorios.membros-por-bairro', $data);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página do relatório de membros por bairro');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página do relatório de membros por bairro'));
         }
     }
 
@@ -82,7 +82,7 @@ class RelatorioController extends Controller
 
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de histórico eclesiástico');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de histórico eclesiástico'));
         }
     }
 
@@ -96,7 +96,7 @@ class RelatorioController extends Controller
 
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membros disciplinados');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membros disciplinados'));
         }
     }
 
@@ -109,7 +109,7 @@ class RelatorioController extends Controller
             }
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membros disciplinados');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membros disciplinados'));
         }
     }
 
@@ -128,7 +128,7 @@ class RelatorioController extends Controller
             ]);
         } catch (\Exception $e) { 
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de Membros por Ministérios.');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de Membros por Ministérios.'));
         }
     }
 

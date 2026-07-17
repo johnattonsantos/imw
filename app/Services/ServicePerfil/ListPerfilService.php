@@ -15,7 +15,7 @@ class ListPerfilService
     {
         $usuario = Auth::user();
         if (!$usuario) {
-            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar essa página.');
+            return redirect()->route('login')->with('error', __('Você precisa estar logado para acessar essa página.'));
         }
         return $usuario;
     }
@@ -24,7 +24,7 @@ class ListPerfilService
     {
         $usuario = Auth::user();
         if (!$usuario) {
-            return redirect()->route('login')->with('error', 'Você precisa estar logado para acessar essa página.');
+            return redirect()->route('login')->with('error', __('Você precisa estar logado para acessar essa página.'));
         }
 
         if (!$usuario->pessoa_id) {

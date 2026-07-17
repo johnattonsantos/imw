@@ -43,7 +43,7 @@ class FinanceiroController extends Controller
         try {
             if($request['consolidado'] == 1){
                 if($request['d1'] == '' && $request['d1'] == ''){
-                    return redirect()->back()->with('error', 'Para verificar consolidados informe Data Início e Data Fim');
+                    return redirect()->back()->with('error', __('Para verificar consolidados informe Data Início e Data Fim'));
                 }
             }
             $filters = $request->only(['caixa_id', 'plano_conta_id', 'd1', 'd2', 'consolidado']);
@@ -51,7 +51,7 @@ class FinanceiroController extends Controller
             return view('financeiro.movimentocaixa', $data);
         } catch(\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de Movimento de Caixa');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de Movimento de Caixa'));
         }
     }
 
@@ -61,7 +61,7 @@ class FinanceiroController extends Controller
             $data = app(IdentificaDadosNovaMovimentacaoService::class)->execute(FinanceiroPlanoConta::TP_ENTRADA);
             return view('financeiro.entrada', $data);
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de nova movimentação de entrada');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de nova movimentação de entrada'));
         }
     }
 
@@ -71,10 +71,10 @@ class FinanceiroController extends Controller
             DB::begintransaction();
             app(StoreLancamentoEntradaService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('financeiro.entrada')->with('success', 'Lançamento de entrada realizado.')->withInput();
+            return redirect()->route('financeiro.entrada')->with('success', __('Lançamento de entrada realizado.'))->withInput();
         /* } catch (\Exception $e) {
-            
-            return redirect()->back()->with('error', 'Não foi possível criar um registro de entrada');
+
+            return redirect()->back()->with('error', __('Não foi possível criar um registro de entrada'));
         } */
     }
 
@@ -85,11 +85,11 @@ class FinanceiroController extends Controller
             DB::begintransaction();
             app(StoreTransferenciaService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('financeiro.transferencia')->with('success', 'Transferência realizada.')->withInput();
+            return redirect()->route('financeiro.transferencia')->with('success', __('Transferência realizada.'))->withInput();
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível criar um registro de transferência');
+            return redirect()->back()->with('error', __('Não foi possível criar um registro de transferência'));
         }
     }
 
@@ -97,9 +97,9 @@ class FinanceiroController extends Controller
     {
         try {
             $data = app(IdentificaDadosNovaMovimentacaoService::class)->execute(FinanceiroPlanoConta::TP_SAIDA);
-            return view('financeiro.saida', $data);            
+            return view('financeiro.saida', $data);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de nova movimentação de saída');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de nova movimentação de saída'));
         }
     }
 
@@ -109,10 +109,10 @@ class FinanceiroController extends Controller
             DB::begintransaction();
             app(StoreLancamentoSaidaService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('financeiro.saida')->with('success', 'Lançamento de saída realizado.')->withInput();
+            return redirect()->route('financeiro.saida')->with('success', __('Lançamento de saída realizado.'))->withInput();
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Não foi possível criar um registro de saída');
+            return redirect()->back()->with('error', __('Não foi possível criar um registro de saída'));
         }
     }
 
@@ -122,7 +122,7 @@ class FinanceiroController extends Controller
             $data = app(IdentificaDadosNovaMovimentacaoService::class)->execute(FinanceiroPlanoConta::TP_TRANSFERENCIA);
             return view('financeiro.transferencia', $data);
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de nova movimentação de transferência');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de nova movimentação de transferência'));
         }
     }
 
@@ -132,7 +132,7 @@ class FinanceiroController extends Controller
             $data = app(ConsolidacaoService::class)->execute();
             return view('financeiro.consolidarcaixa', $data);
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página'));
         }
     }
 
@@ -142,11 +142,11 @@ class FinanceiroController extends Controller
             DB::begintransaction();
             app(ConsolidacaoStoreService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('financeiro.consolidar.caixa')->with('success', 'Consolidação realizada.')->withInput();
+            return redirect()->route('financeiro.consolidar.caixa')->with('success', __('Consolidação realizada.'))->withInput();
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível consolidar.');
+            return redirect()->back()->with('error', __('Não foi possível consolidar.'));
         }
     }
 
@@ -156,7 +156,7 @@ class FinanceiroController extends Controller
             $data = app(SaldoService::class)->execute();
             return view('financeiro.saldo', $data);
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página'));
         }
     }
 
@@ -170,43 +170,43 @@ class FinanceiroController extends Controller
             DB::beginTransaction();
             app(DeletarLancamentoService::class)->execute($id);
             DB::commit();
-            return redirect()->route('financeiro.movimento.caixa')->with('success', 'Movimento excluído com sucesso.'); 
+            return redirect()->route('financeiro.movimento.caixa')->with('success', __('Movimento excluído com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Erro ao excluir o movimento: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('Erro ao excluir o movimento:') . $e->getMessage());
         }
     }
 
     public function editarMovimento($id, $tipo_lancamento) {
-        
+
         $service = app(IdentificaDadosNovaMovimentacaoService::class);
-        
+
         try {
             if ($tipo_lancamento == FinanceiroPlanoConta::TP_ENTRADA) {
                 $lancamento = FinanceiroLancamento::findOrFail($id);
                 $data = $this->prepareDataForView($service->execute(FinanceiroPlanoConta::TP_ENTRADA), $lancamento, 'entrada');
-    
+
                 return view('financeiro.editarentrada', $data);
-                
+
             } elseif ($tipo_lancamento == FinanceiroPlanoConta::TP_SAIDA) {
                 $lancamento = FinanceiroLancamento::findOrFail($id);
-                $data = $this->prepareDataForView($service->execute(FinanceiroPlanoConta::TP_SAIDA), $lancamento, 'saida');              
-                $anexos = app(BuscarAnexosServices::class)->execute($id); 
+                $data = $this->prepareDataForView($service->execute(FinanceiroPlanoConta::TP_SAIDA), $lancamento, 'saida');
+                $anexos = app(BuscarAnexosServices::class)->execute($id);
                 $data['anexos'] = $anexos;
 
                 return view('financeiro.editarsaida', $data);
-                
+
             } else {
-                return redirect()->back()->with('error', 'Tipo de movimentação não encontrado.');
+                return redirect()->back()->with('error', __('Tipo de movimentação não encontrado.'));
             }
-            
+
         } catch(FinanceiroLancamentoNotFoundException $e) {
             $route = $tipo_lancamento == FinanceiroPlanoConta::TP_ENTRADA ? 'financeiro.editarentrada' : 'financeiro.editarsaida';
-            return redirect()->route($route)->with('error', 'Registro não encontrado.');
-            
+            return redirect()->route($route)->with('error', __('Registro não encontrado.'));
+
         } catch (\Exception $e) {
             $route = $tipo_lancamento == FinanceiroPlanoConta::TP_ENTRADA ? 'financeiro.editarentrada' : 'financeiro.editarsaida';
-            return redirect()->route($route)->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route($route)->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -224,7 +224,7 @@ class FinanceiroController extends Controller
     {
         try {
             $fileContent = Storage::disk('s3')->get($anexo->caminho);
-        
+
             return response($fileContent)
                 ->header('Content-Type', "application/{$anexo->mime}")
                 ->header('Content-Disposition', 'attachment; filename="' . $anexo->nome . '"');
@@ -255,24 +255,24 @@ class FinanceiroController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Não foi possível salvar o anexo informado'], 500);
         }
-    }  
-    
+    }
+
     private function prepareDataForView($data, $lancamento, $key) {
         $data[$key] = $lancamento;
         return $data;
     }
-    
+
     public function updateEntrada(FinanceiroUpdateEntradaRequest $request, $id)
     {
         try {
             DB::beginTransaction();
             app(UpdateLancamentoEntradaService::class)->execute($request->all(), $id);
             DB::commit();
-            return redirect()->route('financeiro.movimento.caixa')->with('success', 'Lançamento de entrada atualizado.'); 
+            return redirect()->route('financeiro.movimento.caixa')->with('success', __('Lançamento de entrada atualizado.'));
         } catch(\Exception $e) {
             DB::rollback();
             dd($e);
-            return redirect()->route('financeiro.movimento.caixa')->with('error', $e->getMessage()); 
+            return redirect()->route('financeiro.movimento.caixa')->with('error', $e->getMessage());
         }
     }
 
@@ -281,10 +281,10 @@ class FinanceiroController extends Controller
             DB::beginTransaction();
             app(UpdateLancamentoSaidaService::class)->execute($request->all(), $id);
             DB::commit();
-            return redirect()->route('financeiro.movimento.caixa')->with('success', 'Lançamento de entrada atualizado.'); 
+            return redirect()->route('financeiro.movimento.caixa')->with('success', __('Lançamento de entrada atualizado.'));
         } catch(\Exception $e) {
             DB::rollback();
-            return redirect()->route('financeiro.movimento.caixa')->with('error', $e->getMessage()); 
+            return redirect()->route('financeiro.movimento.caixa')->with('error', $e->getMessage());
         }
     }
 
@@ -312,14 +312,18 @@ class FinanceiroController extends Controller
             $data = app(IdentificaDadosCotaOrcamentariaService::class)->execute($dados);
             $data['instituicao'] = $instituicao_nome;
             if(isset($mes->descricao)){
-                $data['titulo'] = "COTA ORÇAMENTÁRIA - $instituicao_nome do mês de $mes->descricao de $ano";
+                $data['titulo'] = __('COTA ORÇAMENTÁRIA - :instituicao do mês de :mes de :ano', [
+                    'instituicao' => $instituicao_nome,
+                    'mes' => __($mes->descricao),
+                    'ano' => $ano,
+                ]);
             }else{
-                $data['titulo'] = "COTA ORÇAMENTÁRIA - $instituicao_nome";
+                $data['titulo'] = __('COTA ORÇAMENTÁRIA - :instituicao', ['instituicao' => $instituicao_nome]);
             }
             return view('financeiro.cota-orcamentaria.index', $data);
         } catch(\Exception $e) {
             //dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página cota de orçamento');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página cota de orçamento'));
         }
     }
 
@@ -347,14 +351,18 @@ class FinanceiroController extends Controller
             $data = app(IdentificaDadosCotaOrcamentariaService::class)->execute($dados);
             $data['instituicao'] = $instituicao_nome;
             if(isset($mes->descricao)){
-                $data['titulo'] = "COTA ORÇAMENTÁRIA - $instituicao_nome do mês de $mes->descricao de $ano";
+                $data['titulo'] = __('COTA ORÇAMENTÁRIA - :instituicao do mês de :mes de :ano', [
+                    'instituicao' => $instituicao_nome,
+                    'mes' => __($mes->descricao),
+                    'ano' => $ano,
+                ]);
             }else{
-                $data['titulo'] = "COTA ORÇAMENTÁRIA - $instituicao_nome";
+                $data['titulo'] = __('COTA ORÇAMENTÁRIA - :instituicao', ['instituicao' => $instituicao_nome]);
             }
             return view('financeiro.cota-orcamentaria.distrito.index', $data);
         } catch(\Exception $e) {
             //dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página cota de orçamento');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página cota de orçamento'));
         }
     }
 
@@ -388,7 +396,7 @@ class FinanceiroController extends Controller
             }
             return view('distrito.relatorios.recurso-humano', $data);
         } catch(\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página cota de orçamento');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página cota de orçamento'));
         }
     }
 
@@ -416,14 +424,18 @@ class FinanceiroController extends Controller
             $data = app(IdentificaDadosCotaOrcamentariaService::class)->execute($dados);
             $data['instituicao'] = $instituicao_nome;
             if(isset($mes->descricao)){
-                $data['titulo'] = "COTA ORÇAMENTÁRIA - $instituicao_nome do mês de $mes->descricao de $ano";
+                $data['titulo'] = __('COTA ORÇAMENTÁRIA - :instituicao do mês de :mes de :ano', [
+                    'instituicao' => $instituicao_nome,
+                    'mes' => __($mes->descricao),
+                    'ano' => $ano,
+                ]);
             }else{
-                $data['titulo'] = "COTA ORÇAMENTÁRIA - $instituicao_nome";
+                $data['titulo'] = __('COTA ORÇAMENTÁRIA - :instituicao', ['instituicao' => $instituicao_nome]);
             }
             return view('financeiro.cota-orcamentaria.regiao.index', $data);
         } catch(\Exception $e) {
             //dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página cota de orçamento');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página cota de orçamento'));
         }
     }
 

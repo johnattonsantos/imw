@@ -4,10 +4,10 @@
             <table class="table table-bordered table-striped table-hover mb-4">
                 <thead>
                     <tr>
-                        <th>CURSO</th>
-                        <th>INICIO</th>
-                        <th>CONCLUSÂO</th>
-                        <th>OBSERVAÇÃO</th>
+                        <th>{{ __('CURSO') }}</th>
+                        <th>{{ __('INICIO') }}</th>
+                        <th>{{ __('CONCLUSÂO') }}</th>
+                        <th>{{ __('OBSERVAÇÃO') }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -15,7 +15,7 @@
                       <tr>
                         <td>
                             <select class="form-control curso-nome" name="curso-nome[]">
-                                <option value="">Selecione</option>
+                                <option value="">{{ __('Selecione') }}</option>
                                 @foreach ($cursos as $curso)
                                     <option value="{{ $curso->id }}">{{ $curso->nome }}</option>
                                 @endforeach
@@ -34,7 +34,7 @@
                         <td style="width: 200px;">
                             <div class="centralizado">
                                 <!-- Botão Adicionar -->
-                                <button type="button" title="Adicionar Linha"
+                                <button type="button" title="{{ __('Adicionar Linha') }}"
                                     class="btn btn-sm btn-secondary mr-2 btn-rounded adicionar-formacaoEclesiastica">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -46,7 +46,7 @@
                                     </svg>
                                 </button>
                                 <!-- Botão Apagar -->
-                                <button type="button" title="Apagar Linha"
+                                <button type="button" title="{{ __('Apagar Linha') }}"
                                     class="btn btn-sm btn-danger btn-rounded apagar-linha-formacaoEclesiastica">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"

@@ -33,7 +33,7 @@ class EventoFuncaoController extends Controller
     {
         EventoFuncao::create($this->validatedData($request));
 
-        return redirect()->route('eventos.funcoes.index')->with('success', 'Função de evento cadastrada com sucesso.');
+        return redirect()->route('eventos.funcoes.index')->with('success', __('Função de evento cadastrada com sucesso.'));
     }
 
     public function edit(EventoFuncao $funcao)
@@ -45,7 +45,7 @@ class EventoFuncaoController extends Controller
     {
         $funcao->update($this->validatedData($request, $funcao));
 
-        return redirect()->route('eventos.funcoes.index')->with('success', 'Função de evento atualizada com sucesso.');
+        return redirect()->route('eventos.funcoes.index')->with('success', __('Função de evento atualizada com sucesso.'));
     }
 
     public function destroy(EventoFuncao $funcao)
@@ -53,12 +53,12 @@ class EventoFuncaoController extends Controller
         if ($funcao->equipes()->exists()) {
             return redirect()
                 ->route('eventos.funcoes.index')
-                ->with('error', 'Não é possível excluir esta função, pois ela está vinculada a eventos.');
+                ->with('error', __('Não é possível excluir esta função, pois ela está vinculada a eventos.'));
         }
 
         $funcao->delete();
 
-        return redirect()->route('eventos.funcoes.index')->with('success', 'Função de evento excluída com sucesso.');
+        return redirect()->route('eventos.funcoes.index')->with('success', __('Função de evento excluída com sucesso.'));
     }
 
     private function validatedData(Request $request, ?EventoFuncao $funcao = null): array
@@ -72,8 +72,8 @@ class EventoFuncaoController extends Controller
             ],
             'ativo' => ['nullable', 'boolean'],
         ], [
-            'nome.required' => 'Informe o nome da função.',
-            'nome.unique' => 'Já existe uma função de evento com este nome.',
+            'nome.required' => __('Informe o nome da função.'),
+            'nome.unique' => __('Já existe uma função de evento com este nome.'),
         ]) + ['ativo' => false];
     }
 }

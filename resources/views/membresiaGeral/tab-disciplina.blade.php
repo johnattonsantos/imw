@@ -26,43 +26,42 @@
                         <span class="text-center d-block" style="font-weight: bold">
                             {{ $disciplina->dt_inicio->format('d/m/Y') }}
                         </span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Data de Início</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Data de Início') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">
                             {{ $disciplina->dt_termino ? $disciplina->dt_termino->format('d/m/Y') : 'Sem informações' }}
                         </span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Data de
-                            Término</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Data de Término') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">
                             {{ optional($disciplina->igreja)->nome ?? 'Sem informações' }}
                         </span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Igreja</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Igreja') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block" style="font-weight: bold">
                             {{ optional($disciplina->pastor)->nome ?? 'Sem informações' }}
                         </span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Pastor</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Pastor') }}</span>
                     </p>
                     <p class="card-text">
                         <span class="text-center d-block"
                             style="font-weight: bold">{{ $membro->observacao ?? 'sem informações' }}</span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Observações</span>
+                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Observações') }}</span>
                     </p>
                     @if ($disciplina->dt_termino == null)
                         <p class="card-text">
                             <button type="button" class="btn btn-warning"
                                 onclick="encerrarDisciplina(event, {{ $disciplina->id }})">
-                                <x-bx-block /> Encerrar Disciplina
+                                <x-bx-block /> {{ __('Encerrar Disciplina') }}
                             </button>
                         </p>
                     @endif
                 @endforeach
             @else
-                <span class="card-text">Sem informações</span>
+                <span class="card-text">{{ __('Sem informações') }}</span>
             @endif
         </div>
     </div>

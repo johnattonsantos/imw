@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Saldo de Caixas - IMW PGA</title>
+    <title>{{ __('Relatório de Saldo de Caixas - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,7 +86,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">SALDO DE CAIXAS - {{ session('session_perfil')->instituicao_nome }}</div>
             <div class="period" style="margin-top:4px">
@@ -99,13 +99,13 @@
     <table>
         <thead>
             <tr>
-                <th width="150px" style="text-align: left">IGREJA</th>
-                <th width="70px" style="text-align: right">SALDO CAIXA PRINCIPAL</th>
-                <th width="70px" style="text-align: right">SALDO CAIXA CONGREGAÇÕES</th>
-                <th width="70px" style="text-align: right">SALDO CAIXA SECUNDÁRIO</th>
-                <th width="70px" style="text-align: right">SALDO CAIXA BANCOS</th>
-                <th width="70px" style="text-align: right">SALDO OUTROS CAIXAS</th>
-                <th width="70px" style="text-align: right">TOTAL</th>
+                <th width="150px" style="text-align: left">{{ __('IGREJA') }}</th>
+                <th width="70px" style="text-align: right">{{ __('SALDO CAIXA PRINCIPAL') }}</th>
+                <th width="70px" style="text-align: right">{{ __('SALDO CAIXA CONGREGAÇÕES') }}</th>
+                <th width="70px" style="text-align: right">{{ __('SALDO CAIXA SECUNDÁRIO') }}</th>
+                <th width="70px" style="text-align: right">{{ __('SALDO CAIXA BANCOS') }}</th>
+                <th width="70px" style="text-align: right">{{ __('SALDO OUTROS CAIXAS') }}</th>
+                <th width="70px" style="text-align: right">{{ __('TOTAL') }}</th>
             </tr>
         </thead>
         <tbody>

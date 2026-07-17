@@ -23,27 +23,27 @@
             @if ($membro->familiar)
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">{{ $membro->familiar->pai_nome ?? 'Sem informações' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Nome do Pai</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Nome do Pai') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">{{ $membro->familiar->mae_nome ?? 'Sem informações' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Nome da Mãe</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Nome da Mãe') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">{{ $membro->familiar->conjuge_nome ?? 'Sem informações' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Nome do Cônjuge</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Nome do Cônjuge') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">{{ $membro->familiar->filhos ?? 'Sem informações' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Quantidade de Filhos</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Quantidade de Filhos') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">{{ $membro->familiar->histórico_familiar ?? 'Sem informações' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Histórico Familiar</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Histórico Familiar') }}</span>
                 </p>
                 <p class="card-text">
                     <span class="text-center d-block" style="font-weight: bold">{{ $membro->familiar->data_Casamento ? \Carbon\Carbon::parse($membro->familiar->data_Casamento)->format('d/m/Y') : 'Sem informações' }}</span>
-                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">Data de Casamento</span>
+                    <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Data de Casamento') }}</span>
                 </p>
             @endif
         </div>

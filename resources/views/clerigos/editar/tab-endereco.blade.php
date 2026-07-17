@@ -3,7 +3,7 @@
         <div class="row mb-4">
 
             <div class="col-xl-3">
-                <label for="telefone_preferencial">Celular*</label>
+                <label for="telefone_preferencial">{{ __('Celular*') }}</label>
                 <input type="text" class="form-control @error('telefone_preferencial') is-invalid @enderror"
                     id="telefone_preferencial" name="telefone_preferencial"
                     value="{{ old('telefone_preferencial', $clerigo->telefone_preferencial) }}">
@@ -13,7 +13,7 @@
             </div>
 
             <div class="col-xl-3">
-                <label for="telefone_alternativo">Telefone</label>
+                <label for="telefone_alternativo">{{ __('Telefone') }}</label>
                 <input type="text" class="form-control @error('telefone_alternativo') is-invalid @enderror" id="telefone_alternativo"
                     name="telefone_alternativo" value="{{ old('telefone_alternativo', $clerigo->telefone_alternativo) }}" >
                 @error('telefone_alternativo')
@@ -21,9 +21,9 @@
                 @enderror
             </div>
             <div class="col-xl-3">
-                <label for="pais">País</label>
+                <label for="pais">{{ __('País') }}</label>
                 <select class="form-control @error('pais') is-invalid @enderror" id="pais" name="pais">
-                    <option value="BR" {{ old('pais', $clerigo->pais) == 'BR' ? 'selected' : '' }}>Brasil</option>
+                    <option value="BR" {{ old('pais', $clerigo->pais) == 'BR' ? 'selected' : '' }}>{{ __('Brasil') }}</option>
                 </select>
                 @error('pais')
                     <span class="help-block text-danger">{{ $message }}</span>
@@ -33,7 +33,7 @@
 
         <div class="row mb-4">
             <div class="col-xl-2">
-                <label for="cep">* CEP</label>
+                <label for="cep">{{ __('* CEP') }}</label>
                 <input type="text" id="cep" class="form-control @error('cep') is-invalid @enderror"
                     name="cep" value="{{ old('cep', $clerigo->cep) }}">
                 @error('cep')
@@ -42,7 +42,7 @@
             </div>
 
             <div class="col-xl-4">
-                <label for="endereco">* Logradouro (Rua/Av/Beco)</label>
+                <label for="endereco">{{ __('* Logradouro (Rua/Av/Beco)') }}</label>
                 <input type="text" class="form-control @error('endereco') is-invalid @enderror" id="endereco"
                     name="endereco" value="{{ old('endereco', $clerigo->endereco) }}" maxlength="100">
                 @error('endereco')
@@ -51,7 +51,7 @@
             </div>
 
             <div class="col-xl-2">
-                <label for="numero">Número</label>
+                <label for="numero">{{ __('Número') }}</label>
                 <input type="number" class="form-control @error('numero') is-invalid @enderror" id="numero"
                     name="numero" value="{{ old('numero', $clerigo->numero) }}" maxlength="20">
                 @error('numero')
@@ -60,7 +60,7 @@
             </div>
 
             <div class="col-xl-4">
-                <label for="complemento">Complemento</label>
+                <label for="complemento">{{ __('Complemento') }}</label>
                 <input type="text" class="form-control @error('complemento') is-invalid @enderror" id="complemento"
                     name="complemento" value="{{ old('complemento', $clerigo->complemento) }}" maxlength="30">
                 @error('complemento')
@@ -71,7 +71,7 @@
 
         <div class="row mb-4">
             <div class="col-xl-4">
-                <label for="bairro">* Bairro</label>
+                <label for="bairro">{{ __('* Bairro') }}</label>
                 <input type="text" class="form-control @error('bairro') is-invalid @enderror" id="bairro"
                     name="bairro" value="{{ old('bairro', $clerigo->bairro) }}" maxlength="100">
                 @error('bairro')
@@ -80,7 +80,7 @@
             </div>
 
             <div class="col-xl-4">
-                <label for="cidade">* Cidade</label>
+                <label for="cidade">{{ __('* Cidade') }}</label>
                 <input type="text" class="form-control @error('cidade') is-invalid @enderror" id="cidade"
                     name="cidade" value="{{ old('cidade', $clerigo->cidade) }}" maxlength="100">
                 @error('cidade')
@@ -89,9 +89,9 @@
             </div>
 
             <div class="col-xl-4">
-                <label for="uf">* UF</label>
+                <label for="uf">{{ __('* UF') }}</label>
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
-                    <option value="">Selecione</option>
+                    <option value="">{{ __('Selecione') }}</option>
                     @foreach ($ufs as $key => $value)
                         <option value="{{ $key }}" {{ old('uf', $clerigo->uf) == $key ? 'selected' : '' }}>
                             {{ $value }}
@@ -107,14 +107,14 @@
 
         <div class="row mb-4">
             <div class="col-12 mt-3 col-md-4">
-                <label for="residencia_propria">Residência Própria</label>
+                <label for="residencia_propria">{{ __('Residência Própria') }}</label>
                 <select class="form-control @error('residencia_propria') is-invalid @enderror" id="residencia_propria"
                     name="residencia_propria">
                     <option value="0"
-                        {{ old('residencia_propria', $clerigo->residencia_propria) == '0' ? 'selected' : '' }}>Não
+                        {{ old('residencia_propria', $clerigo->residencia_propria) == '0' ? 'selected' : '' }}>{{ __('Não') }}
                     </option>
                     <option value="1"
-                        {{ old('residencia_propria', $clerigo->residencia_propria) == '1' ? 'selected' : '' }}>Sim
+                        {{ old('residencia_propria', $clerigo->residencia_propria) == '1' ? 'selected' : '' }}>{{ __('Sim') }}
                     </option>
                 </select>
                 @error('residencia_propria')
@@ -123,15 +123,15 @@
             </div>
 
             <div class="col-12 mt-3 col-md-4">
-                <label for="residencia_propria_fgts">Utilizou FGTS?</label>
+                <label for="residencia_propria_fgts">{{ __('Utilizou FGTS?') }}</label>
                 <select class="form-control @error('residencia_propria_fgts') is-invalid @enderror"
                     id="residencia_propria_fgts" name="residencia_propria_fgts">
                     <option value="0"
                         {{ old('residencia_propria_fgts', $clerigo->residencia_propria_fgts) == '0' ? 'selected' : '' }}>
-                        Não</option>
+                        {{ __('Não') }}</option>
                     <option value="1"
                         {{ old('residencia_propria_fgts', $clerigo->residencia_propria_fgts) == '1' ? 'selected' : '' }}>
-                        Sim</option>
+                        {{ __('Sim') }}</option>
                 </select>
                 @error('residencia_propria_fgts')
                     <span class="help-block text-danger">{{ $message }}</span>

@@ -37,7 +37,7 @@ class IgrejasRegiaoController extends Controller
             return view('igrejas-regiao.estatistica-ano-eclesiastico', $data);
         } catch (\Exception $e) {
 
-            return redirect()->back()->with('error', 'Erro' . $e->getMessage());
+            return redirect()->back()->with('error', __('Erro') . $e->getMessage());
         }
     }
 
@@ -48,7 +48,7 @@ class IgrejasRegiaoController extends Controller
             return view('igrejas-regiao.estatistica-ano-eclesiastico', $data);
         } catch (\Exception $e) {
 
-            return redirect()->back()->with('error', 'Erro' . $e->getMessage());
+            return redirect()->back()->with('error', __('Erro') . $e->getMessage());
         }
     }
 

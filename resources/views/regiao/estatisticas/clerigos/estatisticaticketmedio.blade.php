@@ -35,7 +35,7 @@
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4" id="filtros_data_inicial">
                         <div class="col-lg-3 text-right">
-                            <label class="control-label">* Data Inicial:</label>
+                            <label class="control-label">{{ __('* Data Inicial:') }}</label>
                         </div>
                         <div class="col-lg-3">
                             <input type="date" class="form-control @error('data_inicial') is-invalid @enderror"
@@ -45,7 +45,7 @@
                     </div>
                     <div class="form-group row mb-4" id="filtros_data_final">
                         <div class="col-lg-3 text-right">
-                            <label class="control-label">* Data Final:</label>
+                            <label class="control-label">{{ __('* Data Final:') }}</label>
                         </div>
                         <div class="col-lg-3">
                             <input type="date" class="form-control @error('data_final') is-invalid @enderror"
@@ -56,11 +56,11 @@
                         <div class="col-lg-2"></div>
                         <div class="col-lg-6">
                             <button id="btn_buscar" type="submit" name="action" value="buscar"
-                                title="Buscar dados do Relatório" class="btn btn-primary btn">
-                                <x-bx-search /> Buscar
+                                title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                                <x-bx-search /> {{ __('Buscar') }}
                             </button>
                             <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                                <i class="fa fa-file-pdf"></i> Relatório
+                                <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                             </button>
                         </div>
                     </div>
@@ -90,15 +90,15 @@
                                         <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                             <thead class="thead-dark">
                                                 <tr>
-                                                    <th style="text-align: left;">Distrito</th>
-                                                    <th colspan="2" style="text-align: center;">Por Igreja</th>
-                                                    <th colspan="2" style="text-align: center;">Por Membro</th>
+                                                    <th style="text-align: left;">{{ __('Distrito') }}</th>
+                                                    <th colspan="2" style="text-align: center;">{{ __('Por Igreja') }}</th>
+                                                    <th colspan="2" style="text-align: center;">{{ __('Por Membro') }}</th>
                                                 </tr>
                                                 <tr>
                                                     <th style="text-align: left;"></th>
-                                                    <th style="text-align: center;">Valor</th>
+                                                    <th style="text-align: center;">{{ __('Valor') }}</th>
                                                     <th style="text-align: center;">%</th>
-                                                    <th style="text-align: center;">Valor</th>
+                                                    <th style="text-align: center;">{{ __('Valor') }}</th>
                                                     <th style="text-align: center;">%</th>
                                                 </tr>
                                             </thead>
@@ -131,7 +131,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th style="text-align: left;">Total Geral</th>
+                                                    <th style="text-align: left;">{{ __('Total Geral') }}</th>
                                                     <th style="text-align: center;">
                                                         {{ number_format($lancamentos->sum('ticket_medio_igreja'), 2) }}
                                                     </th>
@@ -151,7 +151,7 @@
                     <div class="row">
                         <div class="col-12 text-center">
                         <button class="btn btn-success btn-rounded" onclick="exportRepotirtToExcel();"><i
-                                    class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                                    class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                         </div>
                     </div>
                     <!-- Fim do Conteúdo -->
@@ -169,7 +169,7 @@
     <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.selectpicker').selectpicker();
+            $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
 
             $('#btn_relatorio').on('click', function(event) {
                 var dataInicial = $('#data_inicial').val();

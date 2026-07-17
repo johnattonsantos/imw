@@ -37,7 +37,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Filtro por tipo de instituição</h4>
+                    <h4>{{ __('Filtro por tipo de instituição') }}</h4>
                 </div>
             </div>
         </div>
@@ -51,27 +51,27 @@
                         <div class="row mb-3">
                             <div class="col-4">
                                 <select name="tipo_instituicao_id" id="tipo_instituicao_id" class="form-control">
-                                    <option value="" disabled {{ !request('tipo_instituicao_id') ? 'selected' : '' }}>* Selecione o tipo de instituição</option>
-                                    <option value="1" {{ request('tipo_instituicao_id') == 1 ? 'selected' : '' }}>Igrejas</option>
-                                    <option value="5" {{ request('tipo_instituicao_id') == 5 ? 'selected' : '' }}>Secretarias</option>
-                                    <option value="2" {{ request('tipo_instituicao_id') == 2 ? 'selected' : '' }}>Distritos</option>
+                                    <option value="" disabled {{ !request('tipo_instituicao_id') ? 'selected' : '' }}>{{ __('* Selecione o tipo de instituição') }}</option>
+                                    <option value="1" {{ request('tipo_instituicao_id') == 1 ? 'selected' : '' }}>{{ __('Igrejas') }}</option>
+                                    <option value="5" {{ request('tipo_instituicao_id') == 5 ? 'selected' : '' }}>{{ __('Secretarias') }}</option>
+                                    <option value="2" {{ request('tipo_instituicao_id') == 2 ? 'selected' : '' }}>{{ __('Distritos') }}</option>
                                 </select>
                             </div>
 
 
                             <div class="col-4">
-                                <input type="text" name="search" id="searchInput" class="form-control" placeholder="Pesquisar...">
+                                <input type="text" name="search" id="searchInput" class="form-control" placeholder="{{ __('Pesquisar...') }}">
                             </div>
                             <div class="col-2">
                                 <select name="ativo" id="ativo" class="form-control">
-                                    <option value="" {{ request('ativo') === null || request('ativo') === '' ? 'selected' : '' }}>Todos</option>
-                                    <option value="1" {{ request('ativo') === '1' ? 'selected' : '' }}>Ativo</option>
-                                    <option value="0" {{ request('ativo') === '0' ? 'selected' : '' }}>Inativo</option>
+                                    <option value="" {{ request('ativo') === null || request('ativo') === '' ? 'selected' : '' }}>{{ __('Todos') }}</option>
+                                    <option value="1" {{ request('ativo') === '1' ? 'selected' : '' }}>{{ __('Ativo') }}</option>
+                                    <option value="0" {{ request('ativo') === '0' ? 'selected' : '' }}>{{ __('Inativo') }}</option>
                                 </select>
                             </div>
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary btn-rounded">
-                                    Pesquisar
+                                    {{ __('Pesquisar') }}
                                 </button>
                             </div>
                         </div>
@@ -81,12 +81,12 @@
             @if(request()->has('search') || request()->has('tipo_instituicao_id'))
             <div class="card mb-3">
                 <div class="card-header">
-                    <h5 class="mb-0">Listagem de Registros</h5>
+                    <h5 class="mb-0">{{ __('Listagem de Registros') }}</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <a href="{{ route('instituicoes-regiao.novo') }}" title="Inserir um novo registro"
+                            <a href="{{ route('instituicoes-regiao.novo') }}" title="{{ __('Inserir um novo registro') }}"
                                 class="btn btn-primary right btn-rounded"> <svg xmlns="http://www.w3.org/2000/svg"
                                     width="24" height="24" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -95,16 +95,16 @@
                                     </rect>
                                     <line x1="12" y1="8" x2="12" y2="16"></line>
                                     <line x1="8" y1="12" x2="16" y2="12"></line>
-                                </svg> Novo </a>
+                                </svg> {{ __('Novo') }} </a>
                             <div class="table-responsive">
                                 <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                     <thead class="thead-light">
                                         <tr>
-                                            <th>NOME</th>
-                                            <th>E-MAIL</th>
-                                            <th>TELEFONE</th>
-                                            <th>CIDADE</th>
-                                            <th>STATUS</th>
+                                            <th>{{ __('NOME') }}</th>
+                                            <th>{{ __('E-MAIL') }}</th>
+                                            <th>{{ __('TELEFONE') }}</th>
+                                            <th>{{ __('CIDADE') }}</th>
+                                            <th>{{ __('STATUS') }}</th>
                                             <th width="310px"></th>
                                         </tr>
                                     </thead>
@@ -191,16 +191,16 @@
                                             </td>
                                             <td>
                                                 @if ((int) $instituicao->ativo === 1)
-                                                    <span class="badge badge-success">Ativo</span>
+                                                    <span class="badge badge-success">{{ __('Ativo') }}</span>
                                                 @else
-                                                    <span class="badge badge-danger">Inativo</span>
+                                                    <span class="badge badge-danger">{{ __('Inativo') }}</span>
                                                 @endif
                                             </td>
 
 
                                             <td class="table-action">
                                                 <a href="{{ route('instituicoes-regiao.nomeacoes', $instituicao->id) }}"
-                                                    title="Nomeações" class="btn btn-primary right btn-rounded">
+                                                    title="{{ __('Nomeações') }}" class="btn btn-primary right btn-rounded">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                         height="24" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2"
@@ -217,7 +217,7 @@
                                                 </a>
                                             
                                                 @if (!$instituicao->deleted_at)
-                                                <a href="javascript:void(0);" title="Visualizar"
+                                                <a href="javascript:void(0);" title="{{ __('Visualizar') }}"
                                                     class="btn btn-sm btn-info mr-1 btn-rounded btn-view-details"
                                                     data-instituicao-id="{{ $instituicao->id }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
@@ -232,7 +232,7 @@
 
                                                 </a>
                                                 <a href="{{ route('instituicoes-regiao.editar', $instituicao->id) }}"
-                                                    title="Editar"
+                                                    title="{{ __('Editar') }}"
                                                     class="btn btn-sm btn-dark mr-1 btn-rounded">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                         height="24" viewBox="0 0 24 24" fill="none"
@@ -253,7 +253,7 @@
                                                         id="form_ativar_instituicao_{{ $index }}">
                                                         @csrf
                                                         @method('PUT')
-                                                        <button type="button" title="Ativar"
+                                                        <button type="button" title="{{ __('Ativar') }}"
                                                             class="btn btn-sm btn-success mr-1 btn-rounded btn-confirm-ativar"
                                                             data-form-ativar-id="form_ativar_instituicao_{{ $index }}">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -281,7 +281,7 @@
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <button type="button" class="close"
-                                                            data-dismiss="modal" aria-label="Close">
+                                                            data-dismiss="modal" aria-label="{{ __('Close') }}">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>

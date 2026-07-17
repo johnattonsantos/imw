@@ -25,7 +25,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Financeiro por Categoria</h4>
+                    <h4>{{ __('Relatório Financeiro por Categoria') }}</h4>
                 </div>
             </div>
         </div>
@@ -34,11 +34,11 @@
                 <div class="row col-md-12">
                     <div class="form-group mb-4 col-md-3">
                         <div>
-                            <label class="control-label">* Categoria:</label>
+                            <label class="control-label">{{ __('* Categoria:') }}</label>
                         </div>
                         <div>
                             <select class="form-control" id="categoria" name="categoria" required>
-                                <option value="">Selecione</option>
+                                <option value="">{{ __('Selecione') }}</option>
                                 @foreach($categorias as $item)
                                     <option value="{{ $item->id }}" {{ request()->input('categoria') == $item->id ? 'selected' : '' }}>{{ $item->nome }}</option>
                                 @endforeach
@@ -47,7 +47,7 @@
                     </div>
                     <div class="form-group mb-4 col-md-3" id="filtros_data">
                         <div>
-                            <label class="control-label">* Data Inicial:</label>
+                            <label class="control-label">{{ __('* Data Inicial:') }}</label>
                         </div>
                         <div>
                             <input type="date" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" required>
@@ -55,7 +55,7 @@
                     </div>
                     <div class="for-group mb-4 col-md-3">
                         <div>
-                            <label class="control-label">* Data Final:</label>
+                            <label class="control-label">{{ __('* Data Final:') }}</label>
                         </div>
                         <div>
                             <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" required>
@@ -64,8 +64,8 @@
                     <div class="form-group mb-1 col-md-3">
                         <div class="col-lg-2"></div>
                         <div>
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório"  style="margin-top: 30px;" class="btn btn-primary">
-                                <x-bx-search /> Buscar
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}"  style="margin-top: 30px;" class="btn btn-primary">
+                                <x-bx-search /> {{ __('Buscar') }}
                             </button>
                         </div>
                     </div>
@@ -88,10 +88,10 @@
                              <table class="table table-bordered table-striped table-hover mb-4 display nowrap">
                                 <thead> 
                                     <tr>
-                                        <th>DISTRITO</th>
-                                        <th>IGREJA</th>
-                                        <th>CATEGORIA</th>
-                                        <th>VALOR</th>
+                                        <th>{{ __('DISTRITO') }}</th>
+                                        <th>{{ __('IGREJA') }}</th>
+                                        <th>{{ __('CATEGORIA') }}</th>
+                                        <th>{{ __('VALOR') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -113,14 +113,14 @@
                                             </tr>
                                         @endforeach   
                                         <tr>
-                                            <td><b>Total Geral</b></td>
+                                            <td><b>{{ __('Total Geral') }}</b></td>
                                             <td>-</td>
                                             <td>-</td>
                                             <td><b>{{ number_format($dados['TotalGeral']->valor, 2, ',', '.') }}</b></td>
                                         </tr>
                                     @else
                                         <tr>
-                                            <td>Nenhum registro encontrado</td>
+                                            <td>{{ __('Nenhum registro encontrado') }}</td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
@@ -134,10 +134,10 @@
                              <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="financeiro-por-categoria">
                                 <thead>
                                     <tr>
-                                        <th>DISTRITO</th>
-                                        <th>IGREJA</th>
-                                        <th>CATEGORIA</th>
-                                        <th >VALOR</th>
+                                        <th>{{ __('DISTRITO') }}</th>
+                                        <th>{{ __('IGREJA') }}</th>
+                                        <th>{{ __('CATEGORIA') }}</th>
+                                        <th >{{ __('VALOR') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -159,14 +159,14 @@
                                             </tr>
                                         @endforeach  
                                             <tr>
-                                                <td><b>Total Geral</b></td>
+                                                <td><b>{{ __('Total Geral') }}</b></td>
                                                 <td>-</td>
                                                 <td>-</td>
                                                 <td><b>{{ number_format($dados['TotalGeral']->valor, 2, ',', '.') }}</b></td>
                                             </tr>
                                     @else
                                         <tr>
-                                            <td>Nenhum registro encontrado</td>
+                                            <td>{{ __('Nenhum registro encontrado') }}</td>
                                             <td></td>
                                             <td></td>
                                             <td></td>

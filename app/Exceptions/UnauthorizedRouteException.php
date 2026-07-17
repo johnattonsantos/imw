@@ -10,6 +10,6 @@ class UnauthorizedRouteException extends Exception
     {
         return redirect()
             ->route('dashboard')
-            ->with('error', 'Você não tem permissão para acessar esta página');
+            ->with('error', __('Você não tem permissão para acessar esta página'));
     }
 }

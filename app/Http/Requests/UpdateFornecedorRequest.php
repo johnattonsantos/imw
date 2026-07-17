@@ -31,7 +31,7 @@ class UpdateFornecedorRequest extends FormRequest
                 'max:18',
                 function ($attribute, $value, $fail) {
                     if (!CpfCnpj::isValidCpfOrCnpj($value)) {
-                        $fail('O CPF/CNPJ informado é inválido. Para CNPJ alfanumérico, use 12 letras/números e 2 dígitos verificadores numéricos.');
+                        $fail(__('O CPF/CNPJ informado é inválido. Para CNPJ alfanumérico, use 12 letras/números e 2 dígitos verificadores numéricos.'));
                     }
                 },
             ],
@@ -39,7 +39,7 @@ class UpdateFornecedorRequest extends FormRequest
             'email' => ['nullable', 'email', function ($attribute, $value, $fail) {
                 if ($value) {
                     if (!preg_match('/@.*\.\w{2,}$/', $value)) {
-                        $fail('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.');
+                        $fail(__('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.'));
                     }
                 }
             }],

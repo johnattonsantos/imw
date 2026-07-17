@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Orçamentos - IMW PGA</title>
+    <title>{{ __('Relatório de Orçamentos - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,7 +86,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">ORÇAMENTO - {{ request()->input('distrito') != 'all' ? $instituicao->nome : 'Todos os Distritos' }}</div>
             <div class="period" style="margin-top:4px">
@@ -99,20 +99,20 @@
     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
     <thead class="thead-dark">
         <tr>
-            <th width="110px" style="text-align: left">DISTRITO</th>
-            <th width="180px" style="text-align: left">IGREJA</th>
-            <th width="50px" style="text-align: right">JAN</th>
-            <th width="50px" style="text-align: right">FEV</th>
-            <th width="50px" style="text-align: right">MAR</th>
-            <th width="50px" style="text-align: right">ABR</th>
-            <th width="50px" style="text-align: right">MAI</th>
-            <th width="50px" style="text-align: right">JUN</th>
-            <th width="50px" style="text-align: right">JUL</th>
-            <th width="50px" style="text-align: right">AGO</th>
-            <th width="50px" style="text-align: right">SET</th>
-            <th width="50px" style="text-align: right">OUT</th>
-            <th width="50px" style="text-align: right">NOV</th>
-            <th width="50px" style="text-align: right">DEZ</th>
+            <th width="110px" style="text-align: left">{{ __('DISTRITO') }}</th>
+            <th width="180px" style="text-align: left">{{ __('IGREJA') }}</th>
+            <th width="50px" style="text-align: right">{{ __('JAN') }}</th>
+            <th width="50px" style="text-align: right">{{ __('FEV') }}</th>
+            <th width="50px" style="text-align: right">{{ __('MAR') }}</th>
+            <th width="50px" style="text-align: right">{{ __('ABR') }}</th>
+            <th width="50px" style="text-align: right">{{ __('MAI') }}</th>
+            <th width="50px" style="text-align: right">{{ __('JUN') }}</th>
+            <th width="50px" style="text-align: right">{{ __('JUL') }}</th>
+            <th width="50px" style="text-align: right">{{ __('AGO') }}</th>
+            <th width="50px" style="text-align: right">{{ __('SET') }}</th>
+            <th width="50px" style="text-align: right">{{ __('OUT') }}</th>
+            <th width="50px" style="text-align: right">{{ __('NOV') }}</th>
+            <th width="50px" style="text-align: right">{{ __('DEZ') }}</th>
         </tr>
     </thead>
     <tbody>
@@ -163,7 +163,7 @@
             @endphp
         @endforeach
         <tr class="font-weight-bold">
-            <td colspan="2">Totais</td>
+            <td colspan="2">{{ __('Totais') }}</td>
             <td style="text-align: right">{{ number_format($totalJaneiro, 2, ',', '.') }}</td>
             <td style="text-align: right">{{ number_format($totalFevereiro, 2, ',', '.') }}</td>
             <td style="text-align: right">{{ number_format($totalMarco, 2, ',', '.') }}</td>

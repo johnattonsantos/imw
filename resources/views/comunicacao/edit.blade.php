@@ -104,7 +104,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Editar Comunicação</h4>
+                    <h4>{{ __('Editar Comunicação') }}</h4>
                 </div>
             </div>
         </div>
@@ -114,9 +114,9 @@
                 @method('PUT')
 
                 <div class="form-group">
-                    <label for="categoria_comunicacao_id">* Categoria</label>
+                    <label for="categoria_comunicacao_id">{{ __('* Categoria') }}</label>
                     <select name="categoria_comunicacao_id" id="categoria_comunicacao_id" class="form-control @error('categoria_comunicacao_id') is-invalid @enderror" required>
-                        <option value="">Selecione</option>
+                        <option value="">{{ __('Selecione') }}</option>
                         @foreach ($categorias as $categoria)
                             <option value="{{ $categoria->id }}" {{ (string) old('categoria_comunicacao_id', $comunicacao->categoria_comunicacao_id) === (string) $categoria->id ? 'selected' : '' }}>
                                 {{ $categoria->nome }}
@@ -126,18 +126,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="titulo">* Título</label>
+                    <label for="titulo">{{ __('* Título') }}</label>
                     <input type="text" name="titulo" id="titulo" class="form-control @error('titulo') is-invalid @enderror"
                         value="{{ old('titulo', $comunicacao->titulo) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="comentario">* Comentário</label>
+                    <label for="comentario">{{ __('* Comentário') }}</label>
                     <textarea name="comentario" id="comentario" rows="6" class="form-control @error('comentario') is-invalid @enderror">{{ old('comentario', $comunicacao->comentario) }}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="arquivo">Arquivo</label>
+                    <label for="arquivo">{{ __('Arquivo') }}</label>
                     <input type="file" name="arquivo" id="arquivo" class="form-control @error('arquivo') is-invalid @enderror"
                         accept="{{ $arquivoAccept }}">
                     @if ($comunicacao->arquivo)
@@ -163,8 +163,8 @@
                             }
                         @endphp
                         <small class="d-block mt-2">
-                            Arquivo atual:
-                            <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="Ver arquivo">
+                            {{ __('Arquivo atual:') }}
+                            <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="{{ __('Ver arquivo') }}">
                                 <i class="fas {{ $iconClass }} {{ $colorClass }} fa-lg"></i>
                             </a>
                         </small>
@@ -172,8 +172,8 @@
                     <small class="text-muted d-block mt-2">Formatos: {{ $arquivoFormatosTexto }}. Tamanho maximo: 10MB</small>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ route('comunicacao.index') }}" class="btn btn-light">Voltar</a>
+                <button type="submit" class="btn btn-primary">{{ __('Salvar') }}</button>
+                <a href="{{ route('comunicacao.index') }}" class="btn btn-light">{{ __('Voltar') }}</a>
             </form>
         </div>
     </div>

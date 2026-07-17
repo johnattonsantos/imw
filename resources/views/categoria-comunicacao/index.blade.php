@@ -26,7 +26,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Categoria Comunicação</h4>
+                    <h4>{{ __('Categoria Comunicação') }}</h4>
                 </div>
             </div>
         </div>
@@ -35,25 +35,25 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm"
-                            placeholder="Pesquisar por nome...">
+                            placeholder="{{ __('Pesquisar por nome...') }}">
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-primary btn-sm">Pesquisar</button>
+                        <button type="submit" class="btn btn-primary btn-sm">{{ __('Pesquisar') }}</button>
                     </div>
                 </div>
             </form>
 
             <div class="mb-3 d-flex" style="gap: 8px;">
-                <button type="button" id="btn-open-create" class="btn btn-primary btn-sm">Nova categoria</button>
+                <button type="button" id="btn-open-create" class="btn btn-primary btn-sm">{{ __('Nova categoria') }}</button>
             </div>
 
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Nome</th>
-                            <th>Criado em</th>
-                            <th>Ações</th>
+                            <th>{{ __('Nome') }}</th>
+                            <th>{{ __('Criado em') }}</th>
+                            <th>{{ __('Ações') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,12 +62,12 @@
                                 <td>{{ $categoria->nome }}</td>
                                 <td>{{ optional($categoria->created_at)->format('d/m/Y H:i') }}</td>
                                 <td class="table-action">
-                                    <button type="button" class="btn btn-sm btn-dark btn-rounded btn-edit bs-tooltip" data-id="{{ $categoria->id }}" title="Editar" aria-label="Editar">
+                                    <button type="button" class="btn btn-sm btn-dark btn-rounded btn-edit bs-tooltip" data-id="{{ $categoria->id }}" title="{{ __('Editar') }}" aria-label="{{ __('Editar') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2">
                                             <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                                         </svg>
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-danger btn-rounded btn-delete bs-tooltip" data-id="{{ $categoria->id }}" title="Excluir" aria-label="Excluir">
+                                    <button type="button" class="btn btn-sm btn-danger btn-rounded btn-delete bs-tooltip" data-id="{{ $categoria->id }}" title="{{ __('Excluir') }}" aria-label="{{ __('Excluir') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
                                             <polyline points="3 6 5 6 21 6"></polyline>
                                             <path d="M19 6l-1 14H6L5 6"></path>
@@ -80,7 +80,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center">Nenhum registro encontrado.</td>
+                                <td colspan="3" class="text-center">{{ __('Nenhum registro encontrado.') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -96,8 +96,8 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalCategoriaFormTitle">Categoria Comunicação</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h5 class="modal-title" id="modalCategoriaFormTitle">{{ __('Categoria Comunicação') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Close') }}">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -105,13 +105,13 @@
                 <div class="modal-body">
                     <input type="hidden" id="categoria-id" name="id" value="">
                     <div class="form-group">
-                        <label for="categoria-nome">* Nome</label>
+                        <label for="categoria-nome">{{ __('* Nome') }}</label>
                         <input type="text" id="categoria-nome" name="nome" class="form-control" maxlength="150" required>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">{{ __('Cancelar') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('Salvar') }}</button>
                 </div>
             </form>
         </div>
