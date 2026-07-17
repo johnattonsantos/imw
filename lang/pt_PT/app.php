@@ -5,7 +5,7 @@ return [
   [
     'label' => 'Idioma',
     'changed' => 'Idioma alterado com sucesso.',
-    'select' => 'Seleccionar idioma',
+    'select' => 'Selecionar idioma',
   ],
   'messages' => 
   [
@@ -41,7 +41,7 @@ return [
     'email' => 'E-mail',
     'phone' => 'Telefone',
     'contact' => 'Contacto',
-    'address' => 'Endereço',
+    'address' => 'Morada',
     'document' => 'Documento',
     'cpf' => 'CPF',
     'cnpj' => 'CNPJ',

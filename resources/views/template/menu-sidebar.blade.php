@@ -90,10 +90,10 @@
                          style="width: 50px; height: 50px; border-radius: 50%;">
                  </div>
                  <div class="user-details" style="text-align: center;">
-                     <b class="text-bold text-white" style="font-size: 12px ;">{{ $firstName }}
-                         {{ $lastName }}</b><br>
+                     <b class="text-bold text-white" style="font-size: 12px ;">{{ __($firstName) }}
+                         {{ __($lastName) }}</b><br>
                      @if (session('session_perfil'))
-                         <span style="font-size: 12px ;">{{ session('session_perfil')->perfil_nome }}</span> <br>
+                         <span style="font-size: 12px ;">{{ __(session('session_perfil')->perfil_nome) }}</span> <br>
                          <span style="font-size: 12px ;">{{ session('session_perfil')->instituicao_nome }}</span> <br>
                      @endif
 

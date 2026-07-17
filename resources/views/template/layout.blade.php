@@ -16,8 +16,22 @@
         window.IMW_TRANSLATIONS = @json($browserTranslations ?: []);
         window.IMW_LOCALE = @json(app()->getLocale());
         window.__ = function(key) {
-            return (window.IMW_TRANSLATIONS && window.IMW_TRANSLATIONS[key]) ? window.IMW_TRANSLATIONS[key] : key;
+            if (typeof key !== 'string') {
+                return key;
+            }
+
+            const normalized = key.replace(/\s+/g, ' ').trim();
+            if (window.IMW_TRANSLATIONS && window.IMW_TRANSLATIONS[key]) {
+                return window.IMW_TRANSLATIONS[key];
+            }
+
+            if (window.IMW_TRANSLATIONS && window.IMW_TRANSLATIONS[normalized]) {
+                return key.replace(normalized, window.IMW_TRANSLATIONS[normalized]);
+            }
+
+            return key;
         };
+        var __ = window.__;
         window.IMW_SELECTPICKER_OPTIONS = {
             noneSelectedText: window.__('Nenhum item selecionado'),
             selectAllText: window.__('Selecionar todos'),

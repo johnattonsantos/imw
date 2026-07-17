@@ -4,7 +4,7 @@ return [
     'required' => 'O campo :attribute é obrigatório.',
     'email' => 'O campo :attribute deve ser um endereço de e-mail válido.',
     'date' => 'O campo :attribute não é uma data válida.',
-    'exists' => 'O campo :attribute seleccionado é inválido.',
+    'exists' => 'O campo :attribute selecionado é inválido.',
     'unique' => 'O campo :attribute já está a ser utilizado.',
     'image' => 'O campo :attribute deve ser uma imagem.',
     'max' => [
