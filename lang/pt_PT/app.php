@@ -1,18 +1,15 @@
 <?php
 
 return [
-  'language' =>
-  [
+  'language' => [
     'label' => 'Idioma',
     'changed' => 'Idioma alterado com sucesso.',
-    'select' => 'Seleccionar idioma',
+    'select' => 'Selecionar idioma',
   ],
-  'messages' =>
-  [
+  'messages' => [
     'language_changed' => 'Idioma alterado com sucesso.',
   ],
-  'actions' =>
-  [
+  'actions' => [
     'save' => 'Guardar',
     'cancel' => 'Cancelar',
     'create' => 'Criar',
@@ -26,8 +23,7 @@ return [
     'export' => 'Exportar',
     'confirm' => 'Confirmar',
   ],
-  'navigation' =>
-  [
+  'navigation' => [
     'dashboard' => 'Painel',
     'profile' => 'O meu perfil',
     'change_institution' => 'Trocar instituição',
@@ -35,13 +31,12 @@ return [
     'reports' => 'Relatórios',
     'secretary' => 'Secretaria',
   ],
-  'fields' =>
-  [
+  'fields' => [
     'name' => 'Nome',
     'email' => 'E-mail',
     'phone' => 'Telefone',
     'contact' => 'Contacto',
-    'address' => 'Endereço',
+    'address' => 'Morada',
     'document' => 'Documento',
     'cpf' => 'CPF',
     'cnpj' => 'CNPJ',
@@ -56,8 +51,7 @@ return [
     'region' => 'Região',
     'congregation' => 'Congregação',
   ],
-  'auth' =>
-  [
+  'auth' => [
     'title' => 'Autenticação',
     'email' => 'E-mail',
     'password' => 'Palavra-passe',
