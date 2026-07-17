@@ -1,17 +1,17 @@
 <?php
 
 return [
-  'language' => 
+  'language' =>
   [
     'label' => '言語',
     'changed' => '言語が正常に変更されました。',
     'select' => '言語を選択',
   ],
-  'messages' => 
+  'messages' =>
   [
     'language_changed' => '言語が正常に変更されました。',
   ],
-  'actions' => 
+  'actions' =>
   [
     'save' => '保存',
     'cancel' => 'キャンセル',
@@ -26,7 +26,7 @@ return [
     'export' => 'エクスポート',
     'confirm' => '確認',
   ],
-  'navigation' => 
+  'navigation' =>
   [
     'dashboard' => 'ダッシュボード',
     'profile' => 'マイプロフィール',
@@ -35,7 +35,7 @@ return [
     'reports' => 'レポート',
     'secretary' => '事務局',
   ],
-  'fields' => 
+  'fields' =>
   [
     'name' => '名前',
     'email' => 'メール',
@@ -56,7 +56,7 @@ return [
     'region' => '地域',
     'congregation' => '会衆',
   ],
-  'auth' => 
+  'auth' =>
   [
     'title' => '認証',
     'email' => 'メール',

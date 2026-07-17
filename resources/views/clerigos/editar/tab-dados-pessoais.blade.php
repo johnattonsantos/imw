@@ -13,8 +13,8 @@
             <div class="col-xl-3 text-center">
                 <input type="hidden" name="membro_id" value="{{ $clerigo->id }}">
                 <div>
-                    <div class="col-md-12"> 
-                        <img id="showImage" src="{{ $clerigo->foto ? $clerigo->foto : asset('theme/images/sem-foto.jpg') }}" alt="{{ __('Admin') }}" width="150" height="150"> 
+                    <div class="col-md-12">
+                        <img id="showImage" src="{{ $clerigo->foto ? $clerigo->foto : asset('theme/images/sem-foto.jpg') }}" alt="{{ __('Admin') }}" width="150" height="150">
                     </div>
                     <div class="form-group col-md-12" style="margin-top: 10px;">
                         <label for="image" class="form-label"></label>
@@ -213,7 +213,7 @@
     </blockquote>
 </div>
 <script>
-    
+
     $("#data_consagracao").change(function(e){
         let data_nascimento = $('#data_nascimento').val();
         if(!data_nascimento){
@@ -311,7 +311,7 @@
         }
 
     })
-    
+
 </script>
 @push('tab-scripts')
 @endpush

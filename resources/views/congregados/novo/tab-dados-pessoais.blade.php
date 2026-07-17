@@ -70,16 +70,16 @@
                 @enderror
               </div>
             </div>
-            
-            <div class="row mb-4">   
-              
-              
+
+            <div class="row mb-4">
+
+
               <div class="col-xl-4">
                 <label for="nacionalidade">{{ __('* Nacionalidade') }}</label>
                 <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade">
                   <option value="">{{ __('Selecione') }}</option>
                   @php
-                    //Colocar no banco de dados 
+                    //Colocar no banco de dados
                     $paises = [
                                           'BR' => 'Brasil',
                                           'AF' => 'Afeganistão',
@@ -369,10 +369,10 @@
                 </select>
                 @error('uf')
                 <span class="help-block text-danger">{{ $message }}</span>
-                @enderror                
+                @enderror
               </div>
             </div>
-            
+
             <div class="row mb-4">
               <div class="col-xl-3">
                 <label for="escolaridade_id">{{ __('Escolaridade') }}</label>
@@ -429,7 +429,7 @@
                 <select class="form-control" name="tipo_documento" id="tipo_documento">
                   <option value="">{{ __('Selecione') }}</option>
                   <option value="RG">{{ __('RG') }}</option>
-                  <option value="CNH">{{ __('CNH') }}</option>    
+                  <option value="CNH">{{ __('CNH') }}</option>
                 </select>
                 @error('tipo_documento')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -484,8 +484,8 @@
                 @error('historico')
                   <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
-              </div>   
-              
+              </div>
+
               <div class="col-lg-6">
                   <label class="control-label">{{ __('Congregação:') }}</label>
                   <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" >
@@ -499,7 +499,7 @@
                   @enderror
               </div>
             </div>
-          </div>                       
+          </div>
       </div>
     </div>
   </blockquote>

@@ -42,7 +42,7 @@ class EventoController extends Controller
         $this->appendInstitutionMeta($eventos->getCollection());
 
         $escopoEvento = $this->eventScopeType();
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.index', compact('eventos', 'escopoEvento', 'statusOptions'));
     }
@@ -58,7 +58,7 @@ class EventoController extends Controller
 
         $this->appendInstitutionMeta($eventos);
 
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
         $agendaEventos = $eventos->map(function (Evento $evento) use ($statusOptions) {
             $hasTime = !empty($evento->hora_inicio) || !empty($evento->hora_fim);
             $startDate = $evento->data_inicio->toDateString();
@@ -125,7 +125,7 @@ class EventoController extends Controller
             $this->syncEquipe($evento, $validated['equipe'] ?? []);
         });
 
-        return redirect()->route('eventos.index')->with('success', 'Evento cadastrado com sucesso.');
+        return redirect()->route('eventos.index')->with('success', __('Evento cadastrado com sucesso.'));
     }
 
     public function show(Evento $evento)
@@ -134,7 +134,7 @@ class EventoController extends Controller
 
         $evento->load(['proposito', 'equipe.eventoFuncao', 'instituicao.instituicaoPai.instituicaoPai']);
         $this->appendInstitutionMeta(collect([$evento]));
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         if (request()->ajax()) {
             return view('eventos._show_modal', compact('evento', 'statusOptions'));
@@ -151,7 +151,7 @@ class EventoController extends Controller
         $propositos = $this->propositos();
         $funcoesEventos = $this->funcoesEventos();
         $instituicoesEvento = $this->instituicoesEventoOptions();
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.edit', compact('evento', 'propositos', 'funcoesEventos', 'instituicoesEvento', 'statusOptions'));
     }
@@ -167,7 +167,7 @@ class EventoController extends Controller
             $this->syncEquipe($evento, $validated['equipe'] ?? []);
         });
 
-        return redirect()->route('eventos.index')->with('success', 'Evento atualizado com sucesso.');
+        return redirect()->route('eventos.index')->with('success', __('Evento atualizado com sucesso.'));
     }
 
     public function destroy(Evento $evento)
@@ -175,7 +175,7 @@ class EventoController extends Controller
         $this->ensureSameInstituicao($evento);
         $evento->delete();
 
-        return redirect()->route('eventos.index')->with('success', 'Evento excluido com sucesso.');
+        return redirect()->route('eventos.index')->with('success', __('Evento excluído com sucesso.'));
     }
 
     public function relatorio(Request $request)
@@ -191,7 +191,7 @@ class EventoController extends Controller
         $propositos = $this->propositos();
         $instituicoesEvento = $this->instituicoesEventoOptions();
         $escopoEvento = $this->eventScopeType();
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.relatorio', compact('eventos', 'propositos', 'instituicoesEvento', 'escopoEvento', 'statusOptions'));
     }
@@ -241,7 +241,7 @@ class EventoController extends Controller
         $instituicoesEvento = $this->instituicoesEventoOptions();
         $funcoesEventos = $this->funcoesEventos();
         $escopoEvento = $this->eventScopeType();
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.relatorio-pessoas', compact(
             'pessoas',
@@ -259,7 +259,7 @@ class EventoController extends Controller
 
         $evento->load(['proposito', 'equipe.eventoFuncao', 'instituicao.instituicaoPai.instituicaoPai']);
         $this->appendInstitutionMeta(collect([$evento]));
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
         $filename = 'evento-' . Str::slug($evento->titulo ?: 'relatorio') . '.pdf';
 
         $pdf = FacadePdf::loadView('eventos.pdf.evento', compact('evento', 'statusOptions'))
@@ -375,15 +375,15 @@ class EventoController extends Controller
             'equipe.*.contato' => ['nullable', 'string', 'max:60'],
             'equipe.*.lider' => ['nullable', 'boolean'],
         ], [
-            'instituicao_id.required' => 'Selecione a igreja ou congregação do evento.',
-            'instituicao_id.in' => 'A instituição selecionada não está disponível para o perfil logado.',
-            'evento_proposito_id.required' => 'Selecione o propósito do evento.',
-            'titulo.required' => 'Informe o nome do evento.',
-            'data_inicio.required' => 'Informe a data inicial da agenda.',
-            'data_inicio.date_format' => 'Informe a data inicial no formato dd/mm/aaaa.',
-            'data_fim.date_format' => 'Informe a data final no formato dd/mm/aaaa.',
-            'hora_inicio.date_format' => 'Informe a hora inicial no formato HH:mm.',
-            'hora_fim.date_format' => 'Informe a hora final no formato HH:mm.',
+            'instituicao_id.required' => __('Selecione a igreja ou congregação do evento.'),
+            'instituicao_id.in' => __('A instituição selecionada não está disponível para o perfil logado.'),
+            'evento_proposito_id.required' => __('Selecione o propósito do evento.'),
+            'titulo.required' => __('Informe o nome do evento.'),
+            'data_inicio.required' => __('Informe a data inicial da agenda.'),
+            'data_inicio.date_format' => __('Informe a data inicial no formato dd/mm/aaaa.'),
+            'data_fim.date_format' => __('Informe a data final no formato dd/mm/aaaa.'),
+            'hora_inicio.date_format' => __('Informe a hora inicial no formato HH:mm.'),
+            'hora_fim.date_format' => __('Informe a hora final no formato HH:mm.'),
         ]);
 
         if (!empty($validated['data_fim'])) {
@@ -392,7 +392,7 @@ class EventoController extends Controller
 
             if ($dataFim->lt($dataInicio)) {
                 throw ValidationException::withMessages([
-                    'data_fim' => 'A data final deve ser igual ou posterior a data inicial.',
+                    'data_fim' => __('A data final deve ser igual ou posterior a data inicial.'),
                 ]);
             }
         }
@@ -464,6 +464,13 @@ class EventoController extends Controller
     private function parsePtBrDate(string $date): Carbon
     {
         return Carbon::createFromFormat('d/m/Y', $date)->startOfDay();
+    }
+
+    private function statusOptions(): array
+    {
+        return collect(self::STATUS)
+            ->map(fn ($label) => __($label))
+            ->all();
     }
 
     private function ensureSameInstituicao(Evento $evento): void

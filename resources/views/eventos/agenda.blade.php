@@ -142,21 +142,21 @@
     <div class="agenda-shell box-shadow">
         <div class="agenda-heading">
             <div>
-                <h4>Agenda de Eventos</h4>
-                <p>Visualize os eventos cadastrados por mês, semana ou dia.</p>
+                <h4>{{ __('Agenda de Eventos') }}</h4>
+                <p>{{ __('Visualize os eventos cadastrados por mês, semana ou dia.') }}</p>
             </div>
             @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-novo'))
                 <a href="{{ route('eventos.create') }}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-plus mr-1"></i> Novo evento
+                    <i class="fas fa-plus mr-1"></i> {{ __('Novo evento') }}
                 </a>
             @endif
         </div>
 
-        <div class="agenda-legend" aria-label="Legenda dos status">
-            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #d48624;"></span>Planejado</span>
-            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #1976d2;"></span>Confirmado</span>
-            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #27865d;"></span>Realizado</span>
-            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #c44343;"></span>Cancelado</span>
+        <div class="agenda-legend" aria-label="{{ __('Legenda dos status') }}">
+            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #d48624;"></span>{{ __('Planejado') }}</span>
+            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #1976d2;"></span>{{ __('Confirmado') }}</span>
+            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #27865d;"></span>{{ __('Realizado') }}</span>
+            <span class="agenda-legend-item"><span class="agenda-legend-dot" style="background: #c44343;"></span>{{ __('Cancelado') }}</span>
         </div>
 
         <div id="agenda-calendar"></div>
@@ -166,7 +166,7 @@
 <div class="modal fade" id="eventoAgendaModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
-            <div class="modal-body" style="min-height: 180px;">Carregando...</div>
+            <div class="modal-body" style="min-height: 180px;">{{ __('Carregando...') }}</div>
         </div>
     </div>
 </div>
@@ -180,7 +180,7 @@
         const eventos = @json($agendaEventos);
         const modal = $('#eventoAgendaModal');
         const modalContent = modal.find('.modal-content');
-        const loadingHtml = '<div class="modal-body" style="min-height: 180px;">Carregando...</div>';
+        const loadingHtml = '<div class="modal-body" style="min-height: 180px;">' + window.__('Carregando...') + '</div>';
 
         $('#agenda-calendar').fullCalendar({
             header: {
@@ -189,23 +189,37 @@
                 right: 'month,agendaWeek,agendaDay'
             },
             buttonText: {
-                today: 'Hoje',
-                month: 'Mês',
-                week: 'Semana',
-                day: 'Dia'
+                today: window.__('Hoje'),
+                month: window.__('Mês'),
+                week: window.__('Semana'),
+                day: window.__('Dia')
             },
-            monthNames: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
-            monthNamesShort: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
-            dayNames: ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'],
-            dayNamesShort: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
+            monthNames: [
+                window.__('janeiro'), window.__('fevereiro'), window.__('março'), window.__('abril'),
+                window.__('maio'), window.__('junho'), window.__('julho'), window.__('agosto'),
+                window.__('setembro'), window.__('outubro'), window.__('novembro'), window.__('dezembro')
+            ],
+            monthNamesShort: [
+                window.__('jan'), window.__('fev'), window.__('mar'), window.__('abr'),
+                window.__('mai'), window.__('jun'), window.__('jul'), window.__('ago'),
+                window.__('set'), window.__('out'), window.__('nov'), window.__('dez')
+            ],
+            dayNames: [
+                window.__('domingo'), window.__('segunda-feira'), window.__('terça-feira'), window.__('quarta-feira'),
+                window.__('quinta-feira'), window.__('sexta-feira'), window.__('sábado')
+            ],
+            dayNamesShort: [
+                window.__('dom'), window.__('seg'), window.__('ter'), window.__('qua'),
+                window.__('qui'), window.__('sex'), window.__('sáb')
+            ],
             firstDay: 0,
-            allDayText: 'Dia inteiro',
+            allDayText: window.__('Dia inteiro'),
             timeFormat: 'H:mm',
             slotLabelFormat: 'H:mm',
             displayEventTime: false,
             displayEventEnd: true,
             eventLimit: true,
-            eventLimitText: 'mais',
+            eventLimitText: window.__('mais'),
             navLinks: true,
             editable: false,
             events: eventos,
@@ -228,9 +242,9 @@
                     },
                     error: function () {
                         modalContent.html(
-                            '<div class="modal-header"><h5 class="modal-title">Detalhes do Evento</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Fechar"><span aria-hidden="true">&times;</span></button></div>' +
-                            '<div class="modal-body"><div class="alert alert-danger mb-0">Não foi possível carregar os detalhes do evento.</div></div>'
+                            '<div class="modal-header"><h5 class="modal-title">' + window.__('Detalhes do Evento') + '</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="' + window.__('Fechar') + '"><span aria-hidden="true">&times;</span></button></div>' +
+                            '<div class="modal-body"><div class="alert alert-danger mb-0">' + window.__('Não foi possível carregar os detalhes do evento.') + '</div></div>'
                         );
                     }
                 });

@@ -1,17 +1,17 @@
 <?php
 
 return [
-  'language' => 
+  'language' =>
   [
     'label' => 'Langue',
     'changed' => 'Langue modifiée avec succès.',
     'select' => 'Sélectionner la langue',
   ],
-  'messages' => 
+  'messages' =>
   [
     'language_changed' => 'Langue modifiée avec succès.',
   ],
-  'actions' => 
+  'actions' =>
   [
     'save' => 'Enregistrer',
     'cancel' => 'Annuler',
@@ -26,7 +26,7 @@ return [
     'export' => 'Exporter',
     'confirm' => 'Confirmer',
   ],
-  'navigation' => 
+  'navigation' =>
   [
     'dashboard' => 'Tableau de bord',
     'profile' => 'Mon profil',
@@ -35,7 +35,7 @@ return [
     'reports' => 'Rapports',
     'secretary' => 'Secrétariat',
   ],
-  'fields' => 
+  'fields' =>
   [
     'name' => 'Nom',
     'email' => 'E-mail',
@@ -56,7 +56,7 @@ return [
     'region' => 'Région',
     'congregation' => 'Congrégation',
   ],
-  'auth' => 
+  'auth' =>
   [
     'title' => 'Authentification',
     'email' => 'E-mail',

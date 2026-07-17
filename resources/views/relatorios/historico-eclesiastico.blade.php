@@ -31,7 +31,7 @@
   </div>
     <div class="widget-content widget-content-area">
       <form class="form-vertical" id="filter_form">
-        
+
         {{-- Função Ministerial --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -76,7 +76,7 @@
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
             <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
-              <x-bx-search /> {{ __('Buscar') }} 
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
           </div>
         </div>
@@ -98,7 +98,7 @@
             </div>
           </div>
           <div class="widget-content widget-content-area">
-            
+
               <div class="table-responsive">
                   <table class="table table-bordered table-striped table-hover mb-4" id="membros-por-ministerio">
                       <thead>
@@ -160,7 +160,7 @@
   $('#btn_buscar').click(function () {
     $('#filter_form').removeAttr('target');
   })
-  
+
   $('#btn_relatorio').click(function () {
     $('#filter_form').attr('target', '_blank');
   })

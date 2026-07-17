@@ -40,10 +40,10 @@
           <div class="col-md-12">
             <div class="alert alert-warning border-0 mb-4" role="alert">
               <strong>
-                {{ __('ATENÇÃO!!! Esta ação não pode ser revertida.') }}<br> 
+                {{ __('ATENÇÃO!!! Esta ação não pode ser revertida.') }}<br>
                 {{ __('Após Reintegrar este membro DESLIGADO ao Rol Atual, ou seja, membros ativos, por Reconciliação ou Adesão o mesmo passará a ser listado no menu de membros em ROL Atual e só deixará de ser ativo se for novamente Excluído ou Transferido') }}
               </strong>
-            </div> 
+            </div>
           </div>
         </div>
 
@@ -86,7 +86,7 @@
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -103,7 +103,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -120,7 +120,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group mt-4">
           <button type="submit" class="btn btn-primary">{{ __('Salvar') }}</button>

@@ -31,7 +31,7 @@
   </div>
     <div class="widget-content widget-content-area">
       <form class="form-vertical" id="filter_form">
-        
+
         {{-- Congregação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -56,7 +56,7 @@
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox checkbox-outline-success">
-                  <input {{ !request()->get('vinculo') || request()->get('vinculo') == 'M' ? 'checked' : '' }} 
+                  <input {{ !request()->get('vinculo') || request()->get('vinculo') == 'M' ? 'checked' : '' }}
                          type="radio" name="vinculo" id="vinculo_membro" value="M" class="new-control-input">
                   <span class="new-control-indicator"></span>{{ __('Membro') }}
                 </label>
@@ -109,7 +109,7 @@
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                  <input {{ request()->get('situacao') == 'todos' || !request()->get('situacao') ? 'checked' : '' }} 
+                  <input {{ request()->get('situacao') == 'todos' || !request()->get('situacao') ? 'checked' : '' }}
                          type="radio" name="situacao" value="todos" class="new-control-input">
                   <span class="new-control-indicator"></span>{{ __('Todos') }}
                 </label>
@@ -180,7 +180,7 @@
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
             <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
-              <x-bx-search /> {{ __('Buscar') }} 
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
             <!-- <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="{{ __('Gerar Relatório PDF') }}" class="btn btn-secondary btn ml-4">
               <x-bx-file /> {{ __('Relatório') }}
@@ -208,7 +208,7 @@
           </div>
         </div>
         <div class="widget-content widget-content-area">
-          
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-hover mb-4"  id="aniversariantes">
                     <thead>
@@ -253,7 +253,7 @@
                             @if($membro->vinculo == 'M')
                               {{ $membro->dt_exclusao }}
                             @else
-                              
+
                             @endif
                           </td>
                           <td>{{ $membro->modo_exclusao ? $membro->modo_exclusao : '-' }}</td>
@@ -300,7 +300,7 @@
   $('#btn_buscar').click(function () {
     $('#filter_form').removeAttr('target');
   })
-  
+
   $('#btn_relatorio').click(function () {
     $('#filter_form').attr('target', '_blank');
   })
@@ -309,7 +309,7 @@
     $('#dt_inicial').val('')
     $('#dt_final').val('')
   }
- 
+
 
 new DataTable('#aniversariantes', {
     layout: {
@@ -340,7 +340,7 @@ new DataTable('#aniversariantes', {
                         //doc.pageMargins = [20,50,20,30];
                         doc.defaultStyle.fontSize = 9;
                         doc.styles.tableHeader.fontSize = 9;
-                        
+
 
                         const hoje = new Date();
                         const dataFormatada = hoje.toLocaleDateString('pt-BR');
@@ -367,7 +367,7 @@ new DataTable('#aniversariantes', {
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
 

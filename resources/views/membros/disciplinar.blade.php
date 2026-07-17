@@ -31,10 +31,10 @@
           <div class="col-md-12">
             <div class="alert alert-warning border-0 mb-4" role="alert">
               <strong>
-                {{ __('ATENÇÃO!!! ESTA AÇÃO NÃO PODE SER REVERTIDA.') }}<br> 
+                {{ __('ATENÇÃO!!! ESTA AÇÃO NÃO PODE SER REVERTIDA.') }}<br>
                 {{ __('Continue apenas se tiver certeza disso.') }}
               </strong>
-            </div> 
+            </div>
           </div>
         </div>
 
@@ -77,7 +77,7 @@
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -94,7 +94,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -102,12 +102,12 @@
           </div>
           <div class="col-lg-6">
             <textarea id="observacao" name="observacao" class="form-control @error('observacao') is-invalid @enderror"  rows="4"></textarea>
-              
+
             @error('modo_recepcao_id')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group mt-4">
           <a href="{{ route('membro.editar', ['id' => $pessoa->id]) }}" class="btn btn-secondary">

@@ -65,14 +65,14 @@
                     <a href="{{ route('clerigos.perfil.dependentes.edit', $dependente) }}" class="btn btn-primary btn-sm btn-rounded bs-tooltip" title="{{ __('Editar dependente') }}">
                       <x-bx-edit/>
                     </a>
-                    
+
                     <form action="{{ route('clerigos.perfil.dependentes.delete', $dependente) }}" method="POST" style="display: inline-block;" id="form_delete_dependente_{{ $dependente->id }}">
                       @csrf
                       @method('DELETE')
-                      <button 
+                      <button
                           type="button"
-                          class="btn btn-danger btn-sm btn-rounded bs-tooltip btn-confirm-delete" 
-                          title="{{ __('Excluir dependente') }}" 
+                          class="btn btn-danger btn-sm btn-rounded bs-tooltip btn-confirm-delete"
+                          title="{{ __('Excluir dependente') }}"
                           data-form-id="form_delete_dependente_{{ $dependente->id }}">
                         <x-bx-trash/>
                       </button>

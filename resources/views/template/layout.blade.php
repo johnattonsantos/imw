@@ -169,7 +169,7 @@
 
     @yield('extras-css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    
+
     <style>
         .menu-heading {
             margin-top: -20px !important;
@@ -217,8 +217,8 @@
         }
 
         .submenu-fixo span{
-            padding: 0 0 0 35px!important; 
-           
+            padding: 0 0 0 35px!important;
+
         }
 
     #datatable_processing {
@@ -247,7 +247,7 @@
         img{
     width: 140px;
     vertical-align: middle;
-    border-style: none 
+    border-style: none
 }
 
 .field-clear-wrapper {

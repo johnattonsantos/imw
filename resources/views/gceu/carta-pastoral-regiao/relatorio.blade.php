@@ -38,7 +38,7 @@
             </div>
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form">
-                    
+
                     {{-- Congregação --}}
                     <div class="form-group row mb-4">
                         <div class="col-lg-4">
@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-lg-2">
                             <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn" style="margin-top: 30px;">
-                            <x-bx-search /> {{ __('Buscar') }} 
+                            <x-bx-search /> {{ __('Buscar') }}
                             </button>
                         </div>
                     </div>

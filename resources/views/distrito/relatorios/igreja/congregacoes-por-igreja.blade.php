@@ -76,7 +76,7 @@
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
             <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
-              <x-bx-search /> {{ __('Buscar') }} 
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
           </div>
         </div>
@@ -120,7 +120,7 @@
                     @endforelse
                 </tbody>
               </table>
-                
+
         </div>
       </div>
     </div>
@@ -144,7 +144,7 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })

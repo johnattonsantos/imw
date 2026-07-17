@@ -31,10 +31,10 @@
           <div class="col-md-12">
             <div class="alert alert-dark border-0 mb-4" role="alert">
               <strong>
-                {{ __('ATENÇÃO!!! ESTA AÇÃO NÃO PODE SER REVERTIDA.') }}<br> 
+                {{ __('ATENÇÃO!!! ESTA AÇÃO NÃO PODE SER REVERTIDA.') }}<br>
                 {{ __('Após receber este membro de outra igreja, o mesmo será excluído da igreja de origem.') }}<br>
               </strong>
-            </div> 
+            </div>
           </div>
         </div>
 
@@ -77,7 +77,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">

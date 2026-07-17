@@ -31,14 +31,14 @@
   </div>
     <div class="widget-content widget-content-area">
       <form class="form-vertical" id="filter_form">
-        
+
         {{-- Congregação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
             <label class="control-label">{{ __('Membro:') }}</label>
           </div>
           <div class="col-lg-6">
-            <select class="form-control select2 @error('membro_id') is-invalid @enderror" data-bs-toggle="select2" name="membro_id" id="membro_id">              
+            <select class="form-control select2 @error('membro_id') is-invalid @enderror" data-bs-toggle="select2" name="membro_id" id="membro_id">
               <!-- <option value="" {{ old('membro_id') == '' ? 'selected' : '' }} hidden disabled>{{ __('selecione') }}</option> -->
               <option value="todos" {{ $select == 'todos' ? 'selected' : '' }} >{{ __('TODOS') }}</option>
               <!-- @foreach ($membros as $membro)
@@ -77,7 +77,7 @@
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
             <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
-              <x-bx-search /> {{ __('Buscar') }} 
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
             <!-- <button id="btn_relatorio" type="submit" name="action" value="relatorio" title="{{ __('Gerar Relatório PDF') }}" class="btn btn-secondary btn ml-4">
               <x-bx-file /> {{ __('Relatório') }}
@@ -102,7 +102,7 @@
             </div>
           </div>
           <div class="widget-content widget-content-area">
-            
+
               <div class="table-responsive">
                   <table class="table table-bordered table-striped table-hover mb-4" id="membros-disciplinados-table">
                       <thead>
@@ -117,7 +117,7 @@
                           </tr>
                       </thead>
                       <tbody>
-                        
+
                       </tbody>
                   </table>
               </div>
@@ -187,7 +187,7 @@
   $('#btn_buscar').click(function () {
     $('#filter_form').removeAttr('target');
   })
-  
+
   $('#btn_relatorio').click(function () {
     $('#filter_form').attr('target', '_blank');
   })

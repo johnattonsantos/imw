@@ -1,13 +1,13 @@
 @if ($rolMembro->status == \App\Models\MembresiaMembro::STATUS_ATIVO)
     @if($rolMembro->notificacaoTransferenciaAtiva)
-        <form action="{{ route('membro.exclusao_transferencia.cancel', $rolMembro->notificacaoTransferenciaAtiva->id) }}" 
-              method="POST" style="display: none;" 
+        <form action="{{ route('membro.exclusao_transferencia.cancel', $rolMembro->notificacaoTransferenciaAtiva->id) }}"
+              method="POST" style="display: none;"
               id="form_cancel_notificacao_transferencia_{{ $rolMembro->notificacaoTransferenciaAtiva->id }}">
             @csrf
             @method('DELETE')
         </form>
-        <button title="{{ __('Cancelar Transferência') }}" 
-                class="btn btn-sm btn-danger mr-2 btn-rounded btn-cancel-notificacao-transferencia bs-tooltip" 
+        <button title="{{ __('Cancelar Transferência') }}"
+                class="btn btn-sm btn-danger mr-2 btn-rounded btn-cancel-notificacao-transferencia bs-tooltip"
                 data-form-id="form_cancel_notificacao_transferencia_{{ $rolMembro->notificacaoTransferenciaAtiva->id }}">
             <x-bx-transfer-alt />
         </button>
@@ -30,7 +30,7 @@
     </a>
 @endif
 
-<button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip" 
+<button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip"
         title="{{ __('Visualizar dados da pessoa') }}"
         data-membro-id="{{ $rolMembro->membro_id }}">
     <x-bx-show />

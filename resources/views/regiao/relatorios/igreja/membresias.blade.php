@@ -121,7 +121,7 @@
                             <th style="text-align: center;">{{ __('VARIAÇÃO') }}</th>
                         </tr>
                         <tr>
-                            <th></th>   
+                            <th></th>
                             <th></th>
                             <th style="text-align: left;">M</th>
                             <th style="text-align: left;">F</th>
@@ -161,7 +161,7 @@
                     </thead>
                     <tbody>
                         @forelse($membresias as $item)
-                            @php 
+                            @php
                                 $adesaoM = $item['membrosRecebidos'][1]->sexo_masculino;
                                 $totalAdesaoM[] = $adesaoM;
                                 $adesaoF = $item['membrosRecebidos'][1]->sexo_feminino;
@@ -272,7 +272,7 @@
                                         {{ decimal(($totalRolAtualMF - $totalRolAnteriorMF) / $totalRolAnteriorMF * 100) }}%
                                     @else
                                         {{ decimal(0) }}%
-                                    @endif                                    
+                                    @endif
                                 </td>
                                 <td style="text-align: center;">{{ $geral }}</td>
                             </tr>
@@ -284,7 +284,7 @@
                         </tr>
                         @endforelse
                         <tr>
-                            <td>{{ __('TOTAL COLUNAS VERTICAIS') }}</td>   
+                            <td>{{ __('TOTAL COLUNAS VERTICAIS') }}</td>
                             <td></td>
                             <td style="text-align: center;">{{ array_sum($totalAdesaoM) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalAdesaoF) }}</td>
@@ -323,13 +323,13 @@
                                     {{ decimal((array_sum($valorTotalRolAtualMF) - array_sum($valorTotalRolAnteriorMF))/array_sum($valorTotalRolAnteriorMF)*100) }}%
                                 @else
                                     {{ decimal(0) }}%
-                                @endif  
+                                @endif
                             </td>
                             <td style="text-align: center;">{{ decimal(array_sum($valorGeral)) }}</td>
                         </tr>
                     </tbody>
                 </table>
-                @else 
+                @else
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="ano-eclesiastico-simplificado">
                     <thead>
                         <tr>
@@ -363,7 +363,7 @@
                     </thead>
                     <tbody>
                         @forelse($membresias as $item)
-                            @php 
+                            @php
                                 $totalRecebidoM = $item['membrosRecebidos'][0]->sexo_masculino + $item['membrosRecebidos'][1]->sexo_masculino + $item['membrosRecebidos'][2]->sexo_masculino + $item['membrosRecebidos'][3]->sexo_masculino + $item['membrosRecebidos'][4]->sexo_masculino;
                                 $totalRecebidoF = $item['membrosRecebidos'][0]->sexo_feminino + $item['membrosRecebidos'][1]->sexo_feminino + $item['membrosRecebidos'][2]->sexo_feminino + $item['membrosRecebidos'][3]->sexo_feminino + $item['membrosRecebidos'][4]->sexo_feminino;
 
@@ -391,7 +391,7 @@
                                 $falecimento = $item['membrosExcluidos'][3]->sexo_masculino + $item['membrosExcluidos'][3]->sexo_feminino;
                                 $totalFalecimento[] = $falecimento;
                                 $duplicidade = $item['membrosExcluidos'][4]->sexo_masculino + $item['membrosExcluidos'][4]->sexo_feminino;
-                                $totalDuplicidade[] = $duplicidade; 
+                                $totalDuplicidade[] = $duplicidade;
                                 $transferenciaExcluidos = $item['membrosExcluidos'][5]->sexo_masculino + $item['membrosExcluidos'][5]->sexo_feminino;
                                 $totalTransferenciaExcluidos[] = $transferenciaExcluidos;
                                 $excluidos = $totalExcluidoM + $totalExcluidoF;
@@ -428,7 +428,7 @@
                                         {{ decimal(($rolAtual - $rolAnterior) / $rolAnterior * 100) }}%
                                     @else
                                         {{ decimal(0) }}%
-                                    @endif 
+                                    @endif
                                 </td>
                                 <td style="text-align: center;">{{ $geral }}</td>
                             </tr>
@@ -463,13 +463,13 @@
                                     {{ decimal((array_sum($totalRolAtual) - array_sum($totalRolAnterior)) / array_sum($totalRolAnterior) * 100) }}%
                                 @else
                                     {{ decimal(0) }}%
-                                @endif 
+                                @endif
                             <td style="text-align: center;">{{ decimal(array_sum($valorGeral)) }}</td>
                         </tr>
-                       @endif                      
+                       @endif
                     </tbody>
-                </table>   
-                @endif        
+                </table>
+                @endif
             </div>
         </div>
         </div>
@@ -499,7 +499,7 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })
@@ -531,7 +531,7 @@
         }
     });
 
-    new DataTable('#ano-eclesiastico-simplificado', {        
+    new DataTable('#ano-eclesiastico-simplificado', {
         scrollX: true,
         scrollY: 400,
         scrollCollapse: true,

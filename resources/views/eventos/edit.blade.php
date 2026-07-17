@@ -17,7 +17,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Editar Evento</h4>
+                    <h4>{{ __('Editar Evento') }}</h4>
                 </div>
             </div>
         </div>
@@ -26,8 +26,8 @@
                 @csrf
                 @method('PUT')
                 @include('eventos._form')
-                <button type="submit" class="btn btn-primary">Salvar</button>
-                <a href="{{ route('eventos.index') }}" class="btn btn-light">Voltar</a>
+                <button type="submit" class="btn btn-primary">{{ __('Salvar') }}</button>
+                <a href="{{ route('eventos.index') }}" class="btn btn-light">{{ __('Voltar') }}</a>
             </form>
         </div>
     </div>

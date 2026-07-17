@@ -42,13 +42,13 @@
                             <h4>{{ __('Cota Orçamentária') }} - {{ $instituicao }}</h4>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4" id="filtros_data">
                         <div class="col-lg-5">
-                            <label class="control-label">{{ __('* Distritos:') }}</label>  
+                            <label class="control-label">{{ __('* Distritos:') }}</label>
                             <select class="form-control " id="distrito_id" name="distrito_id">
                                 <option value="" selected>{{ __('TODOS') }}</option>
                                 @foreach($distritos as $distrito)
@@ -57,7 +57,7 @@
                             </select>
                         </div>
                         <div class="col-lg-5 ano_mes">
-                            <label class="control-label">{{ __('* Ano/Mês:') }}</label>                           
+                            <label class="control-label">{{ __('* Ano/Mês:') }}</label>
                                 <div class="input-group">
                                     @if(request()->input('ano'))
                                         <select class="form-control " id="ano" name="ano" required="">
@@ -112,7 +112,7 @@
                     <div class="card-body">
                         <h4>{{ $titulo }}</h4>
                         <div class="table-responsive mt-4">
-                            <table id="cota-orcamentaria" class="table table-striped" style="font-size: 90%; margin-top: 15px;">                                
+                            <table id="cota-orcamentaria" class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>{{ __('DISTRITO') }}</th>
@@ -156,7 +156,7 @@
                                             <td>R$ {{ number_format($irrfRepasse, 2,",",".") }}</td>
                                             <td>R$ {{ number_format($total, 2,",",".") }}</td>
                                         </tr>
-                                        
+
                                     @endforeach
                                     <tr>
                                         <td><b>{{ __('TOTAL') }}</b></td>
@@ -242,7 +242,7 @@
                                         }
                                     });
 
-                                    var numColumns = doc.content[0].table.body[0].length; 
+                                    var numColumns = doc.content[0].table.body[0].length;
                                     doc.content[0].table.widths = Array(numColumns).fill('*');
 
 
@@ -284,5 +284,5 @@
             });
         </script>
     @endsection
-    
+
 @endsection

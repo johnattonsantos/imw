@@ -33,13 +33,13 @@
 
                     xhr.onload = function () {
                         if (xhr.status < 200 || xhr.status >= 300) {
-                            failure('Falha no upload: HTTP ' + xhr.status);
+                            failure(window.__('Falha no upload') + ': HTTP ' + xhr.status);
                             return;
                         }
 
                         const json = JSON.parse(xhr.responseText || '{}');
                         if (!json.location) {
-                            failure('Resposta inválida do servidor');
+                            failure(window.__('Resposta inválida do servidor'));
                             return;
                         }
 
@@ -47,7 +47,7 @@
                     };
 
                     xhr.onerror = function () {
-                        failure('Falha no upload da imagem.');
+                        failure(window.__('Falha no upload da imagem.'));
                     };
 
                     const formData = new FormData();

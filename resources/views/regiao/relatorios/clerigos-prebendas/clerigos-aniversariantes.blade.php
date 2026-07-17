@@ -44,7 +44,7 @@
   </div>
   <div class="widget-content widget-content-area">
     <form class="form-vertical" id="filter_form"  method="GET">
-      
+
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
           <label class="control-label">{{ __('Clérigos:') }}</label>
@@ -52,7 +52,7 @@
         <div class="col-lg-6">
           <select class="form-control" id="buscar" name="buscar" required>
               <option value="todos" {{ request()->input('buscar') == 'buscar' ? 'selected' : '' }}>
-                  {{ __('Todos') }} 
+                  {{ __('Todos') }}
               </option>
           </select>
         </div>
@@ -86,7 +86,7 @@
         <div class="col-lg-2"></div>
         <div class="col-lg-6">
           <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
-            <x-bx-search /> {{ __('Buscar') }} 
+            <x-bx-search /> {{ __('Buscar') }}
           </button>
         </div>
       </div>
@@ -134,7 +134,7 @@
                 <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
                 @endforelse
             </tbody>
-          </table>            
+          </table>
         </div>
       </div>
     </div>
@@ -214,7 +214,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
                         doc['footer']=(function(page, pages) {
