@@ -1,18 +1,18 @@
 @if ($rolMembro->status == \App\Models\MembresiaMembro::STATUS_ATIVO)
     @if($rolMembro->notificacaoTransferenciaAtiva)
-        <form action="{{ route('membro.exclusao_transferencia.cancel', $rolMembro->notificacaoTransferenciaAtiva->id) }}" 
-              method="POST" style="display: none;" 
+        <form action="{{ route('membro.exclusao_transferencia.cancel', $rolMembro->notificacaoTransferenciaAtiva->id) }}"
+              method="POST" style="display: none;"
               id="form_cancel_notificacao_transferencia_{{ $rolMembro->notificacaoTransferenciaAtiva->id }}">
             @csrf
             @method('DELETE')
         </form>
-        <button title="Cancelar Transferência" 
-                class="btn btn-sm btn-danger mr-2 btn-rounded btn-cancel-notificacao-transferencia bs-tooltip" 
+        <button title="{{ __('Cancelar Transferência') }}"
+                class="btn btn-sm btn-danger mr-2 btn-rounded btn-cancel-notificacao-transferencia bs-tooltip"
                 data-form-id="form_cancel_notificacao_transferencia_{{ $rolMembro->notificacaoTransferenciaAtiva->id }}">
             <x-bx-transfer-alt />
         </button>
     @else
-        <a href="{{ route('membro.editar', $rolMembro->membro_id) }}" title="Editar"
+        <a href="{{ route('membro.editar', $rolMembro->membro_id) }}" title="{{ __('Editar') }}"
             class="btn btn-sm btn-dark mr-2 btn-rounded bs-tooltip">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -25,13 +25,13 @@
 @endif
 
 @if ($rolMembro->status == \App\Models\MembresiaMembro::STATUS_INATIVO && $rolMembro->transferido == 0)
-    <a href="{{ route('membro.reintegrar', $rolMembro->membro_id) }}" title="Reintegrar membro" class="btn btn-sm btn-secondary mr-2 btn-rounded bs-tooltip">
+    <a href="{{ route('membro.reintegrar', $rolMembro->membro_id) }}" title="{{ __('Reintegrar membro') }}" class="btn btn-sm btn-secondary mr-2 btn-rounded bs-tooltip">
         <x-bx-log-in-circle />
     </a>
 @endif
 
-<button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip" 
-        title="Visualizar dados da pessoa"
+<button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip"
+        title="{{ __('Visualizar dados da pessoa') }}"
         data-membro-id="{{ $rolMembro->membro_id }}">
     <x-bx-show />
 </button>

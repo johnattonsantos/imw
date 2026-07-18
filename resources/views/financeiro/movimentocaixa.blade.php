@@ -254,8 +254,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="anexosModalLabel">Anexos</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <h5 class="modal-title" id="anexosModalLabel">{{ __('Anexos') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="{{ __('Fechar') }}">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -263,7 +263,7 @@
                     <ul id="anexosList"></ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('Fechar') }}</button>
                 </div>
             </div>
         </div>
@@ -275,7 +275,7 @@
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Filtros para pesquisa</h4>
+                            <h4>{{ __('Filtros para pesquisa') }}</h4>
                         </div>
                     </div>
                 </div>
@@ -284,10 +284,10 @@
                     <form action="">
                         <div class="row">
                             <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
-                                <label for="caixa_id">Caixa</label>
+                                <label for="caixa_id">{{ __('Caixa') }}</label>
                                 <select class="form-control select2" data-bs-toggle="select2" width="fit" name="caixa_id"
                                     id="caixa_id">
-                                    <option value="" hidden disabled selected>Selecione</option>
+                                    <option value="" hidden disabled selected>{{ __('Selecione') }}</option>
                                     @foreach ($caixas as $caixa)
                                         <option value="{{ $caixa->id }}">{{ $caixa->descricao }}</option>
                                     @endforeach
@@ -295,10 +295,10 @@
                             </div>
 
                             <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
-                                <label for="plano_conta_id">Plano de Contas</label>
+                                <label for="plano_conta_id">{{ __('Plano de Contas') }}</label>
                                 <select class="form-control select2" data-bs-toggle="select2" width="fit"
                                     name="plano_conta_id" id="plano_conta_id">
-                                    <option value="" hidden disabled selected>Selecione</option>
+                                    <option value="" hidden disabled selected>{{ __('Selecione') }}</option>
                                     @foreach ($planoContas as $pc)
                                         <option {{ !$pc->selecionavel ? 'disabled' : '' }} value="{{ $pc->id }}">
                                             {{ $pc->numeracao }} - {{ $pc->nome }}</option>
@@ -307,12 +307,12 @@
                             </div>
 
                             <div class="mb-3 col-lg-4 col-md-6 col-sm-12 pf lgpd">
-                                <label for="d1">Data Inicio</label>
+                                <label for="d1">{{ __('Data Inicio') }}</label>
                                 <div class="input-group date-input-group">
                                     <input class="form-control datepicker" id="d1" name="d1" maxlength="20"
                                         value="{{ request('d1') }}" type="text" placeholder="">
                                     <button type="button" class="date-clear-btn" id="d1-clear" data-target="#d1"
-                                        aria-label="Limpar Data Início">&times;</button>
+                                        aria-label="{{ __('Limpar Data Início') }}">&times;</button>
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
@@ -320,29 +320,29 @@
                             </div>
 
                             <div class="mb-3 col-lg-4 col-md-6 col-sm-12 pf lgpd">
-                                <label for="d2">Data Fim</label>
+                                <label for="d2">{{ __('Data Fim') }}</label>
                                 <div class="input-group date-input-group">
                                     <input class="form-control datepicker" id="d2" name="d2" maxlength="20"
                                         value="{{ request('d2') }}" type="text" placeholder="">
                                     <button type="button" class="date-clear-btn" id="d2-clear" data-target="#d2"
-                                        aria-label="Limpar Data Fim">&times;</button>
+                                        aria-label="{{ __('Limpar Data Fim') }}">&times;</button>
                                     <span class="input-group-addon">
                                         <i class="fas fa-calendar-alt"></i>
                                     </span>
                                 </div>
                             </div>
                              <div class="mb-3 col-lg-2 col-md-6 col-sm-12">
-                                <label for="consolidado">Consolidado</label>
+                                <label for="consolidado">{{ __('Consolidado') }}</label>
                                 <select class="form-control select2" data-bs-toggle="select2" width="fit" name="consolidado"
                                     id="consolidado">
-                                    <option value="0" {{request()->input('consolidado') ? '' : 'selected'}}>Não</option>
-                                    <option value="1" {{request()->input('consolidado') == 1 ? 'selected' : ''}}>Sim</option>
+                                    <option value="0" {{request()->input('consolidado') ? '' : 'selected'}}>{{ __('Não') }}</option>
+                                    <option value="1" {{request()->input('consolidado') == 1 ? 'selected' : ''}}>{{ __('Sim') }}</option>
                                 </select>
                             </div>
                             <div class="mb-3 col-lg-2 col-md-6 col-sm-12">
                                 <div class="col-auto" style="margin-top: 32px;">
                                     <button type="submit" class="btn btn-primary btn-lg btn-rounded"><x-bx-search />
-                                        Pesquisar</button>
+                                        {{ __('Pesquisar') }}</button>
                                 </div>
                             </div>
 
@@ -355,24 +355,24 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-12 d-flex justify-content-start flex-wrap">
-                            <a href="{{ route('financeiro.entrada') }}" title="Novo registro de entrada"
+                            <a href="{{ route('financeiro.entrada') }}" title="{{ __('Novo registro de entrada') }}"
                                 class="btn btn-success btn-rounded btn-responsive mr-2 mb-2">
-                                <x-bx-plus-circle /> Entrada
+                                <x-bx-plus-circle /> {{ __('Entrada') }}
                             </a>
 
-                            <a href="{{ route('financeiro.saida') }}" title="Novo registro de saída"
+                            <a href="{{ route('financeiro.saida') }}" title="{{ __('Novo registro de saída') }}"
                                 class="btn btn-danger btn-rounded btn-responsive mr-2 mb-2">
-                                <x-bx-minus-circle /> Saída
+                                <x-bx-minus-circle /> {{ __('Saída') }}
                             </a>
 
-                            <a href="{{ route('financeiro.transferencia') }}" title="Novo registro de transferência"
+                            <a href="{{ route('financeiro.transferencia') }}" title="{{ __('Novo registro de transferência') }}"
                                 class="btn btn-warning btn-rounded btn-responsive mr-2 mb-2">
-                                <x-bx-chevrons-right /> Transferência
+                                <x-bx-chevrons-right /> {{ __('Transferência') }}
                             </a>
 
-                            <a href="{{ route('financeiro.saldo') }}" title="Saldo Atual"
+                            <a href="{{ route('financeiro.saldo') }}" title="{{ __('Saldo Atual') }}"
                                 class="btn btn-primary btn-rounded btn-responsive mb-2">
-                                <x-bx-wallet /> Saldo
+                                <x-bx-wallet /> {{ __('Saldo') }}
                             </a>
 
                         </div>
@@ -381,12 +381,12 @@
                         <table id="movimentoCaixaTable" class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-light">
                                 <tr>
-                                    <th>Data</th>
-                                    <th>Caixa</th>
-                                    <th>Entrada</th>
-                                    <th>Saída</th>
-                                    <th>Plano de Conta</th>
-                                    <th>Pagante/Favorecido</th>
+                                    <th>{{ __('Data') }}</th>
+                                    <th>{{ __('Caixa') }}</th>
+                                    <th>{{ __('Entrada') }}</th>
+                                    <th>{{ __('Saída') }}</th>
+                                    <th>{{ __('Plano de Conta') }}</th>
+                                    <th>{{ __('Pagante/Favorecido') }}</th>
                                     <th width="150"></th>
                                 </tr>
                             </thead>
@@ -420,7 +420,7 @@
                                                     id="form_delete_excluirMovimento_{{ $index }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" title="Apagar"
+                                                    <button type="button" title="{{ __('Apagar') }}"
                                                         class="btn btn-sm btn-danger mr-2 btn-rounded btn-confirm-delete btn-sm-custom"
                                                         data-form-id="form_delete_excluirMovimento_{{ $index }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="18"
@@ -444,7 +444,7 @@
                                                     id="form_delete_excluirMovimento_{{ $index }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" title="Apagar"
+                                                    <button type="button" title="{{ __('Apagar') }}"
                                                         class="btn btn-sm btn-danger mr-2 btn-rounded btn-confirm-delete btn-sm-custom"
                                                         data-form-id="form_delete_excluirMovimento_{{ $index }}">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="18"
@@ -462,7 +462,7 @@
                                                         </svg>
                                                     </button>
                                                 </form>
-                                                <a class="btn btn-sm btn-dark mr-2 btn-rounded btn-sm-custom" title="Editar"
+                                                <a class="btn btn-sm btn-dark mr-2 btn-rounded btn-sm-custom" title="{{ __('Editar') }}"
                                                     href="{{ route('financeiro.editarMovimento', ['id' => $lancamento->id, 'tipo_lancamento' => $lancamento->tipo_lancamento]) }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -475,7 +475,7 @@
                                             @endif
 
                                             @if ($lancamento->tipo_lancamento == 'S')
-                                                <button type="button" title="Anexos"
+                                                <button type="button" title="{{ __('Anexos') }}"
                                                     class="btn btn-sm btn-info mr-2 btn-rounded btn-anexos btn-sm-custom"
                                                     data-lancamento-id="{{ $lancamento->id }}">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
@@ -492,7 +492,7 @@
                             </tbody>
                         </table>
                         <button class="btn btn-success btn-rounded btn-responsive mb-2" onclick="exportReportToExcel();">
-                            <i class="fa fa-file-excel" aria-hidden="true"></i> Exportar
+                            <i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}
                         </button>
                     </div>
                 </div>

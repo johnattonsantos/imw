@@ -123,7 +123,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Carteira Digital</h4>
+                        <h4>{{ __('Carteira Digital') }}</h4>
                     </div>
                 </div>
             </div>
@@ -147,15 +147,15 @@
                     <div class="categoria">{{ isset($usuario->categoria) ? mb_convert_case($usuario->categoria, MB_CASE_TITLE, "UTF-8") : '' }}</div>
                     <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
                     <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
-                    <div class="validade">Validade: 31/10/2027</div>
-                    <div class="contato-sede">Sede Administrativa: {{ $telefoneSedeAdministrativa }}</div>
+                    <div class="validade">{{ __('Validade') }}: 31/10/2027</div>
+                    <div class="contato-sede">{{ __('Sede Administrativa') }}: {{ $telefoneSedeAdministrativa }}</div>
                     <div class="regiao_bottom">{{ $regiaoEclesiastica }}</div>
                     <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
                 </div>
             </div>
             @else
                 <div class="widget-content widget-content-area">
-                    Não possui acesso a credencial
+                    {{ __('Não possui acesso a credencial') }}
                 </div>
             @endif
         </div>

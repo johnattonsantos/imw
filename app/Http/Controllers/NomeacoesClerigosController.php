@@ -58,14 +58,14 @@ class NomeacoesClerigosController extends Controller
 
         app(StoreNomeacoesClerigos::class)->execute($request);
 
-        return redirect()->route('clerigos.nomeacoes.index', ['id' => $request->pessoa_id])->with('success', 'Nomeação criada com sucesso!');
+        return redirect()->route('clerigos.nomeacoes.index', ['id' => $request->pessoa_id])->with('success', __('Nomeação criada com sucesso!'));
     }
 
 
     public function finalizar($clerigoId ,string $id, FinalizarNomeacoesRequest $request)
     {
         app(FinalizarNomeacoesClerigos::class)->execute($id, $request);
-        return redirect()->route('clerigos.nomeacoes.index', ['id' => $clerigoId])->with('success', 'Nomeação finalizada com sucesso!');
+        return redirect()->route('clerigos.nomeacoes.index', ['id' => $clerigoId])->with('success', __('Nomeação finalizada com sucesso!'));
     }
 
     private function regiaoLogadaId(): int

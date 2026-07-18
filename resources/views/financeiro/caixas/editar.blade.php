@@ -16,7 +16,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Editar Caixa</h4>
+                        <h4>{{ __('Editar Caixa') }}</h4>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="mb-3 col-lg-4">
-                                    <label for="descricao">* Descrição</label>
+                                    <label for="descricao">{{ __('* Descrição') }}</label>
                                     <input class="form-control @error('descricao') is-invalid @enderror" id="descricao"
                                         name="descricao" type="text" value="{{ $caixa->descricao }}">
                                     @error('descricao')
@@ -37,18 +37,18 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-4">
-                                    <label for="descricao">Tipo</label>
+                                    <label for="descricao">{{ __('Tipo') }}</label>
                                     <select class="form-control @error('tipo') is-invalid @enderror" name="tipo">
-                                        <option value="" {{ old('tipo', $caixa->tipo) == '' ? 'selected' : '' }}>Selecione um tipo</option>
-                                        <option value="B" {{ old('tipo', $caixa->tipo) == 'B' ? 'selected' : '' }}>Banco</option>
-                                        <option value="C" {{ old('tipo', $caixa->tipo) == 'C' ? 'selected' : '' }}>Congregação</option>
-                                        <option value="S" {{ old('tipo', $caixa->tipo) == 'S' ? 'selected' : '' }}>Secundário</option>
+                                        <option value="" {{ old('tipo', $caixa->tipo) == '' ? 'selected' : '' }}>{{ __('Selecione um tipo') }}</option>
+                                        <option value="B" {{ old('tipo', $caixa->tipo) == 'B' ? 'selected' : '' }}>{{ __('Banco') }}</option>
+                                        <option value="C" {{ old('tipo', $caixa->tipo) == 'C' ? 'selected' : '' }}>{{ __('Congregação') }}</option>
+                                        <option value="S" {{ old('tipo', $caixa->tipo) == 'S' ? 'selected' : '' }}>{{ __('Secundário') }}</option>
                                     </select>
-                                
+
                                     @error('tipo')
                                         <small class="form-text text-danger">{{ $message }}</small>
                                     @enderror
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                     </div>

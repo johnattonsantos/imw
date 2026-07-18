@@ -27,7 +27,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Relatório Mapa Estatístico de Membros</h4>
+                        <h4>{{ __('Relatório Mapa Estatístico de Membros') }}</h4>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         <div class="row col-md-12">
                             <div class="form-group mb-4 col-md-3" id="filtros_data_inicial">
                                 <div class="col-md-12">
-                                    <label class="control-label">* Data Inicial:</label>
+                                    <label class="control-label">{{ __('* Data Inicial:') }}</label>
                                 </div>
                                 <div class="col-md-12">
                                     <input type="date" class="form-control @error('data_inicial') is-invalid @enderror"
@@ -47,7 +47,7 @@
                             </div>
                             <div class="form-group mb-4 col-md-3" id="filtros_data_final">
                                 <div class="col-lg-12">
-                                    <label class="control-label">* Data Final:</label>
+                                    <label class="control-label">{{ __('* Data Final:') }}</label>
                                 </div>
                                 <div class="col-md-12">
                                     <input type="date" class="form-control @error('data_final') is-invalid @enderror"
@@ -56,23 +56,23 @@
                             </div>
                             <div class="form-group mb-4 col-md-3" id="filtros_data_final">
                                 <div class="col-lg-12">
-                                    <label class="control-label">* Tipo de Relatório:</label>
+                                    <label class="control-label">{{ __('* Tipo de Relatório:') }}</label>
                                 </div>
                                 <div class="col-md-12">
                                     <select class="form-control " name="relatorio" id="relatorio">
                                         <option value="completo" {{ request('relatorio') == 'completo' ? 'selected' : 'selected' }}>
-                                            Completo
+                                            {{ __('Completo') }}
                                         </option>
                                         <option value="simplificado" {{ request('relatorio') == 'simplificado' ? 'selected' : '' }}>
-                                            Simplificado
+                                            {{ __('Simplificado') }}
                                         </option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group col-md-3">
-                                <button class="btn btn-primary" title="Buscar dados" style="margin-top: 30px;">
+                                <button class="btn btn-primary" title="{{ __('Buscar dados') }}" style="margin-top: 30px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg>
-                                    Buscar
+                                    {{ __('Buscar') }}
                                 </button>
                             </div>
                         </div>
@@ -92,36 +92,36 @@
                     <thead>
                         <tr>
                             <th colspan="2"></th>
-                            <th colspan="12" style="text-align: center;">RECEBIDOS</th>
-                            <th colspan="14" style="text-align: center;">EXCLUÍDOS</th>
-                            <th colspan="7" style="text-align: center;">ROL</th>
+                            <th colspan="12" style="text-align: center;">{{ __('RECEBIDOS') }}</th>
+                            <th colspan="14" style="text-align: center;">{{ __('EXCLUÍDOS') }}</th>
+                            <th colspan="7" style="text-align: center;">{{ __('ROL') }}</th>
                             <th style="text-align: center;"></th>
                         </tr>
                         <tr>
-                            <th>DISTRITO</th>
-                            <th>IGREJA</th>
-                            <th colspan="2" style="text-align: center;">ADESÃO</th>
-                            <th colspan="2" style="text-align: center;">BATISMO</th>
-                            <th colspan="2" style="text-align: center;">RECONCILIAÇÃO</th>
-                            <th colspan="2" style="text-align: center;">TRANSFERÊNCIA</th>
-                            <th colspan="2" style="text-align: center;">CADASTRAMENTO</th>
-                            <th colspan="2" style="text-align: center;">TOTAL</th>
-                            <th colspan="2" style="text-align: center;">PEDIDO</th>
-                            <th colspan="2" style="text-align: center;">ABANDONO</th>
-                            <th colspan="2" style="text-align: center;">EXCLUSÃO</th>
-                            <th colspan="2" style="text-align: center;">FALECIMENTO</th>
-                            <th colspan="2" style="text-align: center;">DUPLICIDADE</th>
-                            <th colspan="2" style="text-align: center;">TRANSFERÊNCIA</th>
-                            <th colspan="2" style="text-align: center;">TOTAL</th>
-                            <th colspan="2" style="text-align: center;">ANTERIOR</th>
-                            <th style="text-align: center;">TOTAL</th>
-                            <th colspan="2" style="text-align: center;">ATUAL</th>
-                            <th style="text-align: center;">TOTAL</th>
-                            <th style="text-align: center;">%ROL</th>
-                            <th style="text-align: center;">VARIAÇÃO</th>
+                            <th>{{ __('DISTRITO') }}</th>
+                            <th>{{ __('IGREJA') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('ADESÃO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('BATISMO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('RECONCILIAÇÃO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('TRANSFERÊNCIA') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('CADASTRAMENTO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('TOTAL') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('PEDIDO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('ABANDONO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('EXCLUSÃO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('FALECIMENTO') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('DUPLICIDADE') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('TRANSFERÊNCIA') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('TOTAL') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('ANTERIOR') }}</th>
+                            <th style="text-align: center;">{{ __('TOTAL') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('ATUAL') }}</th>
+                            <th style="text-align: center;">{{ __('TOTAL') }}</th>
+                            <th style="text-align: center;">{{ __('%ROL') }}</th>
+                            <th style="text-align: center;">{{ __('VARIAÇÃO') }}</th>
                         </tr>
                         <tr>
-                            <th></th>   
+                            <th></th>
                             <th></th>
                             <th style="text-align: left;">M</th>
                             <th style="text-align: left;">F</th>
@@ -161,7 +161,7 @@
                     </thead>
                     <tbody>
                         @forelse($membresias as $item)
-                            @php 
+                            @php
                                 $adesaoM = $item['membrosRecebidos'][1]->sexo_masculino;
                                 $totalAdesaoM[] = $adesaoM;
                                 $adesaoF = $item['membrosRecebidos'][1]->sexo_feminino;
@@ -272,19 +272,19 @@
                                         {{ decimal(($totalRolAtualMF - $totalRolAnteriorMF) / $totalRolAnteriorMF * 100) }}%
                                     @else
                                         {{ decimal(0) }}%
-                                    @endif                                    
+                                    @endif
                                 </td>
                                 <td style="text-align: center;">{{ $geral }}</td>
                             </tr>
                         @empty
                         <tr>
                             <td colspan="8">
-                                Não possui dados
+                                {{ __('Não possui dados') }}
                             </td>
                         </tr>
                         @endforelse
                         <tr>
-                            <td>TOTAL COLUNAS VERTICAIS</td>   
+                            <td>{{ __('TOTAL COLUNAS VERTICAIS') }}</td>
                             <td></td>
                             <td style="text-align: center;">{{ array_sum($totalAdesaoM) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalAdesaoF) }}</td>
@@ -323,47 +323,47 @@
                                     {{ decimal((array_sum($valorTotalRolAtualMF) - array_sum($valorTotalRolAnteriorMF))/array_sum($valorTotalRolAnteriorMF)*100) }}%
                                 @else
                                     {{ decimal(0) }}%
-                                @endif  
+                                @endif
                             </td>
                             <td style="text-align: center;">{{ decimal(array_sum($valorGeral)) }}</td>
                         </tr>
                     </tbody>
                 </table>
-                @else 
+                @else
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="ano-eclesiastico-simplificado">
                     <thead>
                         <tr>
                             <th colspan="2"></th>
-                            <th colspan="6" style="text-align: center;">RECEBIDOS</th>
-                            <th colspan="7" style="text-align: center;">EXCLUÍDOS</th>
-                            <th colspan="3" style="text-align: center;">ROL</th>
+                            <th colspan="6" style="text-align: center;">{{ __('RECEBIDOS') }}</th>
+                            <th colspan="7" style="text-align: center;">{{ __('EXCLUÍDOS') }}</th>
+                            <th colspan="3" style="text-align: center;">{{ __('ROL') }}</th>
                             <th style="text-align: center;"></th>
                         </tr>
                         <tr>
-                            <th>DISTRITO</th>
-                            <th>IGREJA</th>
-                            <th style="text-align: center;">ADESÃO</th>
-                            <th style="text-align: center;">BATISMO</th>
-                            <th style="text-align: center;">RECONCILIAÇÃO</th>
-                            <th style="text-align: center;">TRANSFERÊNCIA</th>
-                            <th style="text-align: center;">CADASTRAMENTO</th>
-                            <th style="text-align: center;">TOTAL</th>
-                            <th style="text-align: center;">PEDIDO</th>
-                            <th style="text-align: center;">ABANDONO</th>
-                            <th style="text-align: center;">EXCLUSÃO</th>
-                            <th style="text-align: center;">FALECIMENTO</th>
-                            <th style="text-align: center;">DUPLICIDADE</th>
-                            <th style="text-align: center;">TRANSFERÊNCIA</th>
-                            <th style="text-align: center;">TOTAL</th>
-                            <th style="text-align: center;">ANTERIOR</th>
-                            <th style="text-align: center;">ATUAL</th>
-                            <th style="text-align: center;">%ROL</th>
-                            <th style="text-align: center;">VARIAÇÃO</th>
+                            <th>{{ __('DISTRITO') }}</th>
+                            <th>{{ __('IGREJA') }}</th>
+                            <th style="text-align: center;">{{ __('ADESÃO') }}</th>
+                            <th style="text-align: center;">{{ __('BATISMO') }}</th>
+                            <th style="text-align: center;">{{ __('RECONCILIAÇÃO') }}</th>
+                            <th style="text-align: center;">{{ __('TRANSFERÊNCIA') }}</th>
+                            <th style="text-align: center;">{{ __('CADASTRAMENTO') }}</th>
+                            <th style="text-align: center;">{{ __('TOTAL') }}</th>
+                            <th style="text-align: center;">{{ __('PEDIDO') }}</th>
+                            <th style="text-align: center;">{{ __('ABANDONO') }}</th>
+                            <th style="text-align: center;">{{ __('EXCLUSÃO') }}</th>
+                            <th style="text-align: center;">{{ __('FALECIMENTO') }}</th>
+                            <th style="text-align: center;">{{ __('DUPLICIDADE') }}</th>
+                            <th style="text-align: center;">{{ __('TRANSFERÊNCIA') }}</th>
+                            <th style="text-align: center;">{{ __('TOTAL') }}</th>
+                            <th style="text-align: center;">{{ __('ANTERIOR') }}</th>
+                            <th style="text-align: center;">{{ __('ATUAL') }}</th>
+                            <th style="text-align: center;">{{ __('%ROL') }}</th>
+                            <th style="text-align: center;">{{ __('VARIAÇÃO') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($membresias as $item)
-                            @php 
+                            @php
                                 $totalRecebidoM = $item['membrosRecebidos'][0]->sexo_masculino + $item['membrosRecebidos'][1]->sexo_masculino + $item['membrosRecebidos'][2]->sexo_masculino + $item['membrosRecebidos'][3]->sexo_masculino + $item['membrosRecebidos'][4]->sexo_masculino;
                                 $totalRecebidoF = $item['membrosRecebidos'][0]->sexo_feminino + $item['membrosRecebidos'][1]->sexo_feminino + $item['membrosRecebidos'][2]->sexo_feminino + $item['membrosRecebidos'][3]->sexo_feminino + $item['membrosRecebidos'][4]->sexo_feminino;
 
@@ -391,7 +391,7 @@
                                 $falecimento = $item['membrosExcluidos'][3]->sexo_masculino + $item['membrosExcluidos'][3]->sexo_feminino;
                                 $totalFalecimento[] = $falecimento;
                                 $duplicidade = $item['membrosExcluidos'][4]->sexo_masculino + $item['membrosExcluidos'][4]->sexo_feminino;
-                                $totalDuplicidade[] = $duplicidade; 
+                                $totalDuplicidade[] = $duplicidade;
                                 $transferenciaExcluidos = $item['membrosExcluidos'][5]->sexo_masculino + $item['membrosExcluidos'][5]->sexo_feminino;
                                 $totalTransferenciaExcluidos[] = $transferenciaExcluidos;
                                 $excluidos = $totalExcluidoM + $totalExcluidoF;
@@ -428,20 +428,20 @@
                                         {{ decimal(($rolAtual - $rolAnterior) / $rolAnterior * 100) }}%
                                     @else
                                         {{ decimal(0) }}%
-                                    @endif 
+                                    @endif
                                 </td>
                                 <td style="text-align: center;">{{ $geral }}</td>
                             </tr>
                         @empty
                         <tr>
                             <td colspan="8">
-                                Não possui dados
+                                {{ __('Não possui dados') }}
                             </td>
                         </tr>
                         @endforelse
                         @if($membresias)
                         <tr>
-                            <td>TOTAL COLUNAS VERTICAIS</td>
+                            <td>{{ __('TOTAL COLUNAS VERTICAIS') }}</td>
                             <td></td>
                             <td style="text-align: center;">{{ array_sum($totalAdesao) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalBatismo) }}</td>
@@ -463,13 +463,13 @@
                                     {{ decimal((array_sum($totalRolAtual) - array_sum($totalRolAnterior)) / array_sum($totalRolAnterior) * 100) }}%
                                 @else
                                     {{ decimal(0) }}%
-                                @endif 
+                                @endif
                             <td style="text-align: center;">{{ decimal(array_sum($valorGeral)) }}</td>
                         </tr>
-                       @endif                      
+                       @endif
                     </tbody>
-                </table>   
-                @endif        
+                </table>
+                @endif
             </div>
         </div>
         </div>
@@ -499,7 +499,7 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })
@@ -531,7 +531,7 @@
         }
     });
 
-    new DataTable('#ano-eclesiastico-simplificado', {        
+    new DataTable('#ano-eclesiastico-simplificado', {
         scrollX: true,
         scrollY: 400,
         scrollCollapse: true,

@@ -53,7 +53,7 @@ class HomeController extends Controller
             ->where('membresia_membros.igreja_id', $igrejaId)
             ->count();
 
-        
+
         $activeVisitantesCount = DB::table('membresia_membros as mm')
             ->where('mm.vinculo', 'V')
             ->where('mm.igreja_id', $igrejaId)
@@ -1510,7 +1510,7 @@ class HomeController extends Controller
 
             return redirect()->route('dashboard');
         } else {
-            return redirect()->back()->with('error', 'A seleção de um perfil é obrigatória. Por favor, selecione.');
+            return redirect()->back()->with('error', __('A seleção de um perfil é obrigatória. Por favor, selecione.'));
         }
     }
 

@@ -4,11 +4,11 @@
       <!-- Coluna para foto do usuário -->
       <div class="col-xl-3 text-center">
         <input type="hidden" name="membro_id" value="{{ $pessoa->id }}">
-        <img src="{{ $pessoa->foto ?: asset('theme/images/sem-foto.jpg') }}" id="user-picture" class="rounded-circle img-fluid mb-3" alt="Foto do usuário" width="150px" height="150px;">
+        <img src="{{ $pessoa->foto ?: asset('theme/images/sem-foto.jpg') }}" id="user-picture" class="rounded-circle img-fluid mb-3" alt="{{ __('Foto do usuário') }}" width="150px" height="150px;">
         <div>
-          <button class="btn btn-primary btn-sm" id="upload-picture">Trocar Foto</button>
+          <button class="btn btn-primary btn-sm" id="upload-picture">{{ __('Trocar Foto') }}</button>
           <input type="file" name="foto" class="d-none" id="upload-picture-input">
-          <button class="btn btn-danger btn-sm" id="delete-picture">Apagar Foto</button>
+          <button class="btn btn-danger btn-sm" id="delete-picture">{{ __('Apagar Foto') }}</button>
         </div>
       </div>
       <!-- Conteúdo do formulário -->
@@ -16,7 +16,7 @@
           <div class="form-group @error('nome') has-error @enderror">
             <div class="row mb-4">
               <div class="col-xl-6">
-                <label for="nome">* Nome</label>
+                <label for="nome">{{ __('* Nome') }}</label>
                 <input type="text" class="form-control @error('nome') is-invalid @enderror" id="nome" name="nome" value="{{ old('nome', $pessoa->nome) }}" maxlength="100" required>
                 @error('nome')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -25,7 +25,7 @@
 
 
               <div class="col-xl-3">
-                <label for="nascimento">* Data de Nascimento</label>
+                <label for="nascimento">{{ __('* Data de Nascimento') }}</label>
                 <input type="date" class="form-control @error('data_nascimento') is-invalid @enderror" id="data_nascimento" name="data_nascimento" value="{{ old('data_nascimento', optional($pessoa->data_nascimento)->format('Y-m-d')) }}" required>
                 @error('data_nascimento')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -33,12 +33,12 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="sexo">* Sexo</label>
+                <label for="sexo">{{ __('* Sexo') }}</label>
                 <select class="form-control" id="sexo" name="sexo" required>
                   @php $sexoSelecionado = old('sexo', $pessoa->sexo); @endphp
-                  <option value="">Selecione</option>
-                  <option value="M" {{ $sexoSelecionado == 'M' ? 'selected' : '' }}>Masculino</option>
-                  <option value="F" {{ $sexoSelecionado == 'F' ? 'selected' : '' }}>Feminino</option>
+                  <option value="">{{ __('Selecione') }}</option>
+                  <option value="M" {{ $sexoSelecionado == 'M' ? 'selected' : '' }}>{{ __('Masculino') }}</option>
+                  <option value="F" {{ $sexoSelecionado == 'F' ? 'selected' : '' }}>{{ __('Feminino') }}</option>
                 </select>
                 @error('sexo')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -49,14 +49,14 @@
             <div class="row mb-4">
 
               <div class="col-xl-3">
-                <label for="estado_civil">* Estado Civíl</label>
+                <label for="estado_civil">{{ __('* Estado Civíl') }}</label>
                 <select class="form-control @error('estado_civil') is-invalid @enderror" id="estado_civil" name="estado_civil" required>
                   @php $estadoCivilSelecionado = old('estado_civil', $pessoa->estado_civil); @endphp
-                  <option value="">Selecione</option>
-                  <option value="S" {{ $estadoCivilSelecionado == 'S' ? 'selected' : '' }}>Solteiro</option>
-                  <option value="C" {{ $estadoCivilSelecionado == 'C' ? 'selected' : '' }}>Casado</option>
-                  <option value="D" {{ $estadoCivilSelecionado == 'D' ? 'selected' : '' }}>Divorciado</option>
-                  <option value="V" {{ $estadoCivilSelecionado == 'V' ? 'selected' : '' }}>Viúvo</option>
+                  <option value="">{{ __('Selecione') }}</option>
+                  <option value="S" {{ $estadoCivilSelecionado == 'S' ? 'selected' : '' }}>{{ __('Solteiro') }}</option>
+                  <option value="C" {{ $estadoCivilSelecionado == 'C' ? 'selected' : '' }}>{{ __('Casado') }}</option>
+                  <option value="D" {{ $estadoCivilSelecionado == 'D' ? 'selected' : '' }}>{{ __('Divorciado') }}</option>
+                  <option value="V" {{ $estadoCivilSelecionado == 'V' ? 'selected' : '' }}>{{ __('Viúvo') }}</option>
                 </select>
                 @error('estado_civil')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -64,9 +64,9 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="nacionalidade">* Nacionalidade</label>
+                <label for="nacionalidade">{{ __('* Nacionalidade') }}</label>
                 <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade" required>
-                  <option value="">Selecione</option>
+                  <option value="">{{ __('Selecione') }}</option>
                   @php
                     //Colocar no banco de dados
                     $paises = [
@@ -330,7 +330,7 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="naturalidade">* Naturalidade</label>
+                <label for="naturalidade">{{ __('* Naturalidade') }}</label>
                 <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50" required>
                 @error('naturalidade')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -338,9 +338,9 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="uf">* UF</label>
+                <label for="uf">{{ __('* UF') }}</label>
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" required>
-                  <option value="">Selecione</option>
+                  <option value="">{{ __('Selecione') }}</option>
                   @php
                     //Colocar no banco de dados , esta estranho assim
                     $ufs = [
@@ -365,9 +365,9 @@
 
             <div class="row mb-4">
               <div class="col-xl-3">
-                <label for="escolaridade_id">Escolaridade</label>
+                <label for="escolaridade_id">{{ __('Escolaridade') }}</label>
                 <select class="form-control" name="escolaridade_id" id="escolaridade_id">
-                  <option value="">Selecione</option>
+                  <option value="">{{ __('Selecione') }}</option>
                   @foreach ($formacoes as $formacao)
                       <option value="{{ $formacao->id }}"
                         {{ $formacao->id == old('escolaridade_id', $pessoa->escolaridade_id) ? 'selected' : '' }}>
@@ -382,9 +382,9 @@
 
               <div class="col-xl-3">
                 @if(request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update'))
-                  <label for="profissao">* Profissão</label>
+                  <label for="profissao">{{ __('* Profissão') }}</label>
                   <select class="form-control @error('profissao') is-invalid @enderror" id="profissao" name="profissao" required>
-                    <option value="">Selecione</option>
+                    <option value="">{{ __('Selecione') }}</option>
                     @foreach (($profissoes ?? []) as $profissao)
                       @php
                         $profissaoDescricao = $profissao->descricao ?? $profissao->nome ?? $profissao->profissao ?? ('Profissão #' . $profissao->id);
@@ -395,7 +395,7 @@
                     @endforeach
                   </select>
                 @else
-                  <label for="profissao">Profissão</label>
+                  <label for="profissao">{{ __('Profissão') }}</label>
                   <input type="text" class="form-control @error('profissao') is-invalid @enderror" id="profissao" name="profissao" value="{{ old('profissao', $pessoa->profissao) }}" maxlength="100">
                 @endif
                 @error('profissao')
@@ -404,9 +404,9 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="funcao_eclesiastica_id">Função Eclesiástica</label>
+                <label for="funcao_eclesiastica_id">{{ __('Função Eclesiástica') }}</label>
                 <select class="form-control" name="funcao_eclesiastica_id" id="funcao_eclesiastica_id">
-                  <option value="">Selecione</option>
+                  <option value="">{{ __('Selecione') }}</option>
                   @foreach ($funcoesEclesiasticas as $funcaoEclesiastica)
                       <option value="{{ $funcaoEclesiastica->id }}"
                         {{ $funcaoEclesiastica->id == old('funcao_eclesiastica_id', $pessoa->funcao_eclesiastica_id) ? 'selected' : '' }}>
@@ -430,11 +430,11 @@
             @if(request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update'))
               <div class="row mb-4">
                 <div class="col-xl-3">
-                  <label for="status">* Status</label>
+                  <label for="status">{{ __('* Status') }}</label>
                   <select class="form-control @error('status') is-invalid @enderror" id="status" name="status" required>
-                    <option value="">Selecione</option>
-                    <option value="A" {{ old('status', $pessoa->status) === 'A' ? 'selected' : '' }}>Ativo</option>
-                    <option value="I" {{ old('status', $pessoa->status) === 'I' ? 'selected' : '' }}>Inativo</option>
+                    <option value="">{{ __('Selecione') }}</option>
+                    <option value="A" {{ old('status', $pessoa->status) === 'A' ? 'selected' : '' }}>{{ __('Ativo') }}</option>
+                    <option value="I" {{ old('status', $pessoa->status) === 'I' ? 'selected' : '' }}>{{ __('Inativo') }}</option>
                   </select>
                   @error('status')
                     <span class="help-block text-danger">{{ $message }}</span>
@@ -445,7 +445,7 @@
 
             <div class="row mb-4">
               <div class="col-xl-3">
-                <label for="cpf" id="cpf-label">* CPF</label>
+                <label for="cpf" id="cpf-label">{{ __('* CPF') }}</label>
                 <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf" name="cpf" value="{{ old('cpf', $pessoa->cpf) }}" maxlength="100" {{ (!request()->routeIs('recadastramento-membro.editar') && !request()->routeIs('recadastramento-membro.update')) || old('status', $pessoa->status) === 'A' ? 'required' : '' }}>
                 @error('cpf')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -453,11 +453,11 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="tipo_documento">Tipo Documento</label>
+                <label for="tipo_documento">{{ __('Tipo Documento') }}</label>
                 <select class="form-control" name="tipo_documento" id="tipo_documento">
-                  <option value="">Selecione</option>
-                  <option value="RG">RG</option>
-                  <option value="CNH">CNH</option>
+                  <option value="">{{ __('Selecione') }}</option>
+                  <option value="RG">{{ __('RG') }}</option>
+                  <option value="CNH">{{ __('CNH') }}</option>
                 </select>
                 @error('tipo_documento')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -465,7 +465,7 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="documento">Documento</label>
+                <label for="documento">{{ __('Documento') }}</label>
                 <input type="text" class="form-control" id="documento" name="documento" value="{{ old('documento', $pessoa->documento) }}" maxlength="30">
                 @error('documento')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -473,7 +473,7 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="documento_complemento">Complemento Documento</label>
+                <label for="documento_complemento">{{ __('Complemento Documento') }}</label>
                 <input type="text" class="form-control" id="documento_complemento" name="documento_complemento" value="{{ old('documento_complemento', $pessoa->documento_complemento) }}" maxlength="30">
                 @error('documento_complemento')
                 <span class="help-block text-danger">{{ $message }}</span>
@@ -482,7 +482,7 @@
             </div>
             <div class="row mb-4">
               <div class="col-xl-3">
-                <label for="data_conversao">Data de Conversão</label>
+                <label for="data_conversao">{{ __('Data de Conversão') }}</label>
                 <input type="date" class="form-control @error('data_conversao') is-invalid @enderror" id="data_conversao" name="data_conversao" value="{{ old('data_conversao', $pessoa->data_conversao) }}">
                 @error('data_conversao')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -490,7 +490,7 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="data_batismo">Data de Batismo</label>
+                <label for="data_batismo">{{ __('Data de Batismo') }}</label>
                 <input type="date" class="form-control @error('data_batismo') is-invalid @enderror" id="data_batismo" name="data_batismo" value="{{ old('data_batismo', $pessoa->data_batismo) }}">
                 @error('data_batismo')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -498,7 +498,7 @@
               </div>
 
               <div class="col-xl-4">
-                <label for="data_batismo_espirito">Data de Batismo Espirito Santo</label>
+                <label for="data_batismo_espirito">{{ __('Data de Batismo Espirito Santo') }}</label>
                 <input type="date" class="form-control @error('data_batismo_espirito') is-invalid @enderror" id="data_batismo_espirito" name="data_batismo_espirito" value="{{ old('data_batismo_espirito', $pessoa->data_batismo_espirito) }}">
                 @error('data_batismo_espirito')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -508,16 +508,16 @@
             @if(request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update'))
               <div class="row mb-4">
                 <div class="col-xl-3">
-                  <label for="dt_recepcao">* Data de Recepção</label>
+                  <label for="dt_recepcao">{{ __('* Data de Recepção') }}</label>
                   <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ old('dt_recepcao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_recepcao)->format('Y-m-d')) }}" required>
                   @error('dt_recepcao')
                     <span class="help-block text-danger">{{ $message }}</span>
                   @enderror
                 </div>
                 <div class="col-xl-3">
-                  <label for="modo_recepcao_id">* Modo de Recepção</label>
+                  <label for="modo_recepcao_id">{{ __('* Modo de Recepção') }}</label>
                   <select id="modo_recepcao_id" name="modo_recepcao_id" class="form-control @error('modo_recepcao_id') is-invalid @enderror" required>
-                    <option value="">Selecione</option>
+                    <option value="">{{ __('Selecione') }}</option>
                     @foreach ($modosRecepcao as $modo)
                       <option value="{{ $modo->id }}" {{ (string) old('modo_recepcao_id', optional($pessoa->rolAtualSessionIgreja)->modo_recepcao_id) === (string) $modo->id ? 'selected' : '' }}>
                         {{ $modo->nome }}
@@ -529,16 +529,16 @@
                   @enderror
                 </div>
                 <div class="col-xl-3">
-                  <label for="dt_exclusao">Data de Exclusão</label>
+                  <label for="dt_exclusao">{{ __('Data de Exclusão') }}</label>
                   <input type="date" class="form-control @error('dt_exclusao') is-invalid @enderror" id="dt_exclusao" name="dt_exclusao" value="{{ old('dt_exclusao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_exclusao)->format('Y-m-d')) }}">
                   @error('dt_exclusao')
                     <span class="help-block text-danger">{{ $message }}</span>
                   @enderror
                 </div>
                 <div class="col-xl-3">
-                  <label for="modo_exclusao_id">Modo de Exclusão</label>
+                  <label for="modo_exclusao_id">{{ __('Modo de Exclusão') }}</label>
                   <select id="modo_exclusao_id" name="modo_exclusao_id" class="form-control @error('modo_exclusao_id') is-invalid @enderror">
-                    <option value="">Selecione</option>
+                    <option value="">{{ __('Selecione') }}</option>
                     @foreach ($modosExclusao as $modo)
                       <option value="{{ $modo->id }}" {{ (string) old('modo_exclusao_id', optional($pessoa->rolAtualSessionIgreja)->modo_exclusao_id) === (string) $modo->id ? 'selected' : '' }}>
                         {{ $modo->nome }}
@@ -554,7 +554,7 @@
             <div class="row mb-4">
               @if(!request()->routeIs('recadastramento-membro.editar') && !request()->routeIs('recadastramento-membro.update'))
                 <div class="col-md-6">
-                  <label for="historico">Pastor Oficiante</label>
+                  <label for="historico">{{ __('Pastor Oficiante') }}</label>
                   <input type="text" class="form-control" id="historico" name="historico" value="{{ old('historico', $pessoa->historico) }}">
                   @error('historico')
                     <span class="help-block text-danger">{{ $message }}</span>
@@ -562,11 +562,11 @@
                 </div>
               @endif
                 <div class="form-group mb-4 col-md-6">
-                    <label class="control-label">Congregação:</label>
+                    <label class="control-label">{{ __('Congregação:') }}</label>
                     <select id="congregacao_id" name="congregacao_id"
                         class="form-control @error('congregacao_id') is-invalid @enderror">
                         <option value="{{ null }}" {{ !$pessoa->congregacao_id ? 'selected' : '' }}>
-                            Sede
+                            {{ __('Sede') }}
                         </option>
                         @foreach ($congregacoes as $congregacao)
                             <option value="{{ $congregacao->id }}"

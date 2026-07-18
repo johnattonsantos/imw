@@ -31,7 +31,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Relatório de Cartas Pastorais - Igreja: <u>{{ $instituicao }}</u></h4>
+                        <h4>{{ __('Relatório de Cartas Pastorais - Igreja:') }} <u>{{ $instituicao }}</u></h4>
                     </div>
                 </div>
             </div>
@@ -41,9 +41,9 @@
                     <table class="table table-bordered table-striped table-hover mb-4" id="cartaPastoral">
                         <thead>
                             <tr>
-                                <th>CARTA PASTORAL</th>
-                                <th>PASTOR</th>
-                                <th>CRIADO EM</th>
+                                <th>{{ __('CARTA PASTORAL') }}</th>
+                                <th>{{ __('PASTOR') }}</th>
+                                <th>{{ __('CRIADO EM') }}</th>
                                 <th></th>
                             </tr>
                         </thead>

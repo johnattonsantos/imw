@@ -11,27 +11,27 @@
             <tbody>
                 <tr class="d-flex flex-column">
                     <td class="d-flex justify-content-between bold">
-                        <p>Redimento Tributáveis:</p>
+                        <p>{{ __('Redimento Tributáveis:') }}</p>
                         R$ {{ number_format($data->rendimentosTributaveis, 2, ',', '.') ?? 'Não informado' }}
                     </td>
                     <td class="d-flex justify-content-between">
-                        <p>Número de dependentes:</p>
+                        <p>{{ __('Número de dependentes:') }}</p>
                         {{ $data->qtdeDependentes }}
                     </td>
                     <td class="d-flex justify-content-between">
-                        <p>Valor dedutível:</p>
+                        <p>{{ __('Valor dedutível:') }}</p>
                         R$ {{ number_format($data->valorDedutivel, 2, ',', '.') ?? 'Não informado' }}
                     </td>
                     <td class="d-flex justify-content-between">
-                        <p>Valor Base:</p>
+                        <p>{{ __('Valor Base:') }}</p>
                         R$ {{ number_format($data->valorBase, 2, ',', '.') ?? 'Não informado' }}
                     </td>
                     <td class="d-flex justify-content-between">
-                        <p>Redutor:</p>
+                        <p>{{ __('Redutor:') }}</p>
                         R$ {{ number_format($data->valorRedutor, 2, ',', '.') ?? 'Não informado' }}
                     </td>
                     <td class="d-flex justify-content-between bold">
-                        <p>Valor de Imposto:</p>
+                        <p>{{ __('Valor de Imposto:') }}</p>
                         R$ {{ number_format($data->valorImposto, 2, ',', '.') ?? 'Não informado' }}
                     </td>
                 </tr>
@@ -42,10 +42,10 @@
         <table class="table table-bordered table-striped table-hover mb-4" id="datatable">
             <thead>
                 <tr>
-                    <th>Faixa</th>
-                    <th>Base Calculo</th>
-                    <th>Aliquota</th>
-                    <th>Valor do Imposto</th>
+                    <th>{{ __('Faixa') }}</th>
+                    <th>{{ __('Base Calculo') }}</th>
+                    <th>{{ __('Aliquota') }}</th>
+                    <th>{{ __('Valor do Imposto') }}</th>
 
                 </tr>
             </thead>

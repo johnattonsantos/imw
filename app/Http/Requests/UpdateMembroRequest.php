@@ -69,7 +69,7 @@ class UpdateMembroRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($minDate, $currentDate) {
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de nascimento deve estar entre 01/01/1910 e a data atual.');
+                        $fail(__('A data de nascimento deve estar entre 01/01/1910 e a data atual.'));
                     }
                 },
             ],
@@ -78,10 +78,10 @@ class UpdateMembroRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de conversão deve ser após a data de nascimento.');
+                        $fail(__('A data de conversão deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de conversão deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de conversão deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -90,10 +90,10 @@ class UpdateMembroRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de batismo deve ser após a data de nascimento.');
+                        $fail(__('A data de batismo deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de batismo deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de batismo deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -102,10 +102,10 @@ class UpdateMembroRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de batismo no Espírito deve ser após a data de nascimento.');
+                        $fail(__('A data de batismo no Espírito deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de batismo no Espírito deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de batismo no Espírito deve ser após a data de nascimento e a data atual.'));
                     }
                 },
 
@@ -118,10 +118,10 @@ class UpdateMembroRequest extends FormRequest
                         return;
                     }
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de recepção deve ser após a data de nascimento.');
+                        $fail(__('A data de recepção deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDateRecepcao) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de recepção deve estar entre 05/01/1967 e a data atual.');
+                        $fail(__('A data de recepção deve estar entre 05/01/1967 e a data atual.'));
                     }
                 },
                 new TodaysDeadlineRule
@@ -139,10 +139,10 @@ class UpdateMembroRequest extends FormRequest
                     }
 
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de exclusão deve ser após a data de nascimento.');
+                        $fail(__('A data de exclusão deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de exclusão deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de exclusão deve ser após a data de nascimento e a data atual.'));
                     }
                 },
                 function ($attribute, $value, $fail) use ($currentDate) {
@@ -156,12 +156,12 @@ class UpdateMembroRequest extends FormRequest
 
                     $dtRecepcao = $this->input('dt_recepcao');
                     if (empty($dtRecepcao)) {
-                        $fail('Para status Inativo, informe também a data de recepção.');
+                        $fail(__('Para status Inativo, informe também a data de recepção.'));
                         return;
                     }
 
                     if (strtotime($value) < strtotime($dtRecepcao) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de exclusão deve estar entre a data de recepção e a data atual.');
+                        $fail(__('A data de exclusão deve estar entre a data de recepção e a data atual.'));
                     }
                 },
             ],
@@ -184,7 +184,7 @@ class UpdateMembroRequest extends FormRequest
                         $dtExclusaoInformada = !empty($this->input('dt_exclusao'));
                         $modoExclusaoInformado = !empty($this->input('modo_exclusao_id'));
                         if ($dtExclusaoInformada || $modoExclusaoInformado) {
-                            $fail('Com status Ativo, é necessário limpar Data de Exclusão e Modo de Exclusão. Se precisar manter essas informações, altere o status para Inativo.');
+                            $fail(__('Com status Ativo, é necessário limpar Data de Exclusão e Modo de Exclusão. Se precisar manter essas informações, altere o status para Inativo.'));
                         }
                     },
                 ]
@@ -222,14 +222,14 @@ class UpdateMembroRequest extends FormRequest
                     }
 
                     if ($query->exists()) {
-                        $fail('Este CPF já está sendo utilizado por outra pessoa');
+                        $fail(__('Este CPF já está sendo utilizado por outra pessoa'));
                     }
                 },
             ],
             'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {
                 if ($value) {
                     if (!preg_match('/@.*\.\w{2,}$/', $value)) {
-                        $fail('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.');
+                        $fail(__('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.'));
                     }
                 }
             }],
@@ -256,7 +256,7 @@ class UpdateMembroRequest extends FormRequest
                     }
 
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de casamento deve ser após a data de nascimento.');
+                        $fail(__('A data de casamento deve ser após a data de nascimento.'));
                     }
                 },
             ],

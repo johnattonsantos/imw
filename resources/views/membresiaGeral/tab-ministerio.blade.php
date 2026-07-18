@@ -26,7 +26,7 @@
                             {{ $funcaoMinisterial->ministerio ? $funcaoMinisterial->ministerio->descricao : 'Sem informações' }}
                         </span>
                         <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">
-                            Ministério
+                            {{ __('Ministério') }}
                         </span>
                     </p>
                     <p class="card-text">
@@ -34,7 +34,7 @@
                             {{ $funcaoMinisterial->tipoAtuacao->descricao ?? 'Sem informações' }}
                         </span>
                         <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">
-                            Função
+                            {{ __('Função') }}
                         </span>
                     </p>
                     <p class="card-text">
@@ -42,7 +42,7 @@
                             {{ $funcaoMinisterial->data_entrada ? \Carbon\Carbon::parse($funcaoMinisterial->data_entrada)->format('d/m/Y') : 'Sem informações' }}
                         </span>
                         <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">
-                            Nomeação
+                            {{ __('Nomeação') }}
                         </span>
                     </p>
                     <p class="card-text">
@@ -50,7 +50,7 @@
                             {{ $funcaoMinisterial->data_saida ? \Carbon\Carbon::parse($funcaoMinisterial->data_saida)->format('d/m/Y') : 'Sem informações' }}
                         </span>
                         <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">
-                            Exoneração
+                            {{ __('Exoneração') }}
                         </span>
                     </p>
                     @if ($funcaoMinisterial->observacoes)
@@ -59,7 +59,7 @@
                                 {{ $funcaoMinisterial->observacoes }}
                             </span>
                             <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">
-                                Observações
+                                {{ __('Observações') }}
                             </span>
                         </p>
                     @endif

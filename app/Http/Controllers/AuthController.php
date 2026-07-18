@@ -69,7 +69,7 @@ class AuthController extends Controller
             // Nunca bloquear o fluxo por falha de auditoria.
         }
 
-        session()->flash('error', 'E-mail ou senha inválida!');
+        session()->flash('error', __('E-mail ou senha inválida!'));
         return redirect()->back();
     }
 
@@ -155,7 +155,7 @@ class AuthController extends Controller
 
         // Verificar o status da redefinição de senha
         if ($status === Password::PASSWORD_RESET) {
-            return back()->with('status', 'Senha redefinida com sucesso!');
+            return back()->with('status', __('Senha redefinida com sucesso!'));
         } else {
             return back()->withErrors(['email' => 'Não foi possível redefinir a senha. Token expirado!']);
         }

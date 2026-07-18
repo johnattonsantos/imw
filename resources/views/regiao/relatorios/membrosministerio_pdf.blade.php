@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Membros por Ministério - IMW PGA</title>
+    <title>{{ __('Relatório de Membros por Ministério - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +90,7 @@ use Carbon\Carbon;
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">MEMBROS POR MINISTÉRIO - {{ optional($instituicao)->nome ?? $regiao->nome }}</div>
             <div class="period">
@@ -104,16 +104,16 @@ use Carbon\Carbon;
     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
         <thead class="thead-dark">
             <tr>
-                <th width="20px" style="text-align: left" rowspan="2">DISTRITO</th>
-                <th width="120px" style="text-align: left" rowspan="2">IGREJA</th>
-                <th width="40px" style="text-align: center" colspan="2">KIDS</th>
-                <th width="40px" style="text-align: center" colspan="2">CONEXÃO</th>
-                <th width="40px" style="text-align: center" colspan="2">FIRE</th>
-                <th width="40px" style="text-align: center" colspan="2">MOVE</th>
-                <th width="40px" style="text-align: center" colspan="2">HOMENS</th>
-                <th width="40px" style="text-align: center" colspan="2">MULHERES</th>
+                <th width="20px" style="text-align: left" rowspan="2">{{ __('DISTRITO') }}</th>
+                <th width="120px" style="text-align: left" rowspan="2">{{ __('IGREJA') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('KIDS') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('CONEXÃO') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('FIRE') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('MOVE') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('HOMENS') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('MULHERES') }}</th>
                 <th width="40px" style="text-align: center" colspan="2">60+</th>
-                <th width="40px" style="text-align: center" colspan="2">TOTAL</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('TOTAL') }}</th>
             </tr>
             <tr>
                 <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
@@ -190,7 +190,7 @@ use Carbon\Carbon;
             </tr>
             @endforeach
             <tr class="thead-dark">
-                <th colspan="2" style="text-align: left">TOTAL</th>
+                <th colspan="2" style="text-align: left">{{ __('TOTAL') }}</th>
                 <th style="text-align: right">{{ $totalKids_X }}</th>
                 <th style="text-align: right">{{ $totalKids_Y }}</th>
                 <th style="text-align: right">{{ $totalConexao_X }}</th>

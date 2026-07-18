@@ -21,7 +21,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Livro Caixa</h4>
+                    <h4>{{ __('Relatório Livro Caixa') }}</h4>
                 </div>
             </div>
         </div>
@@ -29,21 +29,21 @@
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Mês/Ano:</label>
+                        <label class="control-label">{{ __('* Mês/Ano:') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt') is-invalid @enderror" id="dt" name="dt" value="{{ request()->input('dt') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt') is-invalid @enderror" id="dt" name="dt" value="{{ request()->input('dt') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
                 </div>
 
                 {{-- Congregação --}}
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">Caixa:</label>
+                        <label class="control-label">{{ __('Caixa:') }}</label>
                     </div>
                     <div class="col-lg-6">
                         <select id="caixa_id" name="caixa_id" class="form-control @error('caixa_id') is-invalid @enderror">
-                            <option value="all" {{ request()->input('caixa_id') == '99' ? 'selected' : '' }}>Todos
+                            <option value="all" {{ request()->input('caixa_id') == '99' ? 'selected' : '' }}>{{ __('Todos') }}
                             </option>
                             @foreach ($caixasSelect as $cx)
                             <option value="{{ $cx->id }}" {{ request()->input('caixa_id') == $cx->id ? 'selected' : '' }}>
@@ -56,11 +56,11 @@
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
                         <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                            <i class="fa fa-file-pdf"></i> Relatório
+                            <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -78,17 +78,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mt-3">Discriminação de saldos por caixa</h5>
+                            <h5 class="mt-3">{{ __('Discriminação de saldos por caixa') }}</h5>
                             <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>CAIXA</th>
-                                        <th width="300" style="text-align: right">SALDO ANTERIOR</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE SAÍDAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. SAÍDAS</th>
-                                        <th width="120" style="text-align: right">SALDO ATUAL</th>
+                                        <th>{{ __('CAIXA') }}</th>
+                                        <th width="300" style="text-align: right">{{ __('SALDO ANTERIOR') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('SALDO ATUAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -136,7 +136,7 @@
 
                                     {{-- Total de cada caixa --}}
                                     <tr>
-                                        <td style="text-align: left"><strong>Total dos Caixas</strong></td>
+                                        <td style="text-align: left"><strong>{{ __('Total dos Caixas') }}</strong></td>
                                         <td style="text-align: right">
                                             <strong>{{ 'R$ ' . number_format($totalSaldoFinal, 2, ',', '.') }}</strong>
                                         </td>
@@ -163,20 +163,20 @@
                     {{-- <div class="row">
                                 <div class="col-12 text-center">
                                     <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i
-                                            class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                                            class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                                 </div>
                             </div> --}}
 
                     <div class="col-12 mt-3">
-                        <h5>Discriminação dos Lançamentos por Conta</h5>
+                        <h5>{{ __('Discriminação dos Lançamentos por Conta') }}</h5>
                     </div>
                     <div class="col-12">
                         <table class="table" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th>CONTA</th>
-                                    <th>CAIXA</th>
-                                    <th width="100" style="text-align: right;">TOTAL</th>
+                                    <th>{{ __('CONTA') }}</th>
+                                    <th>{{ __('CAIXA') }}</th>
+                                    <th width="100" style="text-align: right;">{{ __('TOTAL') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -223,7 +223,7 @@
             </div>
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                 </div>
             </div>
             <!-- Fim do Conteúdo -->

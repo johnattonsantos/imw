@@ -31,7 +31,7 @@ class StoreDisciplinarRequest extends FormRequest
             'dt_inicio' => [
                 'required',
                 'date',
-                new RangeDateRule, 
+                new RangeDateRule,
                 new DatePreviousToRecebimentoRule($membroId)
             ],
             'dt_termino' => [
@@ -42,7 +42,7 @@ class StoreDisciplinarRequest extends FormRequest
                         $dtInicio = strtotime($this->input('dt_inicio'));
                         $dtTermino = strtotime($value);
                         if ($dtTermino < $dtInicio) {
-                            $fail('A data de término não pode ser anterior à data de início.');
+                            $fail(__('A data de término não pode ser anterior à data de início.'));
                         }
                     }
                 }

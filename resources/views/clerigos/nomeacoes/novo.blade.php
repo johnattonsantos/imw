@@ -40,10 +40,10 @@
             @csrf
             <div class="row">
                 <div class="col-12 mt-3 col-md-4">
-                    <label for="funcao_ministerial_id">* Função Ministerial</label>
+                    <label for="funcao_ministerial_id">{{ __('* Função Ministerial') }}</label>
                     <select class="form-control basic" name="funcao_ministerial_id" id="funcao_ministerial_id"
                         @error('funcao_ministerial_id') is-invalid @enderror>
-                        <option value="">Selecione</option>
+                        <option value="">{{ __('Selecione') }}</option>
                         @foreach ($funcoes as $funcao)
                             <option value="{{ $funcao['id'] }}"
                                 {{ old('funcao_ministerial_id') == $funcao['id'] ? 'selected' : '' }}>
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="col-12 mt-3 col-md-4">
-                    <label for="data_nomeacao">* Data de Nomeação</label>
+                    <label for="data_nomeacao">{{ __('* Data de Nomeação') }}</label>
                     <input class="form-control" type="date" id="data_nomeacao" name="data_nomeacao"
                         value="{{ old('data_nomeacao') }}" @error('data_nomeacao') is-invalid @enderror>
                     @error('data_nomeacao')
@@ -67,10 +67,10 @@
 
 
                 <div class="col-12 mt-3 col-md-4">
-                    <label for="instituicao_id">* Instituição</label>
+                    <label for="instituicao_id">{{ __('* Instituição') }}</label>
                     <select class="form-control basic" name="instituicao_id" id="instituicao_id"
                         @error('instituicao_id') is-invalid @enderror>
-                        <option value="">Selecione</option>
+                        <option value="">{{ __('Selecione') }}</option>
                         @foreach ($instituicoes as $instituicao)
                             <option value="{{ $instituicao->id }}"
                                 {{ old('instituicao_id') == $instituicao->id ? 'selected' : '' }}>
@@ -90,7 +90,7 @@
                 <input type="hidden" name="pessoa_id" id="pessoa_id" value="{{ $pessoa->id }}">
             </div>
 
-            <button class="btn btn-primary my-4">Salvar</button>
+            <button class="btn btn-primary my-4">{{ __('Salvar') }}</button>
         </form>
     </div>
 @endsection

@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Auditorias</title>
+    <title>{{ __('Auditorias') }}</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 10px; }
         h2 { margin: 0 0 10px 0; }
@@ -14,21 +14,21 @@
     </style>
 </head>
 <body>
-    <h2>Auditorias do Sistema</h2>
+    <h2>{{ __('Auditorias do Sistema') }}</h2>
     <div class="meta">
-        <strong>Emitido em:</strong> {{ now()->format('d/m/Y H:i:s') }}<br>
-        <strong>Total:</strong> {{ $audits->count() }} registro(s)
+        <strong>{{ __('Emitido em:') }}</strong> {{ now()->format('d/m/Y H:i:s') }}<br>
+        <strong>{{ __('Total:') }}</strong> {{ $audits->count() }} registro(s)
     </div>
 
     <table>
         <thead>
             <tr>
-                <th>Data/Hora</th>
-                <th>Usuario</th>
-                <th>Evento</th>
-                <th>Entidade</th>
-                <th>ID</th>
-                <th>Alteracoes</th>
+                <th>{{ __('Data/Hora') }}</th>
+                <th>{{ __('Usuario') }}</th>
+                <th>{{ __('Evento') }}</th>
+                <th>{{ __('Entidade') }}</th>
+                <th>{{ __('ID') }}</th>
+                <th>{{ __('Alteracoes') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +48,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" style="text-align: center;">Nenhum registro encontrado.</td>
+                    <td colspan="6" style="text-align: center;">{{ __('Nenhum registro encontrado.') }}</td>
                 </tr>
             @endforelse
         </tbody>

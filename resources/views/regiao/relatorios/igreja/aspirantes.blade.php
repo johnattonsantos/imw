@@ -21,7 +21,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Relatório Aspirantes por Igrejas</h4>
+              <h4>{{ __('Relatório Aspirantes por Igrejas') }}</h4>
           </div>
       </div>
     </div>
@@ -30,11 +30,11 @@
         <input type="hidden" name="buscar" value="todos">
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Distrito:</label>
+            <label class="control-label">{{ __('Distrito:') }}</label>
           </div>
           <div class="col-lg-4">
             <select class="form-control" name="distrito_id">
-              <option value="all">Todos</option>
+              <option value="all">{{ __('Todos') }}</option>
               @foreach ($distritos as $distrito)
                 <option value="{{ $distrito->id }}" {{ request()->input('distrito_id', 'all') == $distrito->id ? 'selected' : '' }}>
                   {{ $distrito->nome }}
@@ -43,11 +43,11 @@
             </select>
           </div>
           <div class="col-lg-2 text-right">
-            <label class="control-label">Igreja:</label>
+            <label class="control-label">{{ __('Igreja:') }}</label>
           </div>
           <div class="col-lg-4">
             <select class="form-control" name="igreja_id">
-              <option value="all">Todas</option>
+              <option value="all">{{ __('Todas') }}</option>
               @foreach ($igrejas as $igreja)
                 <option value="{{ $igreja->id }}" {{ request()->input('igreja_id', 'all') == $igreja->id ? 'selected' : '' }}>
                   {{ $igreja->nome }}
@@ -60,7 +60,7 @@
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
             <button id="btn_buscar" type="submit" name="action" value="buscar" class="btn btn-primary btn">
-              <x-bx-search /> Buscar
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
           </div>
         </div>
@@ -77,15 +77,15 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aspirantes-regiao">
             <thead>
                 <tr>
-                    <th>DISTRITO</th>
-                    <th>IGREJA</th>
-                    <th>NOME</th>
-                    <th>SEXO</th>
-                    <th>ESTADO CIVIL</th>
-                    <th>CPF</th>
-                    <th>NASCIMENTO</th>
-                    <th>CONTATO</th>
-                    <th>E-MAIL</th>
+                    <th>{{ __('DISTRITO') }}</th>
+                    <th>{{ __('IGREJA') }}</th>
+                    <th>{{ __('NOME') }}</th>
+                    <th>{{ __('SEXO') }}</th>
+                    <th>{{ __('ESTADO CIVIL') }}</th>
+                    <th>{{ __('CPF') }}</th>
+                    <th>{{ __('NASCIMENTO') }}</th>
+                    <th>{{ __('CONTATO') }}</th>
+                    <th>{{ __('E-MAIL') }}</th>
                 </tr>
             </thead>
             <tbody>

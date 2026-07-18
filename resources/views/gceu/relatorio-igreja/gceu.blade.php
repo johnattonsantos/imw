@@ -46,17 +46,17 @@
   <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
-          
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aniversariantes">
                     <thead>
                         <tr>
                           <th>#</th>
-                          <th>ANFITRIÃO</th>
-                          <th>CONTATO</th>
-                          <th>GCEU</th>
-                          <th>ENDEREÇO GCEU</th>
-                          <th>MAPS</th>
+                          <th>{{ __('ANFITRIÃO') }}</th>
+                          <th>{{ __('CONTATO') }}</th>
+                          <th>{{ __('GCEU') }}</th>
+                          <th>{{ __('ENDEREÇO GCEU') }}</th>
+                          <th>{{ __('MAPS') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -67,7 +67,7 @@
                             <td>{{ formatStr($item->contato, '## (##) #####-####') }}</td>
                             <td>{{ $item->nome }}</td>
                             <td>{{ $item->endereco }} {{ $item->numero }}, {{ $item->bairro }}, {{ $item->cidade }}, {{ $item->uf }}</td>
-                            <td><a href="https://www.google.com/maps/?q={{ $item->endereco }} {{ $item->numero }}, {{ $item->bairro }}, {{ $item->cidade }}, {{ $item->uf }}" title="Acessar no Google Maps" target="_blank" rel="noopener noreferrer"><i class="fas fa-map-marker-alt" style="margin-left: 25px;"></i></a></td>
+                            <td><a href="https://www.google.com/maps/?q={{ $item->endereco }} {{ $item->numero }}, {{ $item->bairro }}, {{ $item->cidade }}, {{ $item->uf }}" title="{{ __('Acessar no Google Maps') }}" target="_blank" rel="noopener noreferrer"><i class="fas fa-map-marker-alt" style="margin-left: 25px;"></i></a></td>
                           </tr>
                       @endforeach
                     </tbody>
@@ -104,7 +104,7 @@
   $('#btn_buscar').click(function () {
     $('#filter_form').removeAttr('target');
   })
-  
+
   $('#btn_relatorio').click(function () {
     $('#filter_form').attr('target', '_blank');
   })
@@ -136,7 +136,7 @@
                         //doc.pageMargins = [20,50,20,30];
                         doc.defaultStyle.fontSize = 9;
                         doc.styles.tableHeader.fontSize = 9;
-                        
+
 
                         const hoje = new Date();
                         const dataFormatada = hoje.toLocaleDateString('pt-BR');
@@ -163,7 +163,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
 

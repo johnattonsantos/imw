@@ -34,7 +34,7 @@
         <table class="table mb-4">
           <thead>
             <tr>
-              <th style="width: 90%; position: relative; bottom: 15px;">ROL ANTERIOR</th>
+              <th style="width: 90%; position: relative; bottom: 15px;">{{ __('ROL ANTERIOR') }}</th>
               <th class="text-center">MAS {{ $rolAnterior->sexo_masculino }}</th>
               <th class="text-center">FEM {{ $rolAnterior->sexo_feminino }}</th>
               <th class="text-center">TOTAL {{ $rolAnterior->total }}</th>
@@ -47,10 +47,10 @@
         <table class="table mb-4">
           <thead>
             <tr>
-              <th style="width: 90%">MEMBROS RECEBIDOS</th>
-              <th class="text-center">MAS</th>
-              <th class="text-center">FEM</th>
-              <th class="text-center">TOTAL</th>
+              <th style="width: 90%">{{ __('MEMBROS RECEBIDOS') }}</th>
+              <th class="text-center">{{ __('MAS') }}</th>
+              <th class="text-center">{{ __('FEM') }}</th>
+              <th class="text-center">{{ __('TOTAL') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -63,7 +63,7 @@
               </tr>
             @endforeach
             <tr>
-              <td>TOTAL</td>
+              <td>{{ __('TOTAL') }}</td>
               <td class="text-center">{{ $membrosRecebidos->sum(fn($item) => $item->sexo_masculino) }}</td>
               <td class="text-center">{{ $membrosRecebidos->sum(fn($item) => $item->sexo_feminino) }}</td>
               <td class="text-center">{{ $membrosRecebidos->sum(fn($item) => $item->total) }}</td>
@@ -76,10 +76,10 @@
         <table class="table mb-4">
           <thead>
             <tr>
-              <th style="width: 90%">MEMBROS DESLIGADOS</th>
-              <th class="text-center">MAS</th>
-              <th class="text-center">FEM</th>
-              <th class="text-center">TOTAL</th>
+              <th style="width: 90%">{{ __('MEMBROS DESLIGADOS') }}</th>
+              <th class="text-center">{{ __('MAS') }}</th>
+              <th class="text-center">{{ __('FEM') }}</th>
+              <th class="text-center">{{ __('TOTAL') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -92,7 +92,7 @@
               </tr>
             @endforeach
             <tr>
-              <td>TOTAL</td>
+              <td>{{ __('TOTAL') }}</td>
               <td class="text-center">{{ $membrosExcluidos->sum(fn($item) => $item->sexo_masculino) }}</td>
               <td class="text-center">{{ $membrosExcluidos->sum(fn($item) => $item->sexo_feminino) }}</td>
               <td class="text-center">{{ $membrosExcluidos->sum(fn($item) => $item->total) }}</td>
@@ -105,7 +105,7 @@
         <table class="table mb-4">
           <thead>
             <tr>
-              <th style="width: 90%; position: relative; bottom: 15px;">ROL ATUAL</th>
+              <th style="width: 90%; position: relative; bottom: 15px;">{{ __('ROL ATUAL') }}</th>
               <th class="text-center">MAS {{ $rolAtual->sexo_masculino }}</th>
               <th class="text-center">FEM {{ $rolAtual->sexo_feminino }}</th>
               <th class="text-center">TOTAL {{ $rolAtual->total }}</th>

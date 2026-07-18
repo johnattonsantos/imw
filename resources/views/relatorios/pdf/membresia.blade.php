@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Relatório de Membros - IMW PGA</title>
+    <title>{{ __('Relatório de Membros - IMW PGA') }}</title>
 
     <style>
         * {
@@ -16,7 +16,7 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
         }
-        
+
         h2 {
             text-transform: uppercase;
             margin-bottom: 2rem;
@@ -24,7 +24,7 @@
 
         h4 {
             margin-bottom: .5rem;
-        } 
+        }
 
         table {
             margin-top: 2rem;
@@ -57,15 +57,15 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 5%">ROL</th>
-                <th style="width: 20%">NOME</th>
-                <th style="width: 15%">TELEFONE</th>
-                <th style="width: 9%">SITUAÇÃO</th>
-                <th style="width: 12%">VÍNCULO</th>
-                <th style="width: 12%">NASCIMENTO</th>
-                <th style="width: 10%">RECEPÇÃO</th>
-                <th style="width: 10%">EXCLUSÃO</th>
-                <th style="width: 15%">LOCAL</th>
+                <th style="width: 5%">{{ __('ROL') }}</th>
+                <th style="width: 20%">{{ __('NOME') }}</th>
+                <th style="width: 15%">{{ __('TELEFONE') }}</th>
+                <th style="width: 9%">{{ __('SITUAÇÃO') }}</th>
+                <th style="width: 12%">{{ __('VÍNCULO') }}</th>
+                <th style="width: 12%">{{ __('NASCIMENTO') }}</th>
+                <th style="width: 10%">{{ __('RECEPÇÃO') }}</th>
+                <th style="width: 10%">{{ __('EXCLUSÃO') }}</th>
+                <th style="width: 15%">{{ __('LOCAL') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -81,7 +81,7 @@
                             {{ $membro->status == 'A' ? 'ATIVO' : 'INATIVO' }}
                         @else
                             {{ $membro->statusText }}
-                        @endif 
+                        @endif
                     </td>
                     <td>{{ $membro->vinculoText }}</td>
                     <td>{{ optional($membro->data_nascimento)->format('d/m/Y') }}</td>

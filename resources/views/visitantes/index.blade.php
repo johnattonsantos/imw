@@ -34,7 +34,7 @@
                     <line x1="12" y1="8" x2="12" y2="16"></line>
                     <line x1="8" y1="12" x2="16" y2="12"></line>
                 </svg>
-                <span class="ml-2">INCLUIR VISITANTE</span>
+                <span class="ml-2">{{ __('INCLUIR VISITANTE') }}</span>
             </a>
         </div>
 
@@ -56,7 +56,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Lista de Visitantes</h4>
+                        <h4>{{ __('Lista de Visitantes') }}</h4>
                     </div>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                                     <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                         <input type="radio" name="excluido" value="0" class="new-control-input"
                                             {{ request()->input('excluido') == '0' || request()->input('excluido') == null ? 'checked' : '' }}>
-                                        <span class="new-control-indicator"></span>Ativos
+                                        <span class="new-control-indicator"></span>{{ __('Ativos') }}
                                     </label>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
                                     <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                         <input type="radio" name="excluido" value="1" class="new-control-input"
                                             {{ request()->input('excluido') == '1' ? 'checked' : '' }}>
-                                        <span class="new-control-indicator"></span>Excluídos
+                                        <span class="new-control-indicator"></span>{{ __('Excluídos') }}
                                     </label>
                                 </div>
                             </div>
@@ -87,10 +87,10 @@
                     <div class="row mb-4">
                         <div class="col-4">
                             <input type="text" name="search" id="searchInput" class="form-control form-control-sm"
-                                placeholder="Pesquisar...">
+                                placeholder="{{ __('Pesquisar...') }}">
                         </div>
                         <div class="col-auto" style="margin-left: -19px;">
-                            <button type="submit" class="btn btn-primary btn-rounded"><x-bx-search /> Pesquisar</button>
+                            <button type="submit" class="btn btn-primary btn-rounded"><x-bx-search /> {{ __('Pesquisar') }}</button>
                         </div>
                     </div>
                 </form>
@@ -100,10 +100,10 @@
                         data-url="{{ route('visitante.list') }}">
                         <thead>
                             <tr>
-                                <th>NOME</th>
-                                <th>TELEFONE</th>
-                                <th>E-MAIL</th>
-                                <th>ATUALIZADO EM</th>
+                                <th>{{ __('NOME') }}</th>
+                                <th>{{ __('TELEFONE') }}</th>
+                                <th>{{ __('E-MAIL') }}</th>
+                                <th>{{ __('ATUALIZADO EM') }}</th>
                                 <th></th>
                             </tr>
                         </thead>

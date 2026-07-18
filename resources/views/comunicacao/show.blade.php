@@ -14,16 +14,16 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Detalhes da Comunicação</h4>
+                    <h4>{{ __('Detalhes da Comunicação') }}</h4>
                 </div>
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <p><strong>Categoria:</strong> {{ optional($comunicacao->categoria)->nome ?: '-' }}</p>
-            <p><strong>Título:</strong> {{ $comunicacao->titulo }}</p>
-            <p><strong>Comentário:</strong></p>
+            <p><strong>{{ __('Categoria:') }}</strong> {{ optional($comunicacao->categoria)->nome ?: '-' }}</p>
+            <p><strong>{{ __('Título:') }}</strong> {{ $comunicacao->titulo }}</p>
+            <p><strong>{{ __('Comentário:') }}</strong></p>
             <div>{!! $comunicacao->comentario !!}</div>
-            <p><strong>Arquivo:</strong>
+            <p><strong>{{ __('Arquivo:') }}</strong>
                 @if ($comunicacao->arquivo)
                     @php
                         $arquivoExt = strtolower((string) pathinfo($comunicacao->arquivo, PATHINFO_EXTENSION));
@@ -46,17 +46,17 @@
                             $colorClass = 'text-warning';
                         }
                     @endphp
-                    <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="Ver arquivo">
+                    <a href="{{ route('comunicacao.visualizar', $comunicacao) }}" target="_blank" title="{{ __('Ver arquivo') }}">
                         <i class="fas {{ $iconClass }} {{ $colorClass }} fa-lg"></i>
                     </a>
                 @else
                     -
                 @endif
             </p>
-            <p><strong>Criado em:</strong> {{ optional($comunicacao->created_at)->format('d/m/Y H:i:s') }}</p>
+            <p><strong>{{ __('Criado em:') }}</strong> {{ optional($comunicacao->created_at)->format('d/m/Y H:i:s') }}</p>
 
-            <a href="{{ route('comunicacao.edit', $comunicacao) }}" class="btn btn-dark">Editar</a>
-            <a href="{{ route('comunicacao.index') }}" class="btn btn-light">Voltar</a>
+            <a href="{{ route('comunicacao.edit', $comunicacao) }}" class="btn btn-dark">{{ __('Editar') }}</a>
+            <a href="{{ route('comunicacao.index') }}" class="btn btn-light">{{ __('Voltar') }}</a>
         </div>
     </div>
 </div>

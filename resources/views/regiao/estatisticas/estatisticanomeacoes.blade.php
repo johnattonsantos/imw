@@ -79,15 +79,15 @@
     <form class="form-vertical" id="filter_form" method="GET">
         <div class="form-group row mb-4">
             <div class="col-lg-2 text-right">
-                <label class="control-label">* Visão:</label>
+                <label class="control-label">{{ __('* Visão:') }}</label>
             </div>
             <div class="col-lg-3">
                 <select class="form-control" id="visao" name="visao" required>
                     <option value="1" {{ request()->input('visao') == 1 ? 'selected' : '' }}>
-                        Clérigo
+                        {{ __('Clérigo') }}
                     </option>
                     <option value="2" {{ request()->input('visao') == 2 ? 'selected' : '' }}>
-                        Igreja
+                        {{ __('Igreja') }}
                     </option>
                 </select>
             </div>
@@ -102,7 +102,7 @@
                         <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('situacao') == '' ? 'checked' : 'checked' }}
                                 type="radio" name="situacao" value="" class="new-control-input">
-                        <span class="new-control-indicator"></span>Todos
+                        <span class="new-control-indicator"></span>{{ __('Todos') }}
                         </label>
                     </div>
                 </div>
@@ -111,7 +111,7 @@
                         <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                         <input {{ request()->get('situacao') == '1' ? 'checked' : '' }}
                                 type="radio" name="situacao" value="1" class="new-control-input">
-                        <span class="new-control-indicator"></span>Titular
+                        <span class="new-control-indicator"></span>{{ __('Titular') }}
                         </label>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                     <div class="n-chk">
                         <label class="new-control new-checkbox checkbox-outline-success">
                         <input {{ request()->get('ativo') == 1 ? 'checked' : '' }} type="checkbox" name="ativo" value="1" class="new-control-input">
-                        <span class="new-control-indicator"></span>Ativos
+                        <span class="new-control-indicator"></span>{{ __('Ativos') }}
                         </label>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
             <div class="col-lg-2"></div>
             <div class="col-lg-6">
                 <button id="btn_buscar" type="submit" class="btn btn-primary">
-                    <x-bx-search /> Buscar
+                    <x-bx-search /> {{ __('Buscar') }}
                 </button>
             </div>
         </div>
@@ -140,7 +140,7 @@
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Histórico Nomeações</h4>
+                            <h4>{{ __('Histórico Nomeações') }}</h4>
                         </div>
                     </div>
                 </div>
@@ -150,12 +150,12 @@
                             <table class="table table-striped" style="font-size: 90%;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>Nome</th>
-                                        <th>Distrito</th>
-                                        <th>Igreja</th>
-                                        <th>Função Ministerial</th>
-                                        <th>Data Início</th>
-                                        <th>Data Termino</th>
+                                        <th>{{ __('Nome') }}</th>
+                                        <th>{{ __('Distrito') }}</th>
+                                        <th>{{ __('Igreja') }}</th>
+                                        <th>{{ __('Função Ministerial') }}</th>
+                                        <th>{{ __('Data Início') }}</th>
+                                        <th>{{ __('Data Termino') }}</th>
 
                                     </tr>
                                 </thead>
@@ -186,7 +186,7 @@
                             </table>
                         </div>
 
-                        <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
+                        <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
 
                     </div>
                 @elseif (request('visao') == 2)
@@ -195,12 +195,12 @@
                             <table class="table table-striped" style="font-size: 90%;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>Nome</th>
-                                        <th>Clérigo</th>
-                                        <th>Distrito</th>
-                                        <th>Função Ministerial</th>
-                                        <th>Data Início</th>
-                                        <th>Data Termino</th>
+                                        <th>{{ __('Nome') }}</th>
+                                        <th>{{ __('Clérigo') }}</th>
+                                        <th>{{ __('Distrito') }}</th>
+                                        <th>{{ __('Função Ministerial') }}</th>
+                                        <th>{{ __('Data Início') }}</th>
+                                        <th>{{ __('Data Termino') }}</th>
 
                                     </tr>
                                 </thead>
@@ -228,8 +228,8 @@
                                 </tbody>
                             </table>
                         </div>
-                        <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
-                    </div>                    
+                        <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
+                    </div>
                 @endif
     @endif
     </div>

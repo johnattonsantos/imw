@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Estatística por Gênero - IMW PGA</title>
+    <title>{{ __('Relatório de Estatística por Gênero - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +90,7 @@ use Carbon\Carbon;
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">ESTATÍSTICA POR GÊNERO - {{ session('session_perfil')->instituicao_nome }}</div>
             <div class="period">
@@ -105,12 +105,12 @@ use Carbon\Carbon;
     <thead class="thead-dark">
         <tr>
             <th width="200px" style="text-align: left"></th>
-            <th colspan="2" style="text-align: center">TOTAL MASCULINO</th>
-            <th colspan="2" style="text-align: center">TOTAL FEMININO</th>
-            <th colspan="2" style="text-align: center">TOTAL</th>
+            <th colspan="2" style="text-align: center">{{ __('TOTAL MASCULINO') }}</th>
+            <th colspan="2" style="text-align: center">{{ __('TOTAL FEMININO') }}</th>
+            <th colspan="2" style="text-align: center">{{ __('TOTAL') }}</th>
         </tr>
         <tr>
-            <th width="200px" style="text-align: left">IGREJA</th>
+            <th width="200px" style="text-align: left">{{ __('IGREJA') }}</th>
             <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
             <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
             <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
@@ -150,7 +150,7 @@ use Carbon\Carbon;
     </tbody>
     <tfoot>
         <tr>
-            <th style="text-align: center;">Total Geral</th>
+            <th style="text-align: center;">{{ __('Total Geral') }}</th>
             <th style="text-align: center;">{{ $totalMasculinoX }}</th>
             <th style="text-align: center;">{{ $totalMasculinoY }}</th>
             <th style="text-align: center;">{{ $totalFemininoX }}</th>

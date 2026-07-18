@@ -9,7 +9,7 @@
   $filhosInformados = $filhosInformados ?: [''];
 @endphp
 
-<label>Filhos</label>
+<label>{{ __('Filhos') }}</label>
 <div class="filhos-inputs-container">
   @foreach ($filhosInformados as $index => $filho)
     <div class="input-group mb-2 filho-input-row">
@@ -19,16 +19,16 @@
         name="filhos[]"
         value="{{ $filho }}"
         maxlength="150"
-        placeholder="Nome do filho"
-        aria-label="Nome do filho"
+        placeholder="{{ __('Nome do filho') }}"
+        aria-label="{{ __('Nome do filho') }}"
       >
       <div class="input-group-append">
         @if ($index === 0)
-          <button type="button" class="btn btn-outline-primary btn-adicionar-filho" title="Adicionar outro filho" aria-label="Adicionar outro filho">
+          <button type="button" class="btn btn-outline-primary btn-adicionar-filho" title="{{ __('Adicionar outro filho') }}" aria-label="{{ __('Adicionar outro filho') }}">
             <i class="fas fa-plus"></i>
           </button>
         @else
-          <button type="button" class="btn btn-outline-danger btn-remover-filho" title="Remover filho" aria-label="Remover filho">
+          <button type="button" class="btn btn-outline-danger btn-remover-filho" title="{{ __('Remover filho') }}" aria-label="{{ __('Remover filho') }}">
             <i class="fas fa-trash-alt"></i>
           </button>
         @endif
@@ -36,7 +36,7 @@
     </div>
   @endforeach
 </div>
-<small class="form-text text-muted">Informe um filho por campo.</small>
+<small class="form-text text-muted">{{ __('Informe um filho por campo.') }}</small>
 @error('filhos')
   <span class="help-block text-danger">{{ $message }}</span>
 @enderror
@@ -57,10 +57,10 @@
           row.className = 'input-group mb-2 filho-input-row';
           row.innerHTML =
             '<input type="text" class="form-control" name="filhos[]" maxlength="150" ' +
-              'placeholder="Nome do filho" aria-label="Nome do filho">' +
+              'placeholder="{{ __('Nome do filho') }}" aria-label="{{ __('Nome do filho') }}">' +
             '<div class="input-group-append">' +
               '<button type="button" class="btn btn-outline-danger btn-remover-filho" ' +
-                'title="Remover filho" aria-label="Remover filho">' +
+                'title="{{ __('Remover filho') }}" aria-label="{{ __('Remover filho') }}">' +
                 '<i class="fas fa-trash-alt"></i>' +
               '</button>' +
             '</div>';

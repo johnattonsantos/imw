@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redefinir Senha</title>
+    <title>{{ __('Redefinir Senha') }}</title>
     <!-- Bootstrap CSS -->
     <link href="{{ asset('auth/css/bootstrap.min.css') }}" rel="stylesheet">
     <!-- Font Awesome CSS -->
@@ -18,14 +18,14 @@
 <body>
 
     <div class="form-signin text-center">
-        <img src="{{ asset('auth/images/login.png') }}" alt="Logotipo" class="logo">
-        <h4 class="mb-4">Redefinir Senha</h4>
+        <img src="{{ asset('auth/images/login.png') }}" alt="{{ __('Logotipo') }}" class="logo">
+        <h4 class="mb-4">{{ __('Redefinir Senha') }}</h4>
         <form method="POST" action="{{ route('password.reset-post') }}">
             @csrf
             <input type="hidden" name="token" value="{{ $token }}">
 
             <div class="form-group row">
-                <label for="email" class="col-md-12 col-form-label">Endereço de E-mail</label>
+                <label for="email" class="col-md-12 col-form-label">{{ __('Endereço de E-mail') }}</label>
                 <div class="col-md-12">
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus readonly>
                     @error('email')
@@ -37,7 +37,7 @@
             </div>
 
             <div class="form-group row">
-                <label for="password" class="col-md-12 col-form-label">Nova Senha</label>
+                <label for="password" class="col-md-12 col-form-label">{{ __('Nova Senha') }}</label>
                 <div class="col-md-12">
                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
                     @error('password')
@@ -49,7 +49,7 @@
             </div>
 
             <div class="form-group row">
-                <label for="password-confirm" class="col-md-12 col-form-label">Confirme a Nova Senha</label>
+                <label for="password-confirm" class="col-md-12 col-form-label">{{ __('Confirme a Nova Senha') }}</label>
                 <div class="col-md-12">
                     <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
                 </div>
@@ -57,7 +57,7 @@
 
             <div class="form-group row mb-0 mt-4">
                 <div class="col-md-12 text-center">
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Redefinir Senha</button>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">{{ __('Redefinir Senha') }}</button>
                 </div>
             </div>
 

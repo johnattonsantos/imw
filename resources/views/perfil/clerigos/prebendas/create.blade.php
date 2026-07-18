@@ -30,7 +30,7 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-bell p-4"></i>
                 <div class="d-flex flex-column text-start">
-                    <p class="fs-1 mb-0" style="color: #fff; font-weight:900 ">Prebenda:</p>
+                    <p class="fs-1 mb-0" style="color: #fff; font-weight:900 ">{{ __('Prebenda:') }}</p>
                     <p class="fw-bold fs-1" style="color: #fff;">Caso você não receba recursos/prebendas, informe o valor
                         R$0,00 no campo valor de prebenda</p>
                 </div>
@@ -40,7 +40,7 @@
             <div class="d-flex align-items-center">
                 <i class="fas fa-bell p-4"></i>
                 <div class="d-flex flex-column text-start">
-                    <p class="fw-bold fs-1 mb-0" style="color: #fff; font-weight:900">Prebenda:</p>
+                    <p class="fw-bold fs-1 mb-0" style="color: #fff; font-weight:900">{{ __('Prebenda:') }}</p>
                     <p class="fw-bold fs-1" style="color: #fff">O valor atual da prebenda é de R$ <span
                             id="valor_prebenda"></span></p>
                 </div>
@@ -51,7 +51,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Nova Prebenda</h4>
+                        <h4>{{ __('Nova Prebenda') }}</h4>
                     </div>
                 </div>
             </div>
@@ -61,10 +61,10 @@
                     @csrf
                     <div class="row">
                         <div class="form-group mb-4 col-sm-12 col-md-3">
-                            <label class="control-label">* Ano</label>
+                            <label class="control-label">{{ __('* Ano') }}</label>
                             <select name="ano" id="ano" class="form-control @error('ano') is-invalid @enderror"
                                 value="{{ old('ano') }}">
-                                <option value="">Seleciona o Ano</option>
+                                <option value="">{{ __('Seleciona o Ano') }}</option>
                                 @foreach ($prebendas as $index =>  $prebenda)
                                     <option value="{{ $prebenda->ano }}"
                                         {{ $index == 0 && !old('ano') ? 'data-recent-year selected' : '' }}
@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="form-group mb-4 col-12 col-sm-6 col-md-3">
-                            <label class="control-label">* Valor</label>
+                            <label class="control-label">{{ __('* Valor') }}</label>
                             <input type="text" name="valor" id="valor"
                                 class="form-control @error('valor') is-invalid @enderror" value="{{ old('valor') }}">
                             @error('valor')
@@ -90,10 +90,10 @@
                     <div class="row mt-3">
                         <div class="col-12">
                             <a href="{{ route('clerigos.perfil.prebendas.index') }}" class="btn btn-secondary">
-                                <x-bx-arrow-back /> Voltar
+                                <x-bx-arrow-back /> {{ __('Voltar') }}
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <x-bx-save /> Salvar
+                                <x-bx-save /> {{ __('Salvar') }}
                             </button>
                         </div>
                     </div>
@@ -105,9 +105,9 @@
                     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                         <thead class="thead-light">
                             <tr>
-                                <th>Função</th>
-                                <th class="text-center">Quantidade de Prebendas</th>
-                                <th class="text-center">valor calculado</th>
+                                <th>{{ __('Função') }}</th>
+                                <th class="text-center">{{ __('Quantidade de Prebendas') }}</th>
+                                <th class="text-center">{{ __('valor calculado') }}</th>
                             </tr>
                         </thead>
                         <tbody>

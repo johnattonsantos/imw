@@ -27,7 +27,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>CNPJ por Igrejas</h4>
+                        <h4>{{ __('CNPJ por Igrejas') }}</h4>
                     </div>
                 </div>
             </div>
@@ -37,10 +37,10 @@
                         <div class="row">
                             <div class="col-md-5">
                                 <select class="form-control " name="igreja" id="igreja">
-                                    <option value="todas">Todas</option>
+                                    <option value="todas">{{ __('Todas') }}</option>
                                 </select>
                             </div>
-                            <button class="btn btn-primary" id="btn-alcular">Buscar</button>
+                            <button class="btn btn-primary" id="btn-alcular">{{ __('Buscar') }}</button>
                         </div>
                     </form>
                 </div>
@@ -58,9 +58,9 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="contabilidade-irrf">
             <thead>
                 <tr>
-                    <th>DISTRITO</th>
-                    <th>IGREJA</th>
-                    <th>CNPJ</th>
+                    <th>{{ __('DISTRITO') }}</th>
+                    <th>{{ __('IGREJA') }}</th>
+                    <th>{{ __('CNPJ') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -73,12 +73,12 @@
                 @empty
                 <tr>
                     <td colspan="8">
-                        Não possui dados
+                        {{ __('Não possui dados') }}
                     </td>
                 </tr>
                 @endforelse
             </tbody>
-          </table>            
+          </table>
         </div>
       </div>
     </div>
@@ -105,7 +105,7 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })

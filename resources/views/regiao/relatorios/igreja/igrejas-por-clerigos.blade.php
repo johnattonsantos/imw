@@ -23,7 +23,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Relatório Igrejas por Clérigos</h4>
+                        <h4>{{ __('Relatório Igrejas por Clérigos') }}</h4>
                     </div>
                 </div>
             </div>
@@ -31,9 +31,9 @@
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4">
                         <div class="col-lg-3">
-                            <label class="control-label">* Distrito</label>
+                            <label class="control-label">{{ __('* Distrito') }}</label>
                             <select class="form-control" id="distrito" name="distrito" required>
-                                <option value="all">Todos</option>
+                                <option value="all">{{ __('Todos') }}</option>
                                 @foreach($distritos as $distrito)
                                     <option value="{{ $distrito->id }}" {{ request()->input('distrito', 'all') == $distrito->id ? 'selected' : '' }}>
                                         {{ $distrito->nome }}
@@ -42,9 +42,9 @@
                             </select>
                         </div>
                         <div class="col-lg-3">
-                            <label class="control-label">* Igreja</label>
+                            <label class="control-label">{{ __('* Igreja') }}</label>
                             <select class="form-control" id="igreja" name="igreja" required>
-                                <option value="all">Todas</option>
+                                <option value="all">{{ __('Todas') }}</option>
                                 @foreach($igrejas as $igreja)
                                     <option value="{{ $igreja->id }}" {{ request()->input('igreja', 'all') == $igreja->id ? 'selected' : '' }}>
                                         {{ $igreja->nome }}
@@ -53,9 +53,9 @@
                             </select>
                         </div>
                         <div class="col-lg-3">
-                            <label class="control-label">* Clérigo</label>
+                            <label class="control-label">{{ __('* Clérigo') }}</label>
                             <select class="form-control" id="clerigo" name="clerigo" required>
-                                <option value="all">Todos</option>
+                                <option value="all">{{ __('Todos') }}</option>
                                 @foreach($clerigos as $clerigo)
                                     <option value="{{ $clerigo->id }}" {{ request()->input('clerigo', 'all') == $clerigo->id ? 'selected' : '' }}>
                                         {{ $clerigo->nome }}
@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-lg-3 d-flex align-items-end">
                             <button id="btn_buscar" type="submit" name="action" value="buscar" class="btn btn-primary">
-                                <x-bx-search /> Buscar
+                                <x-bx-search /> {{ __('Buscar') }}
                             </button>
                         </div>
                     </div>
@@ -83,13 +83,13 @@
                         <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="igrejas-por-clerigos">
                             <thead>
                                 <tr>
-                                    <th>DISTRITO</th>
-                                    <th>IGREJA</th>
-                                    <th>CLÉRIGO</th>
-                                    <th>DATA INICIAL</th>
-                                    <th>DATA FINAL</th>
-                                    <th>MEMBROS NO INÍCIO</th>
-                                    <th>MEMBROS NO FINAL</th>
+                                    <th>{{ __('DISTRITO') }}</th>
+                                    <th>{{ __('IGREJA') }}</th>
+                                    <th>{{ __('CLÉRIGO') }}</th>
+                                    <th>{{ __('DATA INICIAL') }}</th>
+                                    <th>{{ __('DATA FINAL') }}</th>
+                                    <th>{{ __('MEMBROS NO INÍCIO') }}</th>
+                                    <th>{{ __('MEMBROS NO FINAL') }}</th>
                                 </tr>
                             </thead>
                             <tbody>

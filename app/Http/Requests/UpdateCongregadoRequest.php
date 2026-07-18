@@ -40,7 +40,7 @@ class UpdateCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($minDate, $currentDate) {
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de nascimento deve estar entre 01/01/1910 e a data atual.');
+                        $fail(__('A data de nascimento deve estar entre 01/01/1910 e a data atual.'));
                     }
                 },
             ],
@@ -49,10 +49,10 @@ class UpdateCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de conversão deve ser após a data de nascimento.');
+                        $fail(__('A data de conversão deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de conversão deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de conversão deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -61,10 +61,10 @@ class UpdateCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de batismo deve ser após a data de nascimento.');
+                        $fail(__('A data de batismo deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de batismo deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de batismo deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -73,10 +73,10 @@ class UpdateCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de batismo no Espírito deve ser após a data de nascimento.');
+                        $fail(__('A data de batismo no Espírito deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de batismo no Espírito deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de batismo no Espírito deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -92,7 +92,7 @@ class UpdateCongregadoRequest extends FormRequest
             'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {
                 if ($value) {
                     if (!preg_match('/@.*\.\w{2,}$/', $value)) {
-                        $fail('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.');
+                        $fail(__('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.'));
                     }
                 }
             }],
@@ -105,10 +105,10 @@ class UpdateCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de casamento deve ser após a data de nascimento.');
+                        $fail(__('A data de casamento deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de casamento deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de casamento deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
