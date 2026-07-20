@@ -35,7 +35,7 @@
                 {{ __('ATENÇÃO!!! Esta ação não pode ser revertida') }} <br>
                 {{ __('Após excluir este membro, o mesmo não será mais listado no ROL. Atual no menu de membros, apenas no rol Permanente e Desligados não sendo mais possível alterar seus dados') }}
               </strong>
-            </div> 
+            </div>
           </div>
         </div>
 
@@ -66,7 +66,7 @@
                   <div class="invalid-feedback">{{ $message }}</div>
               @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -83,7 +83,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group mt-4">
           <a href="{{ route('membro.editar', ['id' => $pessoa->id]) }}" class="btn btn-secondary">

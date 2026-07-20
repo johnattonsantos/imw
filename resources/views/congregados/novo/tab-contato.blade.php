@@ -17,7 +17,7 @@
         </div>
       </div>
 
-    
+
 
       <div class="row mb-4">
         <div class="col-xl-2">
@@ -88,7 +88,7 @@
             <span class="help-block text-danger">{{ $message }}</span>
           @enderror
         </div>
-        
+
       </div>
       <div class="row mb-4">
         <div class="col-xl-12">

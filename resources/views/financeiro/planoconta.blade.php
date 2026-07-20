@@ -42,7 +42,7 @@
                         <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-light">
                                 <tr>
-                
+
                                     <th style="width: 60px;">{{ __('Código') }}</th>
                                     <th>{{ __('Nome') }}</th>
                                     <th width="150"></th>
@@ -58,8 +58,8 @@
                                 @endforeach
                             </tbody>
                         </table>
-                
-                
+
+
                         {{ $planocontas->links('vendor.pagination.index') }}
                     </div>
                 </div>

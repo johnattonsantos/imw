@@ -86,7 +86,7 @@
                         <div class="col-12 exibir-excel">
                             <h4 class="mt-3">{{ $titulo }}</h4>
                              <table class="table table-bordered table-striped table-hover mb-4 display nowrap">
-                                <thead> 
+                                <thead>
                                     <tr>
                                         <th>{{ __('DISTRITO') }}</th>
                                         <th>{{ __('IGREJA') }}</th>
@@ -111,7 +111,7 @@
                                                 <td>-</td>
                                                 <td><b>{{ number_format($dado->distrito->valor, 2, ',', '.') }}</b></td>
                                             </tr>
-                                        @endforeach   
+                                        @endforeach
                                         <tr>
                                             <td><b>{{ __('Total Geral') }}</b></td>
                                             <td>-</td>
@@ -125,7 +125,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                    @endif                                 
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -157,7 +157,7 @@
                                                 <td>-</td>
                                                 <td><b>{{ number_format($dado->distrito->valor, 2, ',', '.') }}</b></td>
                                             </tr>
-                                        @endforeach  
+                                        @endforeach
                                             <tr>
                                                 <td><b>{{ __('Total Geral') }}</b></td>
                                                 <td>-</td>
@@ -171,7 +171,7 @@
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                    @endif                                      
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -210,7 +210,7 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })
@@ -273,7 +273,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
                         doc['footer']=(function(page, pages) {

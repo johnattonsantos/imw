@@ -40,14 +40,14 @@
         }
 
         .table_fixed_box{
-            overflow: auto; 
+            overflow: auto;
             height: 53vh;
         }
 
         .table_fixed_box thead {
             position: -webkit-sticky;
-            position: sticky !important; 
-            top: 0 !important; 
+            position: sticky !important;
+            top: 0 !important;
             z-index: 1;
             background: #e8eaea;
             color:#777;
@@ -89,9 +89,9 @@
         <div class="widget-content widget-content-area" style="padding-bottom: 0;">
           <input type="hidden" id="input-ordenar" value="">
           <form class="form-vertical" id="filter_form">
-            
+
             {{-- Congregação --}}
-            <div class="form-group row mb-4">              
+            <div class="form-group row mb-4">
               <div class="col-lg-4">
                 <label class="control-label">{{ __('Vínculo:') }}</label>
                 <div>
@@ -103,7 +103,7 @@
                               type="radio" name="vinculo" value="M" class="new-control-input vinculoMembro vinculo">
                         <span class="new-control-indicator"></span>{{ __('Membro') }}
                       </label>
-                    
+
                     </div>
                   </div>
                   <div class="form-check form-check-inline">
@@ -138,8 +138,8 @@
             </div>
 
             <div class="form-group row mb-4">
-              
-              <div class="col-lg-4"> 
+
+              <div class="col-lg-4">
                 <label class="control-label">{{ __('Situação:') }}</label>
                 <div>
                   <input type="hidden" id="situacaoEscolhida">
@@ -164,7 +164,7 @@
                   <div class="form-check form-check-inline">
                     <div class="n-chk">
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                        <input {{ request()->get('situacao') == 'todos' || !request()->get('situacao') ? 'checked' : '' }} 
+                        <input {{ request()->get('situacao') == 'todos' || !request()->get('situacao') ? 'checked' : '' }}
                               type="radio" name="situacao" value="todos" class="new-control-input situacaoTodos situacao">
                         <span class="new-control-indicator"></span>{{ __('Todos') }}
                       </label>
@@ -172,7 +172,7 @@
                   </div>
                 </div>
               </div>
-              
+
 
               <div class="col-lg-6">
                 <label class="control-label">{{ __('Filtro:') }}</label>
@@ -190,7 +190,7 @@
                   <div class="form-check form-check-inline">
                     <div class="n-chk">
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                        <input {{ request()->get('dt_filtro') == 'data_nascimento' ? 'checked' : '' }} 
+                        <input {{ request()->get('dt_filtro') == 'data_nascimento' ? 'checked' : '' }}
                               type="radio" name="dt_filtro" value="data_nascimento" class="new-control-input filtro">
                         <span class="new-control-indicator"></span>{{ __('Nascimento') }}
                       </label>
@@ -199,7 +199,7 @@
                   <div class="form-check form-check-inline">
                     <div class="n-chk">
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                        <input {{ request()->get('dt_filtro') == 'dt_recepcao' ? 'checked' : '' }} 
+                        <input {{ request()->get('dt_filtro') == 'dt_recepcao' ? 'checked' : '' }}
                               type="radio" name="dt_filtro" value="dt_recepcao" class="new-control-input filtro">
                         <span class="new-control-indicator"></span>{{ __('Recepção') }}
                       </label>
@@ -208,7 +208,7 @@
                   <div class="form-check form-check-inline">
                     <div class="n-chk">
                       <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                        <input {{ request()->get('dt_filtro') == 'dt_exclusao' ? 'checked' : '' }} 
+                        <input {{ request()->get('dt_filtro') == 'dt_exclusao' ? 'checked' : '' }}
                               type="radio" name="dt_filtro" value="dt_exclusao" class="new-control-input filtro">
                         <span class="new-control-indicator"></span>{{ __('Exclusão') }}
                       </label>
@@ -223,7 +223,7 @@
               </div>
 
             </div>
-          
+
 
             {{-- Inserção de data --}}
             <div class="form-group row mb-4 {{ !request()->get('dt_filtro') ? 'd-none' : '' }}" id="filtros_data">
@@ -266,7 +266,7 @@
   $('#btn_buscar').click(function () {
     $('#filter_form').removeAttr('target');
   })
-  
+
   $('#btn_relatorio').click(function () {
     $('#filter_form').attr('target', '_blank');
   })
@@ -296,7 +296,7 @@
         url: url,
         dataType: "html",
         success: function (response) {
-          $('#conteudo-lista').html(response)                
+          $('#conteudo-lista').html(response)
         },
         error: function (request, status, error) {
           toastr.warning('Não retornou dados em sua consulta');

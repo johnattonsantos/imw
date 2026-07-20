@@ -90,7 +90,7 @@
         <div class="info">
             <div class="title">MOVIMENTO DIÁRIO - {{ session('session_perfil')->instituicao_nome }}</div>
             <div class="period">
-                Período de {{ \Carbon\Carbon::parse(request()->input('dt_inicial'))->format('d/m/Y') }} 
+                Período de {{ \Carbon\Carbon::parse(request()->input('dt_inicial'))->format('d/m/Y') }}
                 a {{ \Carbon\Carbon::parse(request()->input('dt_final'))->format('d/m/Y') }}
             </div>
         </div>

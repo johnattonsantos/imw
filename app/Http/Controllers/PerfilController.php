@@ -16,7 +16,7 @@ class PerfilController extends Controller
         $perfisUsuarios = PerfilUser::with(['perfil', 'instituicao'])
         ->where('user_id', $usuario->id)
         ->get();
-        
+
         return view('perfil.index', compact('usuario', 'perfisUsuarios'));
     }
 
@@ -29,5 +29,5 @@ class PerfilController extends Controller
         $usuario = app(ListPerfilService::class)->carteiraDigital();
         return view('perfil.carteira-digital', ['usuario' => $usuario]);
     }
-    
+
 }

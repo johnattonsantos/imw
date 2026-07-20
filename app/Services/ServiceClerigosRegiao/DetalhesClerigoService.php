@@ -4,7 +4,9 @@ namespace App\Services\ServiceClerigosRegiao;
 
 use App\Models\PessoasPessoa;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DetalhesClerigoService
 {
@@ -16,8 +18,7 @@ class DetalhesClerigoService
             ->Leftjoin('formacoes', 'formacoes.id','pessoas_pessoas.formacao_id')
             ->findOrFail($id);
         if ($clerigo->foto) {
-            $disk = Storage::disk('s3');
-            $clerigo->foto = $disk->temporaryUrl($clerigo->foto, Carbon::now()->addMinutes(15));
+            $clerigo->foto = $this->resolveFotoUrl((string) $clerigo->foto);
         }
         $clerigo->data_nascimento = formatDate($clerigo->data_nascimento);
         $clerigo->data_consagracao = formatDate($clerigo->data_consagracao);
@@ -26,5 +27,34 @@ class DetalhesClerigoService
 
 
         return $clerigo;
+    }
+
+    private function resolveFotoUrl(string $foto): string
+    {
+        if (Str::startsWith($foto, ['http://', 'https://'])) {
+            return $foto;
+        }
+
+        if (Str::startsWith($foto, ['/storage/', 'storage/'])) {
+            return Str::startsWith($foto, '/') ? $foto : '/' . ltrim($foto, '/');
+        }
+
+        if (!$this->hasS3Credentials()) {
+            return asset('theme/images/sem-foto.jpg');
+        }
+
+        try {
+            return Storage::disk('s3')->temporaryUrl($foto, Carbon::now()->addMinutes(15));
+        } catch (\Throwable $e) {
+            return asset('theme/images/sem-foto.jpg');
+        }
+    }
+
+    private function hasS3Credentials(): bool
+    {
+        return filled(Config::get('filesystems.disks.s3.key'))
+            && filled(Config::get('filesystems.disks.s3.secret'))
+            && filled(Config::get('filesystems.disks.s3.region'))
+            && filled(Config::get('filesystems.disks.s3.bucket'));
     }
 }

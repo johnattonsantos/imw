@@ -34,7 +34,7 @@
                     <div class="col-lg-3">
                         <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
-                
+
                     <div class="col-lg-3">
                         <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>

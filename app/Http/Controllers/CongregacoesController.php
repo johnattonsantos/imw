@@ -31,7 +31,7 @@ class CongregacoesController extends Controller
 
     public function novo()
     {
-        try { 
+        try {
             return view('congregacoes.create', ['ufs' => LocationUtils::fetchUFs()]);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', __('Não foi possível criar uma nova congregação'));

@@ -37,7 +37,7 @@ class FinanceiroCaixasController extends Controller
         }
     }
 
-    public function deletar($id) 
+    public function deletar($id)
     {
         try {
             DB::beginTransaction();
@@ -50,12 +50,12 @@ class FinanceiroCaixasController extends Controller
         }
     }
 
-    
+
     public function editar($id)
     {
         try {
             $caixa = FinanceiroCaixa::findOrFail($id);
-            return view('financeiro.caixas.editar', compact('caixa', 'id'));    
+            return view('financeiro.caixas.editar', compact('caixa', 'id'));
         }  catch(FinanceiroCaixaNotFoundException $e) {
             return redirect()->route('financeiro.caixas')->with('error', __('Registro não encontrado.'));
         }
@@ -65,7 +65,7 @@ class FinanceiroCaixasController extends Controller
     }
 
     public function update(UpdateCaixasRequest $request, $id)
-    {   
+    {
         try {
             DB::beginTransaction();
             app(UpdateFinanceiroCaixasService::class)->execute($request->all(), $id);

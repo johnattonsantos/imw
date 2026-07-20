@@ -125,7 +125,7 @@
                                 <div class="n-chk">
                                     <label class="new-control new-checkbox checkbox-outline-success ">
                                         <input type="checkbox" {{ $user->pessoa_id ? 'checked' : '' }} id="chk_clerigo_id" data-clerigoId="{{ $user->pessoa_id }}" name="chk_clerigo_id"  class="new-control-input">
-                                        <span class="new-control-indicator"></span> 
+                                        <span class="new-control-indicator"></span>
                                         <p>{{ __('Vincular Clérigo(a)') }} <span id="clerigo_nome" class="font-weight-bold font-italic">{{ optional($user->pessoa)->nome }}</span> {{ __('ao cadastro?') }}</p>
                                     </label>
                                     <input type="hidden" name="pessoa_id" id="pessoa_id" value="{{ $user->pessoa_id }}">

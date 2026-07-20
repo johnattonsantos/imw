@@ -43,16 +43,16 @@
                                         <div class="media-body">
                                             <h5 class="">Nome: {{ $notificacao->membro->nome }}</h5>
                                             <p class="meta-time">
-                                                Data de registro da transferência: 
-                                                {{ $notificacao->dt_abertura 
-                                                    ? \Carbon\Carbon::parse($notificacao->dt_abertura)->format('d/m/Y') 
-                                                    : 'Sem informações' 
+                                                Data de registro da transferência:
+                                                {{ $notificacao->dt_abertura
+                                                    ? \Carbon\Carbon::parse($notificacao->dt_abertura)->format('d/m/Y')
+                                                    : 'Sem informações'
                                                 }}
                                             </p>
                                             <p class="meta-time">
                                                 Origem:
-                                                {{ $notificacao->regiaoOrigem->nome ?? 'Sem região' }} 
-                                                - {{ $notificacao->distritoOrigem->nome ?? 'Sem distrito' }} 
+                                                {{ $notificacao->regiaoOrigem->nome ?? 'Sem região' }}
+                                                - {{ $notificacao->distritoOrigem->nome ?? 'Sem distrito' }}
                                                 - {{ $notificacao->igrejaOrigem->nome ?? 'Sem igreja' }}
                                             </p>
                                         </div>

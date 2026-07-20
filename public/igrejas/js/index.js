@@ -7,7 +7,7 @@ $(document).ready(function() {
     }
 
     // ativa as ações dos botões na datatable
-    function activeActions() { 
+    function activeActions() {
         // ação de remover
         $('.btn-confirm-delete').on('click', function() {
             const formId = $(this).data('form-id')
@@ -52,8 +52,8 @@ $(document).ready(function() {
             }
         },
         columns: [
-            {data: 'cidade', name: 'cidade'}, 
-            {data: 'nome', name: 'igreja'},  
+            {data: 'cidade', name: 'cidade'},
+            {data: 'nome', name: 'igreja'},
             {data: 'pastor', name: 'pastor'},
             {data: 'actions', name: 'Ações'},
         ],

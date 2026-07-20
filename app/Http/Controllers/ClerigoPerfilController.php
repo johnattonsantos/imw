@@ -30,7 +30,7 @@ class ClerigoPerfilController extends Controller
             DB::beginTransaction();
             app(StoreDependenteService::class)->execute($request->user()->pessoa_id, $request->validated());
             DB::commit();
-            
+
             return redirect()->route('clerigos.perfil.dependentes.index')->with('success', __('Dependente cadastrado com sucesso.'));
         } catch (\Exception $e) {
             dd($e);
@@ -50,7 +50,7 @@ class ClerigoPerfilController extends Controller
             DB::beginTransaction();
             app(UpdateDependenteService::class)->execute($dependente, $request->validated());
             DB::commit();
-            
+
             return redirect()->route('clerigos.perfil.dependentes.index')->with('success', __('Dependente atualizado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();

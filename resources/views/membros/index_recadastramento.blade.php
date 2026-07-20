@@ -54,7 +54,7 @@
                         <!-- <div class="form-check form-check-inline">
                             <div class="n-chk">
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                                    <input type="radio" name="status" value="rol_atual" class="new-control-input" 
+                                    <input type="radio" name="status" value="rol_atual" class="new-control-input"
                                            {{ request()->input('status') == 'rol_atual' || request()->input('status') == null ? 'checked' : '' }}>
                                     <span class="new-control-indicator"></span>{{ __('Ativos') }}
                                 </label>
@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    
+
 @endsection
 
 @section('extras-scripts')

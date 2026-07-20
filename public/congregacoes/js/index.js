@@ -7,7 +7,7 @@ $(document).ready(function() {
     }
 
     // ativa as ações dos botões na datatable
-    function activeActions() { 
+    function activeActions() {
         // ação de remover
         $('.btn-confirm-delete').on('click', function() {
             const formId = $(this).data('form-id')

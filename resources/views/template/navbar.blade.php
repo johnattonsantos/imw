@@ -8,7 +8,7 @@
              </svg></a>
          <ul class="navbar-item flex-row search-ul">
             <li class="nav-item align-self-center search-animated">
-                                              
+
             </li>
 	         </ul>
 	         <ul class="navbar-item flex-row navbar-dropdown">
@@ -88,7 +88,7 @@
                             <span> {{ __('app.navigation.change_institution') }}</span>
                         </a>
                     </div>
-                    
+
                      <div class="dropdown-item">
                          <!-- Este link atua como um botão para submeter o formulário de logout -->
                          <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

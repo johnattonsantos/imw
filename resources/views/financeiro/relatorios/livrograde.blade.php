@@ -235,10 +235,10 @@
         });
 
 
-        
+
 
         function gerarPdf() {
-            
+
             const doc = new jspdf.jsPDF({
                 orientation: 'l', // 'l' for landscape, 'p' for portrait
                 unit: 'mm',
@@ -249,8 +249,8 @@
                 },
             })
             const totalPagesExp = doc.internal.getNumberOfPages();
-            doc.autoTable({ 
-                
+            doc.autoTable({
+
                 head: headRows(),
                 body: bodyRows(40),
                 willDrawPage: function (data) {
@@ -281,7 +281,7 @@
                 head: headRows(),
                 body: bodyRows(5),
                 theme: 'grid',
-                html: '#livrograde' 
+                html: '#livrograde'
             })
 
             doc.save('table.pdf')

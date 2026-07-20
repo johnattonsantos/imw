@@ -70,7 +70,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-          
+
                     <div class="form-group mb-4 col-md-6">
                         <label class="control-label">{{ __('Telefone') }}</label>
                         <input type="text" id="telefone_preferencial" name="telefone_preferencial" class="form-control @error('telefone_preferencial') is-invalid @enderror" placeholder="{{ __('ex: +55 (00) 0000-0000') }}" value="{{ old('telefone_preferencial', $visitante->telefone_preferencial ?? '') }}">
@@ -81,7 +81,7 @@
 
                 </div>
                 <div class="row">
-                    
+
                   <!--   <div class="form-group mb-4 col-md-6">
                         <label class="control-label">{{ __('Telefone Alternativo') }}</label>
                         <input type="text" id="telefone_alternativo" name="telefone_alternativo" class="form-control @error('telefone_alternativo') is-invalid @enderror" value="{{ old('telefone_alternativo', $visitante->telefone_alternativo ?? '') }}">

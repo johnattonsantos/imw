@@ -117,6 +117,11 @@ class PrebendasClerigosController extends Controller
 
     public function updatePrebenda(Request $request)
     {
+        $request->validate([
+            'ano' => 'required',
+            'valor' => 'required',
+        ]);
+
         app(UpdatePrebendaClerigosService::class)->execute($request);
         return redirect()->route('clerigos.prebendas.index')->with('success', __('Valor da prebenda alterado com sucesso'))->withInput();
     }

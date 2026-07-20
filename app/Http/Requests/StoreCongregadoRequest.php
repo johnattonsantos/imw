@@ -164,5 +164,5 @@ class StoreCongregadoRequest extends FormRequest
             ]);
         }
     }
-    
+
 }

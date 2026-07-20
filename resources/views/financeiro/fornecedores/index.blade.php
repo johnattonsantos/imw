@@ -132,8 +132,8 @@
                                                                     </svg>
                                                                 </button>
                                                             </form>
-                                                        </td>  
-                                                    </tr>    
+                                                        </td>
+                                                    </tr>
                                             @endforeach
                                         </tbody>
                                     </table>

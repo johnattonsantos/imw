@@ -782,7 +782,7 @@
             </div>
         </div>
     </div>
-@else 
+@else
     <div class="row flex-fill mt-4">
         <div class="col-12 text-center">
             <div class="card h-100">

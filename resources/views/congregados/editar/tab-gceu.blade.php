@@ -24,7 +24,7 @@
                             </select>
                         </td>
                         <td>
-                    
+
                             <select class="form-control gceu-funcao" name="gceu-funcao[]">
                                 <option value="">{{ __('Selecione') }}</option>
                                 @foreach ($gceuFuncoes as $funcao)

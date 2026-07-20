@@ -236,7 +236,7 @@
 
     $('#distrito').change(function () {
         $('#igreja').html('<option value="" disabled selected hidden>...</option>');
-        
+
         const result = $.get(`/instituicoes/igrejasByDistrito/${this.value}`, function (igrejas) {
             $('#igreja').html('<option value="all">todas</option>');
             igrejas.forEach(igreja => {

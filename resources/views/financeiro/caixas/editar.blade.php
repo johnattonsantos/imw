@@ -44,11 +44,11 @@
                                         <option value="C" {{ old('tipo', $caixa->tipo) == 'C' ? 'selected' : '' }}>{{ __('Congregação') }}</option>
                                         <option value="S" {{ old('tipo', $caixa->tipo) == 'S' ? 'selected' : '' }}>{{ __('Secundário') }}</option>
                                     </select>
-                                
+
                                     @error('tipo')
                                         <small class="form-text text-danger">{{ $message }}</small>
                                     @enderror
-                                </div>                                
+                                </div>
                             </div>
                         </div>
                     </div>

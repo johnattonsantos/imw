@@ -147,8 +147,8 @@
                     <div class="categoria">{{ isset($usuario->categoria) ? mb_convert_case($usuario->categoria, MB_CASE_TITLE, "UTF-8") : '' }}</div>
                     <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
                     <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
-                    <div class="validade">{{ __('Validade: 31/10/2027') }}</div>
-                    <div class="contato-sede">{{ __('Sede Administrativa: :telefone', ['telefone' => $telefoneSedeAdministrativa]) }}</div>
+                    <div class="validade">{{ __('Validade') }}: 31/10/2027</div>
+                    <div class="contato-sede">{{ __('Sede Administrativa') }}: {{ $telefoneSedeAdministrativa }}</div>
                     <div class="regiao_bottom">{{ $regiaoEclesiastica }}</div>
                     <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
                 </div>

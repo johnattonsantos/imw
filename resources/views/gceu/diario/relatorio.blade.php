@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-                        
+
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="row">
@@ -108,14 +108,14 @@
                                     </table>
                                 </div>
 
-                            
-                                
+
+
                             </div>
                         </div>
                     </div>
                 @endif
             </div>
-                
+
         </div>
     </div>
 @endsection
@@ -161,7 +161,7 @@
                             //doc.pageMargins = [20,50,20,30];
                             doc.defaultStyle.fontSize = 9;
                             doc.styles.tableHeader.fontSize = 9;
-                            
+
 
                             const hoje = new Date();
                             const dataFormatada = hoje.toLocaleDateString('pt-BR');
@@ -188,7 +188,7 @@
                                 }
                             });
 
-                            var numColumns = doc.content[0].table.body[0].length; 
+                            var numColumns = doc.content[0].table.body[0].length;
                             doc.content[0].table.widths = Array(numColumns).fill('*');
 
 

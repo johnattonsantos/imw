@@ -110,7 +110,7 @@
                         $totalBaseCalculos += $valorBase;
                         $totalRedutor += $valorRedutor;
                         $totalIrrfCalculado += $valorIrrf;
-                        $totalRetido += $valorRetido;                        
+                        $totalRetido += $valorRetido;
                         $totalRepassado += $valorRepassado;
                     @endphp
                     <tr>
@@ -160,7 +160,7 @@
                     </tr>
                 @endif
             </tfoot>
-          </table>            
+          </table>
         </div>
       </div>
     </div>
@@ -187,7 +187,7 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })
@@ -248,7 +248,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
                         doc['footer']=(function(page, pages) {

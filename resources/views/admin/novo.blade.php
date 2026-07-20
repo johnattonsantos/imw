@@ -166,13 +166,13 @@
                     </div>
                 </div>
 
-                
+
                 <div class="row mt-4" id="check_clerigo_container" {{ old('pessoa_id') ? '' : 'hidden' }}>
                     <div class="col-12">
                         <div class="form-group">
                             <div class="n-chk">
                                 <label class="new-control new-checkbox checkbox-outline-success ">
-                                    <input id="chk_clerigo_id" data-clerigoId="{{ old('pessoa_id') }}" name="chk_clerigo_id" type="checkbox" class="new-control-input" {{ old('pessoa_id') ? 'checked' : '' }}>                                        <span class="new-control-indicator"></span> 
+                                    <input id="chk_clerigo_id" data-clerigoId="{{ old('pessoa_id') }}" name="chk_clerigo_id" type="checkbox" class="new-control-input" {{ old('pessoa_id') ? 'checked' : '' }}>                                        <span class="new-control-indicator"></span>
                                     <p>{{ __('Vincular Vincular Clérigo(a)') }} <span id="clerigo_nome" class="font-weight-bold font-italic">
                                         {{ old('pessoa_id') ? \App\Models\PessoasPessoa::find(old('pessoa_id'))->nome : '' }}
                                     </span> {{ __('ao cadastro?') }}</p>

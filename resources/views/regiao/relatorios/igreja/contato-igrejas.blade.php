@@ -93,7 +93,7 @@
                 </tr>
                 @endforelse
             </tbody>
-          </table>            
+          </table>
         </div>
       </div>
     </div>
@@ -120,7 +120,7 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })

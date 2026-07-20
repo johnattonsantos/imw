@@ -120,7 +120,7 @@ class InstituicaoRegiaoDistritosController extends Controller
         if (!$data['instituicao']) {
             return redirect()->back()->with('error', __('Essa instituição não está ativa. Por favor ative ela e tente novamente'));
         }
-        
+
         return view('instituicoes.nomeacoes.index', $data);
     }
 

@@ -31,7 +31,7 @@ class StoreDisciplinarRequest extends FormRequest
             'dt_inicio' => [
                 'required',
                 'date',
-                new RangeDateRule, 
+                new RangeDateRule,
                 new DatePreviousToRecebimentoRule($membroId)
             ],
             'dt_termino' => [

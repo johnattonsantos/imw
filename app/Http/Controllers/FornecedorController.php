@@ -24,7 +24,7 @@ class FornecedorController extends Controller
 
     public function novo(){
         return view('financeiro.fornecedores.novo');
-    }  
+    }
 
     public function store(StoreFornecedorRequest $request)
     {
@@ -39,7 +39,7 @@ class FornecedorController extends Controller
         }
     }
 
-    public function deletar($id) 
+    public function deletar($id)
     {
         try {
             DB::beginTransaction();
@@ -52,12 +52,12 @@ class FornecedorController extends Controller
         }
     }
 
-      
+
     public function editar($id)
     {
         try {
             $fornecedor = FinanceiroFornecedores::findOrFail($id);
-            return view('financeiro.fornecedores.editar', compact('fornecedor', 'id'));    
+            return view('financeiro.fornecedores.editar', compact('fornecedor', 'id'));
         }  catch(FornecedorNotFoundException $e) {
             return redirect()->route('fornecedor.index')->with('error', __('Registro não encontrado.'));
         }
@@ -67,7 +67,7 @@ class FornecedorController extends Controller
     }
 
     public function update(UpdateFornecedorRequest $request, $id)
-    {   
+    {
         try {
             DB::beginTransaction();
             app(UpdateFornecedorService::class)->execute($request->all(), $id);

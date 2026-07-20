@@ -269,19 +269,19 @@
         $('#caixa_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
-    
+
         $('#plano_conta_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
         $('#plano_conta_id').change(function() {
             aplicarRegraTipoBeneficiarioPorPlanoConta();
         });
 
-        
+
         // evento de exibição do descritivo do pagante/favorecido
         $('#tipo_pagante_favorecido_id').change(function() {
             var tipoPaganteFavorecido = this.value;

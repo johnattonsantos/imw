@@ -215,7 +215,7 @@
                                                             y2="12"></line>
                                                     </svg>
                                                 </a>
-                                            
+
                                                 @if (!$instituicao->deleted_at)
                                                 <a href="javascript:void(0);" title="{{ __('Visualizar') }}"
                                                     class="btn btn-sm btn-info mr-1 btn-rounded btn-view-details"
@@ -245,7 +245,7 @@
                                                     </svg>
                                                 </a>
                                                 @endif
-                                                
+
                                                 @if ((int) $instituicao->ativo === 0 || $instituicao->deleted_at)
                                                     <form
                                                         action="{{ route('instituicoes-regiao.ativar', [$instituicao->id, 'search' => request('search')]) }}"

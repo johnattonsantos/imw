@@ -118,7 +118,7 @@
                                         </option>
                                     @endif
                                 @endforeach
-                            @else 
+                            @else
                                 @foreach ($tiposPagantesFavorecidos as $tipoPaganteFavorecido)
                                         @if (($tipoPaganteFavorecido->id != 1) && ($tipoPaganteFavorecido->id != 2) && ($tipoPaganteFavorecido->id != 3))
                                             <option value="{{ $tipoPaganteFavorecido->id }}">
@@ -240,13 +240,13 @@
         $('#caixa_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
-    
+
         $('#plano_conta_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
         $('#plano_conta_id').change(function() {
             aplicarRegraTipoPagantePorPlanoConta();
@@ -362,7 +362,7 @@
             submitButton.prop('disabled', true);
             var originalText = submitButton.html();
             submitButton.html('<i class="fa fa-spinner fa-spin"></i> Aguarde...');
-         
+
         });
     </script>
 @endsection

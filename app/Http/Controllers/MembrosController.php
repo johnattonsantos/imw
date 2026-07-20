@@ -197,7 +197,7 @@ class MembrosController extends Controller
 
     public function storeReceberNovo(StoreReceberNovoMembroRequest $request, $id)
     {
-        try {   
+        try {
             $data = app(StoreReceberNovoMembroService::class)->execute($request->all(), $id);
             if($data == 'idade'){
                 return redirect()->back()->with('error', __('Não pode ser membro, pois a idade desse congregado é menor que 11 anos'));

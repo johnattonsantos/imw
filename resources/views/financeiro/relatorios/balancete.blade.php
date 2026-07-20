@@ -35,7 +35,7 @@
                     <div class="col-lg-3">
                         <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
-                
+
                     <div class="col-lg-3">
                         <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
@@ -86,7 +86,7 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">                            
+                        <div class="col-12">
                             <table class="table table-striped" id="tblExport" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
@@ -201,7 +201,7 @@
                                                 @endforeach
 
                                                 {{-- Renderizar a tabela --}}
-                                                
+
                                                 @foreach ($lancamentos as $index => $lancamento)
                                                 @if (!in_array($lancamento->numeracao, $numerosJaExibidos))
                                                     @php
@@ -228,7 +228,7 @@
                                                 </tr>
                                                 @endforeach
                                                 <!-- <tr>
-                                                    <th></th>   
+                                                    <th></th>
                                                     <th  colspan="5" style="text-align: left;">{{ __('Total Conta') }}</th>
                                                     @php
                                                         $total = isset($total) ? $total : [];
@@ -236,10 +236,10 @@
                                                     <th style="text-align: right;">R$ {{ number_format(array_sum($total), 2, ',', '.') }}</th>
                                                 </tr> -->
                                             </tbody>
-                                        </table>                                        
+                                        </table>
                                     </td>
                                 </tr>
-                                
+
                                 </tbody>
                             </table>
                         </div>

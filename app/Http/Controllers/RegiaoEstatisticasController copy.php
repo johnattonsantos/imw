@@ -212,7 +212,7 @@ class RegiaoEstatisticasController extends Controller
             // ->when($params['dt_filtro'], function ($query) use ($params) {
             //     if ($params['dt_filtro'] == 'data_nascimento') {
             //         return $this->handleFilterDtNascimento($query, $params['dt_inicial'], $params['dt_final']);
-            //     } else {   
+            //     } else {
             //         return $this->handleRolDates($query, $params['dt_filtro'], $params['dt_inicial'], $params['dt_final']);
             //     }
             // })

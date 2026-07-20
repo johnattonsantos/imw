@@ -362,6 +362,6 @@
                     button.html(originalButtonText);
                 }
             });
-        });        
+        });
     </script>
 @endsection

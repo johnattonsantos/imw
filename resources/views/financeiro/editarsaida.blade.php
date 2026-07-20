@@ -152,10 +152,10 @@
         <div class="col-12 mb-4">
             <h4><b>{{ __('Anexos') }}</b></h4>
         </div>
-        <div id="contentAnexos" 
+        <div id="contentAnexos"
              data-url="{{ route('financeiro.htmlManipularAnexos', ['lancamento' => $saida->id]) }}"
              class="loadable">
-        </div> 
+        </div>
 
         <div class="row mb-4 justify-content-center">
              <button type="submit" title="{{ __('Atualizar movimentação de entrada') }}" class="btn btn-primary btn-lg ml-4">
@@ -173,13 +173,13 @@
         <form class="row mb-4" method="POST" id="novoAnexoForm" data-url="{{ route('financeiro.storeNewAnexo', ['lancamento' => $saida->id]) }}">
             <div class="col-md-12 mb-4">
                 <label for="anexo">{{ __('Anexo') }}</label>
-                <input  type="file" 
+                <input  type="file"
                         class="mb-3 form-control-file @error('anexo') is-invalid @enderror"
                         id="anexo" name="anexo">
                 <label for="descricao_anexo">{{ __('Descrição do Anexo') }}</label>
-                <textarea class="form-control @error('descricao_anexo') is-invalid @enderror" 
+                <textarea class="form-control @error('descricao_anexo') is-invalid @enderror"
                           id="descricao_anexo"
-                          name="descricao_anexo" 
+                          name="descricao_anexo"
                           rows="1"></textarea>
                 @error('anexo')
                     <span class="help-block text-danger">{{ $message }}</span>
@@ -240,13 +240,13 @@
         $('#caixa_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
-    
+
         $('#plano_conta_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
         $('#plano_conta_id').change(function() {
             aplicarRegraTipoBeneficiarioPorPlanoConta();
@@ -342,7 +342,7 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 beforeSend: function () {
-                    $('#novoAnexoModalContent').block({ 
+                    $('#novoAnexoModalContent').block({
                         message: '<div class="spinner-border mr-2 text-secondary align-self-center loader-sm"></div>',
                         overlayCSS: {
                             backgroundColor: '#fff',
@@ -450,7 +450,7 @@
                 },
                 method: 'DELETE',
                 beforeSend: function () {
-                    $('#anexosList').block({ 
+                    $('#anexosList').block({
                         message: '<div class="spinner-border mr-2 text-secondary align-self-center loader-sm"></div>',
                         overlayCSS: {
                             backgroundColor: '#fff',
@@ -483,7 +483,7 @@
                 event.preventDefault();
                 $('#novoAnexoForm')[0].reset();
                 $('#novoAnexoModal').modal('show');
-            })        
+            })
         }
     </script>
 @endsection

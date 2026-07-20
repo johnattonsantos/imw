@@ -187,7 +187,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         function abrirModal(instituicao_id,id, funcao) {
             const nomeacaoId = id;

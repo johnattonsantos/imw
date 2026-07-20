@@ -51,7 +51,7 @@ $(document).ready(function() {
             }
         });
     })
-  
+
 
     // atrela a pesquisa pelo formulário ao datatable
     $('#searchForm').on('submit', function(e) {

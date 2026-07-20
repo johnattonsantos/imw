@@ -480,10 +480,10 @@ class RegiaoRelatorioController extends Controller
     public function cnpjIgreja(Request $request)
     {
         $data = app(CnpjIgreja::class)->execute($request->all());
- 
+
         return view('regiao.relatorios.igreja.cnpj-igrejas', $data);
     }
-       
+
     public function contatoIgreja(Request $request)
     {
         $data = app(ContatoIgreja::class)->execute($request->all());

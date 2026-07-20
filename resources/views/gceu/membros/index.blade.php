@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div>
-                        
+
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="widget-content-area row">
@@ -59,13 +59,13 @@
                             </button>
                         </div>
                     </div>
-                    
+
                     <div class="row" style="display: flex;flex-direction: row;align-items: baseline;align-content: space-around;flex-wrap: wrap;justify-content: center;">
                     @foreach ($totalFuncao as $total)
                         @if($total->total > 1)
                             <div class="card bg-warning col-lg-3" style="float: left; margin: 3px;">
                                 <div class="card-body">
-                                    
+
                                     <p>
                                         <b>{{ __('ATENÇÃO:') }}</b>
                                         </p>
@@ -75,7 +75,7 @@
                         @endif
                     @endforeach
                     </div>
-                    
+
                 </form>
                 @if(request()->input('membro_id'))
                  <form method="POST" action="{{ route('gceu.membro.update', ['id' => request()->input('membro_id')]) }}" enctype="multipart/form-data">
@@ -234,7 +234,7 @@
             dataType: "json",
             data: {
                 valor, gceu_id, membro_id, dt_gceu, nome
-            },            
+            },
             success: function (response) {
                 if(valor == 1){
                     var msg = `Presença confirmada com sucesso para ${nome}`

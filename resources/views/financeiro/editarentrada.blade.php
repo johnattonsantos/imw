@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-           
+
             <form action="{{ route('financeiro.entrada.update', $entrada->id) }}" method="POST"
                 class="widget-content widget-content-area">
                 @csrf
@@ -138,7 +138,7 @@
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="col-4 ano_mes">
                     <label for="ano_mes">{{ __('Mês/Ano') }}</label>
                     <div class="input-group">
@@ -226,13 +226,13 @@
         $('#caixa_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
-    
+
         $('#plano_conta_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
         $(document).ready(function() {
             aplicarRegraTipoPagantePorPlanoConta();

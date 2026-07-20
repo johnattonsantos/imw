@@ -13,9 +13,8 @@ class MaxPrebendasClerigoCalculator implements MaxPrebendasClerigoCalculatorInte
         $idsFuncoesMinisteriais = $pessoa->nomeacoesAtivas->pluck('funcao_ministerial_id');
 
 		$maxQtdPrebendas = PessoaFuncaoministerial::whereIn('id', $idsFuncoesMinisteriais)
-			->orderBy('qtd_prebendas', 'desc')
-			->first()
-			->qtd_prebendas;
+            ->whereNotNull('qtd_prebendas')
+            ->max('qtd_prebendas') ?? 0;
 
         return (float) $maxQtdPrebendas * (float) $prebenda->valor;
     }

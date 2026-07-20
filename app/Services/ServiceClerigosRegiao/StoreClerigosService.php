@@ -6,18 +6,20 @@ use App\Models\PessoaNomeacao;
 use App\Models\PessoasPessoa;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Ramsey\Uuid\Uuid;
 class StoreClerigosService
 {
     public function execute($request)
     {
+        $cpf = $request->filled('cpf') ? $request->input('cpf') : null;
+
         if ($request->file('image')) {
             $photo = $request->file('image');  
                 try {
                     // Gerar um UUID para o nome do arquivo
                     $filename = Uuid::uuid4()->toString() . '.' . $photo->getClientOriginalExtension();                        
-                    // Fazer upload do arquivo para o S3 usando o método storeAs
-                    $filePath = $photo->storeAs('fotos', $filename, 's3');
+                    $filePath = $this->storeFoto($photo, $filename);
                 } catch (\Exception $e) {
                     // Tratamento de erro, caso o upload falhe
                     return response()->json(['error' => $e->getMessage()], 500);
@@ -33,7 +35,7 @@ class StoreClerigosService
             'orgao_emissor' => $request['orgao_emissor'],
             'data_emissao' => $request['data_emissao'],
             'foto' => $filePath,
-            'cpf' => $request['cpf'],
+            'cpf' => $cpf,
             'endereco' => $request['endereco'],
             'numero' => $request['numero'],
             'regiao_id' =>   $data['regiao_id'] = $instituicaoId,
@@ -59,9 +61,9 @@ class StoreClerigosService
             'habilitacao_uf' => $request->input('habilitacao_uf', ''),
             'ctps' => $request->input('ctps', ''),
             'ctps_emissao' => $request->input('ctps_emissao', ''),
-            'titulo_eleitor' => $request['titulo_eleitor'],
-            'titulo_eleitor_secao' => $request['titulo_eleitor_secao'],
-            'titulo_eleitor_zona' => $request['titulo_eleitor_zona'],
+            'titulo_eleitor' => $request->input('titulo_eleitor', ''),
+            'titulo_eleitor_secao' => $request->input('titulo_eleitor_secao', ''),
+            'titulo_eleitor_zona' => $request->input('titulo_eleitor_zona', ''),
             'formacao_id' => $request['formacao_id'],
             'categoria' => $request['categoria'],
             'situacao_id' => $request['situacao'],
@@ -70,5 +72,21 @@ class StoreClerigosService
             'data_integralizacao' => $request['data_integralizacao'],
             'rol' => $request['rol'],
         ]);
+    }
+
+    private function storeFoto($photo, string $filename): string
+    {
+        $disk = $this->hasS3Credentials() ? 's3' : 'public';
+        $filePath = $photo->storeAs('fotos', $filename, $disk);
+
+        return $disk === 'public' ? 'storage/' . ltrim($filePath, '/') : $filePath;
+    }
+
+    private function hasS3Credentials(): bool
+    {
+        return filled(Config::get('filesystems.disks.s3.key'))
+            && filled(Config::get('filesystems.disks.s3.secret'))
+            && filled(Config::get('filesystems.disks.s3.region'))
+            && filled(Config::get('filesystems.disks.s3.bucket'));
     }
 }

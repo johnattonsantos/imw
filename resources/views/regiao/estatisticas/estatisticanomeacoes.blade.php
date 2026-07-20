@@ -229,7 +229,7 @@
                             </table>
                         </div>
                         <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
-                    </div>                    
+                    </div>
                 @endif
     @endif
     </div>

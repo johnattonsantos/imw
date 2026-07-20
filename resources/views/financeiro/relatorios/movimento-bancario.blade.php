@@ -87,7 +87,7 @@
                             </thead>
                             <tbody>
                             @foreach ($movimentosBancarios as $item)
-                            
+
                                 @php $item = (array)$item @endphp
                                 <tr>
                                     <td>
@@ -137,12 +137,12 @@
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
     })
-    
+
     $('#btn_relatorio').click(function () {
         $('#filter_form').attr('target', '_blank');
     })
 
-    new DataTable('#movimento-bancario', {        
+    new DataTable('#movimento-bancario', {
         scrollX: true,
         scrollY: 400,
         scrollCollapse: true,
@@ -171,7 +171,7 @@
                         //doc.pageMargins = [20,50,20,30];
                         doc.defaultStyle.fontSize = 9;
                         doc.styles.tableHeader.fontSize = 9;
-                        
+
 
                         const hoje = new Date();
                         const dataFormatada = hoje.toLocaleDateString('pt-BR');
@@ -198,7 +198,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
 

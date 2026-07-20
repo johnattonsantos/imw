@@ -113,14 +113,14 @@
     <script src="{{ asset('theme/plugins/fullcalendar/moment.min.js') }}"></script>
     <script src="{{ asset('membros/js/editar.js') }}"></script>
     <script>
-      
+
       $(document).ready(function(){
           // Validação das datas de formação eclesiástica
           function validateFormacaoEclesiastica() {
               let valid = true;
               const dataNascimento = new Date($('input[name="data_nascimento"]').val());
 
-              
+
               $('#formacao-tbody tr').each(function() {
                   const $row = $(this);
                   const dataInicioInput = $row.find('input[name="curso-data-inicio[]"]');

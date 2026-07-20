@@ -16,7 +16,7 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
         }
-        
+
         h2 {
             text-transform: uppercase;
             margin-bottom: 2rem;
@@ -24,7 +24,7 @@
 
         h4 {
             margin-bottom: .5rem;
-        } 
+        }
 
         table {
             margin-top: 2rem;

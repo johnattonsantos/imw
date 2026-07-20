@@ -3,6 +3,10 @@
 namespace App\Http\Requests;
 
 
+use App\Calculators\PrebendasClerigos\MaxPrebendasClerigoCalculator;
+use App\Models\PessoasPrebenda;
+use App\Rules\TakeMaxPrebendaForAnoAndFuncaoMinisterial;
+use App\Traits\Identifiable;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePrebendaRequest extends FormRequest
@@ -28,8 +32,21 @@ class UpdatePrebendaRequest extends FormRequest
         $valor = $this->input('valor');
 
         return [
-            'ano' => 'required',
-            'valor' => 'required',
+            'ano' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    $id = $this->route('id');
+                    $prebendaDuplicada = PessoasPrebenda::where('ano', $value)
+                        ->where('pessoa_id', Identifiable::fetchSessionPessoa()->id)
+                        ->when($id, fn ($query) => $query->where('id', '<>', $id))
+                        ->exists();
+
+                    if ($prebendaDuplicada) {
+                        $fail('Você já cadastrou a prebenda deste ano');
+                    }
+                },
+            ],
+            'valor' => ['required', new TakeMaxPrebendaForAnoAndFuncaoMinisterial(new MaxPrebendasClerigoCalculator(), $ano, $valor)],
         ];
     }
     public function messages()

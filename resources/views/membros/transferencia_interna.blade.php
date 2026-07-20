@@ -31,10 +31,10 @@
           <div class="col-md-12">
             <div class="alert alert-primary border-0 mb-4" role="alert">
               <strong>
-                Atualmente este membro se encontra em {{ optional($pessoa->congregacao)->nome ?? 'IGREJA PRINCIPAL' }}.<br> 
+                Atualmente este membro se encontra em {{ optional($pessoa->congregacao)->nome ?? 'IGREJA PRINCIPAL' }}.<br>
                 {{ __('Escolha para onde deseja transferir o membro') }}
               </strong>
-            </div> 
+            </div>
           </div>
         </div>
 
@@ -65,7 +65,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
@@ -82,7 +82,7 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group mt-4">
           <a href="{{ route('membro.editar', ['id' => $pessoa->id]) }}" class="btn btn-secondary">

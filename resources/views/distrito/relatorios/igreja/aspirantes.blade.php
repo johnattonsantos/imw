@@ -72,13 +72,13 @@
                       <td>{{ formatStr($membro->contato, '## (##) #####-####') }}</td>
                       <td>{{ $membro->email }}</td>
                       <td>{{ $membro->igreja_nome }}</td>
-                      
+
                   </tr>
                 @empty
                 <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
                 @endforelse
             </tbody>
-          </table>            
+          </table>
         </div>
       </div>
     </div>
@@ -157,7 +157,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
                         doc['footer']=(function(page, pages) {

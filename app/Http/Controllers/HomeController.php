@@ -53,7 +53,7 @@ class HomeController extends Controller
             ->where('membresia_membros.igreja_id', $igrejaId)
             ->count();
 
-        
+
         $activeVisitantesCount = DB::table('membresia_membros as mm')
             ->where('mm.vinculo', 'V')
             ->where('mm.igreja_id', $igrejaId)

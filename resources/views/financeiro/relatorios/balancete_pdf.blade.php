@@ -90,7 +90,7 @@
     <div class="info">
         <div class="title">BALANCETE - {{ session('session_perfil')->instituicao_nome }}</div>
         <div class="period">
-            Período de {{ request()->input('dt_inicial') }} 
+            Período de {{ request()->input('dt_inicial') }}
             a {{ request()->input('dt_final') }}
         </div>
     </div>

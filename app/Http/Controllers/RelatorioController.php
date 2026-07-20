@@ -130,7 +130,7 @@ class RelatorioController extends Controller
     public function membrosPorMinisterios(Request $request)
     {
         try {
-            $data = app(IdentificaDadosRelatorioMembrosPorMinisterioService::class)->execute($request->all());      
+            $data = app(IdentificaDadosRelatorioMembrosPorMinisterioService::class)->execute($request->all());
             $ministerioSelecionado = $data['ministerioSelecionado'];
             return view('relatorios.membros-por-ministerios', [
                 'ministerios' => $data['ministerios'],
@@ -140,7 +140,7 @@ class RelatorioController extends Controller
                 'quantidadeIntegrantes' => $data['quantidadeIntegrantes'],
                 'incluirCongregados' => $data['incluirCongregados'],
             ]);
-        } catch (\Exception $e) { 
+        } catch (\Exception $e) {
             dd($e);
             return redirect()->back()->with('error', __('Não foi possível abrir a página de Membros por Ministérios.'));
         }

@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-                        
+
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="row">
@@ -73,11 +73,11 @@
                                     <div class="col-sm-4">
                                         <div class="card">
                                             <div class="card-body">
-                                                
+
                                                 <p>
-                                                    {{ $membro->nome }} 
+                                                    {{ $membro->nome }}
                                                     @if($membro->presenca === 0)
-                                                        <i class="fas fa-times-circle" style="float: right; color: red;"></i> 
+                                                        <i class="fas fa-times-circle" style="float: right; color: red;"></i>
                                                     @elseif($membro->presenca === 1)
                                                         <i class="fas fa-check-circle"  style="float: right; color: green;"></i>
                                                     @endif
@@ -100,7 +100,7 @@
                     </div>
                 @endif
             </div>
-                
+
         </div>
     </div>
 @endsection
@@ -126,7 +126,7 @@
             dataType: "json",
             data: {
                 valor, gceu_id, membro_id, dt_gceu, nome
-            },            
+            },
             success: function (response) {
                 if(valor == 1){
                     var msg = `Presença confirmada com sucesso para ${nome}`

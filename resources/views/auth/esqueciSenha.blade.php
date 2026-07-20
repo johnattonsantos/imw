@@ -14,7 +14,7 @@
 </head>
 
 <body>
-    
+
     <div class="form-signin text-center">
         <img src="{{ asset('auth/images/login.png') }}" alt="{{ __('Logotipo') }}" class="logo">
         <h4 class="mb-4">{{ __('Lembrar Senha') }}</h4>

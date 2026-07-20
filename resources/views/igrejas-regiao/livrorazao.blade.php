@@ -147,7 +147,7 @@
                     if (!dt_inicial || !dt_final) {
                         alert('Por favor, preencha todos os campos obrigatórios.');
                         return;
-                    }                    
+                    }
 
                     var url = $(this).data('url') + '?dt_inicial=' + dt_inicial + '&dt_final=' + dt_final;
                     window.open(url, '_blank');
