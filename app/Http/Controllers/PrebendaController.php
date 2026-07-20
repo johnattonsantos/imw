@@ -84,7 +84,7 @@ class PrebendaController extends Controller
      */
     public function edit($id)
     {
-        $prebenda = PessoasPrebenda::findOrFail($id);
+        $prebenda = PessoasPrebenda::where('pessoa_id', Identifiable::fetchSessionPessoa()->id)->findOrFail($id);
         $data = app(BuscarDadosPrebendasService::class)->execute();
         return view('perfil.clerigos.prebendas.edit', [...$data, 'prebenda' => $prebenda]);
     }
@@ -98,6 +98,8 @@ class PrebendaController extends Controller
      */
     public function update(UpdatePrebendaRequest $request, $id)
     {
+        PessoasPrebenda::where('pessoa_id', Identifiable::fetchSessionPessoa()->id)->findOrFail($id);
+
         app(UpdatePrebendaService::class)->execute($request, $id);
 
         return redirect()->route('clerigos.perfil.prebendas.index')->with('success', __('Prebenda atualizada com sucesso'));
@@ -111,6 +113,8 @@ class PrebendaController extends Controller
      */
     public function delete($id)
     {
+        PessoasPrebenda::where('pessoa_id', Identifiable::fetchSessionPessoa()->id)->findOrFail($id);
+
         app(DeletePrebendaService::class)->execute($id);
 
         return redirect()->route('clerigos.perfil.prebendas.index')->with('success', __('Prebenda deletada com sucesso'));

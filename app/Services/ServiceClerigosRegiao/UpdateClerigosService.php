@@ -4,6 +4,7 @@ namespace App\Services\ServiceClerigosRegiao;
 
 use App\Models\PessoasPessoa;
 //use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Config;
 use Ramsey\Uuid\Uuid;
 
 class UpdateClerigosService
@@ -12,14 +13,14 @@ class UpdateClerigosService
     {
         $clerigo = PessoasPessoa::findOrFail($id);
         $instituicaoId = session('session_perfil')->instituicoes->regiao->id;
+        $cpf = $request->filled('cpf') ? $request->input('cpf') : null;
 
         if ($request->file('image')) {
             $photo = $request->file('image');  
                 try {
                     // Gerar um UUID para o nome do arquivo
                     $filename = Uuid::uuid4()->toString() . '.' . $photo->getClientOriginalExtension();                        
-                    // Fazer upload do arquivo para o S3 usando o método storeAs
-                    $filePath = $photo->storeAs('fotos', $filename, 's3');
+                    $filePath = $this->storeFoto($photo, $filename);
                 } catch (\Exception $e) {
                     // Tratamento de erro, caso o upload falhe
                     return response()->json(['error' => $e->getMessage()], 500);
@@ -30,7 +31,7 @@ class UpdateClerigosService
                     'orgao_emissor' => $request->input('orgao_emissor'),
                     'data_emissao' => $request->input('data_emissao'),
                     'foto' => $filePath,
-                    'cpf' => $request->input('cpf'),
+                    'cpf' => $cpf,
                     'endereco' => $request->input('endereco'),
                     'numero' => $request->input('numero'),
                     'complemento' => $request->input('complemento', ''),
@@ -76,7 +77,7 @@ class UpdateClerigosService
                 'identidade' => $request->input('identidade'),
                 'orgao_emissor' => $request->input('orgao_emissor'),
                 'data_emissao' => $request->input('data_emissao'),
-                'cpf' => $request->input('cpf'),
+                'cpf' => $cpf,
                 'endereco' => $request->input('endereco'),
                 'numero' => $request->input('numero'),
                 'complemento' => $request->input('complemento', ''),
@@ -117,5 +118,21 @@ class UpdateClerigosService
                 'rol' => $request->input('rol', ''),
             ]);
         }        
+    }
+
+    private function storeFoto($photo, string $filename): string
+    {
+        $disk = $this->hasS3Credentials() ? 's3' : 'public';
+        $filePath = $photo->storeAs('fotos', $filename, $disk);
+
+        return $disk === 'public' ? 'storage/' . ltrim($filePath, '/') : $filePath;
+    }
+
+    private function hasS3Credentials(): bool
+    {
+        return filled(Config::get('filesystems.disks.s3.key'))
+            && filled(Config::get('filesystems.disks.s3.secret'))
+            && filled(Config::get('filesystems.disks.s3.region'))
+            && filled(Config::get('filesystems.disks.s3.bucket'));
     }
 }

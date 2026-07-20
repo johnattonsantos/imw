@@ -53,10 +53,14 @@
                     </div>
 
                     <div class="row mb-4">
+                        @php
+                            $situacaoSelecionada = $situacoes->firstWhere('id', old('situacao'));
+                            $cpfOpcional = $situacaoSelecionada ? $situacaoSelecionada->cpfOpcional() : false;
+                        @endphp
                         <div class="col-xl-4">
-                            <label for="cpf">{{ __('* CPF') }}</label>
+                            <label for="cpf" id="cpf-label">{{ __($cpfOpcional ? 'CPF' : '* CPF') }}</label>
                             <input type="text" class="form-control @error('cpf') is-invalid @enderror" id="cpf"
-                                name="cpf" value="{{ old('cpf') }}" maxlength="100">
+                                name="cpf" value="{{ old('cpf') }}" maxlength="100" @unless($cpfOpcional) required @endunless>
                             @error('cpf')
                                 <span class="help-block text-danger">{{ $message }}</span>
                             @enderror
@@ -83,7 +87,7 @@
                                 id="situacao" name="situacao">
                                 <option value="">{{ __('Selecione') }}</option>
                                 @foreach($situacoes as $situacao)
-                                    <option value="{{  $situacao->id }}" {{ old('situacao') ==  $situacao->id ? 'selected' : '' }}> {{  $situacao->descricao }}</option>
+                                    <option value="{{  $situacao->id }}" data-cpf-opcional="{{ $situacao->cpfOpcional() ? '1' : '0' }}" {{ old('situacao') ==  $situacao->id ? 'selected' : '' }}> {{  $situacao->descricao }}</option>
                                 @endforeach
                             </select>
                             @error('situacao')

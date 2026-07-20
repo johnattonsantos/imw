@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\RangeDateRule;
 use App\Rules\UniqueCPFInIgrejaRule;
 use App\Rules\UniqueRolIgrejaRule;
+use App\Models\PessoaStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreReceberNovoClerigoRequest extends FormRequest
@@ -26,6 +27,11 @@ class StoreReceberNovoClerigoRequest extends FormRequest
      */
     public function rules()
     {
+        $cpfRules = ['nullable', 'max:18'];
+
+        if (!$this->situacaoDispensaCpf()) {
+            array_unshift($cpfRules, 'required');
+        }
 
         return [
             'nome' => 'required|max:255',
@@ -33,7 +39,7 @@ class StoreReceberNovoClerigoRequest extends FormRequest
             'identidade_uf' => 'required',
             'orgao_emissor' => 'required|max:50',
             'data_emissao' => ['required', 'date', new RangeDateRule],
-            'cpf' => 'required',
+            'cpf' => $cpfRules,
             'situacao' => 'required',
             'endereco' => 'required|max:255',
             'numero' => 'required',
@@ -52,9 +58,9 @@ class StoreReceberNovoClerigoRequest extends FormRequest
             'telefone_alternativo' => 'nullable',
             'ctps' => 'max:20|nullable',
             'ctps_emissao' => ['nullable', new RangeDateRule],
-            'titulo_eleitor' => 'required|max:20',
-            'titulo_eleitor_secao' => 'required|max:10',
-            'titulo_eleitor_zona' => 'required|max:10',
+            'titulo_eleitor' => 'nullable|max:20',
+            'titulo_eleitor_secao' => 'nullable|max:10',
+            'titulo_eleitor_zona' => 'nullable|max:10',
             'formacao_id' => 'required',
             'categoria' => 'required',
             'situacao' => 'required',
@@ -70,6 +76,19 @@ class StoreReceberNovoClerigoRequest extends FormRequest
             'rol' => 'required',
 
         ];
+    }
+
+    private function situacaoDispensaCpf(): bool
+    {
+        $situacaoId = $this->input('situacao');
+
+        if (!$situacaoId) {
+            return false;
+        }
+
+        $situacao = PessoaStatus::find($situacaoId);
+
+        return $situacao ? $situacao->cpfOpcional() : false;
     }
 
     public function messages()

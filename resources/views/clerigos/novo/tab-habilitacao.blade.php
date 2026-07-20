@@ -14,6 +14,7 @@
                 <label for="habilitacao_categoria">{{ __('Categoria') }}</label>
                 <select class="form-control @error('habilitacao_categoria') is-invalid @enderror"
                     id="habilitacao_categoria" name="habilitacao_categoria">
+                    <option value="">{{ __('Selecione') }}</option>
                     <option value="A" {{ old('habilitacao_categoria') == 'A' ? 'selected' : '' }}>A</option>
                     <option value="B" {{ old('habilitacao_categoria') == 'B' ? 'selected' : '' }}>B</option>
                     <option value="C" {{ old('habilitacao_categoria') == 'C' ? 'selected' : '' }}>C</option>

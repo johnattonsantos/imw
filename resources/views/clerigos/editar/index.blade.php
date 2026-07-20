@@ -225,6 +225,23 @@
             Inputmask("(99) 99999-9999").mask(document.getElementById("telefone_alternativo"));
             Inputmask("9999 9999 9999").mask(document.getElementById("titulo_eleitor"));
             Inputmask("99.999.999-9").mask(document.getElementById("identidade"));
+
+            const cpfInput = document.getElementById("cpf");
+            const cpfLabel = document.getElementById("cpf-label");
+            const situacaoSelect = document.getElementById("situacao");
+
+            function atualizarObrigatoriedadeCpf() {
+                const opcaoSelecionada = situacaoSelect.options[situacaoSelect.selectedIndex];
+                const cpfOpcional = opcaoSelecionada && opcaoSelecionada.dataset.cpfOpcional === '1';
+
+                cpfInput.required = !cpfOpcional;
+                cpfLabel.textContent = cpfOpcional ? "{{ __('CPF') }}" : "{{ __('* CPF') }}";
+            }
+
+            if (cpfInput && cpfLabel && situacaoSelect) {
+                situacaoSelect.addEventListener('change', atualizarObrigatoriedadeCpf);
+                atualizarObrigatoriedadeCpf();
+            }
         });
 
     </script>

@@ -128,7 +128,7 @@
                                                     <td>{{ $funcao->funcao }}</td>
                                                     <td>{{ $funcao->ordem }}</td>
                                                     <td class="text-center">
-                                                        {{ number_format($funcao->qtd_prebendas, $decimals = 1, $decimal_separator = ',') ?? 'Não informado' }}
+                                                        {{ is_null($funcao->qtd_prebendas) ? __('Não informado') : number_format($funcao->qtd_prebendas, 1, ',') }}
                                                     </td>
                                                     <td class="text-center valor-calculado"> {{ $funcao->valor_calculado }}
                                                     </td>
