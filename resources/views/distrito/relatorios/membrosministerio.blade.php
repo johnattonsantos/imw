@@ -26,7 +26,7 @@ use Carbon\Carbon;
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Membros por Ministério</h4>
+                    <h4>{{ __('Membros por Ministério') }}</h4>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@ use Carbon\Carbon;
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data_inicial">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">* Data Inicial:</label>
+                        <label class="control-label">{{ __('* Data Inicial:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <input type="date" class="form-control @error('data_inicial') is-invalid @enderror" id="data_inicial" name="data_inicial" value="{{ request()->input('data_inicial') }}" required>
@@ -42,7 +42,7 @@ use Carbon\Carbon;
                 </div>
                 <div class="form-group row mb-4" id="filtros_data_final">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">* Data Final:</label>
+                        <label class="control-label">{{ __('* Data Final:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <input type="date" class="form-control @error('data_final') is-invalid @enderror" id="data_final" name="data_final" value="{{ request()->input('data_final') }}" required>
@@ -50,24 +50,24 @@ use Carbon\Carbon;
                 </div>
                 <div class="form-group row mb-4" id="filtros_congregados">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">* Incluir Congregados:</label>
+                        <label class="control-label">{{ __('* Incluir Congregados:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select class="form-control" id="tipo" name="tipo">
-                            <option value="">Selecione</option>
-                            <option value="C" {{ request()->input('tipo') == 'C' ? 'selected' : '' }}>Sim</option>
-                            <option value="M" {{ request()->input('tipo') == 'M' ? 'selected' : '' }}>Não</option>
+                            <option value="">{{ __('Selecione') }}</option>
+                            <option value="C" {{ request()->input('tipo') == 'C' ? 'selected' : '' }}>{{ __('Sim') }}</option>
+                            <option value="M" {{ request()->input('tipo') == 'M' ? 'selected' : '' }}>{{ __('Não') }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
                         <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                            <i class="fa fa-file-pdf"></i> Relatório
+                            <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -97,15 +97,15 @@ use Carbon\Carbon;
                                 <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th width="500px" style="text-align: left" rowspan="2">IGREJA</th>
-                                            <th width="60px" style="text-align: center" colspan="2">KIDS</th>
-                                            <th width="60px" style="text-align: center" colspan="2">CONEXÃO</th>
-                                            <th width="60px" style="text-align: center" colspan="2">FIRE</th>
-                                            <th width="60px" style="text-align: center" colspan="2">MOVE</th>
-                                            <th width="60px" style="text-align: center" colspan="2">HOMENS</th>
-                                            <th width="60px" style="text-align: center" colspan="2">MULHERES</th>
+                                            <th width="500px" style="text-align: left" rowspan="2">{{ __('IGREJA') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('KIDS') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('CONEXÃO') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('FIRE') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('MOVE') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('HOMENS') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('MULHERES') }}</th>
                                             <th width="60px" style="text-align: center" colspan="2">60+</th>
-                                            <th width="60px" style="text-align: center" colspan="2">TOTAL</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('TOTAL') }}</th>
                                         </tr>
                                         <tr>
                                             <th width="50px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
@@ -181,7 +181,7 @@ use Carbon\Carbon;
                                         </tr>
                                         @endforeach
                                         <tr class="thead-dark">
-                                            <th style="text-align: left">TOTAL</th>
+                                            <th style="text-align: left">{{ __('TOTAL') }}</th>
                                             <th style="text-align: right">{{ $totalKids_X }}</th>
                                             <th style="text-align: right">{{ $totalKids_Y }}</th>
                                             <th style="text-align: right">{{ $totalConexao_X }}</th>
@@ -210,7 +210,7 @@ use Carbon\Carbon;
             </div>
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                 </div>
             </div>
             <!-- Fim do Conteúdo -->
@@ -228,7 +228,7 @@ use Carbon\Carbon;
 <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
 <script>
     $(document).ready(function() {
-        $('.selectpicker').selectpicker();
+        $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
 
         $('#btn_relatorio').on('click', function(event) {
             var dataInicial = $('#data_inicial').val();

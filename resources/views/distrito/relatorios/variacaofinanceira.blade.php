@@ -21,7 +21,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Variação financeira</h4>
+                    <h4>{{ __('Relatório Variação financeira') }}</h4>
                 </div>
             </div>
         </div>
@@ -29,24 +29,24 @@
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Período (Inicial e Final):</label>
+                        <label class="control-label">{{ __('* Período (Inicial e Final):') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
 
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
                 </div>
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
-                        <button id="btn_relatorio" type="button" name="action" value="relatorio" title="Gerar Relatório" class="btn btn-secondary btn">
-                            Relatório
+                        <button id="btn_relatorio" type="button" name="action" value="relatorio" title="{{ __('Gerar Relatório') }}" class="btn btn-secondary btn">
+                            {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -74,13 +74,13 @@
                             <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th width="200" style="text-align: left">IGREJA</th>
-                                        <th width="100" style="text-align: right">SALDO ANTERIOR</th>
-                                        <th width="100" style="text-align: right">ENTRADAS</th>
-                                        <th width="100" style="text-align: right">TRANSF. ENTRADAS</th>
-                                        <th width="100" style="text-align: right">SAÍDAS</th>
-                                        <th width="100" style="text-align: right">TRANSF. SAÍDAS</th>
-                                        <th width="100" style="text-align: right">SALDO FINAL</th>
+                                        <th width="200" style="text-align: left">{{ __('IGREJA') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('SALDO ANTERIOR') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('ENTRADAS') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('TRANSF. ENTRADAS') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('SAÍDAS') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('TRANSF. SAÍDAS') }}</th>
+                                        <th width="100" style="text-align: right">{{ __('SALDO FINAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,7 +104,7 @@
             </div>
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                 </div>
             </div>
             <!-- Fim do Conteúdo -->

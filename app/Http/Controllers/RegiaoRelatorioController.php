@@ -27,6 +27,7 @@ use App\Services\ServiceRegiaoRelatorios\PerfilMembrosRecebidosService;
 use App\Services\ServiceRegiaoRelatorios\QuantidadeMembrosService;
 use App\Services\ServiceRegiaoRelatorios\SaldoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\VariacaoFinanceiraService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioCongregadosService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioConjugesHierarquiaService;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoAniversariantes;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoCategorias;
@@ -71,10 +72,10 @@ class RegiaoRelatorioController extends Controller
     {
         $dataInicial = $request->input('data_inicial');
         $dataFinal = $request->input('data_final');
-        $tipo = $request->input('tipo');
+        $periodoAnos = $request->input('periodo_anos');
         $distritoId = $request->input('distrito');
 
-        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $tipo, $distritoId);
+        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $distritoId, $periodoAnos);
         return view('regiao.relatorios.quantidademembros', $data);
     }
 
@@ -82,10 +83,10 @@ class RegiaoRelatorioController extends Controller
     {
         $dataInicial = $request->input('data_inicial');
         $dataFinal = $request->input('data_final');
-        $tipo = $request->input('tipo');
+        $periodoAnos = $request->input('periodo_anos');
         $distritoId = $request->input('distrito');
 
-        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $tipo, $distritoId);
+        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $distritoId, $periodoAnos);
         $pdf = FacadePdf::loadView('regiao.relatorios.quantidademembros_pdf', $data)
             ->setPaper('a4', 'landscape');
 
@@ -119,7 +120,7 @@ class RegiaoRelatorioController extends Controller
 
             return view('relatorios.esposas-de-pastores', compact('esposas'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de esposas de pastores');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de esposas de pastores'));
         }
     }
 
@@ -167,6 +168,13 @@ class RegiaoRelatorioController extends Controller
         return view('relatorios.conjuges-hierarquia', $data + [
             'breadcrumbGrupo' => 'Relatórios Regionais',
         ]);
+    }
+
+    public function congregados()
+    {
+        $data = app(IdentificaDadosRelatorioCongregadosService::class)->executeRegiao();
+
+        return view('relatorios.congregados', $data);
     }
 
     public function acompanhamentoValidacoes()
@@ -480,10 +488,10 @@ class RegiaoRelatorioController extends Controller
     public function cnpjIgreja(Request $request)
     {
         $data = app(CnpjIgreja::class)->execute($request->all());
- 
+
         return view('regiao.relatorios.igreja.cnpj-igrejas', $data);
     }
-       
+
     public function contatoIgreja(Request $request)
     {
         $data = app(ContatoIgreja::class)->execute($request->all());

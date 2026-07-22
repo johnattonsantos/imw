@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório Livro Razão</title>
+    <title>{{ __('Relatório Livro Razão') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -106,7 +106,7 @@
 
 <body>
 <div class="header">
-    <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+    <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
     <div class="info">
         <div class="title">LIVRO CAIXA - {{ session('session_perfil')->instituicao_nome }}</div>
         <div class="period">
@@ -117,15 +117,15 @@
     <div class="date">Data do Relatório: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
 </div>
 
-<h4 class="blue">Discriminação de saldos por conta</h4>
+<h4 class="blue">{{ __('Discriminação de saldos por conta') }}</h4>
 <div class="widget-content widget-content-area">
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th colspan="3">CONTA/DATA/ORIGEM/DESTINO</th>
-                <th>ENTRADA </th>
-                <th class="text-right">SAÍDA</th>
+                <th colspan="3">{{ __('CONTA/DATA/ORIGEM/DESTINO') }}</th>
+                <th>{{ __('ENTRADA') }} </th>
+                <th class="text-right">{{ __('SAÍDA') }}</th>
             </tr>
             </thead>
             <tbody>

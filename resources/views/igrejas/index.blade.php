@@ -28,17 +28,17 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Lista de Igrejas</h4>
+                    <h4>{{ __('Lista de Igrejas') }}</h4>
                 </div>
             </div>
         </div>
         <div class="widget-content widget-content-area">
             <form class="row mb-5" id="searchForm">
                 <div class="col-4">
-                    <input type="text" name="search" id="searchInput" class="form-control form-control-sm" placeholder="Pesquisar...">
+                    <input type="text" name="search" id="searchInput" class="form-control form-control-sm" placeholder="{{ __('Pesquisar...') }}">
                 </div>
                 <div class="col-auto" style="margin-left: -19px;">
-                    <button type="submit" id="searchButton" class="btn btn-primary btn-rounded"><x-bx-search /> Pesquisar</button>
+                    <button type="submit" id="searchButton" class="btn btn-primary btn-rounded"><x-bx-search /> {{ __('Pesquisar') }}</button>
                 </div>
             </form>
 
@@ -46,10 +46,10 @@
                 <table class="table table-bordered table-striped table-hover mb-4" id="datatable" data-url="{{ route('igreja.list') }}">
                     <thead>
                         <tr>
-                            <th>CIDADE</th>
-                            <th>IGREJA</th>
-                            <th>PASTOR</th>
-                            <th>AÇÕES</th>
+                            <th>{{ __('CIDADE') }}</th>
+                            <th>{{ __('IGREJA') }}</th>
+                            <th>{{ __('PASTOR') }}</th>
+                            <th>{{ __('AÇÕES') }}</th>
                         </tr>
                     </thead>
                 </table>

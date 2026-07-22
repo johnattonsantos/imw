@@ -26,7 +26,7 @@ use Carbon\Carbon;
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Estatística por Gênero</h4>
+                    <h4>{{ __('Estatística por Gênero') }}</h4>
                 </div>
             </div>
         </div>
@@ -34,12 +34,12 @@ use Carbon\Carbon;
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">* Distrito:</label>
+                        <label class="control-label">{{ __('* Distrito:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select class="form-control" id="distrito" name="distrito" required>
-                            <option value="">Selecione</option>
-                            <option value="all" {{ request()->input('distrito') == 'all' ? 'selected' : '' }}>Todos</option>
+                            <option value="">{{ __('Selecione') }}</option>
+                            <option value="all" {{ request()->input('distrito') == 'all' ? 'selected' : '' }}>{{ __('Todos') }}</option>
                             @foreach($distritos as $distrito)
                                 <option value="{{ $distrito->id }}" {{ request()->input('distrito') == $distrito->id ? 'selected' : '' }}>{{ $distrito->nome }}</option>
                             @endforeach
@@ -48,7 +48,7 @@ use Carbon\Carbon;
                 </div>
                 <div class="form-group row mb-4" id="filtros_data_inicial">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">* Data Inicial:</label>
+                        <label class="control-label">{{ __('* Data Inicial:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <input type="date" class="form-control @error('data_inicial') is-invalid @enderror" id="data_inicial" name="data_inicial" value="{{ request()->input('data_inicial') }}" required>
@@ -56,7 +56,7 @@ use Carbon\Carbon;
                 </div>
                 <div class="form-group row mb-4" id="filtros_data_final">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">* Data Final:</label>
+                        <label class="control-label">{{ __('* Data Final:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <input type="date" class="form-control @error('data_final') is-invalid @enderror" id="data_final" name="data_final" value="{{ request()->input('data_final') }}" required>
@@ -64,24 +64,24 @@ use Carbon\Carbon;
                 </div>
                 <div class="form-group row mb-4" id="filtros_congregados">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">* Incluir Congregados:</label>
+                        <label class="control-label">{{ __('* Incluir Congregados:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select class="form-control" id="tipo" name="tipo">
-                            <option value="">Selecione</option>
-                            <option value="C" {{ request()->input('tipo') == 'C' ? 'selected' : '' }}>Sim</option>
-                            <option value="M" {{ request()->input('tipo') == 'M' ? 'selected' : '' }}>Não</option>
+                            <option value="">{{ __('Selecione') }}</option>
+                            <option value="C" {{ request()->input('tipo') == 'C' ? 'selected' : '' }}>{{ __('Sim') }}</option>
+                            <option value="M" {{ request()->input('tipo') == 'M' ? 'selected' : '' }}>{{ __('Não') }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
                         <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                            <i class="fa fa-file-pdf"></i> Relatório
+                            <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -113,13 +113,13 @@ use Carbon\Carbon;
                                     <thead class="thead-dark">
                                         <tr>
                                             <th colspan="2" width="200px" style="text-align: left"></th>
-                                            <th colspan="2" style="text-align: center">TOTAL MASCULINO</th>
-                                            <th colspan="2" style="text-align: center">TOTAL FEMININO</th>
-                                            <th colspan="2" style="text-align: center">TOTAL</th>
+                                            <th colspan="2" style="text-align: center">{{ __('TOTAL MASCULINO') }}</th>
+                                            <th colspan="2" style="text-align: center">{{ __('TOTAL FEMININO') }}</th>
+                                            <th colspan="2" style="text-align: center">{{ __('TOTAL') }}</th>
                                         </tr>
                                         <tr>
-                                            <th width="40px" style="text-align: left">DISTRITO</th>
-                                            <th width="200px" style="text-align: left">IGREJA</th>
+                                            <th width="40px" style="text-align: left">{{ __('DISTRITO') }}</th>
+                                            <th width="200px" style="text-align: left">{{ __('IGREJA') }}</th>
                                             <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
                                             <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
                                             <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
@@ -160,7 +160,7 @@ use Carbon\Carbon;
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <th colspan="2" style="text-align: left;">Total Geral</th>
+                                            <th colspan="2" style="text-align: left;">{{ __('Total Geral') }}</th>
                                             <th style="text-align: center;">{{ $totalMasculinoX }}</th>
                                             <th style="text-align: center;">{{ $totalMasculinoY }}</th>
                                             <th style="text-align: center;">{{ $totalFemininoX }}</th>
@@ -181,7 +181,7 @@ use Carbon\Carbon;
             </div>
             <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                 </div>
             </div>
             <!-- Fim do Conteúdo -->
@@ -199,7 +199,7 @@ use Carbon\Carbon;
 <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
 <script>
     $(document).ready(function() {
-        $('.selectpicker').selectpicker();
+        $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
 
         $('#btn_relatorio').on('click', function(event) {
             var distrito = $('#distrito').val();

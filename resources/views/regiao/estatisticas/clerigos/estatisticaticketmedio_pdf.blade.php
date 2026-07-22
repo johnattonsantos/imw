@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Estatística Ticket Médio - IMW PGA</title>
+    <title>{{ __('Relatório de Estatística Ticket Médio - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,7 +90,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">ESTATÍSTICA Ticket Médio - {{ $lancamentos[0]->instituicao }}</div>
         </div>
@@ -107,15 +107,15 @@
                     <div<table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                         <thead class="thead-dark">
                             <tr>
-                                <th style="text-align: left;">Distrito</th>
-                                <th colspan="2" style="text-align: center;">Por Igreja</th>
-                                <th colspan="2" style="text-align: center;">Por Membro</th>
+                                <th style="text-align: left;">{{ __('Distrito') }}</th>
+                                <th colspan="2" style="text-align: center;">{{ __('Por Igreja') }}</th>
+                                <th colspan="2" style="text-align: center;">{{ __('Por Membro') }}</th>
                             </tr>
                             <tr>
                                 <th style="text-align: left;"></th>
-                                <th style="text-align: center;">Valor</th>
+                                <th style="text-align: center;">{{ __('Valor') }}</th>
                                 <th style="text-align: center;">%</th>
-                                <th style="text-align: center;">Valor</th>
+                                <th style="text-align: center;">{{ __('Valor') }}</th>
                                 <th style="text-align: center;">%</th>
                             </tr>
                         </thead>
@@ -148,7 +148,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th style="text-align: left;">Total Geral</th>
+                                <th style="text-align: left;">{{ __('Total Geral') }}</th>
                                 <th style="text-align: center;">
                                     {{ number_format($lancamentos->sum('ticket_medio_igreja'), 2) }}
                                 </th>

@@ -25,7 +25,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Saldo de Caixas</h4>
+                    <h4>{{ __('Relatório Saldo de Caixas') }}</h4>
                 </div>
             </div>
         </div>
@@ -33,11 +33,11 @@
             <form class="form-vertical" id="filter_form" method="GET">
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Distrito:</label>
+                        <label class="control-label">{{ __('* Distrito:') }}</label>
                     </div>
                     <div class="col-lg-3">
                         <select class="form-control" id="distrito" name="distrito" required>
-                            <option value="all">Todos</option>
+                            <option value="all">{{ __('Todos') }}</option>
                             @foreach($distritos as $distrito)
                                 <option value="{{ $distrito->id }}" {{ request()->input('distrito') == $distrito->id ? 'selected' : '' }}>{{ $distrito->nome }}</option>
                             @endforeach
@@ -46,21 +46,21 @@
                 </div>
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
-                        <label class="control-label">* Mês/Ano:</label>
+                        <label class="control-label">{{ __('* Mês/Ano:') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="text" class="form-control @error('dt') is-invalid @enderror" id="dt" name="dt" value="{{ request()->input('dt') }}" placeholder="mm/yyyy" required>
+                        <input type="text" class="form-control @error('dt') is-invalid @enderror" id="dt" name="dt" value="{{ request()->input('dt') }}" placeholder="{{ __('mm/yyyy') }}" required>
                     </div>
                 </div>
 
                 <div class="form-group row mb-4">
                     <div class="col-lg-2"></div>
                     <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                            <x-bx-search /> Buscar
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
                         <!-- <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                            <i class="fa fa-file-pdf"></i> Relatório
+                            <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                         </button> -->
                     </div>
                 </div>
@@ -88,13 +88,13 @@
                             <table class="table table-striped" id="saldo-caixa">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th width="150" style="text-align: left">IGREJA</th>
-                                        <th width="150" style="text-align: left">SALDO CAIXA PRINCIPAL</th>
-                                        <th width="180" style="text-align: left">SALDO CAIXA CONGREGAÇÕES</th>
-                                        <th width="150" style="text-align: left">SALDO CAIXA SECUNDÁRIO</th>
-                                        <th width="150" style="text-align: left">SALDO CAIXA BANCOS</th>
-                                        <th width="150" style="text-align: left">SALDO OUTROS CAIXAS</th>
-                                        <th width="70" style="text-align: center">TOTAL</th>
+                                        <th width="150" style="text-align: left">{{ __('IGREJA') }}</th>
+                                        <th width="150" style="text-align: left">{{ __('SALDO CAIXA PRINCIPAL') }}</th>
+                                        <th width="180" style="text-align: left">{{ __('SALDO CAIXA CONGREGAÇÕES') }}</th>
+                                        <th width="150" style="text-align: left">{{ __('SALDO CAIXA SECUNDÁRIO') }}</th>
+                                        <th width="150" style="text-align: left">{{ __('SALDO CAIXA BANCOS') }}</th>
+                                        <th width="150" style="text-align: left">{{ __('SALDO OUTROS CAIXAS') }}</th>
+                                        <th width="70" style="text-align: center">{{ __('TOTAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -118,7 +118,7 @@
                                     </tr>
                                     @endforeach
                                     <tr>
-                                        <td>TOTAL</td>
+                                        <td>{{ __('TOTAL') }}</td>
                                         <td style="text-align: left">{{ number_format(array_sum($saldoCxPrincipal), 2, ',', '.') }}</td>
                                         <td style="text-align: left">{{ number_format(array_sum($saldoCxCongregacoes), 2, ',', '.') }}</td>
                                         <td style="text-align: left">{{ number_format(array_sum($saldoCxSecundado), 2, ',', '.') }}</td>
@@ -135,14 +135,14 @@
                                 <table class="table table-striped" style="font-size: 90%; margin-top: 15px;" id="saldo-caixa">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th width="150" style="text-align: left">DISTRITO</th>
-                                            <th width="150" style="text-align: left">IGREJA</th>
-                                            <th width="150" style="text-align: left">SALDO CAIXA PRINCIPAL</th>
-                                            <th width="180" style="text-align: left">SALDO CAIXA CONGREGAÇÕES</th>
-                                            <th width="150" style="text-align: left">SALDO CAIXA SECUNDÁRIO</th>
-                                            <th width="150" style="text-align: left">SALDO CAIXA BANCOS</th>
-                                            <th width="150" style="text-align: left">SALDO OUTROS CAIXAS</th>
-                                            <th width="70" style="text-align: center">TOTAL</th>
+                                            <th width="150" style="text-align: left">{{ __('DISTRITO') }}</th>
+                                            <th width="150" style="text-align: left">{{ __('IGREJA') }}</th>
+                                            <th width="150" style="text-align: left">{{ __('SALDO CAIXA PRINCIPAL') }}</th>
+                                            <th width="180" style="text-align: left">{{ __('SALDO CAIXA CONGREGAÇÕES') }}</th>
+                                            <th width="150" style="text-align: left">{{ __('SALDO CAIXA SECUNDÁRIO') }}</th>
+                                            <th width="150" style="text-align: left">{{ __('SALDO CAIXA BANCOS') }}</th>
+                                            <th width="150" style="text-align: left">{{ __('SALDO OUTROS CAIXAS') }}</th>
+                                            <th width="70" style="text-align: center">{{ __('TOTAL') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -169,7 +169,7 @@
                                             @endforeach
                                         @endforeach
                                         <tr>
-                                            <td>TOTAL</td>
+                                            <td>{{ __('TOTAL') }}</td>
                                             <td></td>
                                             <td style="text-align: left">{{ number_format(array_sum($saldoCxPrincipal), 2, ',', '.') }}</td>
                                             <td style="text-align: left">{{ number_format(array_sum($saldoCxCongregacoes), 2, ',', '.') }}</td>
@@ -187,7 +187,7 @@
             </div>
             <!-- <div class="row">
                 <div class="col-12 text-center">
-                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                    <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                 </div>
             </div> -->
             <!-- Fim do Conteúdo -->
@@ -337,7 +337,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
                         doc['footer']=(function(page, pages) {

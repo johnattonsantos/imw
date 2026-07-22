@@ -16,7 +16,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Funções Eventos</h4>
+                    <h4>{{ __('Funções Eventos') }}</h4>
                 </div>
             </div>
         </div>
@@ -24,38 +24,38 @@
             <form method="GET" class="mb-3">
                 <div class="row">
                     <div class="col-md-4 mb-2">
-                        <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Pesquisar função">
+                        <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="{{ __('Pesquisar função') }}">
                     </div>
                     <div class="col-md-2 mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm btn-block">Filtrar</button>
+                        <button type="submit" class="btn btn-primary btn-sm btn-block">{{ __('Filtrar') }}</button>
                     </div>
                 </div>
             </form>
 
             <div class="mb-3">
                 @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-funcao-novo'))
-                    <a href="{{ route('eventos.funcoes.create') }}" class="btn btn-primary btn-sm">Novo</a>
+                    <a href="{{ route('eventos.funcoes.create') }}" class="btn btn-primary btn-sm">{{ __('Novo') }}</a>
                 @endif
-                <a href="{{ route('eventos.index') }}" class="btn btn-light btn-sm">Eventos</a>
+                <a href="{{ route('eventos.index') }}" class="btn btn-light btn-sm">{{ __('Eventos') }}</a>
             </div>
 
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Função</th>
-                            <th>Status</th>
-                            <th style="width: 150px;">Ações</th>
+                            <th>{{ __('Função') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th style="width: 150px;">{{ __('Ações') }}</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($funcoes as $funcao)
                             <tr>
                                 <td>{{ $funcao->nome }}</td>
-                                <td>{{ $funcao->ativo ? 'Ativo' : 'Inativo' }}</td>
+                                <td>{{ $funcao->ativo ? __('Ativo') : __('Inativo') }}</td>
                                 <td class="table-action">
                                     @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-funcao-editar'))
-                                        <a href="{{ route('eventos.funcoes.edit', $funcao) }}" class="btn btn-sm btn-dark btn-rounded bs-tooltip" title="Editar" aria-label="Editar">
+                                        <a href="{{ route('eventos.funcoes.edit', $funcao) }}" class="btn btn-sm btn-dark btn-rounded bs-tooltip" title="{{ __('Editar') }}" aria-label="{{ __('Editar') }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                 class="feather feather-edit-2">
@@ -64,10 +64,10 @@
                                         </a>
                                     @endif
                                     @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-funcao-excluir'))
-                                        <form method="POST" action="{{ route('eventos.funcoes.destroy', $funcao) }}" class="d-inline" onsubmit="return confirm('Deseja excluir esta função?')">
+                                        <form method="POST" action="{{ route('eventos.funcoes.destroy', $funcao) }}" class="d-inline" onsubmit="return confirm(@js(__('Deseja excluir esta função?')))">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-rounded bs-tooltip" title="Excluir" aria-label="Excluir">
+                                            <button type="submit" class="btn btn-sm btn-danger btn-rounded bs-tooltip" title="{{ __('Excluir') }}" aria-label="{{ __('Excluir') }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="feather feather-trash-2">
@@ -84,7 +84,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center">Nenhuma função encontrada.</td>
+                                <td colspan="3" class="text-center">{{ __('Nenhuma função encontrada.') }}</td>
                             </tr>
                         @endforelse
                     </tbody>

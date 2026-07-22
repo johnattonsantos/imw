@@ -212,7 +212,7 @@ class RegiaoEstatisticasController extends Controller
             // ->when($params['dt_filtro'], function ($query) use ($params) {
             //     if ($params['dt_filtro'] == 'data_nascimento') {
             //         return $this->handleFilterDtNascimento($query, $params['dt_inicial'], $params['dt_final']);
-            //     } else {   
+            //     } else {
             //         return $this->handleRolDates($query, $params['dt_filtro'], $params['dt_inicial'], $params['dt_final']);
             //     }
             // })
@@ -240,7 +240,7 @@ class RegiaoEstatisticasController extends Controller
 
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
 }

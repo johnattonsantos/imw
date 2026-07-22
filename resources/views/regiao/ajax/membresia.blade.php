@@ -1,6 +1,6 @@
 <!-- TABELA -->
 
-  
+
 
       <div id="conteudo-lista">
         <div class="widget-content widget-content-area" style="padding-top: 0;">
@@ -11,78 +11,78 @@
                     <thead>
                         <tr>
                             <th width=100px>
-                              DISTRITO
+                              {{ __('DISTRITO') }}
                               <span id="distrito-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="distrito-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              IGREJA
+                              {{ __('IGREJA') }}
                               <span id="igreja-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="igreja-down"></i>
                               </span>
                             </th>
                             <th width=55px>
-                              ROL
+                              {{ __('ROL') }}
                               <span id="rol-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="rol-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              NOME
+                              {{ __('NOME') }}
                               <span id="nome-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="nome-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              TELEFONE
+                              {{ __('TELEFONE') }}
                               <span id="telefone-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="telefone-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              SITUAÇÃO
+                              {{ __('SITUAÇÃO') }}
                               <span id="situacao-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="situacao-down"></i>
                               </span>
                             </th>
                             <th width=90px>
-                              VÍNCULO
+                              {{ __('VÍNCULO') }}
                               <span id="vinculo-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="vinculo-down"></i>
                               </span>
                             </th>
                             <th width=120px>
-                              NASCIMENTO
+                              {{ __('NASCIMENTO') }}
                               <span id="nascimento-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="nascimento-down"></i>
                               </span>
                             </th>
-                            <th width=110px>RECEPÇÃO
+                            <th width=110px>{{ __('RECEPÇÃO') }}
                               <span id="recepcao-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="recepcao-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              MODO
+                              {{ __('MODO') }}
                               <span id="modo-recepcao-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="modo-recepcao-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              EXCLUSÃO
+                              {{ __('EXCLUSÃO') }}
                               <span id="exclusao-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="exclusao-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              MODO
+                              {{ __('MODO') }}
                               <span id="modo-exclusao-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="modo-exclusao-down"></i>
                               </span>
                             </th>
                             <th width=100px>
-                              LOCAL
+                              {{ __('LOCAL') }}
                               <span id="local-order">
                                   <i class="fa-solid fa-caret-right float-right cursor-pointer-ordem ordenar" data-ordem="local-down"></i>
                               </span>
@@ -126,7 +126,7 @@
                         </tr>
                       @empty
                       <tr>
-                          <td colspan="13">Nenhum dado encontrado.</td>
+                          <td colspan="13">{{ __('Nenhum dado encontrado.') }}</td>
                       </tr>
                       @endforelse
                     </tbody>

@@ -7,17 +7,17 @@ $(document).ready(function() {
     }
 
     // ativa as ações dos botões na datatable
-    function activeActions() { 
+    function activeActions() {
         // ação de remover
         $('.btn-confirm-delete').on('click', function() {
             const formId = $(this).data('form-id')
             swal({
-                title: 'Deseja realmente desativar esta igreja?',
+                title: __('Deseja realmente desativar esta igreja?'),
                 type: 'error',
                 showCancelButton: true,
-                confirmButtonText: "Desativar",
+                confirmButtonText: __('Desativar'),
                 confirmButtonColor: "#d33",
-                cancelButtonText: "Cancelar",
+                cancelButtonText: __('Cancelar'),
                 cancelButtonColor: "#3085d6",
                 padding: '2em'
             }).then(function(result) {
@@ -29,12 +29,12 @@ $(document).ready(function() {
         $('.btn-confirm-restore').on('click', function() {
             const formId = $(this).data('form-id')
             swal({
-                title: 'Deseja realmente restaurar a igreja?',
+                title: __('Deseja realmente restaurar a igreja?'),
                 type: 'success',
                 showCancelButton: true,
-                confirmButtonText: "Restaurar",
+                confirmButtonText: __('Restaurar'),
                 confirmButtonColor: "#1abc9c",
-                cancelButtonText: "Cancelar",
+                cancelButtonText: __('Cancelar'),
                 cancelButtonColor: "#3085d6",
                 padding: '2em'
             }).then(function(result) {
@@ -52,8 +52,8 @@ $(document).ready(function() {
             }
         },
         columns: [
-            {data: 'cidade', name: 'cidade'}, 
-            {data: 'nome', name: 'igreja'},  
+            {data: 'cidade', name: 'cidade'},
+            {data: 'nome', name: 'igreja'},
             {data: 'pastor', name: 'pastor'},
             {data: 'actions', name: 'Ações'},
         ],

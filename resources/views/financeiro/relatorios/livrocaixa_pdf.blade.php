@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório Livro Caixa</title>
+    <title>{{ __('Relatório Livro Caixa') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,7 +86,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">LIVRO CAIXA - {{ session('session_perfil')->instituicao_nome }}</div>
             <div class="period">
@@ -96,17 +96,17 @@
         <div class="date">Data do Relatório: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</div>
     </div>
 
-    <h4>Discriminação de saldos por caixa</h4>
+    <h4>{{ __('Discriminação de saldos por caixa') }}</h4>
     <table>
         <thead>
             <tr>
-                <th>CAIXA</th>
-                <th class="text-right">SALDO ANTERIOR</th>
-                <th class="text-right">TOTAIS DE ENTRADAS</th>
-                <th class="text-right">TOTAIS DE SAÍDAS</th>
-                <th class="text-right">TRANSF. ENTRADAS</th>
-                <th class="text-right">TRANSF. SAÍDAS</th>
-                <th class="text-right">SALDO ATUAL</th>
+                <th>{{ __('CAIXA') }}</th>
+                <th class="text-right">{{ __('SALDO ANTERIOR') }}</th>
+                <th class="text-right">{{ __('TOTAIS DE ENTRADAS') }}</th>
+                <th class="text-right">{{ __('TOTAIS DE SAÍDAS') }}</th>
+                <th class="text-right">{{ __('TRANSF. ENTRADAS') }}</th>
+                <th class="text-right">{{ __('TRANSF. SAÍDAS') }}</th>
+                <th class="text-right">{{ __('SALDO ATUAL') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -141,7 +141,7 @@
 
             {{-- Total de cada caixa --}}
             <tr class="bold">
-                <td>Total dos Caixas</td>
+                <td>{{ __('Total dos Caixas') }}</td>
                 <td class="text-right">{{ 'R$ ' . number_format($totalSaldoFinal, 2, ',', '.') }}</td>
                 <td class="text-right">{{ 'R$ ' . number_format($totalEntradas, 2, ',', '.') }}</td>
                 <td class="text-right">{{ 'R$ ' . ($totalSaidas > 0 ? '-' : '') . number_format(abs($totalSaidas), 2, ',', '.') }}</td>
@@ -152,13 +152,13 @@
         </tbody>
     </table>
 
-    <h5>Discriminação dos Lançamentos por Conta</h5>
+    <h5>{{ __('Discriminação dos Lançamentos por Conta') }}</h5>
     <table>
         <thead>
             <tr>
-                <th>CONTA</th>
-                <th>CAIXA</th>
-                <th class="text-right">TOTAL</th>
+                <th>{{ __('CONTA') }}</th>
+                <th>{{ __('CAIXA') }}</th>
+                <th class="text-right">{{ __('TOTAL') }}</th>
             </tr>
         </thead>
         <tbody>

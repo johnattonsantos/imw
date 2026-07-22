@@ -22,7 +22,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Membros por Ministérios</h4>
+              <h4>{{ __('Membros por Ministérios') }}</h4>
           </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
         @endphp
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Ministério:</label>
+            <label class="control-label">{{ __('Ministério:') }}</label>
           </div>
           <div class="col-lg-6">
             <select class="form-control" name="ministerio" id="ministerio">
@@ -46,14 +46,14 @@
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">Vínculo:</label>
+            <label class="control-label">{{ __('Vínculo:') }}</label>
           </div>
           <div class="col-lg-6">
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox checkbox-outline-success">
                   <input type="checkbox" name="incluir_congregados" value="1" class="new-control-input" {{ $incluirCongregados ? 'checked' : '' }}>
-                  <span class="new-control-indicator"></span>Incluir Congregados
+                  <span class="new-control-indicator"></span>{{ __('Incluir Congregados') }}
                 </label>
               </div>
             </div>
@@ -64,7 +64,7 @@
           <div class="col-lg-2"></div>
           <div class="col-lg-6">
             <button type="submit" class="btn btn-primary btn">
-              <x-bx-search /> Buscar
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
           </div>
         </div>
@@ -89,8 +89,8 @@
               <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="membros-por-ministerios-table">
                   <thead>
                       <tr>
-                          <th>NOME</th>
-                          <th>CONTATOS</th>
+                          <th>{{ __('NOME') }}</th>
+                          <th>{{ __('CONTATOS') }}</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -117,7 +117,7 @@
                       </tr>
                     @empty
                       <tr>
-                          <td>Não existem registros para o ministério selecionado</td>
+                          <td>{{ __('Não existem registros para o ministério selecionado') }}</td>
                           <td>-</td>
                       </tr>
                     @endforelse

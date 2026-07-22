@@ -12,7 +12,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Filtros para pesquisa</h4>
+                    <h4>{{ __('Filtros para pesquisa') }}</h4>
                 </div>
             </div>
         </div>
@@ -27,10 +27,10 @@
                             <div class="row mb-4">
                                 <div class="col-4">
                                     <input type="text" name="search" id="searchInput" class="form-control form-control-sm"
-                                        placeholder="Pesquisar...">
+                                        placeholder="{{ __('Pesquisar...') }}">
                                 </div>
                                 <div class="col-auto" style="margin-left: -19px;">
-                                    <button type="submit" class="btn btn-primary btn-rounded">Pesquisar</button>
+                                    <button type="submit" class="btn btn-primary btn-rounded">{{ __('Pesquisar') }}</button>
                                 </div>
                             </div>
                         </form>
@@ -42,9 +42,9 @@
                         <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-light">
                                 <tr>
-                
-                                    <th style="width: 60px;">Código</th>
-                                    <th>Nome</th>
+
+                                    <th style="width: 60px;">{{ __('Código') }}</th>
+                                    <th>{{ __('Nome') }}</th>
                                     <th width="150"></th>
                                 </tr>
                             </thead>
@@ -58,8 +58,8 @@
                                 @endforeach
                             </tbody>
                         </table>
-                
-                
+
+
                         {{ $planocontas->links('vendor.pagination.index') }}
                     </div>
                 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Rules\RangeDateRule;
 use App\Rules\ValidaCPF;
+use App\Services\ServiceMembros\ConsultaCpfMembroService;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
@@ -41,7 +42,7 @@ class StoreCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($minDate, $currentDate) {
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de nascimento deve estar entre 01/01/1910 e a data atual.');
+                        $fail(__('A data de nascimento deve estar entre 01/01/1910 e a data atual.'));
                     }
                 },
             ],
@@ -50,10 +51,10 @@ class StoreCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de conversão deve ser após a data de nascimento.');
+                        $fail(__('A data de conversão deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de conversão deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de conversão deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -62,10 +63,10 @@ class StoreCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de batismo deve ser após a data de nascimento.');
+                        $fail(__('A data de batismo deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de batismo deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de batismo deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -74,10 +75,10 @@ class StoreCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de batismo no Espírito deve ser após a data de nascimento.');
+                        $fail(__('A data de batismo no Espírito deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de batismo no Espírito deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de batismo no Espírito deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -89,10 +90,29 @@ class StoreCongregadoRequest extends FormRequest
                 'nullable',
                 new ValidaCPF,
                 function ($attribute, $value, $fail) use ($membroId) {
-                    // Remove todos os caracteres que não são números
-                    $cpf = preg_replace('/[^0-9]/', '', $value);
+                    if (empty($value)) {
+                        return;
+                    }
 
-                    // Verifica se o CPF já existe na tabela membresia_membros, ignorando o membro atual
+                    $cpf = preg_replace('/[^0-9]/', '', $value);
+                    $consultaCpf = app(ConsultaCpfMembroService::class);
+
+                    $membroAtivo = $consultaCpf->findMembroAtivo($cpf, $membroId);
+                    if ($membroAtivo) {
+                        $fail($consultaCpf->mensagemAtivo($membroAtivo));
+                        return;
+                    }
+
+                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
+                    if ($membroDuplicado) {
+                        if (!$membroId && !$consultaCpf->isAtivo($membroDuplicado)) {
+                            return;
+                        }
+
+                        $fail('Este CPF já está sendo utilizado por outra pessoa');
+                        return;
+                    }
+
                     $query = DB::table('membresia_membros')->where('cpf', $cpf);
 
                     if ($membroId) {
@@ -100,14 +120,14 @@ class StoreCongregadoRequest extends FormRequest
                     }
 
                     if ($query->exists()) {
-                        $fail('Este CPF já está sendo utilizado por outra pessoa');
+                        $fail(__('Este CPF já está sendo utilizado por outra pessoa'));
                     }
                 }
             ],
             'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {
                 if ($value) {
                     if (!preg_match('/@.*\.\w{2,}$/', $value)) {
-                        $fail('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.');
+                        $fail(__('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.'));
                     }
                 }
             }],
@@ -118,10 +138,10 @@ class StoreCongregadoRequest extends FormRequest
                 'date',
                 function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
-                        $fail('A data de casamento deve ser após a data de nascimento.');
+                        $fail(__('A data de casamento deve ser após a data de nascimento.'));
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail('A data de casamento deve ser após a data de nascimento e a data atual.');
+                        $fail(__('A data de casamento deve ser após a data de nascimento e a data atual.'));
                     }
                 },
             ],
@@ -144,5 +164,5 @@ class StoreCongregadoRequest extends FormRequest
             ]);
         }
     }
-    
+
 }

@@ -38,13 +38,13 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Relatório Clérigos por Categoria</h4>
+              <h4>{{ __('Relatório Clérigos por Categoria') }}</h4>
           </div>
       </div>
   </div>
   <div class="widget-content widget-content-area">
     <form class="form-vertical" id="filter_form"  method="GET">
-      
+
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
         </div>
@@ -55,15 +55,15 @@
 
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
-          <label class="control-label">categoria:</label>
+          <label class="control-label">{{ __('categoria:') }}</label>
         </div>
         <div class="col-lg-6">
           <select id="categoria" name="categoria" class="form-control @error('mes') is-invalid @enderror" >
-            <option value="" {{ request()->get('categoria') == '' ? 'selected hidden' : '' }}>Todos</option>
-            <option value="missionária" {{ request()->get('categoria') == 'missionária' ? 'selected hidden' : '' }}> Missionária</option>
-            <option value="pastor" {{ request()->get('categoria') == 'pastor' ? 'selected hidden' : '' }}>Pastor</option>
-            <option value="ministro" {{ request()->get('categoria') == 'ministro' ? 'selected hidden' : '' }}>Ministro</option>
-            <option value="bispo" {{ request()->get('categoria') == 'bispo' ? 'selected hidden' : '' }}>Bispo</option>
+            <option value="" {{ request()->get('categoria') == '' ? 'selected hidden' : '' }}>{{ __('Todos') }}</option>
+            <option value="missionária" {{ request()->get('categoria') == 'missionária' ? 'selected hidden' : '' }}> {{ __('Missionária') }}</option>
+            <option value="pastor" {{ request()->get('categoria') == 'pastor' ? 'selected hidden' : '' }}>{{ __('Pastor') }}</option>
+            <option value="ministro" {{ request()->get('categoria') == 'ministro' ? 'selected hidden' : '' }}>{{ __('Ministro') }}</option>
+            <option value="bispo" {{ request()->get('categoria') == 'bispo' ? 'selected hidden' : '' }}>{{ __('Bispo') }}</option>
           </select>
         </div>
       </div>
@@ -71,8 +71,8 @@
       <div class="form-group row mb-4">
         <div class="col-lg-2"></div>
         <div class="col-lg-6">
-          <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-            <x-bx-search /> Buscar 
+          <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+            <x-bx-search /> {{ __('Buscar') }}
           </button>
         </div>
       </div>
@@ -88,10 +88,10 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aniversariantes-clerigos">
             <thead>
                 <tr>
-                    <th>NOME</th>
-                    <th>CATEGORIA</th>
-                    <th>TELEFONE</th>
-                    <th>INSTITUIÇÃO</th>
+                    <th>{{ __('NOME') }}</th>
+                    <th>{{ __('CATEGORIA') }}</th>
+                    <th>{{ __('TELEFONE') }}</th>
+                    <th>{{ __('INSTITUIÇÃO') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -103,10 +103,10 @@
                       <td>{{ $membro->igreja }}</td>
                   </tr>
                 @empty
-                <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
+                <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
                 @endforelse
             </tbody>
-          </table>            
+          </table>
         </div>
       </div>
     </div>

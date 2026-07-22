@@ -36,7 +36,7 @@ class IgrejasController extends Controller
             $data = app(GetEstatisticaAnoEclesiasticoService::class)->execute($igreja, $request->input('ano'));
             return view('igrejas.estatistica-ano-eclesiastico', $data);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Houve um erro ao tentar visualizar o relatório de histórico eclesiástico');
+            return redirect()->back()->with('error', __('Houve um erro ao tentar visualizar o relatório de histórico eclesiástico'));
         }
     }
 

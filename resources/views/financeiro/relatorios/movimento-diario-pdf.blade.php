@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório Movimento Diário</title>
+    <title>{{ __('Relatório Movimento Diário') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,27 +86,27 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">MOVIMENTO DIÁRIO - {{ session('session_perfil')->instituicao_nome }}</div>
             <div class="period">
-                Período de {{ \Carbon\Carbon::parse(request()->input('dt_inicial'))->format('d/m/Y') }} 
+                Período de {{ \Carbon\Carbon::parse(request()->input('dt_inicial'))->format('d/m/Y') }}
                 a {{ \Carbon\Carbon::parse(request()->input('dt_final'))->format('d/m/Y') }}
             </div>
         </div>
         <div class="date">Data do Relatório: {{ now()->format('d/m/Y') }}</div>
     </div>
 
-    <h4>Discriminação de saldos por caixa</h4>
+    <h4>{{ __('Discriminação de saldos por caixa') }}</h4>
     <table>
         <thead>
             <tr>
-                <th>DATA</th>
-                <th>PLANO DE CONTA</th>
-                <th>ENTRADA</th>
-                <th>SAÍDA</th>
-                <th>ORIGEM/DESTINO</th>
-                <th>PAGANTE/FAVORECIDO</th>
+                <th>{{ __('DATA') }}</th>
+                <th>{{ __('PLANO DE CONTA') }}</th>
+                <th>{{ __('ENTRADA') }}</th>
+                <th>{{ __('SAÍDA') }}</th>
+                <th>{{ __('ORIGEM/DESTINO') }}</th>
+                <th>{{ __('PAGANTE/FAVORECIDO') }}</th>
             </tr>
         </thead>
         <tbody>

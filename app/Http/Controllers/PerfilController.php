@@ -16,18 +16,18 @@ class PerfilController extends Controller
         $perfisUsuarios = PerfilUser::with(['perfil', 'instituicao'])
         ->where('user_id', $usuario->id)
         ->get();
-        
+
         return view('perfil.index', compact('usuario', 'perfisUsuarios'));
     }
 
     public function update(UpdatePerfilRequest $request, $id) {
         app(UpdatePerfilService::class)->execute($request, $id);
-        return redirect()->route('perfil.index')->with('success', 'Perfil atualizado!');
+        return redirect()->route('perfil.index')->with('success', __('Perfil atualizado!'));
     }
 
     public function carteiraDigital(Request $request) {
         $usuario = app(ListPerfilService::class)->carteiraDigital();
         return view('perfil.carteira-digital', ['usuario' => $usuario]);
     }
-    
+
 }

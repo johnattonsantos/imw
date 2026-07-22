@@ -29,20 +29,20 @@
 <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-header">
-            <h4>Estatística Total de Membresia</h4>
+            <h4>{{ __('Estatística Total de Membresia') }}</h4>
         </div>
         <div class="widget-content widget-content-area">
             <form class="form" id="filter_form" method="GET">
                 <div class="form-group row mb-4">
                     <div class="col-lg-3 d-flex align-items-center">
                         <select class="form-control" name="checkIgreja" id="checkIgreja">
-                            <option value="distrito" {{ request()->input('checkIgreja') == 'distrito' ? 'selected' : '' }}>Filtro por Distrito</option>
-                            <option value="igreja" {{ request()->input('checkIgreja') == 'igreja' ? 'selected' : '' }}>Filtro por Igreja</option>
+                            <option value="distrito" {{ request()->input('checkIgreja') == 'distrito' ? 'selected' : '' }}>{{ __('Filtro por Distrito') }}</option>
+                            <option value="igreja" {{ request()->input('checkIgreja') == 'igreja' ? 'selected' : '' }}>{{ __('Filtro por Igreja') }}</option>
                         </select>
                     </div>
                     <div class="col-lg-2">
                         <button id="btn_buscar" type="submit" class="btn btn-primary">
-                            <x-bx-search /> Buscar
+                            <x-bx-search /> {{ __('Buscar') }}
                         </button>
                     </div>
                 </div>
@@ -53,12 +53,12 @@
                 <table class="table table-striped" style="font-size: 90%;">
                     <thead class="thead-dark">
                         <tr>
-                            <th style="text-align: left;">Nome</th>
-                            <th style="text-align: right;">Total de Membros</th>
+                            <th style="text-align: left;">{{ __('Nome') }}</th>
+                            <th style="text-align: right;">{{ __('Total de Membros') }}</th>
                             @if ($tipo == 'igreja')
-                                <th style="text-align: right;" width="150px">% do Distrito</th>
+                                <th style="text-align: right;" width="150px">{{ __('% do Distrito') }}</th>
                             @endif
-                            <th style="text-align: right;" width="150px">% da Região</th>
+                            <th style="text-align: right;" width="150px">{{ __('% da Região') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -116,7 +116,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th style="text-align: left;">Total da 6 Região</th>
+                            <th style="text-align: left;">{{ __('Total da 6 Região') }}</th>
                             <th style="text-align: right;">{{ $totalGeral }}</th>
                             @if ($tipo == 'igreja')
                                 <th></th>

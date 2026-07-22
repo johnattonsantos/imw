@@ -37,6 +37,10 @@ class TakeMaxPrebendaForAnoAndFuncaoMinisterial implements Rule
         $pessoa = Identifiable::fetchSessionPessoa();
         $prebenda = Prebenda::where('ano', $this->ano)->where('ativo', 1)->first();
 
+        if (!$prebenda) {
+            return false;
+        }
+
         $this->valorMaxPrebenda = $this->calculator->calculate($pessoa, $prebenda);
 
         return $this->valor <= $this->valorMaxPrebenda ? true : false;
@@ -58,6 +62,6 @@ class TakeMaxPrebendaForAnoAndFuncaoMinisterial implements Rule
      */
     public function message()
     {
-        return 'O valor da prebenda não pode ultrapassar o valor máximo de R$ ' . $this->valorMaxPrebenda;
+        return 'O valor da prebenda não pode ultrapassar o valor máximo de R$ ' . number_format((float) $this->valorMaxPrebenda, 2, ',', '.');
     }
 }

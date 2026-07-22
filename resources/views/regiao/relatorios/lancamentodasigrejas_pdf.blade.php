@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Lançamento das Igrejas - IMW PGA</title>
+    <title>{{ __('Relatório de Lançamento das Igrejas - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,7 +86,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">LANÇAMENTOS DAS IGREJAS - {{ $instituicao->nome }}</div>
             <div class="period" style="margin-top:4px">
@@ -99,20 +99,20 @@
     <table>
         <thead>
             <tr>
-                <!--          <th width="100">DISTRITO</th> -->
-                <th width="100">IGREJA</th>
-                <th width="30" class="text-right">JAN</th>
-                <th width="30" class="text-right">FEV</th>
-                <th width="30" class="text-right">MAR</th>
-                <th width="30" class="text-right">ABR</th>
-                <th width="30" class="text-right">MAI</th>
-                <th width="30" class="text-right">JUN</th>
-                <th width="30" class="text-right">JUL</th>
-                <th width="30" class="text-right">AGO</th>
-                <th width="30" class="text-right">SET</th>
-                <th width="30" class="text-right">OUT</th>
-                <th width="30" class="text-right">NOV</th>
-                <th width="30" class="text-right">DEZ</th>
+                <!--          <th width="100">{{ __('DISTRITO') }}</th> -->
+                <th width="100">{{ __('IGREJA') }}</th>
+                <th width="30" class="text-right">{{ __('JAN') }}</th>
+                <th width="30" class="text-right">{{ __('FEV') }}</th>
+                <th width="30" class="text-right">{{ __('MAR') }}</th>
+                <th width="30" class="text-right">{{ __('ABR') }}</th>
+                <th width="30" class="text-right">{{ __('MAI') }}</th>
+                <th width="30" class="text-right">{{ __('JUN') }}</th>
+                <th width="30" class="text-right">{{ __('JUL') }}</th>
+                <th width="30" class="text-right">{{ __('AGO') }}</th>
+                <th width="30" class="text-right">{{ __('SET') }}</th>
+                <th width="30" class="text-right">{{ __('OUT') }}</th>
+                <th width="30" class="text-right">{{ __('NOV') }}</th>
+                <th width="30" class="text-right">{{ __('DEZ') }}</th>
             </tr>
         </thead>
         <tbody>

@@ -19,7 +19,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório Estatísticas GCEU</h4>
+                    <h4>{{ __('Relatório Estatísticas GCEU') }}</h4>
                 </div>
             </div>
         </div>
@@ -28,11 +28,11 @@
                 <table class="table table-bordered table-striped display nowrap" id="estatisticas-gceu-distrito" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th>Igreja</th>
-                            <th>Quant. GCEUS</th>
-                            <th>% GCEUS</th>
-                            <th>Quant. Membros</th>
-                            <th>% Membros</th>
+                            <th>{{ __('Igreja') }}</th>
+                            <th>{{ __('Quant. GCEUS') }}</th>
+                            <th>{{ __('% GCEUS') }}</th>
+                            <th>{{ __('Quant. Membros') }}</th>
+                            <th>{{ __('% Membros') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,7 +56,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th style="text-align: right;">TOTAL GERAL:</th>
+                            <th style="text-align: right;">{{ __('TOTAL GERAL:') }}</th>
                             <th>{{ $totais['qtd_gceus'] ?? 0 }}</th>
                             <th>100,00%</th>
                             <th>{{ $totais['qtd_membros_gceu'] ?? 0 }}</th>

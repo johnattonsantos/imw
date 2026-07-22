@@ -12,12 +12,12 @@ $(document).ready(function() {
         $('.btn-cancel-notificacao-transferencia').on('click', function () {
             const formId = $(this).data('form-id')
             swal({
-                title: 'Deseja realmente cancelar a transferência deste membro?',
+                title: __('Deseja realmente cancelar a transferência deste membro?'),
                 type: 'error',
                 showCancelButton: true,
-                confirmButtonText: "Sim",
+                confirmButtonText: __('Sim'),
                 confirmButtonColor: "#d33",
-                cancelButtonText: "Não",
+                cancelButtonText: __('Não'),
                 cancelButtonColor: "#3085d6",
                 padding: '2em'
             }).then(function(result) {
@@ -57,7 +57,7 @@ $(document).ready(function() {
                 },
                 error: function (error) {
                     $('#visualizarMembroModal').modal('hide');
-                    toastr.error('Erro ao visualizar dados desta pessoa.');
+                    toastr.error(__('Erro ao visualizar dados desta pessoa.'));
                 },
                 complete: function () {
                     $('.loadable').unblock();
@@ -88,13 +88,13 @@ $(document).ready(function() {
                 orderable: 1,
                 render: function (data, type, row, meta) {
                     if (row.dt_exclusao && row.transferido) {
-                        return `<span class="badge badge-secondary"> ${row.membro} (transferido(a) para ${row.igreja_atual})</span>`
+                        return `<span class="badge badge-secondary"> ${row.membro} ${__('(transferido(a) para')} ${row.igreja_atual})</span>`
                     } else if (row.dt_exclusao) {
                         return `<span class="badge badge-danger"> ${row.membro} </span>`
                     } else if (row.has_errors) {
                         return `<span class="badge badge-warning"> ${row.membro} </span>`
                     } else if (row.notificacao_transferencia_ativa) {
-                        return `<span class="font-italic text-secondary">${row.membro} (Em transferência para ${row.notificacao_transferencia_ativa.igreja_destino.nome})</span>`
+                        return `<span class="font-italic text-secondary">${row.membro} (${__('Em transferência para')} ${row.notificacao_transferencia_ativa.igreja_destino.nome})</span>`
                     } else {
                         return row.membro
                     }

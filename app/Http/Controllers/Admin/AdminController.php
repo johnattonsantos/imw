@@ -29,9 +29,9 @@ class AdminController extends Controller
             $perfis = app(AdminNovoUsuarioService::class)->execute();
             return view('admin.novo', compact('perfis'));
         } catch (MembroNotFoundException $e) {
-            return redirect()->route('admin.index')->with('error', 'Registro não encontrado.');
+            return redirect()->route('admin.index')->with('error', __('Registro não encontrado.'));
         } catch (\Exception $e) {
-            return redirect()->route('admin.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('admin.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -41,7 +41,7 @@ class AdminController extends Controller
             DB::beginTransaction();
             app(SalvarUsuarioService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('admin.novo')->with('success', 'Usuário cadastrado com sucesso.');
+            return redirect()->route('admin.novo')->with('success', __('Usuário cadastrado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('admin.novo')->with('error', $e);
@@ -55,7 +55,7 @@ class AdminController extends Controller
             $perfis = app(AdminNovoUsuarioService::class)->execute();
             return view('admin.editar', compact('user', 'perfis', 'id'));
         } catch (\Exception $e) {
-            return redirect()->route('admin.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('admin.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -65,7 +65,7 @@ class AdminController extends Controller
             DB::beginTransaction();
             app(AdminEditarUsuarioService::class)->execute($request->all(), $id);
             DB::commit();
-            return redirect()->route('admin.editar', $id)->with('success', 'Usuário atualizado com sucesso.');
+            return redirect()->route('admin.editar', $id)->with('success', __('Usuário atualizado com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->route('admin.editar', $id)->with('error', $e->getMessage());
@@ -78,7 +78,7 @@ class AdminController extends Controller
             DB::beginTransaction();
             app(AdminDeletarUsuarioService::class)->execute($id);
             DB::commit();
-            return redirect()->route('admin.index')->with('success', 'Usuário excluído com sucesso.');
+            return redirect()->route('admin.index')->with('success', __('Usuário excluído com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->route('admin.index')->with('error', $e->getMessage());

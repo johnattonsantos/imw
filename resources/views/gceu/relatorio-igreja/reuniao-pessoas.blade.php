@@ -29,34 +29,34 @@
       <form class="form-vertical" method="GET">
         <div class="form-group row mb-4">
           <div class="col-lg-3">
-            <label class="control-label">GCEU</label>
+            <label class="control-label">{{ __('GCEU') }}</label>
             <select id="gceu_id" name="gceu_id" class="form-control">
-              <option value="">Todos</option>
+              <option value="">{{ __('Todos') }}</option>
               @foreach ($gceus as $gceu)
                 <option value="{{ $gceu->id }}" {{ request('gceu_id') == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-2">
-            <label class="control-label">Tipo</label>
+            <label class="control-label">{{ __('Tipo') }}</label>
             <select id="tipo" name="tipo" class="form-control">
-              <option value="">Todos</option>
-              <option value="V" {{ request('tipo') === 'V' ? 'selected' : '' }}>Visitante</option>
-              <option value="C" {{ request('tipo') === 'C' ? 'selected' : '' }}>Congregado</option>
-              <option value="N" {{ request('tipo') === 'N' ? 'selected' : '' }}>Novo Convertido</option>
+              <option value="">{{ __('Todos') }}</option>
+              <option value="V" {{ request('tipo') === 'V' ? 'selected' : '' }}>{{ __('Visitante') }}</option>
+              <option value="C" {{ request('tipo') === 'C' ? 'selected' : '' }}>{{ __('Congregado') }}</option>
+              <option value="N" {{ request('tipo') === 'N' ? 'selected' : '' }}>{{ __('Novo Convertido') }}</option>
             </select>
           </div>
           <div class="col-lg-2">
-            <label class="control-label">Data Inicial</label>
+            <label class="control-label">{{ __('Data Inicial') }}</label>
             <input type="date" name="data_inicial" class="form-control" value="{{ request('data_inicial') }}">
           </div>
           <div class="col-lg-2">
-            <label class="control-label">Data Final</label>
+            <label class="control-label">{{ __('Data Final') }}</label>
             <input type="date" name="data_final" class="form-control" value="{{ request('data_final') }}">
           </div>
           <div class="col-lg-3">
             <button id="btn_buscar" type="submit" class="btn btn-primary" style="margin-top: 30px;">
-              <x-bx-search /> Buscar
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
           </div>
         </div>
@@ -66,15 +66,15 @@
         <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="relatorio-reuniao-pessoas">
           <thead>
             <tr>
-              <th>Nº</th>
-              <th>IGREJA</th>
-              <th>GCEU</th>
-              <th>Nome</th>
-              <th>Contato</th>
-              <th>Tipo</th>
-              <th>Data Reunião</th>
-              <th>Data Cadastro</th>
-              <th>Origem</th>
+              <th>{{ __('Nº') }}</th>
+              <th>{{ __('IGREJA') }}</th>
+              <th>{{ __('GCEU') }}</th>
+              <th>{{ __('Nome') }}</th>
+              <th>{{ __('Contato') }}</th>
+              <th>{{ __('Tipo') }}</th>
+              <th>{{ __('Data Reunião') }}</th>
+              <th>{{ __('Data Cadastro') }}</th>
+              <th>{{ __('Origem') }}</th>
             </tr>
           </thead>
           <tbody>

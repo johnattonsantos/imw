@@ -45,7 +45,7 @@ class UpdateUsuarioLocalRequest extends FormRequest
                     $cpfSemMascara = $this->removeMascaraCPF($value);
                     $user = User::where('cpf', $cpfSemMascara)->where('id', '!=', $userId)->first();
                     if ($user) {
-                        $fail('O CPF já está sendo utilizado por outra pessoa.');
+                        $fail(__('O CPF já está sendo utilizado por outra pessoa.'));
                     }
                 },
                 new ValidaCPF,
@@ -56,7 +56,7 @@ class UpdateUsuarioLocalRequest extends FormRequest
                     $telefoneSemMascara = $this->removeMascaraTelefone($value);
                     $user = User::where('telefone', $telefoneSemMascara)->where('id', '!=', $userId)->first();
                     if ($user) {
-                        $fail('O telefone já está sendo utilizado por outra pessoa.');
+                        $fail(__('O telefone já está sendo utilizado por outra pessoa.'));
                     }
                 },
                 'regex:/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/',

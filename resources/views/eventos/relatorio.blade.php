@@ -39,7 +39,7 @@
 
 @section('content')
 @php
-    $tituloRelatorio = 'RELATÓRIO DE EVENTOS';
+    $tituloRelatorio = __('RELATÓRIO DE EVENTOS');
 @endphp
 
 <div class="col-lg-12 col-12 layout-spacing">
@@ -47,8 +47,8 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Relatório de Eventos</h4>
-                    <p class="pl-3">Registros Encontrados: {{ $eventos->count() }}</p>
+                    <h4>{{ __('Relatório de Eventos') }}</h4>
+                    <p class="pl-3">{{ __('Registros Encontrados') }}: {{ $eventos->count() }}</p>
                 </div>
             </div>
         </div>
@@ -56,11 +56,11 @@
             <form method="GET" class="mb-3 no-print">
                 <div class="row align-items-center">
                     <div class="col-lg-2 mb-2">
-                        <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Pesquisar evento, local ou descrição">
+                        <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="{{ __('Pesquisar evento, local ou descrição') }}">
                     </div>
                     <div class="col-lg-3 mb-2">
                         <select name="instituicao_id" class="form-control form-control-sm">
-                            <option value="">Todas as igrejas/congregações</option>
+                            <option value="">{{ __('Todas as igrejas/congregações') }}</option>
                             @foreach ($instituicoesEvento->groupBy('grupo') as $grupo => $instituicoesGrupo)
                                 <optgroup label="{{ $grupo }}">
                                     @foreach ($instituicoesGrupo as $instituicaoEvento)
@@ -74,7 +74,7 @@
                     </div>
                     <div class="col-lg-2 mb-2">
                         <select name="evento_proposito_id" class="form-control form-control-sm">
-                            <option value="">Todos os propósitos</option>
+                            <option value="">{{ __('Todos os propósitos') }}</option>
                             @foreach ($propositos as $proposito)
                                 <option value="{{ $proposito->id }}" {{ (string) request('evento_proposito_id') === (string) $proposito->id ? 'selected' : '' }}>{{ $proposito->nome }}</option>
                             @endforeach
@@ -82,20 +82,20 @@
                     </div>
                     <div class="col-lg-1 mb-2">
                         <select name="status" class="form-control form-control-sm">
-                            <option value="">Todos os status</option>
+                            <option value="">{{ __('Todos os status') }}</option>
                             @foreach ($statusOptions as $value => $label)
                                 <option value="{{ $value }}" {{ request('status') === $value ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-lg-1 mb-2">
-                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="form-control form-control-sm" title="A partir de">
+                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="form-control form-control-sm" title="{{ __('A partir de') }}">
                     </div>
                     <div class="col-lg-1 mb-2">
-                        <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="form-control form-control-sm" title="Até">
+                        <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="form-control form-control-sm" title="{{ __('Até') }}">
                     </div>
                     <div class="col-lg-2 mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+                        <button type="submit" class="btn btn-primary btn-sm">{{ __('Filtrar') }}</button>
                     </div>
                 </div>
             </form>
@@ -104,20 +104,20 @@
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="eventos-relatorio-table" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th>EVENTO</th>
+                            <th>{{ __('EVENTO') }}</th>
                             @if ($escopoEvento === 'regiao')
-                                <th>DISTRITO</th>
+                                <th>{{ __('DISTRITO') }}</th>
                             @endif
                             @if (in_array($escopoEvento, ['regiao', 'distrito'], true))
-                                <th>IGREJA</th>
+                                <th>{{ __('IGREJA') }}</th>
                             @endif
-                            <th>SEDE/CONGREGAÇÃO</th>
-                            <th>PROPÓSITO</th>
-                            <th>AGENDA</th>
-                            <th>LOCAL INFORMADO</th>
-                            <th>LÍDER</th>
-                            <th>STATUS</th>
-                            <th class="no-export">AÇÕES</th>
+                            <th>{{ __('SEDE/CONGREGAÇÃO') }}</th>
+                            <th>{{ __('PROPÓSITO') }}</th>
+                            <th>{{ __('AGENDA') }}</th>
+                            <th>{{ __('LOCAL INFORMADO') }}</th>
+                            <th>{{ __('LÍDER') }}</th>
+                            <th>{{ __('STATUS') }}</th>
+                            <th class="no-export">{{ __('AÇÕES') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -128,7 +128,7 @@
                                     $agenda .= ' ' . substr((string) $evento->hora_inicio, 0, 5);
                                 }
                                 if ($evento->data_fim) {
-                                    $agenda .= ' até ' . optional($evento->data_fim)->format('d/m/Y');
+                                    $agenda .= ' ' . __('até') . ' ' . optional($evento->data_fim)->format('d/m/Y');
                                     if ($evento->hora_fim) {
                                         $agenda .= ' ' . substr((string) $evento->hora_fim, 0, 5);
                                     }
@@ -149,7 +149,7 @@
                                 <td>{{ optional($evento->lider)->nome ?: '-' }}</td>
                                 <td>{{ $statusOptions[$evento->status] ?? $evento->status }}</td>
                                 <td class="no-export text-center">
-                                    <a href="{{ route('eventos.relatorio.evento-pdf', $evento) }}" target="_blank" class="btn btn-danger btn-sm btn-rounded" title="Gerar PDF">
+                                    <a href="{{ route('eventos.relatorio.evento-pdf', $evento) }}" target="_blank" class="btn btn-danger btn-sm btn-rounded" title="{{ __('Gerar PDF') }}">
                                         <i class="fas fa-file-pdf"></i> PDF
                                     </a>
                                 </td>
@@ -173,36 +173,36 @@
 <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
 <script>
     const reportTitle = @json($tituloRelatorio);
-    const language = {
+    const language = Object.assign({}, window.IMW_DATATABLE_LANGUAGE || {}, {
         decimal: ',',
         thousands: '.',
-        emptyTable: 'Nenhum registro encontrado',
-        info: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
-        infoEmpty: 'Mostrando 0 até 0 de 0 registros',
-        infoFiltered: '(Filtrados de _MAX_ registros)',
-        lengthMenu: '_MENU_ resultados por página',
-        loadingRecords: 'Carregando...',
-        processing: 'Processando...',
-        search: 'Pesquisar',
-        zeroRecords: 'Nenhum registro encontrado',
+        emptyTable: window.__('Nenhum registro encontrado'),
+        info: window.__('Mostrando de _START_ até _END_ de _TOTAL_ registros'),
+        infoEmpty: window.__('Mostrando 0 até 0 de 0 registros'),
+        infoFiltered: window.__('(Filtrados de _MAX_ registros)'),
+        lengthMenu: window.__('_MENU_ resultados por página'),
+        loadingRecords: window.__('Carregando...'),
+        processing: window.__('Processando...'),
+        search: window.__('Pesquisar'),
+        zeroRecords: window.__('Nenhum registro encontrado'),
         paginate: {
-            first: 'Primeiro',
-            last: 'Último',
-            next: 'Próximo',
-            previous: 'Anterior'
+            first: window.__('Primeiro'),
+            last: window.__('Último'),
+            next: window.__('Próximo'),
+            previous: window.__('Anterior')
         },
         buttons: {
             pageLength: {
-                '-1': 'Mostrar todos os registros',
-                '_': 'Mostrar %d registros'
+                '-1': window.__('Mostrar todos os registros'),
+                '_': window.__('Mostrar %d registros')
             }
         }
-    };
+    });
 
     new DataTable('#eventos-relatorio-table', {
         language: language,
         pageLength: 10,
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, window.__('Todos')]],
         layout: {
             topStart: {
                 buttons: [

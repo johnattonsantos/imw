@@ -94,7 +94,7 @@
                                 class="bi bi-exclamation-triangle-fill mr-2" viewBox="0 0 16 16">
                                 <path
                                     d="M0 14.42l.719-1.24L7.998 1.58l7.283 11.58.719 1.24H0zm8-1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-.002-3a1 1 0 1 0-.001-2 1 1 0 0 0 0 2z" />
-                            </svg> Nenhum dado encontrado.
+                            </svg> {{ __('Nenhum dado encontrado.') }}
                         </div>
 
                         <!-- Alerta de erro -->
@@ -103,28 +103,28 @@
                                 class="bi bi-exclamation-triangle-fill mr-2" viewBox="0 0 16 16">
                                 <path
                                     d="M0 14.42l.719-1.24L7.998 1.58l7.283 11.58.719 1.24H0zm8-1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-.002-3a1 1 0 1 0-.001-2 1 1 0 0 0 0 2z" />
-                            </svg> Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.
+                            </svg> {{ __('Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.') }}
                         </div>
                         <input type="hidden" id="get-ano">
                         <table id="livrograde" class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-dark">
                                 <tr>
-                                    <th width="50px">ROL</th>
-                                    <th width="450px">DIZIMISTA</th>
-                                    <th width="100px">JAN</th>
-                                    <th width="100px">FEV</th>
-                                    <th width="100px">MAR</th>
-                                    <th width="100px">ABR</th>
-                                    <th width="100px">MAI</th>
-                                    <th width="100px">JUN</th>
-                                    <th width="100px">JUL</th>
-                                    <th width="100px">AGO</th>
-                                    <th width="100px">SET</th>
-                                    <th width="100px">OUT</th>
-                                    <th width="100px">NOV</th>
-                                    <th width="100px">DEZ</th>
-                                    <th width="100px">13º</th>
-                                    <th width="50px">TOTAL</th>
+                                    <th width="50px">{{ __('ROL') }}</th>
+                                    <th width="450px">{{ __('DIZIMISTA') }}</th>
+                                    <th width="100px">{{ __('JAN') }}</th>
+                                    <th width="100px">{{ __('FEV') }}</th>
+                                    <th width="100px">{{ __('MAR') }}</th>
+                                    <th width="100px">{{ __('ABR') }}</th>
+                                    <th width="100px">{{ __('MAI') }}</th>
+                                    <th width="100px">{{ __('JUN') }}</th>
+                                    <th width="100px">{{ __('JUL') }}</th>
+                                    <th width="100px">{{ __('AGO') }}</th>
+                                    <th width="100px">{{ __('SET') }}</th>
+                                    <th width="100px">{{ __('OUT') }}</th>
+                                    <th width="100px">{{ __('NOV') }}</th>
+                                    <th width="100px">{{ __('DEZ') }}</th>
+                                    <th width="100px">{{ __('13º') }}</th>
+                                    <th width="50px">{{ __('TOTAL') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -136,8 +136,8 @@
             <div class="row">
                 <div class="col-12 text-center">
                     <button class="btn btn-success " onclick="exportReportToExcel();"><i
-                            class="fa fa-file-excel" aria-hidden="true"></i> Excel</button>
-                             <button class="btn btn-secondary " onclick="gerarPdf()"> <i class="fa fa-file-pdf"></i> PDF</button>
+                            class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Excel') }}</button>
+                             <button class="btn btn-secondary " onclick="gerarPdf()"> <i class="fa fa-file-pdf"></i> {{ __('PDF') }}</button>
                 </div>
             </div>
         </div>
@@ -235,10 +235,10 @@
         });
 
 
-        
+
 
         function gerarPdf() {
-            
+
             const doc = new jspdf.jsPDF({
                 orientation: 'l', // 'l' for landscape, 'p' for portrait
                 unit: 'mm',
@@ -249,8 +249,8 @@
                 },
             })
             const totalPagesExp = doc.internal.getNumberOfPages();
-            doc.autoTable({ 
-                
+            doc.autoTable({
+
                 head: headRows(),
                 body: bodyRows(40),
                 willDrawPage: function (data) {
@@ -281,7 +281,7 @@
                 head: headRows(),
                 body: bodyRows(5),
                 theme: 'grid',
-                html: '#livrograde' 
+                html: '#livrograde'
             })
 
             doc.save('table.pdf')

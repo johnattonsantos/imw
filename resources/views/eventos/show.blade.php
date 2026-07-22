@@ -14,7 +14,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Detalhes do Evento</h4>
+                    <h4>{{ __('Detalhes do Evento') }}</h4>
                 </div>
             </div>
         </div>
@@ -22,9 +22,9 @@
             @include('eventos._show_content')
 
             @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-editar'))
-                <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-dark">Editar</a>
+                <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-dark">{{ __('Editar') }}</a>
             @endif
-            <a href="{{ route('eventos.index') }}" class="btn btn-light">Voltar</a>
+            <a href="{{ route('eventos.index') }}" class="btn btn-light">{{ __('Voltar') }}</a>
         </div>
     </div>
 </div>

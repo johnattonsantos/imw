@@ -51,8 +51,8 @@
                                         <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                             <thead class="thead-dark">
                                                 <tr>
-                                                    <th style="text-align: left;">Região</th>
-                                                    <th style="text-align: center;">Total</th>
+                                                    <th style="text-align: left;">{{ __('Região') }}</th>
+                                                    <th style="text-align: center;">{{ __('Total') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -66,7 +66,7 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <th style="text-align: left;">Total Geral</th>
+                                                    <th style="text-align: left;">{{ __('Total Geral') }}</th>
                                                     <th style="text-align: center;">{{ $lancamentos->sum('total') }}</th>
 
                                                 </tr>
@@ -80,7 +80,7 @@
                     <div class="row">
                         <div class="col-12 text-center">
                             <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i
-                                    class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                                    class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                         </div>
                     </div>
                     <!-- Fim do Conteúdo -->
@@ -98,7 +98,7 @@
     <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.selectpicker').selectpicker();
+            $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
 
             $('#btn_relatorio').on('click', function(event) {
                 var distrito = $('#distrito').val();

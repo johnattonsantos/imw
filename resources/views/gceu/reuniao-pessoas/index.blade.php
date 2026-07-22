@@ -33,9 +33,9 @@
                 @csrf
                 <div class="form-group row mb-4">
                     <div class="col-lg-3">
-                        <label class="control-label">* GCEU</label>
+                        <label class="control-label">{{ __('* GCEU') }}</label>
                         <select id="gceu_cadastro_id" name="gceu_cadastro_id" class="form-control @error('gceu_cadastro_id') is-invalid @enderror" required>
-                            <option value="">Selecione</option>
+                            <option value="">{{ __('Selecione') }}</option>
                             @foreach($gceus as $gceu)
                                 <option value="{{ $gceu->id }}" {{ old('gceu_cadastro_id') == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
                             @endforeach
@@ -43,31 +43,31 @@
                         @error('gceu_cadastro_id')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-lg-2">
-                        <label class="control-label">* Data da Reunião</label>
+                        <label class="control-label">{{ __('* Data da Reunião') }}</label>
                         <input type="date" name="data_reuniao" class="form-control @error('data_reuniao') is-invalid @enderror" value="{{ old('data_reuniao', date('Y-m-d')) }}" required>
                         @error('data_reuniao')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-lg-3">
-                        <label class="control-label">* Nome</label>
+                        <label class="control-label">{{ __('* Nome') }}</label>
                         <input type="text" name="nome" class="form-control @error('nome') is-invalid @enderror" value="{{ old('nome') }}" maxlength="150" required>
                         @error('nome')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-lg-2">
-                        <label class="control-label">Contato</label>
+                        <label class="control-label">{{ __('Contato') }}</label>
                         <input type="text" name="contato" class="form-control @error('contato') is-invalid @enderror" value="{{ old('contato') }}" maxlength="20" placeholder="(00) 00000-0000">
                         @error('contato')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                     <div class="col-lg-2">
-                        <label class="control-label">* Tipo</label>
+                        <label class="control-label">{{ __('* Tipo') }}</label>
                         <select id="tipo" name="tipo" class="form-control @error('tipo') is-invalid @enderror" required>
-                            <option value="V" {{ old('tipo', 'V') === 'V' ? 'selected' : '' }}>Visitante</option>
-                            <option value="N" {{ old('tipo') === 'N' ? 'selected' : '' }}>Novo Convertido</option>
+                            <option value="V" {{ old('tipo', 'V') === 'V' ? 'selected' : '' }}>{{ __('Visitante') }}</option>
+                            <option value="N" {{ old('tipo') === 'N' ? 'selected' : '' }}>{{ __('Novo Convertido') }}</option>
                         </select>
                         @error('tipo')<div class="invalid-feedback">{{ $message }}</div>@enderror
                     </div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary"><x-bx-save /> Salvar</button>
+                    <button type="submit" class="btn btn-primary"><x-bx-save /> {{ __('Salvar') }}</button>
                 </div>
             </form>
         </div>
@@ -79,7 +79,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Registros Cadastrados</h4>
+                    <h4>{{ __('Registros Cadastrados') }}</h4>
                 </div>
             </div>
         </div>
@@ -87,28 +87,28 @@
             <form method="GET" class="form-vertical mb-4">
                 <div class="form-group row">
                     <div class="col-lg-4">
-                        <label class="control-label">GCEU</label>
+                        <label class="control-label">{{ __('GCEU') }}</label>
                         <select id="filtro_gceu_id" name="filtro_gceu_id" class="form-control">
-                            <option value="">Todos</option>
+                            <option value="">{{ __('Todos') }}</option>
                             @foreach($gceus as $gceu)
                                 <option value="{{ $gceu->id }}" {{ request('filtro_gceu_id') == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-lg-3">
-                        <label class="control-label">Tipo</label>
+                        <label class="control-label">{{ __('Tipo') }}</label>
                         <select name="filtro_tipo" class="form-control">
-                            <option value="">Todos</option>
-                            <option value="V" {{ request('filtro_tipo') === 'V' ? 'selected' : '' }}>Visitante</option>
-                            <option value="N" {{ request('filtro_tipo') === 'N' ? 'selected' : '' }}>Novo Convertido</option>
+                            <option value="">{{ __('Todos') }}</option>
+                            <option value="V" {{ request('filtro_tipo') === 'V' ? 'selected' : '' }}>{{ __('Visitante') }}</option>
+                            <option value="N" {{ request('filtro_tipo') === 'N' ? 'selected' : '' }}>{{ __('Novo Convertido') }}</option>
                         </select>
                     </div>
                     <div class="col-lg-3">
-                        <label class="control-label">Data da Reunião</label>
+                        <label class="control-label">{{ __('Data da Reunião') }}</label>
                         <input type="date" name="filtro_data_reuniao" class="form-control" value="{{ request('filtro_data_reuniao') }}">
                     </div>
                     <div class="col-lg-2">
-                        <button type="submit" class="btn btn-primary" style="margin-top: 30px;"><x-bx-search /> Buscar</button>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 30px;"><x-bx-search /> {{ __('Buscar') }}</button>
                     </div>
                 </div>
             </form>
@@ -117,17 +117,17 @@
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="reuniao-pessoas-table">
                     <thead>
                         <tr>
-                            <th>Nº</th>
-                            <th>IGREJA</th>
-                            <th>GCEU</th>
-                            <th>Data Reunião</th>
-                            <th>Nome</th>
-                            <th>Contato</th>
-                            <th>Tipo</th>
-                            <th>Criado Em</th>
-                            <th>Atualizado Em</th>
-                            <th>Excluído Em</th>
-                            <th>Ações</th>
+                            <th>{{ __('Nº') }}</th>
+                            <th>{{ __('IGREJA') }}</th>
+                            <th>{{ __('GCEU') }}</th>
+                            <th>{{ __('Data Reunião') }}</th>
+                            <th>{{ __('Nome') }}</th>
+                            <th>{{ __('Contato') }}</th>
+                            <th>{{ __('Tipo') }}</th>
+                            <th>{{ __('Criado Em') }}</th>
+                            <th>{{ __('Atualizado Em') }}</th>
+                            <th>{{ __('Excluído Em') }}</th>
+                            <th>{{ __('Ações') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,9 +141,9 @@
                                 <td>{{ !empty($registro->contato) ? formatStr($registro->contato, '(##) #####-####') : '-' }}</td>
                                 <td>
                                     @if($registro->tipo === 'N')
-                                        <span class="badge badge-success">Novo Convertido</span>
+                                        <span class="badge badge-success">{{ __('Novo Convertido') }}</span>
                                     @else
-                                        <span class="badge badge-warning">Visitante</span>
+                                        <span class="badge badge-warning">{{ __('Visitante') }}</span>
                                     @endif
                                 </td>
                                 <td>{{ !empty($registro->created_at) ? \Carbon\Carbon::parse($registro->created_at)->format('d/m/Y H:i:s') : '-' }}</td>
@@ -153,13 +153,13 @@
                                     @if(empty($registro->deleted_at) && $registro->tipo === 'V')
                                         <form action="{{ route('gceu.reuniao-pessoas.converter', ['id' => $registro->id]) }}" method="POST" class="d-inline">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-success">Virar Novo Convertido</button>
+                                            <button type="submit" class="btn btn-sm btn-success">{{ __('Virar Novo Convertido') }}</button>
                                         </form>
                                     @endif
                                     @if(empty($registro->deleted_at))
                                         <form action="{{ route('gceu.reuniao-pessoas.deletar', ['id' => $registro->id]) }}" method="POST" class="d-inline" onsubmit="return confirm('Deseja remover este registro?');">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                            <button type="submit" class="btn btn-sm btn-danger">{{ __('Excluir') }}</button>
                                         </form>
                                     @endif
                                 </td>
