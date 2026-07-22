@@ -977,7 +977,7 @@
     "Missionária": "Missionária",
     "Modo de Exclusão": "Modo de Eliminação",
     "Modo/Forma": "Modo/Forma",
-    "Mostrando 0 até 0 de 0 registros": "A mostrar 0 a 0 de 0 registos",
+    "Mostrando 0 até 0 de 0 registros": "A mostrar 0 até 0 de 0 registos",
     "Mostrando _START_ até _END_ de _TOTAL_ registros": "A mostrar _START_ a _END_ de _TOTAL_ registos",
     "Mostrar _MENU_ entradas": "Mostrar _MENU_ entradas",
     "Mostrar _MENU_ registros": "Mostrar _MENU_ registos",
@@ -1219,7 +1219,7 @@
     "Profissão": "Profissão",
     "Propósito": "Propósito",
     "Próxima": "Seguinte",
-    "Próximo": "Próximo",
+    "Próximo": "Seguinte",
     "Página não encontrada": "Página não encontrada",
     "QUANTIDADE DE MEMBROS -": "QUANTIDADE DE SÓCIOS -",
     "Qua": "Qua",
@@ -1902,5 +1902,10 @@
     "valor calculado": "valor calculado",
     "vinculo == 'V')": "vinculo == 'V')",
     "Órgão Emissor*": "Órgão Emissor*",
-    "Último": "Último"
+    "Último": "Último",
+    "Congregados Ativos": "Congregados Activos",
+    "Total por Igreja": "Total por Igreja",
+    "Mostrando de _START_ até _END_ de _TOTAL_ registros": "A mostrar de _START_ até _END_ de _TOTAL_ registos",
+    "(Filtrados de _MAX_ registros)": "(Filtrados de _MAX_ registos)",
+    "_MENU_ resultados por página": "_MENU_ resultados por página"
 }

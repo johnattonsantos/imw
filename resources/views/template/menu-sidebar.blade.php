@@ -278,6 +278,11 @@
                                  <a href="{{ route('relatorio.conjuges') }}">{{ __('Cônjuges') }}</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/relatorio/congregados') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && (auth()->user()->hasPerfilRegra('relatorio-congregados') || auth()->user()->hasPerfilRegra('menu-relatorios-secretaria')))
+                                 <a href="{{ route('relatorio.congregados') }}">{{ __('Congregados') }}</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('secretaria/relatorio/familia') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-familia'))
                                  <a href="{{ route('relatorio.familia') }}">Família</a>
@@ -564,6 +569,11 @@
                                  <a href="{{ route('distrito.relatorio.conjuges') }}">{{ __('Cônjuges') }}</a>
                              @endif
                          </li>
+                         <li {!! Request::is('distrito/relatorio/congregados') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && (auth()->user()->hasPerfilRegra('distrito-menu-relatorio-congregados') || auth()->user()->hasPerfilRegra('distrito-menu-relatorio')))
+                                 <a href="{{ route('distrito.relatorio.congregados') }}">{{ __('Congregados') }}</a>
+                             @endif
+                         </li>
                          <li {!! Request::is('distrito/relatorio/estatisticagenero') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-estatistica-genero'))
                                  <a href="{{ route('distrito.relatorio.estatisticagenero') }}">{{ __('Estatística por Gênero') }}</a>
@@ -840,6 +850,13 @@
                          <li {!! Request::is('regiao/relatorio/conjuges') ? 'class="active"' : '' !!}>
 
                                  <a href="{{ route('regiao.relatorio.conjuges') }}">{{ __('Cônjuges') }}</a>
+
+                         </li>
+                        @endif
+                        @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-menu-relatorio-congregados') || auth()->user()->hasPerfilRegra('regiao-menu-relatorio')))
+                         <li {!! Request::is('regiao/relatorio/congregados') ? 'class="active"' : '' !!}>
+
+                                 <a href="{{ route('regiao.relatorio.congregados') }}">{{ __('Congregados') }}</a>
 
                          </li>
                         @endif

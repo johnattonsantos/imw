@@ -976,7 +976,7 @@
     "Missionária": "宣教師",
     "Modo de Exclusão": "除外モード",
     "Modo/Forma": "モード/形状",
-    "Mostrando 0 até 0 de 0 registros": "0件中0から0まで表示",
+    "Mostrando 0 até 0 de 0 registros": "0 件中 0 から 0 件を表示",
     "Mostrando _START_ até _END_ de _TOTAL_ registros": "_TOTAL_件中_START_から_END_まで表示",
     "Mostrar _MENU_ entradas": "_MENU_件表示",
     "Mostrar _MENU_ registros": "_MENU_件表示",
@@ -1890,5 +1890,11 @@
     "valor calculado": "計算値",
     "vinculo == 'V')": "リンク == 'V')",
     "Órgão Emissor*": "発行機関*",
-    "Último": "最後"
+    "Último": "最後",
+    "Congregados Ativos": "アクティブな会衆",
+    "Total por Igreja": "教会別合計",
+    "Mostrando de _START_ até _END_ de _TOTAL_ registros": "_TOTAL_ 件中 _START_ から _END_ 件を表示",
+    "(Filtrados de _MAX_ registros)": "（全 _MAX_ 件から絞り込み）",
+    "_MENU_ resultados por página": "1ページあたり _MENU_ 件",
+    "Anterior": "前へ"
 }

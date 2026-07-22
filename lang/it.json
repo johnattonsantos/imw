@@ -1890,5 +1890,11 @@
     "valor calculado": "valore calcolato",
     "vinculo == 'V')": "collegamento == 'V')",
     "Órgão Emissor*": "Ente emittente*",
-    "Último": "Ultimo"
+    "Último": "Ultimo",
+    "Congregados Ativos": "Congregati attivi",
+    "Total por Igreja": "Totale per chiesa",
+    "Mostrando de _START_ até _END_ de _TOTAL_ registros": "Visualizzazione da _START_ a _END_ di _TOTAL_ record",
+    "(Filtrados de _MAX_ registros)": "(filtrati da _MAX_ record)",
+    "_MENU_ resultados por página": "_MENU_ risultati per pagina",
+    "Anterior": "Precedente"
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioAniversariantesService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioCongregadosService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioConjugesService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioFamiliaService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioFuncoesEclesiasticasService;
@@ -58,6 +59,17 @@ class RelatorioController extends Controller
             return view('relatorios.conjuges', $data);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', __('Não foi possível abrir a página do relatório de cônjuges'));
+        }
+    }
+
+    public function congregados()
+    {
+        try {
+            $data = app(IdentificaDadosRelatorioCongregadosService::class)->executeLocal();
+
+            return view('relatorios.congregados', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', __('Não foi possível abrir a página do relatório de congregados'));
         }
     }
 

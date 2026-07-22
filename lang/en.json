@@ -1890,5 +1890,11 @@
     "valor calculado": "calculated value",
     "vinculo == 'V')": "link == 'V')",
     "Órgão Emissor*": "Issuing body*",
-    "Último": "Last"
+    "Último": "Last",
+    "Congregados Ativos": "Active Congregants",
+    "Total por Igreja": "Total by Church",
+    "Mostrando de _START_ até _END_ de _TOTAL_ registros": "Showing _START_ to _END_ of _TOTAL_ records",
+    "(Filtrados de _MAX_ registros)": "(filtered from _MAX_ records)",
+    "_MENU_ resultados por página": "_MENU_ results per page",
+    "Anterior": "Previous"
 }

@@ -9,26 +9,40 @@ class QuantidadeMembrosService
 {
     use QuantidadeMembrosUtils;
 
-    public function execute($dataInicial, $dataFinal, $tipo)
+    public function execute($dataInicial, $dataFinal, $periodoAnos = null)
     {
-        if (empty($dataInicial)) {
-            $dataInicial = Carbon::now()->format('Y-m-d');
-        }
+        [$dataInicial, $dataFinal, $periodoAnos] = $this->normalizarPeriodo($dataInicial, $dataFinal, $periodoAnos);
 
-        if (empty($dataFinal)) {
-            $dataFinal = Carbon::now()->format('Y-m-d');
-        }
-
-        if (empty($tipo)) {
-            $tipo = 'M';
-        }
-        
         $distritoId = session()->get('session_perfil')->instituicao_id;
 
-        $lancamentos = QuantidadeMembrosUtils::fetch($dataInicial, $dataFinal, $tipo, $distritoId);
+        $lancamentos = QuantidadeMembrosUtils::fetch($dataInicial, $dataFinal, $distritoId);
 
         return [
-            'lancamentos' => $lancamentos
+            'lancamentos' => $lancamentos,
+            'dataInicial' => $dataInicial,
+            'dataFinal'   => $dataFinal,
+            'periodoAnos' => $periodoAnos,
         ];
+    }
+
+    private function normalizarPeriodo($dataInicial, $dataFinal, $periodoAnos): array
+    {
+        $dataFinal = $dataFinal ? Carbon::parse($dataFinal) : Carbon::now();
+
+        if ($periodoAnos !== null && $periodoAnos !== '') {
+            $periodoAnos = max(1, min(6, (int) $periodoAnos));
+            $dataInicial = $dataFinal->copy()->subYearsNoOverflow($periodoAnos);
+
+            return [$dataInicial->format('Y-m-d'), $dataFinal->format('Y-m-d'), $periodoAnos];
+        }
+
+        $dataInicial = $dataInicial ? Carbon::parse($dataInicial) : $dataFinal->copy()->subYearsNoOverflow(1);
+        $limiteInicial = $dataFinal->copy()->subYearsNoOverflow(6);
+
+        if ($dataInicial->lt($limiteInicial) || $dataInicial->gt($dataFinal)) {
+            $dataInicial = $limiteInicial;
+        }
+
+        return [$dataInicial->format('Y-m-d'), $dataFinal->format('Y-m-d'), null];
     }
 }
