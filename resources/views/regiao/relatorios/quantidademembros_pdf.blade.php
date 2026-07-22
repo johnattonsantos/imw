@@ -94,8 +94,8 @@ use Carbon\Carbon;
         <div class="info">
             <div class="title">QUANTIDADE DE MEMBROS - {{ optional($instituicao)->nome ?? optional($regiao)->nome }}</div>
             <div class="period">
-                Período de {{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}
-                a {{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}
+                Período de {{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}
+                a {{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}
             </div>
         </div>
         <div class="date">Data do Relatório: {{ \Carbon\Carbon::now()->format('m/Y') }}</div>
@@ -107,10 +107,10 @@ use Carbon\Carbon;
                 <th style="width: 17%" style="text-align: distrito">{{ __('DISTRITO') }}</th>
                 <th style="text-align: left" rowspan="2">{{ __('IGREJA') }}</th>
                 <th width="100px" style="text-align: left" rowspan="2">
-                    TOTAL EM {{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}
+                    TOTAL EM {{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}
                 </th>
                 <th width="100px" style="text-align: left" rowspan="2">
-                    TOTAL EM {{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}
+                    TOTAL EM {{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}
                 </th>
             </tr>
         </thead>

@@ -1890,5 +1890,11 @@
     "valor calculado": "valor calculado",
     "vinculo == 'V')": "vinculo == 'V')",
     "Órgão Emissor*": "Órgão Emissor*",
-    "Último": "Último"
+    "Último": "Último",
+    "Congregados Ativos": "Congregados Ativos",
+    "Total por Igreja": "Total por Igreja",
+    "Mostrando de _START_ até _END_ de _TOTAL_ registros": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+    "(Filtrados de _MAX_ registros)": "(Filtrados de _MAX_ registros)",
+    "_MENU_ resultados por página": "_MENU_ resultados por página",
+    "Anterior": "Anterior"
 }
