@@ -27,5 +27,5 @@ ALTER TABLE `juridico_regiao_advogados`
 
 ALTER TABLE `juridico_regiao_advogados`
   ADD CONSTRAINT `juridico_regiao_advogados_regiao_id_foreign` FOREIGN KEY (`regiao_id`) REFERENCES `instituicoes_instituicoes` (`id`);
-COMMIT;
+
 

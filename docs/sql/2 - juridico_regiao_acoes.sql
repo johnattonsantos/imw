@@ -45,4 +45,4 @@ ALTER TABLE `juridico_regiao_acoes`
   ADD CONSTRAINT `juridico_regiao_acoes_advogado_oposicao_id_foreign` FOREIGN KEY (`advogado_oposicao_id`) REFERENCES `juridico_regiao_advogados` (`id`) ,
   ADD CONSTRAINT `juridico_regiao_acoes_instituicao_id_foreign` FOREIGN KEY (`instituicao_id`) REFERENCES `instituicoes_instituicoes` (`id`) ,
   ADD CONSTRAINT `juridico_regiao_acoes_regiao_id_foreign` FOREIGN KEY (`regiao_id`) REFERENCES `instituicoes_instituicoes` (`id`) ;
-COMMIT;
+
