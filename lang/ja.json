@@ -1896,5 +1896,17 @@
     "Mostrando de _START_ até _END_ de _TOTAL_ registros": "_TOTAL_ 件中 _START_ から _END_ 件を表示",
     "(Filtrados de _MAX_ registros)": "（全 _MAX_ 件から絞り込み）",
     "_MENU_ resultados por página": "1ページあたり _MENU_ 件",
-    "Anterior": "前へ"
+    "Anterior": "前へ",
+    "Clérigos por Vínculo": "関係タイプ別聖職者",
+    "Relatório Clérigos por Vínculo": "関係タイプ別聖職者レポート",
+    "Tipo de Vínculo": "関係タイプ",
+    "Integral": "常勤",
+    "Parcial": "非常勤",
+    "Integrais": "常勤",
+    "Parciais": "非常勤",
+    "Com ônus": "負担あり",
+    "Sem ônus": "負担なし",
+    "TIPO DE VÍNCULO": "関係タイプ",
+    "QTD. PREBENDAS": "俸給数",
+    "INTEGRALIZAÇÃO": "常勤化日"
 }

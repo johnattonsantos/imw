@@ -1896,5 +1896,17 @@
     "Mostrando de _START_ até _END_ de _TOTAL_ registros": "Showing _START_ to _END_ of _TOTAL_ records",
     "(Filtrados de _MAX_ registros)": "(filtered from _MAX_ records)",
     "_MENU_ resultados por página": "_MENU_ results per page",
-    "Anterior": "Previous"
+    "Anterior": "Previous",
+    "Clérigos por Vínculo": "Clergy by Link Type",
+    "Relatório Clérigos por Vínculo": "Clergy by Link Type Report",
+    "Tipo de Vínculo": "Link Type",
+    "Integral": "Full-time",
+    "Parcial": "Part-time",
+    "Integrais": "Full-time Clergy",
+    "Parciais": "Part-time Clergy",
+    "Com ônus": "With cost",
+    "Sem ônus": "Without cost",
+    "TIPO DE VÍNCULO": "LINK TYPE",
+    "QTD. PREBENDAS": "PREBENDS QTY.",
+    "INTEGRALIZAÇÃO": "FULL-TIME DATE"
 }

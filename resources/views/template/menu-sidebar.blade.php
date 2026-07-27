@@ -929,6 +929,13 @@
 
                         </li>
                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-vinculos'))
+                        <li {!! Request::is('regiao/relatorio/clerigos-vinculos') ? 'class="active"' : '' !!}>
+
+                                <a href="{{ route('regiao.relatorio.clerigosvinculos') }}">{{ __('Clérigos por Vínculo') }}</a>
+
+                        </li>
+                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-hitorico-nomeacoes'))
                          <li {!! Request::is('regiao/relatorio/historiconomeacoes') ? 'class="active"' : '' !!}>
 

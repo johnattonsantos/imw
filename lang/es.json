@@ -1896,5 +1896,17 @@
     "Mostrando de _START_ até _END_ de _TOTAL_ registros": "Mostrando de _START_ a _END_ de _TOTAL_ registros",
     "(Filtrados de _MAX_ registros)": "(filtrados de _MAX_ registros)",
     "_MENU_ resultados por página": "_MENU_ resultados por página",
-    "Anterior": "Anterior"
+    "Anterior": "Anterior",
+    "Clérigos por Vínculo": "Clérigos por vínculo",
+    "Relatório Clérigos por Vínculo": "Informe de clérigos por vínculo",
+    "Tipo de Vínculo": "Tipo de vínculo",
+    "Integral": "Integral",
+    "Parcial": "Parcial",
+    "Integrais": "Integrales",
+    "Parciais": "Parciales",
+    "Com ônus": "Con carga económica",
+    "Sem ônus": "Sin carga económica",
+    "TIPO DE VÍNCULO": "TIPO DE VÍNCULO",
+    "QTD. PREBENDAS": "CANT. PREBENDAS",
+    "INTEGRALIZAÇÃO": "INTEGRACIÓN"
 }
