@@ -1896,5 +1896,17 @@
     "Mostrando de _START_ até _END_ de _TOTAL_ registros": "Visualizzazione da _START_ a _END_ di _TOTAL_ record",
     "(Filtrados de _MAX_ registros)": "(filtrati da _MAX_ record)",
     "_MENU_ resultados por página": "_MENU_ risultati per pagina",
-    "Anterior": "Precedente"
+    "Anterior": "Precedente",
+    "Clérigos por Vínculo": "Clero per tipo di vincolo",
+    "Relatório Clérigos por Vínculo": "Rapporto del clero per tipo di vincolo",
+    "Tipo de Vínculo": "Tipo di vincolo",
+    "Integral": "Integrale",
+    "Parcial": "Parziale",
+    "Integrais": "Integrali",
+    "Parciais": "Parziali",
+    "Com ônus": "Con onere",
+    "Sem ônus": "Senza onere",
+    "TIPO DE VÍNCULO": "TIPO DI VINCOLO",
+    "QTD. PREBENDAS": "Q.TÀ PREBENDE",
+    "INTEGRALIZAÇÃO": "INTEGRAZIONE"
 }

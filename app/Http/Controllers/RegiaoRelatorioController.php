@@ -34,6 +34,7 @@ use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoCategorias;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoDados;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoEsposas;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoStatus;
+use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoVinculos;
 use App\Traits\Identifiable;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
@@ -472,6 +473,12 @@ class RegiaoRelatorioController extends Controller
     {
         $data = app(ClerigoStatus::class)->execute($request->all());
         return view('regiao.relatorios.clerigos-prebendas.clerigos-status', $data);
+    }
+
+    public function clerigoVinculos(Request $request)
+    {
+        $data = app(ClerigoVinculos::class)->execute($request->all());
+        return view('regiao.relatorios.clerigos-prebendas.clerigos-vinculos', $data);
     }
 
     public function CongregacaoPorIgreja(Request $request){

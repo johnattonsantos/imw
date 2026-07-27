@@ -222,7 +222,7 @@
             reverse: true
         });
         // definir o idioma padrão do Select2 para português
-        2fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
+        $.fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
         $('#caixa_id').select2({
            placeholder: 'Selecione',
             allowClear: true

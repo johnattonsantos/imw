@@ -1907,5 +1907,17 @@
     "Total por Igreja": "Total por Igreja",
     "Mostrando de _START_ até _END_ de _TOTAL_ registros": "A mostrar de _START_ até _END_ de _TOTAL_ registos",
     "(Filtrados de _MAX_ registros)": "(Filtrados de _MAX_ registos)",
-    "_MENU_ resultados por página": "_MENU_ resultados por página"
+    "_MENU_ resultados por página": "_MENU_ resultados por página",
+    "Clérigos por Vínculo": "Clérigos por Vínculo",
+    "Relatório Clérigos por Vínculo": "Relatório Clérigos por Vínculo",
+    "Tipo de Vínculo": "Tipo de Vínculo",
+    "Integral": "Integral",
+    "Parcial": "Parcial",
+    "Integrais": "Integrais",
+    "Parciais": "Parciais",
+    "Com ônus": "Com ónus",
+    "Sem ônus": "Sem ónus",
+    "TIPO DE VÍNCULO": "TIPO DE VÍNCULO",
+    "QTD. PREBENDAS": "QTD. PREBENDAS",
+    "INTEGRALIZAÇÃO": "INTEGRALIZAÇÃO"
 }

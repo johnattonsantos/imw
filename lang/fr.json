@@ -1896,5 +1896,17 @@
     "Mostrando de _START_ até _END_ de _TOTAL_ registros": "Affichage de _START_ à _END_ sur _TOTAL_ enregistrements",
     "(Filtrados de _MAX_ registros)": "(filtrés sur _MAX_ enregistrements)",
     "_MENU_ resultados por página": "_MENU_ résultats par page",
-    "Anterior": "Précédent"
+    "Anterior": "Précédent",
+    "Clérigos por Vínculo": "Clergé par type de lien",
+    "Relatório Clérigos por Vínculo": "Rapport du clergé par type de lien",
+    "Tipo de Vínculo": "Type de lien",
+    "Integral": "Temps plein",
+    "Parcial": "Temps partiel",
+    "Integrais": "Temps plein",
+    "Parciais": "Temps partiel",
+    "Com ônus": "Avec charge",
+    "Sem ônus": "Sans charge",
+    "TIPO DE VÍNCULO": "TYPE DE LIEN",
+    "QTD. PREBENDAS": "QTÉ DE PRÉBENDES",
+    "INTEGRALIZAÇÃO": "INTÉGRATION"
 }

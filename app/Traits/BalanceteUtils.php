@@ -114,6 +114,7 @@ trait BalanceteUtils
         // Usando Carbon para manipulação de datas
         $dataInicial = Carbon::createFromFormat('m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
         $dataFinal = Carbon::createFromFormat('m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
+        $tipoIgreja = InstituicoesTipoInstituicao::IGREJA_LOCAL;
 
         $sql = "SELECT 
                     fpc.numeracao,
@@ -123,8 +124,11 @@ trait BalanceteUtils
                     financeiro_lancamentos fl
                 JOIN 
                     financeiro_plano_contas fpc ON fpc.id = fl.plano_conta_id
+                JOIN
+                    instituicoes_instituicoes ii ON ii.id = fl.instituicao_id
                 WHERE 
-                    fl.deleted_at IS NULL AND fl.conciliado = 1 ";
+                    ii.tipo_instituicao_id = $tipoIgreja
+                    AND fl.deleted_at IS NULL AND fl.conciliado = 1 ";
                     if ($instituicaoId) {
                         $sql .= "AND fl.instituicao_id = '$instituicaoId' ";
                     }
@@ -238,45 +242,53 @@ trait BalanceteUtils
         $anoAnterior = $dataMesAnterior->format('Y');
 
         // Construção da query com as variáveis diretamente
+        $tipoIgreja = InstituicoesTipoInstituicao::IGREJA_LOCAL;
+        $filtroIgreja = " AND EXISTS (
+                            SELECT 1
+                            FROM instituicoes_instituicoes ii
+                            WHERE ii.id = fscm.instituicao_id
+                              AND ii.tipo_instituicao_id = $tipoIgreja
+                              AND ii.deleted_at IS NULL
+                        )";
 
         $sql = "SELECT 'saldo_inicial', sum(fscm.saldo_anterior ) AS saldo
                     FROM financeiro_saldo_consolidado_mensal fscm
-                    WHERE fscm.ano=$dataIni[1] AND fscm.mes=$dataIni[0]";
+                    WHERE fscm.ano=$dataIni[1] AND fscm.mes=$dataIni[0] $filtroIgreja";
                     if ($instituicaoId) {
                         $sql .= " AND fscm.instituicao_id = '$instituicaoId' ";
                     }
         $sql .= " UNION 
                 SELECT 'total_entradas', sum(fscm.total_entradas )
                     FROM financeiro_saldo_consolidado_mensal fscm
-                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal ";
+                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal $filtroIgreja ";
                     if ($instituicaoId) {
                         $sql .= " AND fscm.instituicao_id = '$instituicaoId' ";
                     }
         $sql .= " UNION 
                 SELECT 'total_saidas', sum(fscm.total_saidas )
                     FROM financeiro_saldo_consolidado_mensal fscm
-                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal";
+                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal $filtroIgreja";
                     if ($instituicaoId) {
                         $sql .= " AND fscm.instituicao_id = '$instituicaoId' ";
                     }
         $sql .= " UNION 
                 SELECT 'total_tranf_entradas', sum(fscm.total_transf_entradas  )
                     FROM financeiro_saldo_consolidado_mensal fscm
-                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal";
+                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal $filtroIgreja";
                     if ($instituicaoId) {
                         $sql .= " AND fscm.instituicao_id = '$instituicaoId' ";
                     }
         $sql .= " UNION 
                 SELECT 'total_transf_saidas', sum(fscm.total_transf_saidas  )
                     FROM financeiro_saldo_consolidado_mensal fscm
-                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal";
+                    WHERE (fscm.ano * 100 + fscm.mes) between $tdInicial AND $tdFinal $filtroIgreja";
                     if ($instituicaoId) {
                         $sql .= " AND fscm.instituicao_id = '$instituicaoId' ";
                     }
         $sql .= " UNION 
                 SELECT 'saldo_atual', sum(fscm.saldo_final )
                     FROM financeiro_saldo_consolidado_mensal fscm
-                    WHERE fscm.ano=$dataFin[1] AND fscm.mes=$dataFin[0]";
+                    WHERE fscm.ano=$dataFin[1] AND fscm.mes=$dataFin[0] $filtroIgreja";
                     if ($instituicaoId) {
                         $sql .= " AND fscm.instituicao_id = '$instituicaoId' ";
                     }
