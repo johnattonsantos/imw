@@ -44,6 +44,7 @@ trait VariacaoFinanceiraUtils
                 AND fscm.ano = :ano 
                 AND fscm.mes BETWEEN :mesInicial3 AND :mesFinal
             WHERE ii.instituicao_pai_id = :instituicaoPaiId
+                AND ii.tipo_instituicao_id = 1
             GROUP BY ii.id, ii.nome
             ORDER BY ii.nome;
             ";
