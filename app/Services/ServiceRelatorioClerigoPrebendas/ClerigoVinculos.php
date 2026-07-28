@@ -55,8 +55,8 @@ class ClerigoVinculos
         string $onus
     ): Collection {
         $tipoVinculoSql = "CASE
-            WHEN LOWER(pf.funcao) LIKE '%integral%' THEN 'Integral'
-            WHEN LOWER(pf.funcao) LIKE '%parcial%' THEN 'Parcial'
+            WHEN LOWER(TRIM(pf.vinculo)) = 'integral' THEN 'Integral'
+            WHEN LOWER(TRIM(pf.vinculo)) = 'parcial' THEN 'Parcial'
             ELSE 'Não informado'
         END";
 
@@ -129,8 +129,8 @@ class ClerigoVinculos
             ->when($igrejaId !== 'all' && is_numeric($igrejaId), function ($query) use ($igrejaId) {
                 $query->where('igreja.id', (int) $igrejaId);
             })
-            ->when(in_array($tipoVinculo, ['integral', 'parcial'], true), function ($query) use ($tipoVinculo, $tipoVinculoSql) {
-                $query->whereRaw($tipoVinculoSql . ' = ?', [ucfirst($tipoVinculo)]);
+            ->when(in_array($tipoVinculo, ['integral', 'parcial'], true), function ($query) use ($tipoVinculo) {
+                $query->whereRaw('LOWER(TRIM(pf.vinculo)) = ?', [$tipoVinculo]);
             })
             ->when(in_array($onus, ['0', '1'], true), function ($query) use ($onus) {
                 $query->whereRaw('COALESCE(pf.onus, 0) = ?', [(int) $onus]);
