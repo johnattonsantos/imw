@@ -154,7 +154,6 @@
                                     <th>{{ __('TIPO DE VÍNCULO') }}</th>
                                     <th>{{ __('ÔNUS') }}</th>
                                     <th>{{ __('QTD. PREBENDAS') }}</th>
-                                    <th>{{ __('INTEGRALIZAÇÃO') }}</th>
                                     <th>{{ __('CONTATO') }}</th>
                                 </tr>
                             </thead>
@@ -169,7 +168,6 @@
                                         <td>{{ __($clerigo->tipo_vinculo) }}</td>
                                         <td>{{ __($clerigo->onus_descricao) }}</td>
                                         <td>{{ is_null($clerigo->qtd_prebendas) ? __('Não informado') : number_format($clerigo->qtd_prebendas, 2, ',', '.') }}</td>
-                                        <td>{{ $clerigo->data_integralizacao ?: '-' }}</td>
                                         <td>{{ $clerigo->contato ? formatStr($clerigo->contato, '## (##) #####-####') : '-' }}</td>
                                     </tr>
                                 @empty
