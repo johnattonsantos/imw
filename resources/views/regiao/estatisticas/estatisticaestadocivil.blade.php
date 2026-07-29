@@ -39,7 +39,7 @@
                         <div class="col-lg-2 text-right">
                             <label class="control-label">{{ __('* Distrito:') }}</label>
                         </div>
-                        <div class="col-lg-3">
+                        <div class="col-lg-5">
                             <select class="form-control" id="distrito" name="distrito" required>
                                 <option value="">{{ __('Selecione') }}</option>
                                 <option value="all" {{ request()->input('distrito') == 'all' ? 'selected' : '' }}>{{ __('Todos') }}
@@ -49,22 +49,6 @@
                                         {{ request()->input('distrito') == $distrito->id ? 'selected' : '' }}>
                                         {{ $distrito->nome }}</option>
                                 @endforeach
-                            </select>
-                        </div>
-                        <div class="col-lg-2 text-right">
-                            <label class="control-label">{{ __('* Vínculo:') }}</label>
-                        </div>
-                        <div class="col-lg-3">
-                            <select class="form-control" id="vinculo" name="vinculo" required>
-                                <option value="M" {{ ($vinculo ?? request()->input('vinculo', 'M')) == 'M' ? 'selected' : '' }}>
-                                    {{ __('Membro') }}
-                                </option>
-                                <option value="C" {{ ($vinculo ?? request()->input('vinculo', 'M')) == 'C' ? 'selected' : '' }}>
-                                    {{ __('Congregado') }}
-                                </option>
-                                <option value="V" {{ ($vinculo ?? request()->input('vinculo', 'M')) == 'V' ? 'selected' : '' }}>
-                                    {{ __('Visitante') }}
-                                </option>
                             </select>
                         </div>
                         <div class="col-lg-2">
@@ -88,7 +72,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12">
-                                    <h6 class="mt-3">QUANTIDADE DE MEMBROS -
+                                    <h6 class="mt-3">{{ __('QUANTIDADE DE MEMBROS ATIVOS') }} -
                                         {{ optional($instituicao)->nome ?? $regiao->nome }}</h6>
                                     <div class="table-responsive">
                                         <table id="estado-civil-table" class="table table-striped table-bordered"
@@ -145,11 +129,10 @@
 
             $('#filter_form').submit(function(event) {
                 var distrito = $('#distrito').val();
-                var vinculo = $('#vinculo').val();
 
-                if (!distrito || !vinculo) {
+                if (!distrito) {
                     event.preventDefault();
-                    alert('Por favor, preencha todos os campos.');
+                    alert('{{ __('Por favor, preencha todos os campos.') }}');
                 }
             });
 

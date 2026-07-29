@@ -1116,7 +1116,7 @@
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/estatisticaestadocivil') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-estado-civl'))
-                                 <a href="{{ route('regiao.relatorio.estatisticaestadocivil') }}">{{ __('Estado Cívil') }}</a>
+                                 <a href="{{ route('regiao.relatorio.estatisticaestadocivil') }}">{{ __('Estado Civil') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/estatisticageneroporcentagem') ? 'class="active"' : '' !!}>

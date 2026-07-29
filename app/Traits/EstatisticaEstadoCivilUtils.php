@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\MembresiaMembro;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +25,10 @@ trait EstatisticaEstadoCivilUtils
             END";
 
         $baseQuery = DB::table('membresia_membros as mm')
-            ->selectRaw("mm.id as membro_id, {$estadoCivilNormalizadoSql} as estado_civil");
+            ->selectRaw("mm.id as membro_id, {$estadoCivilNormalizadoSql} as estado_civil")
+            ->where('mm.status', MembresiaMembro::STATUS_ATIVO)
+            ->where('mm.vinculo', MembresiaMembro::VINCULO_MEMBRO)
+            ->whereNull('mm.deleted_at');
 
         if ($regiaoId !== null) {
             $baseQuery->where('mm.regiao_id', $regiaoId);
