@@ -47,6 +47,22 @@
                         <span class="help-block text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="col-12 mt-3 col-md-4">
+                    @php($vinculoSelecionado = strtolower((string) old('vinculo', $funcao->vinculo)))
+                    <label for="vinculo">{{ __('Tipo de vínculo') }}</label>
+                    <select class="form-control" id="vinculo" name="vinculo">
+                        <option value="">{{ __('Não informado') }}</option>
+                        <option value="integral" {{ $vinculoSelecionado === 'integral' ? 'selected' : '' }}>
+                            {{ __('Integral') }}
+                        </option>
+                        <option value="parcial" {{ $vinculoSelecionado === 'parcial' ? 'selected' : '' }}>
+                            {{ __('Parcial') }}
+                        </option>
+                    </select>
+                    @error('vinculo')
+                        <span class="help-block text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
             <div class="row">
 
