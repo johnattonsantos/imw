@@ -154,7 +154,6 @@
                                     <th>{{ __('TIPO DE VÍNCULO') }}</th>
                                     <th>{{ __('ÔNUS') }}</th>
                                     <th>{{ __('QTD. PREBENDAS') }}</th>
-                                    <th>{{ __('INTEGRALIZAÇÃO') }}</th>
                                     <th>{{ __('CONTATO') }}</th>
                                 </tr>
                             </thead>
@@ -169,7 +168,6 @@
                                         <td>{{ __($clerigo->tipo_vinculo) }}</td>
                                         <td>{{ __($clerigo->onus_descricao) }}</td>
                                         <td>{{ is_null($clerigo->qtd_prebendas) ? __('Não informado') : number_format($clerigo->qtd_prebendas, 2, ',', '.') }}</td>
-                                        <td>{{ $clerigo->data_integralizacao ?: '-' }}</td>
                                         <td>{{ $clerigo->contato ? formatStr($clerigo->contato, '## (##) #####-####') : '-' }}</td>
                                     </tr>
                                 @empty
@@ -192,7 +190,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js"></script>
 
     @if (request()->has('action'))
         <script>
@@ -219,13 +216,6 @@
                                 title: 'IMW - RELATÓRIO CLÉRIGOS POR VÍNCULO',
                                 orientation: 'landscape',
                                 pageSize: 'A4'
-                            },
-                            {
-                                extend: 'print',
-                                className: 'btn btn-primary btn-rounded',
-                                text: '<i class="fas fa-print"></i> {{ __('Imprimir') }}',
-                                titleAttr: '{{ __('Imprimir') }}',
-                                title: 'IMW - RELATÓRIO CLÉRIGOS POR VÍNCULO'
                             }
                         ]
                     },

@@ -39,6 +39,7 @@ class UpdateQtdPrebendasRequest extends FormRequest
                     }
                 },
             ],
+            'vinculo' => ['nullable', 'in:integral,parcial'],
         ];
     }
 

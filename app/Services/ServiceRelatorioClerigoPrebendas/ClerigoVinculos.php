@@ -55,11 +55,40 @@ class ClerigoVinculos
         string $onus
     ): Collection {
         $tipoVinculoSql = "CASE
-            WHEN COALESCE(pf.qtd_prebendas, 0) >= 1 OR pp.data_integralizacao IS NOT NULL THEN 'Integral'
-            ELSE 'Parcial'
+            WHEN LOWER(TRIM(pf.vinculo)) = 'integral' THEN 'Integral'
+            WHEN LOWER(TRIM(pf.vinculo)) = 'parcial' THEN 'Parcial'
+            ELSE 'Não informado'
         END";
 
+        $ultimaNomeacao = DB::table('pessoas_nomeacoes as pn_base')
+            ->join('instituicoes_instituicoes as igreja_base', 'igreja_base.id', '=', 'pn_base.instituicao_id')
+            ->join('instituicoes_instituicoes as distrito_base', 'distrito_base.id', '=', 'igreja_base.instituicao_pai_id')
+            ->leftJoin('instituicoes_instituicoes as regiao_base', 'regiao_base.id', '=', 'distrito_base.instituicao_pai_id')
+            ->select('pn_base.pessoa_id', DB::raw('MAX(pn_base.id) as nomeacao_id'))
+            ->where('igreja_base.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->where('distrito_base.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where('igreja_base.ativo', 1)
+            ->where('distrito_base.ativo', 1)
+            ->whereNull('pn_base.deleted_at')
+            ->whereNull('pn_base.data_termino')
+            ->whereNull('igreja_base.deleted_at')
+            ->whereNull('distrito_base.deleted_at')
+            ->where(function ($query) use ($regiaoId) {
+                $query->where('regiao_base.id', $regiaoId)
+                    ->orWhere('igreja_base.regiao_id', $regiaoId);
+            })
+            ->when($distritoId !== 'all' && is_numeric($distritoId), function ($query) use ($distritoId) {
+                $query->where('distrito_base.id', (int) $distritoId);
+            })
+            ->when($igrejaId !== 'all' && is_numeric($igrejaId), function ($query) use ($igrejaId) {
+                $query->where('igreja_base.id', (int) $igrejaId);
+            })
+            ->groupBy('pn_base.pessoa_id');
+
         $query = DB::table('pessoas_nomeacoes as pn')
+            ->joinSub($ultimaNomeacao, 'ultima_nomeacao', function ($join) {
+                $join->on('ultima_nomeacao.nomeacao_id', '=', 'pn.id');
+            })
             ->join('pessoas_pessoas as pp', 'pp.id', '=', 'pn.pessoa_id')
             ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
             ->join('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'pn.instituicao_id')
@@ -74,15 +103,13 @@ class ClerigoVinculos
                 'pf.qtd_prebendas',
                 DB::raw($tipoVinculoSql . ' as tipo_vinculo'),
                 DB::raw("CASE WHEN COALESCE(pf.onus, 0) = 1 THEN 'Com ônus' ELSE 'Sem ônus' END as onus_descricao"),
-                DB::raw("DATE_FORMAT(pp.data_integralizacao, '%d/%m/%Y') as data_integralizacao"),
                 DB::raw("CASE
                     WHEN pp.telefone_preferencial IS NOT NULL AND pp.telefone_preferencial <> '' THEN pp.telefone_preferencial
                     WHEN pp.telefone_alternativo IS NOT NULL AND pp.telefone_alternativo <> '' THEN pp.telefone_alternativo
                     ELSE ''
                 END as contato")
             )
-            ->where('pp.tipo', 'CLE')
-            ->where('pp.status_id', 1)
+            ->where('pp.situacao_id', 1)
             ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('distrito.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
             ->where('igreja.ativo', 1)
@@ -102,8 +129,8 @@ class ClerigoVinculos
             ->when($igrejaId !== 'all' && is_numeric($igrejaId), function ($query) use ($igrejaId) {
                 $query->where('igreja.id', (int) $igrejaId);
             })
-            ->when(in_array($tipoVinculo, ['integral', 'parcial'], true), function ($query) use ($tipoVinculo, $tipoVinculoSql) {
-                $query->whereRaw($tipoVinculoSql . ' = ?', [ucfirst($tipoVinculo)]);
+            ->when(in_array($tipoVinculo, ['integral', 'parcial'], true), function ($query) use ($tipoVinculo) {
+                $query->whereRaw('LOWER(TRIM(pf.vinculo)) = ?', [$tipoVinculo]);
             })
             ->when(in_array($onus, ['0', '1'], true), function ($query) use ($onus) {
                 $query->whereRaw('COALESCE(pf.onus, 0) = ?', [(int) $onus]);

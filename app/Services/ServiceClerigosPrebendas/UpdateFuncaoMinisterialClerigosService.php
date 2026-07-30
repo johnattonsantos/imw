@@ -13,6 +13,7 @@ class UpdateFuncaoMinisterialClerigosService
 
         $funcao->update([
             'qtd_prebendas' => $request->input('qtd_prebendas'),
+            'vinculo' => $request->input('vinculo') ?: null,
         ]);
     }
 }
