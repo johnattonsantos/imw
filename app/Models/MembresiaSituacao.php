@@ -13,6 +13,7 @@ class MembresiaSituacao extends Model implements Auditable
     const TIPO_ADESAO = 'R';
     const TIPO_EXCLUSAO = 'E';
     const TIPO_DISCIPLINA = 'D';
+    const RECEPCAO_RECONCILIACAO = 3;
 
     use HasFactory, SoftDeletes, AuditableTrait;
 
