@@ -5,6 +5,8 @@ namespace App\Http\Requests;
 use App\Rules\TodaysDeadlineRule;
 use App\Rules\UniqueRolIgrejaRule;
 use App\Rules\ValidaCPF;
+use App\Models\MembresiaMembro;
+use App\Models\MembresiaSituacao;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -213,12 +215,24 @@ class UpdateMembroRequest extends FormRequest
 
                     // Remove todos os caracteres que não são números
                     $cpf = preg_replace('/[^0-9]/', '', $value);
+                    $isReconciliacao = (int) $this->input('modo_recepcao_id') === MembresiaSituacao::RECEPCAO_RECONCILIACAO;
 
                     // Verifica se o CPF já existe na tabela membresia_membros, ignorando o membro atual
                     $query = DB::table('membresia_membros')->where('cpf', $cpf);
 
                     if ($membroId) {
                         $query->where('id', '!=', $membroId);
+                    }
+
+                    if ($isReconciliacao) {
+                        $temMembroAtivo = (clone $query)
+                            ->where('status', MembresiaMembro::STATUS_ATIVO)
+                            ->whereNull('deleted_at')
+                            ->exists();
+
+                        if (!$temMembroAtivo) {
+                            return;
+                        }
                     }
 
                     if ($query->exists()) {
