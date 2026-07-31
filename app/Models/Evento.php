@@ -16,6 +16,7 @@ class Evento extends Model implements Auditable
 
     protected $fillable = [
         'instituicao_id',
+        'evento_local_id',
         'evento_proposito_id',
         'titulo',
         'descricao',
@@ -38,6 +39,11 @@ class Evento extends Model implements Auditable
         return $this->belongsTo(InstituicoesInstituicao::class, 'instituicao_id');
     }
 
+    public function localEvento()
+    {
+        return $this->belongsTo(EventoLocal::class, 'evento_local_id');
+    }
+
     public function proposito()
     {
         return $this->belongsTo(EventoProposito::class, 'evento_proposito_id');
@@ -46,6 +52,11 @@ class Evento extends Model implements Auditable
     public function equipe()
     {
         return $this->hasMany(EventoEquipe::class, 'evento_id')->orderByDesc('lider')->orderBy('nome');
+    }
+
+    public function inscricoes()
+    {
+        return $this->hasMany(EventoInscricao::class, 'evento_id')->orderBy('nome');
     }
 
     public function lider()
