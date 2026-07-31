@@ -161,6 +161,9 @@
                          <li {!! Request::is('eventos/agenda') ? 'class="active"' : '' !!}>
                              <a href="{{ route('eventos.agenda') }}">Agenda de Eventos</a>
                          </li>
+                         <li {!! Request::is('eventos/presenca') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('eventos.presenca') }}">{{ __('Presença do Evento') }}</a>
+                         </li>
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-funcao'))
                              <li {!! Request::is('eventos/funcoes*') ? 'class="active"' : '' !!}>
                                  <a href="{{ route('eventos.funcoes.index') }}">Funções Eventos</a>
@@ -174,6 +177,12 @@
                          </li>
                          <li {!! Request::is('eventos/relatorio/pessoas') ? 'class="active"' : '' !!}>
                              <a href="{{ route('eventos.relatorio.pessoas') }}">Pessoas do Evento</a>
+                         </li>
+                         <li {!! Request::is('eventos/relatorio/inscritos') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('eventos.relatorio.inscritos') }}">{{ __('Inscritos no Evento') }}</a>
+                         </li>
+                         <li {!! Request::is('eventos/relatorio/presencas') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('eventos.relatorio.presencas') }}">{{ __('Histórico de Presença') }}</a>
                          </li>
                      </ul>
                  </li>

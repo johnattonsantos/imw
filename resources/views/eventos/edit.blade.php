@@ -11,6 +11,25 @@
 @include('extras.alerts')
 @include('extras.alerts-error-all')
 
+@section('extras-css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container .select2-selection--single {
+        height: 50px !important;
+        border-color: #bfc9d4;
+    }
+
+    .select2-selection__rendered {
+        line-height: 50px !important;
+        padding-left: 20px !important;
+    }
+
+    .select2-selection__arrow {
+        height: 50px !important;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">

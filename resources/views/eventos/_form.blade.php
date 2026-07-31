@@ -23,31 +23,65 @@
     if ($equipeRows->isEmpty()) {
         $equipeRows = collect([['nome' => '', 'evento_funcao_id' => '', 'contato' => '', 'lider' => 1]]);
     }
+
+    $isEscopoRegional = ($escopoEvento ?? null) === 'regiao';
+    $eventoInstituicaoPadraoId = $eventoInstituicaoPadraoId ?? $evento->instituicao_id;
 @endphp
 
 <div class="row">
     <div class="col-md-4">
         <div class="form-group">
-            <label for="instituicao_id">* Igreja / Congregação</label>
-            <select name="instituicao_id" id="instituicao_id" class="form-control @error('instituicao_id') is-invalid @enderror" required>
-                <option value="">Selecione</option>
-                @foreach ($instituicoesEvento->groupBy('grupo') as $grupo => $instituicoesGrupo)
-                    <optgroup label="{{ $grupo }}">
-                        @foreach ($instituicoesGrupo as $instituicaoEvento)
-                            <option value="{{ $instituicaoEvento->id }}" {{ (string) old('instituicao_id', $evento->instituicao_id) === (string) $instituicaoEvento->id ? 'selected' : '' }}>
-                                {{ $instituicaoEvento->label }}
-                            </option>
-                        @endforeach
-                    </optgroup>
-                @endforeach
-            </select>
+            @if ($isEscopoRegional)
+                <div class="d-flex align-items-center justify-content-between mb-1">
+                    <label for="evento_local_id" class="mb-0">{{ __('* Local do Evento') }}</label>
+                    <div>
+                        <a href="{{ route('eventos.locais.index') }}" class="btn btn-sm btn-info btn-rounded bs-tooltip" title="{{ __('Listar Locais do Evento') }}" aria-label="{{ __('Listar Locais do Evento') }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <input type="hidden" name="instituicao_id" value="{{ old('instituicao_id', $evento->instituicao_id ?: $eventoInstituicaoPadraoId) }}">
+                <select name="evento_local_id" id="evento_local_id" class="form-control select2-evento-local @error('evento_local_id') is-invalid @enderror" required>
+                    <option value="">{{ __('Selecione') }}</option>
+                    @foreach ($eventoLocais as $eventoLocal)
+                        <option value="{{ $eventoLocal->id }}" {{ (string) old('evento_local_id', $evento->evento_local_id) === (string) $eventoLocal->id ? 'selected' : '' }}>
+                            {{ $eventoLocal->endereco ? $eventoLocal->nome . ' - ' . $eventoLocal->endereco : $eventoLocal->nome }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('evento_local_id')
+                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                @enderror
+            @else
+                <label for="instituicao_id">{{ __('* Igreja / Congregação') }}</label>
+                <select name="instituicao_id" id="instituicao_id" class="form-control select2-evento-instituicao @error('instituicao_id') is-invalid @enderror" required>
+                    <option value="">{{ __('Selecione') }}</option>
+                    @foreach ($instituicoesEvento->groupBy('grupo') as $grupo => $instituicoesGrupo)
+                        <optgroup label="{{ $grupo }}">
+                            @foreach ($instituicoesGrupo as $instituicaoEvento)
+                                <option value="{{ $instituicaoEvento->id }}" {{ (string) old('instituicao_id', $evento->instituicao_id) === (string) $instituicaoEvento->id ? 'selected' : '' }}>
+                                    {{ $instituicaoEvento->label }}
+                                </option>
+                            @endforeach
+                        </optgroup>
+                    @endforeach
+                </select>
+            @endif
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
-            <label for="evento_proposito_id">* Propósito</label>
+            <label for="evento_proposito_id">{{ __('* Tipo') }}</label>
             <select name="evento_proposito_id" id="evento_proposito_id" class="form-control @error('evento_proposito_id') is-invalid @enderror" required>
-                <option value="">Selecione</option>
+                <option value="">{{ __('Selecione') }}</option>
                 @foreach ($propositos as $proposito)
                     <option value="{{ $proposito->id }}" {{ (string) old('evento_proposito_id', $evento->evento_proposito_id) === (string) $proposito->id ? 'selected' : '' }}>
                         {{ $proposito->nome }}
@@ -134,7 +168,7 @@
                 <input type="text" name="equipe[{{ $index }}][nome]" class="form-control" value="{{ data_get($membro, 'nome') }}">
             </div>
             <div class="col-md-3">
-                <label>Função</label>
+                <label>{{ __('Equipes/Funções') }}</label>
                 <select name="equipe[{{ $index }}][evento_funcao_id]" class="form-control">
                     <option value="">Selecione</option>
                     @foreach ($funcoesEventos as $funcaoEvento)
@@ -169,7 +203,7 @@
             <input type="text" name="__name__[nome]" class="form-control">
         </div>
         <div class="col-md-3">
-            <label>Função</label>
+            <label>{{ __('Equipes/Funções') }}</label>
             <select name="__name__[evento_funcao_id]" class="form-control">
                 <option value="">Selecione</option>
                 @foreach ($funcoesEventos as $funcaoEvento)

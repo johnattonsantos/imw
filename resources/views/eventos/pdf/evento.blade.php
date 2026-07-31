@@ -117,7 +117,7 @@
                 <td>{{ $evento->titulo }}</td>
             </tr>
             <tr>
-                <th>Propósito</th>
+                <th>{{ __('Tipo') }}</th>
                 <td>{{ optional($evento->proposito)->nome ?: '-' }}</td>
             </tr>
             @if (($evento->evento_distrito_nome ?? '-') !== '-')
@@ -133,7 +133,7 @@
                 </tr>
             @endif
             <tr>
-                <th>Sede/Congregação</th>
+                <th>{{ __($evento->evento_local_rotulo ?? 'Sede/Congregação') }}</th>
                 <td>{{ $evento->evento_local_nome ?? '-' }}</td>
             </tr>
             <tr>
@@ -164,7 +164,7 @@
             <thead>
                 <tr>
                     <th>Nome</th>
-                    <th>Função</th>
+                    <th>{{ __('Equipes/Funções') }}</th>
                     <th>Contato</th>
                     <th>Líder</th>
                 </tr>

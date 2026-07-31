@@ -24,6 +24,7 @@ use App\Http\Controllers\EbdRelatorioController;
 use App\Http\Controllers\EbdTurmaController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\EventoFuncaoController;
+use App\Http\Controllers\EventoLocalController;
 use App\Http\Controllers\FinanceiroCaixasController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\FinanceiroPlanoContaController;
@@ -209,6 +210,8 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('eventos')->name('eventos.')->controller(EventoController::class)->middleware(['seguranca:evento'])->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/agenda', 'agenda')->name('agenda');
+            Route::get('/presenca', 'presenca')->name('presenca');
+            Route::post('/presenca/registrar', 'registrarPresenca')->name('presenca.registrar');
             Route::get('/novo', 'create')->name('create')->middleware(['seguranca:evento-novo']);
             Route::post('/store', 'store')->name('store')->middleware(['seguranca:evento-novo']);
             Route::post('/upload-image', 'uploadEditorImage')->name('upload-image');
@@ -216,10 +219,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio/eventos', 'relatorio')->name('relatorio');
             Route::get('/relatorio/eventos/{evento}/pdf', 'relatorioEventoPdf')->name('relatorio.evento-pdf');
             Route::get('/relatorio/pessoas', 'relatorioPessoas')->name('relatorio.pessoas');
+            Route::get('/relatorio/inscritos', 'relatorioInscritos')->name('relatorio.inscritos');
+            Route::get('/relatorio/presencas', 'relatorioPresencas')->name('relatorio.presencas');
+            Route::post('/inscricoes/{evento}', 'inscrever')->name('inscricoes.store');
             Route::get('/detalhes/{evento}', 'show')->name('show');
             Route::get('/editar/{evento}', 'edit')->name('edit')->middleware(['seguranca:evento-editar']);
             Route::put('/update/{evento}', 'update')->name('update')->middleware(['seguranca:evento-editar']);
             Route::delete('/deletar/{evento}', 'destroy')->name('destroy')->middleware(['seguranca:evento-excluir']);
+        });
+
+        Route::prefix('eventos/locais')->name('eventos.locais.')->controller(EventoLocalController::class)->middleware(['seguranca:evento'])->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/novo', 'create')->name('create')->middleware(['seguranca:evento-novo']);
+            Route::post('/store', 'store')->name('store')->middleware(['seguranca:evento-novo']);
+            Route::get('/editar/{local}', 'edit')->name('edit')->middleware(['seguranca:evento-editar']);
+            Route::put('/update/{local}', 'update')->name('update')->middleware(['seguranca:evento-editar']);
+            Route::delete('/deletar/{local}', 'destroy')->name('destroy')->middleware(['seguranca:evento-excluir']);
         });
 
         Route::prefix('eventos/funcoes')->name('eventos.funcoes.')->controller(EventoFuncaoController::class)->middleware(['seguranca:evento-funcao'])->group(function () {

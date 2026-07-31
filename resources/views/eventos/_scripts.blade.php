@@ -1,8 +1,18 @@
 <script src="{{ asset('gceu/tinymce/tinymce.min.js') }}?time={{ time() }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const uploadImageUrl = "{{ route('eventos.upload-image') }}";
         const csrfToken = "{{ csrf_token() }}";
+
+        if (window.jQuery && typeof window.jQuery.fn.select2 === 'function') {
+            window.jQuery.fn.select2.defaults.set('language', window.IMW_SELECT2_LANGUAGE || 'pt-BR');
+            window.jQuery('.select2-evento-instituicao, .select2-evento-local').select2({
+                placeholder: "{{ __('Selecione') }}",
+                allowClear: true,
+                width: '100%'
+            });
+        }
 
         if (typeof window.tinymce !== 'undefined') {
             window.tinymce.init({

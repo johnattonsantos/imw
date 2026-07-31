@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Evento;
 use App\Models\EventoEquipe;
 use App\Models\EventoFuncao;
+use App\Models\EventoInscricao;
+use App\Models\EventoInscricaoMovimento;
+use App\Models\EventoLocal;
 use App\Models\EventoProposito;
 use App\Models\InstituicoesInstituicao;
 use App\Models\InstituicoesTipoInstituicao;
@@ -34,7 +37,7 @@ class EventoController extends Controller
     {
         $eventos = Evento::query()
             ->whereIn('instituicao_id', $this->allowedEventInstitutionIds())
-            ->with(['proposito', 'lider', 'instituicao.instituicaoPai.instituicaoPai'])
+            ->with(['proposito', 'lider', 'localEvento', 'instituicao.instituicaoPai.instituicaoPai'])
             ->orderBy('data_inicio')
             ->orderBy('hora_inicio')
             ->paginate(15);
@@ -51,7 +54,7 @@ class EventoController extends Controller
     {
         $eventos = Evento::query()
             ->whereIn('instituicao_id', $this->allowedEventInstitutionIds())
-            ->with(['proposito', 'lider', 'instituicao.instituicaoPai.instituicaoPai'])
+            ->with(['proposito', 'lider', 'localEvento', 'instituicao.instituicaoPai.instituicaoPai'])
             ->orderBy('data_inicio')
             ->orderBy('hora_inicio')
             ->get();
@@ -111,9 +114,26 @@ class EventoController extends Controller
         $propositos = $this->propositos();
         $funcoesEventos = $this->funcoesEventos();
         $instituicoesEvento = $this->instituicoesEventoOptions();
+        $escopoEvento = $this->eventScopeType();
+        $eventoLocais = $this->eventoLocais();
+        $eventoInstituicaoPadraoId = $escopoEvento === 'regiao'
+            ? $this->resolveRegiaoId((int) $this->instituicaoId())
+            : null;
+        if ($eventoInstituicaoPadraoId) {
+            $evento->instituicao_id = $eventoInstituicaoPadraoId;
+        }
         $statusOptions = self::STATUS;
 
-        return view('eventos.create', compact('evento', 'propositos', 'funcoesEventos', 'instituicoesEvento', 'statusOptions'));
+        return view('eventos.create', compact(
+            'evento',
+            'propositos',
+            'funcoesEventos',
+            'instituicoesEvento',
+            'escopoEvento',
+            'eventoLocais',
+            'eventoInstituicaoPadraoId',
+            'statusOptions'
+        ));
     }
 
     public function store(Request $request)
@@ -132,7 +152,7 @@ class EventoController extends Controller
     {
         $this->ensureSameInstituicao($evento);
 
-        $evento->load(['proposito', 'equipe.eventoFuncao', 'instituicao.instituicaoPai.instituicaoPai']);
+        $evento->load(['proposito', 'equipe.eventoFuncao', 'localEvento', 'instituicao.instituicaoPai.instituicaoPai']);
         $this->appendInstitutionMeta(collect([$evento]));
         $statusOptions = self::STATUS;
 
@@ -151,9 +171,23 @@ class EventoController extends Controller
         $propositos = $this->propositos();
         $funcoesEventos = $this->funcoesEventos();
         $instituicoesEvento = $this->instituicoesEventoOptions();
+        $escopoEvento = $this->eventScopeType();
+        $eventoLocais = $this->eventoLocais();
+        $eventoInstituicaoPadraoId = $escopoEvento === 'regiao'
+            ? $this->resolveRegiaoId((int) $this->instituicaoId())
+            : null;
         $statusOptions = self::STATUS;
 
-        return view('eventos.edit', compact('evento', 'propositos', 'funcoesEventos', 'instituicoesEvento', 'statusOptions'));
+        return view('eventos.edit', compact(
+            'evento',
+            'propositos',
+            'funcoesEventos',
+            'instituicoesEvento',
+            'escopoEvento',
+            'eventoLocais',
+            'eventoInstituicaoPadraoId',
+            'statusOptions'
+        ));
     }
 
     public function update(Request $request, Evento $evento)
@@ -178,10 +212,148 @@ class EventoController extends Controller
         return redirect()->route('eventos.index')->with('success', 'Evento excluido com sucesso.');
     }
 
+    public function inscrever(Request $request, Evento $evento)
+    {
+        $this->ensureSameInstituicao($evento);
+
+        $request->validate([
+            'cpf' => ['required', 'string'],
+        ], [
+            'cpf.required' => 'Informe o CPF do membro ou clérigo.',
+        ]);
+
+        $cpf = preg_replace('/\D/', '', (string) $request->input('cpf'));
+
+        if (strlen($cpf) !== 11) {
+            throw ValidationException::withMessages([
+                'cpf' => 'Informe um CPF válido com 11 dígitos.',
+            ]);
+        }
+
+        $inscrito = $this->findInscritoByCpf($cpf);
+
+        if (!$inscrito) {
+            throw ValidationException::withMessages([
+                'cpf' => 'CPF não encontrado no cadastro de membros ou clérigos.',
+            ]);
+        }
+
+        $existing = EventoInscricao::withTrashed()
+            ->where('evento_id', $evento->id)
+            ->where('cpf', $cpf)
+            ->first();
+
+        if ($existing && !$existing->trashed()) {
+            throw ValidationException::withMessages([
+                'cpf' => 'Este CPF já está inscrito neste evento.',
+            ]);
+        }
+
+        if ($existing) {
+            $existing->restore();
+            $existing->update($inscrito + [
+                'qr_token' => $existing->qr_token ?: $this->newQrToken(),
+            ]);
+        } else {
+            EventoInscricao::create(['evento_id' => $evento->id] + $inscrito + [
+                'qr_token' => $this->newQrToken(),
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Inscrição realizada com sucesso.',
+            'inscrito' => [
+                'nome' => $inscrito['nome'],
+                'cpf' => $this->formatCpf($cpf),
+                'origem' => $inscrito['origem'] === 'clerigo' ? 'Clérigo' : 'Membro',
+            ],
+        ]);
+    }
+
+    public function presenca()
+    {
+        $eventOptions = Evento::query()
+            ->whereIn('instituicao_id', $this->allowedEventInstitutionIds())
+            ->orderByDesc('data_inicio')
+            ->orderBy('titulo')
+            ->get(['id', 'titulo', 'data_inicio']);
+
+        return view('eventos.presenca', compact('eventOptions'));
+    }
+
+    public function registrarPresenca(Request $request)
+    {
+        $validated = $request->validate([
+            'qr_token' => ['required', 'string', 'max:120'],
+            'evento_id' => ['nullable', 'integer'],
+        ], [
+            'qr_token.required' => 'Leia ou informe o QR Code do inscrito.',
+        ]);
+
+        $token = trim((string) $validated['qr_token']);
+        $eventFilter = (int) ($validated['evento_id'] ?? 0);
+
+        $inscricao = EventoInscricao::query()
+            ->with(['evento.localEvento', 'evento.instituicao.instituicaoPai.instituicaoPai'])
+            ->where('qr_token', $token)
+            ->whereHas('evento', function ($query) use ($eventFilter) {
+                $query->whereIn('instituicao_id', $this->allowedEventInstitutionIds())
+                    ->whereNull('deleted_at');
+
+                if ($eventFilter > 0) {
+                    $query->where('id', $eventFilter);
+                }
+            })
+            ->first();
+
+        if (!$inscricao) {
+            throw ValidationException::withMessages([
+                'qr_token' => 'QR Code não encontrado para os eventos disponíveis neste perfil.',
+            ]);
+        }
+
+        $lastType = EventoInscricaoMovimento::query()
+            ->where('evento_inscricao_id', $inscricao->id)
+            ->orderByDesc('registrado_em')
+            ->orderByDesc('id')
+            ->value('tipo');
+        $tipo = $lastType === 'entrada' ? 'saida' : 'entrada';
+
+        $movimento = EventoInscricaoMovimento::create([
+            'evento_inscricao_id' => $inscricao->id,
+            'evento_id' => $inscricao->evento_id,
+            'tipo' => $tipo,
+            'registrado_por' => optional(auth()->user())->id,
+            'registrado_em' => now(),
+        ]);
+
+        $this->appendInstitutionMeta(collect([$inscricao->evento]));
+
+        return response()->json([
+            'message' => $tipo === 'entrada' ? 'Entrada registrada com sucesso.' : 'Saída registrada com sucesso.',
+            'tipo' => $tipo,
+            'tipo_label' => $tipo === 'entrada' ? 'Entrada' : 'Saída',
+            'registrado_em' => optional($movimento->registrado_em)->format('d/m/Y H:i:s'),
+            'inscrito' => [
+                'nome' => $inscricao->nome,
+                'cpf' => $this->formatCpf($inscricao->cpf),
+                'telefone' => $inscricao->telefone ?: '-',
+                'igreja' => $inscricao->igreja_nome ?: '-',
+                'funcao' => $inscricao->funcao_eclesiastica ?: '-',
+            ],
+            'evento' => [
+                'titulo' => $inscricao->evento->titulo,
+                'local' => $this->eventLocationLabel($inscricao->evento),
+            ],
+            'historico' => $this->presenceHistory($inscricao->id),
+        ]);
+    }
+
     public function relatorio(Request $request)
     {
         $eventos = $this->buildQuery($request)
             ->with(['proposito', 'lider', 'instituicao.instituicaoPai.instituicaoPai'])
+            ->with('localEvento')
             ->orderBy('data_inicio')
             ->orderBy('hora_inicio')
             ->get();
@@ -220,6 +392,7 @@ class EventoController extends Controller
                 $query->whereDate('eventos.data_inicio', '<=', $request->input('data_fim')))
             ->with([
                 'evento.proposito',
+                'evento.localEvento',
                 'evento.instituicao.instituicaoPai.instituicaoPai',
                 'eventoFuncao',
             ])
@@ -253,11 +426,152 @@ class EventoController extends Controller
         ));
     }
 
+    public function relatorioInscritos(Request $request)
+    {
+        $allowedInstitutionIds = $this->allowedEventInstitutionIds();
+
+        $inscricoes = EventoInscricao::query()
+            ->join('eventos', 'eventos.id', '=', 'evento_inscricoes.evento_id')
+            ->whereNull('eventos.deleted_at')
+            ->whereIn('eventos.instituicao_id', $allowedInstitutionIds)
+            ->when($request->filled('evento_id'), fn ($query) =>
+                $query->where('eventos.id', (int) $request->input('evento_id')))
+            ->when($request->filled('status'), fn ($query) =>
+                $query->where('eventos.status', (string) $request->input('status')))
+            ->when($request->filled('data_inicio'), fn ($query) =>
+                $query->whereDate('eventos.data_inicio', '>=', $request->input('data_inicio')))
+            ->when($request->filled('data_fim'), fn ($query) =>
+                $query->whereDate('eventos.data_inicio', '<=', $request->input('data_fim')))
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = trim((string) $request->input('search'));
+                $searchDigits = preg_replace('/\D/', '', $search);
+
+                $query->where(function ($q) use ($search, $searchDigits) {
+                    $q->where('evento_inscricoes.nome', 'like', '%' . $search . '%')
+                        ->orWhere('eventos.titulo', 'like', '%' . $search . '%')
+                        ->orWhere('evento_inscricoes.igreja_nome', 'like', '%' . $search . '%');
+
+                    if ($searchDigits !== '') {
+                        $q->orWhere('evento_inscricoes.cpf', 'like', '%' . $searchDigits . '%');
+                    }
+                });
+            })
+            ->with([
+                'evento.proposito',
+                'evento.localEvento',
+                'evento.instituicao.instituicaoPai.instituicaoPai',
+                'ultimoMovimento',
+            ])
+            ->select('evento_inscricoes.*')
+            ->orderBy('eventos.data_inicio')
+            ->orderBy('eventos.hora_inicio')
+            ->orderBy('eventos.titulo')
+            ->orderBy('evento_inscricoes.nome')
+            ->get();
+        $clerigoCpfs = $this->clerigoCpfsFor($inscricoes->pluck('cpf')->all());
+        $inscricoes->each(function ($inscricao) use ($clerigoCpfs) {
+            $cpf = preg_replace('/\D/', '', (string) $inscricao->cpf);
+            $inscricao->tipo_participante = in_array($cpf, $clerigoCpfs, true)
+                ? 'clerigo'
+                : ($inscricao->origem ?: 'membro');
+        });
+
+        $eventos = $inscricoes->pluck('evento')->filter()->unique('id')->values();
+        $this->appendInstitutionMeta($eventos);
+
+        $eventOptions = Evento::query()
+            ->whereIn('instituicao_id', $allowedInstitutionIds)
+            ->orderByDesc('data_inicio')
+            ->orderBy('titulo')
+            ->get(['id', 'titulo', 'data_inicio']);
+        $statusOptions = self::STATUS;
+        $summaryByType = function (string $tipo) use ($inscricoes): array {
+            $items = $inscricoes->where('tipo_participante', $tipo);
+            $total = $items->count();
+            $presentes = $items->filter(fn ($inscricao) => optional($inscricao->ultimoMovimento)->tipo === 'entrada')->count();
+            $ausentes = max(0, $total - $presentes);
+
+            return [
+                'presentes' => $presentes,
+                'ausentes' => $ausentes,
+                'percentual_presenca' => $total > 0 ? round(($presentes / $total) * 100, 2) : 0,
+                'total' => $total,
+            ];
+        };
+        $participantSummary = [
+            'clerigos' => $summaryByType('clerigo'),
+            'membros' => $summaryByType('membro'),
+        ];
+
+        return view('eventos.relatorio-inscritos', compact(
+            'inscricoes',
+            'eventOptions',
+            'statusOptions',
+            'participantSummary'
+        ));
+    }
+
+    public function relatorioPresencas(Request $request)
+    {
+        $allowedInstitutionIds = $this->allowedEventInstitutionIds();
+
+        $movimentos = EventoInscricaoMovimento::query()
+            ->join('eventos', 'eventos.id', '=', 'evento_inscricao_movimentos.evento_id')
+            ->join('evento_inscricoes', 'evento_inscricoes.id', '=', 'evento_inscricao_movimentos.evento_inscricao_id')
+            ->whereNull('eventos.deleted_at')
+            ->whereNull('evento_inscricoes.deleted_at')
+            ->whereIn('eventos.instituicao_id', $allowedInstitutionIds)
+            ->when($request->filled('evento_id'), fn ($query) =>
+                $query->where('eventos.id', (int) $request->input('evento_id')))
+            ->when($request->filled('tipo'), fn ($query) =>
+                $query->where('evento_inscricao_movimentos.tipo', (string) $request->input('tipo')))
+            ->when($request->filled('data_inicio'), fn ($query) =>
+                $query->whereDate('evento_inscricao_movimentos.registrado_em', '>=', $request->input('data_inicio')))
+            ->when($request->filled('data_fim'), fn ($query) =>
+                $query->whereDate('evento_inscricao_movimentos.registrado_em', '<=', $request->input('data_fim')))
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = trim((string) $request->input('search'));
+                $searchDigits = preg_replace('/\D/', '', $search);
+
+                $query->where(function ($q) use ($search, $searchDigits) {
+                    $q->where('evento_inscricoes.nome', 'like', '%' . $search . '%')
+                        ->orWhere('eventos.titulo', 'like', '%' . $search . '%')
+                        ->orWhere('evento_inscricoes.igreja_nome', 'like', '%' . $search . '%');
+
+                    if ($searchDigits !== '') {
+                        $q->orWhere('evento_inscricoes.cpf', 'like', '%' . $searchDigits . '%');
+                    }
+                });
+            })
+            ->with([
+                'evento.localEvento',
+                'evento.instituicao.instituicaoPai.instituicaoPai',
+                'inscricao',
+            ])
+            ->select('evento_inscricao_movimentos.*')
+            ->orderByDesc('evento_inscricao_movimentos.registrado_em')
+            ->orderByDesc('evento_inscricao_movimentos.id')
+            ->get();
+
+        $eventos = $movimentos->pluck('evento')->filter()->unique('id')->values();
+        $this->appendInstitutionMeta($eventos);
+
+        $eventOptions = Evento::query()
+            ->whereIn('instituicao_id', $allowedInstitutionIds)
+            ->orderByDesc('data_inicio')
+            ->orderBy('titulo')
+            ->get(['id', 'titulo', 'data_inicio']);
+        $presenceSummary = $this->currentPresenceSummary($request, $allowedInstitutionIds);
+
+        return view('eventos.relatorio-presencas', compact('movimentos', 'eventOptions', 'presenceSummary'));
+    }
+
     public function relatorioEventoPdf(Evento $evento)
     {
         $this->ensureSameInstituicao($evento);
 
         $evento->load(['proposito', 'equipe.eventoFuncao', 'instituicao.instituicaoPai.instituicaoPai']);
+        $evento->load('localEvento');
         $this->appendInstitutionMeta(collect([$evento]));
         $statusOptions = self::STATUS;
         $filename = 'evento-' . Str::slug($evento->titulo ?: 'relatorio') . '.pdf';
@@ -325,7 +639,10 @@ class EventoController extends Controller
             $query->where(function (Builder $q) use ($search) {
                 $q->where('titulo', 'like', '%' . $search . '%')
                     ->orWhere('local', 'like', '%' . $search . '%')
-                    ->orWhere('descricao', 'like', '%' . $search . '%');
+                    ->orWhere('descricao', 'like', '%' . $search . '%')
+                    ->orWhereHas('localEvento', fn ($localQuery) =>
+                        $localQuery->where('nome', 'like', '%' . $search . '%')
+                            ->orWhere('endereco', 'like', '%' . $search . '%'));
             });
         }
 
@@ -357,8 +674,21 @@ class EventoController extends Controller
 
     private function validateEvento(Request $request): array
     {
+        $isRegionalScope = $this->eventScopeType() === 'regiao';
+        $regiaoId = $isRegionalScope ? $this->resolveRegiaoId((int) $this->instituicaoId()) : 0;
+
         $validated = $request->validate([
             'instituicao_id' => ['required', 'integer', Rule::in($this->allowedEventInstitutionIds())],
+            'evento_local_id' => $isRegionalScope
+                ? [
+                    'required',
+                    'integer',
+                    Rule::exists('evento_locais', 'id')->where(fn ($query) =>
+                        $query->where('regiao_id', $regiaoId)
+                            ->where('ativo', true)
+                            ->whereNull('deleted_at')),
+                ]
+                : ['nullable'],
             'evento_proposito_id' => ['required', 'integer', Rule::exists('evento_propositos', 'id')->where('ativo', true)],
             'titulo' => ['required', 'string', 'max:180'],
             'descricao' => ['nullable', 'string'],
@@ -375,9 +705,11 @@ class EventoController extends Controller
             'equipe.*.contato' => ['nullable', 'string', 'max:60'],
             'equipe.*.lider' => ['nullable', 'boolean'],
         ], [
-            'instituicao_id.required' => 'Selecione a igreja ou congregação do evento.',
+            'instituicao_id.required' => $isRegionalScope ? 'Selecione o local do evento.' : 'Selecione a igreja ou congregação do evento.',
             'instituicao_id.in' => 'A instituição selecionada não está disponível para o perfil logado.',
-            'evento_proposito_id.required' => 'Selecione o propósito do evento.',
+            'evento_local_id.required' => 'Selecione o local do evento.',
+            'evento_local_id.exists' => 'O local selecionado não está disponível para a região logada.',
+            'evento_proposito_id.required' => 'Selecione o tipo do evento.',
             'titulo.required' => 'Informe o nome do evento.',
             'data_inicio.required' => 'Informe a data inicial da agenda.',
             'data_inicio.date_format' => 'Informe a data inicial no formato dd/mm/aaaa.',
@@ -402,8 +734,13 @@ class EventoController extends Controller
 
     private function eventoData(array $validated): array
     {
+        $isRegionalScope = $this->eventScopeType() === 'regiao';
+
         return [
-            'instituicao_id' => $validated['instituicao_id'],
+            'instituicao_id' => $isRegionalScope
+                ? $this->resolveRegiaoId((int) $this->instituicaoId())
+                : $validated['instituicao_id'],
+            'evento_local_id' => $isRegionalScope ? $validated['evento_local_id'] : null,
             'evento_proposito_id' => $validated['evento_proposito_id'],
             'titulo' => $validated['titulo'],
             'descricao' => $validated['descricao'] ?? null,
@@ -443,6 +780,196 @@ class EventoController extends Controller
                 'lider' => $lider,
             ]);
         }
+    }
+
+    private function findInscritoByCpf(string $cpf): ?array
+    {
+        $clerigo = DB::table('pessoas_pessoas as pp')
+            ->leftJoin('pessoas_nomeacoes as pn', function ($join) {
+                $join->on('pn.pessoa_id', '=', 'pp.id')
+                    ->whereNull('pn.deleted_at')
+                    ->whereNull('pn.data_termino');
+            })
+            ->leftJoin('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
+            ->leftJoin('instituicoes_instituicoes as igreja_nomeacao', 'igreja_nomeacao.id', '=', 'pn.instituicao_id')
+            ->leftJoin('instituicoes_instituicoes as igreja_pessoa', 'igreja_pessoa.id', '=', 'pp.igreja_id')
+            ->whereNull('pp.deleted_at')
+            ->whereRaw($this->cpfDigitsExpression('pp.cpf') . ' = ?', [$cpf])
+            ->select([
+                'pp.id as pessoa_id',
+                'pp.nome',
+                'pp.cpf',
+                DB::raw('COALESCE(igreja_nomeacao.id, igreja_pessoa.id) as igreja_id'),
+                DB::raw('COALESCE(igreja_nomeacao.nome, igreja_pessoa.nome) as igreja_nome'),
+                'pf.funcao as funcao_eclesiastica',
+                DB::raw("COALESCE(NULLIF(pp.telefone_preferencial, ''), NULLIF(pp.telefone_alternativo, '')) as telefone"),
+            ])
+            ->orderByDesc('pn.data_nomeacao')
+            ->first();
+
+        if ($clerigo) {
+            return [
+                'origem' => 'clerigo',
+                'membro_id' => null,
+                'pessoa_id' => $clerigo->pessoa_id,
+                'cpf' => $cpf,
+                'nome' => $clerigo->nome,
+                'funcao_eclesiastica' => $clerigo->funcao_eclesiastica,
+                'igreja_id' => $clerigo->igreja_id,
+                'igreja_nome' => $clerigo->igreja_nome,
+                'telefone' => $clerigo->telefone,
+            ];
+        }
+
+        $membro = DB::table('membresia_membros as mm')
+            ->leftJoin('membresia_contatos as mc', function ($join) {
+                $join->on('mc.membro_id', '=', 'mm.id')
+                    ->whereNull('mc.deleted_at');
+            })
+            ->leftJoin('membresia_funcoeseclesiasticas as fe', 'fe.id', '=', 'mm.funcao_eclesiastica_id')
+            ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'mm.igreja_id')
+            ->whereNull('mm.deleted_at')
+            ->where('mm.vinculo', 'M')
+            ->whereRaw($this->cpfDigitsExpression('mm.cpf') . ' = ?', [$cpf])
+            ->select([
+                'mm.id as membro_id',
+                'mm.nome',
+                'mm.cpf',
+                'mm.igreja_id',
+                'igreja.nome as igreja_nome',
+                'fe.descricao as funcao_eclesiastica',
+                DB::raw("COALESCE(NULLIF(mc.telefone_preferencial, ''), NULLIF(mc.telefone_alternativo, ''), NULLIF(mc.telefone_whatsapp, '')) as telefone"),
+            ])
+            ->first();
+
+        if ($membro) {
+            return [
+                'origem' => 'membro',
+                'membro_id' => $membro->membro_id,
+                'pessoa_id' => null,
+                'cpf' => $cpf,
+                'nome' => $membro->nome,
+                'funcao_eclesiastica' => $membro->funcao_eclesiastica,
+                'igreja_id' => $membro->igreja_id,
+                'igreja_nome' => $membro->igreja_nome,
+                'telefone' => $membro->telefone,
+            ];
+        }
+
+        return null;
+    }
+
+    private function cpfDigitsExpression(string $column): string
+    {
+        return "REPLACE(REPLACE(REPLACE(REPLACE({$column}, '.', ''), '-', ''), '/', ''), ' ', '')";
+    }
+
+    private function clerigoCpfsFor(array $cpfs): array
+    {
+        $normalizedCpfs = collect($cpfs)
+            ->map(fn ($cpf) => preg_replace('/\D/', '', (string) $cpf))
+            ->filter(fn ($cpf) => strlen($cpf) === 11)
+            ->unique()
+            ->values()
+            ->all();
+
+        if (empty($normalizedCpfs)) {
+            return [];
+        }
+
+        $expression = $this->cpfDigitsExpression('pp.cpf');
+
+        return DB::table('pessoas_pessoas as pp')
+            ->whereNull('pp.deleted_at')
+            ->whereIn(DB::raw($expression), $normalizedCpfs)
+            ->selectRaw($expression . ' as cpf')
+            ->pluck('cpf')
+            ->map(fn ($cpf) => (string) $cpf)
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function newQrToken(): string
+    {
+        do {
+            $token = (string) Str::uuid();
+        } while (EventoInscricao::where('qr_token', $token)->exists());
+
+        return $token;
+    }
+
+    private function presenceHistory(int $inscricaoId)
+    {
+        return EventoInscricaoMovimento::query()
+            ->where('evento_inscricao_id', $inscricaoId)
+            ->orderByDesc('registrado_em')
+            ->orderByDesc('id')
+            ->limit(10)
+            ->get()
+            ->map(fn ($movimento) => [
+                'tipo' => $movimento->tipo,
+                'tipo_label' => $movimento->tipo === 'entrada' ? 'Entrada' : 'Saída',
+                'registrado_em' => optional($movimento->registrado_em)->format('d/m/Y H:i:s'),
+            ])
+            ->values();
+    }
+
+    private function currentPresenceSummary(Request $request, array $allowedInstitutionIds): array
+    {
+        $inscricoes = EventoInscricao::query()
+            ->join('eventos', 'eventos.id', '=', 'evento_inscricoes.evento_id')
+            ->whereNull('eventos.deleted_at')
+            ->whereIn('eventos.instituicao_id', $allowedInstitutionIds)
+            ->when($request->filled('evento_id'), fn ($query) =>
+                $query->where('eventos.id', (int) $request->input('evento_id')))
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = trim((string) $request->input('search'));
+                $searchDigits = preg_replace('/\D/', '', $search);
+
+                $query->where(function ($q) use ($search, $searchDigits) {
+                    $q->where('evento_inscricoes.nome', 'like', '%' . $search . '%')
+                        ->orWhere('eventos.titulo', 'like', '%' . $search . '%')
+                        ->orWhere('evento_inscricoes.igreja_nome', 'like', '%' . $search . '%');
+
+                    if ($searchDigits !== '') {
+                        $q->orWhere('evento_inscricoes.cpf', 'like', '%' . $searchDigits . '%');
+                    }
+                });
+            })
+            ->with('ultimoMovimento')
+            ->select('evento_inscricoes.*')
+            ->get();
+
+        $presentes = $inscricoes->filter(fn ($inscricao) => optional($inscricao->ultimoMovimento)->tipo === 'entrada')->count();
+        $total = $inscricoes->count();
+
+        return [
+            'presentes' => $presentes,
+            'ausentes' => max(0, $total - $presentes),
+        ];
+    }
+
+    private function eventLocationLabel(Evento $evento): string
+    {
+        $localEvento = $evento->evento_local_nome ?? optional($evento->localEvento)->nome ?? '-';
+
+        if (!empty($evento->local)) {
+            return $localEvento !== '-' ? $localEvento . ' - ' . $evento->local : $evento->local;
+        }
+
+        return $localEvento;
+    }
+
+    private function formatCpf(?string $cpf): string
+    {
+        $digits = preg_replace('/\\D/', '', (string) $cpf);
+
+        if (strlen($digits) !== 11) {
+            return (string) $cpf;
+        }
+
+        return substr($digits, 0, 3) . '.' . substr($digits, 3, 3) . '.' . substr($digits, 6, 3) . '-' . substr($digits, 9, 2);
     }
 
     private function propositos()
@@ -504,12 +1031,20 @@ class EventoController extends Controller
 
     private function allowedEventInstitutionIds(): array
     {
-        return $this->instituicoesEventoOptions()
+        $ids = $this->instituicoesEventoOptions()
             ->pluck('id')
             ->map(fn ($id) => (int) $id)
             ->unique()
-            ->values()
-            ->all();
+            ->values();
+
+        if ($this->eventScopeType() === 'regiao') {
+            $regiaoId = $this->resolveRegiaoId((int) $this->instituicaoId());
+            if ($regiaoId > 0) {
+                $ids->push($regiaoId);
+            }
+        }
+
+        return $ids->unique()->values()->all();
     }
 
     private function instituicoesEventoOptions()
@@ -622,6 +1157,21 @@ class EventoController extends Controller
         ]));
     }
 
+    private function eventoLocais()
+    {
+        if ($this->eventScopeType() !== 'regiao') {
+            return collect();
+        }
+
+        $regiaoId = $this->resolveRegiaoId((int) $this->instituicaoId());
+
+        return EventoLocal::query()
+            ->where('regiao_id', $regiaoId)
+            ->where('ativo', true)
+            ->orderBy('nome')
+            ->get();
+    }
+
     private function isRegionalInstitutionType(int $tipo): bool
     {
         return in_array($tipo, [
@@ -680,9 +1230,19 @@ class EventoController extends Controller
     {
         foreach ($eventos as $evento) {
             $instituicao = $evento->instituicao;
+            $eventoLocal = $evento->localEvento;
             $igreja = null;
             $distrito = null;
             $local = optional($instituicao)->nome ?: '-';
+
+            if ($eventoLocal) {
+                $evento->evento_distrito_nome = '-';
+                $evento->evento_igreja_nome = '-';
+                $evento->evento_local_nome = $eventoLocal->nome;
+                $evento->evento_local_rotulo = 'Local do Evento';
+                $evento->evento_instituicao_nome = $eventoLocal->nome;
+                continue;
+            }
 
             if ($instituicao && (int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::CONGREGACAO) {
                 $igreja = $instituicao->instituicaoPai;
@@ -699,6 +1259,7 @@ class EventoController extends Controller
             $evento->evento_distrito_nome = optional($distrito)->nome ?: '-';
             $evento->evento_igreja_nome = optional($igreja)->nome ?: '-';
             $evento->evento_local_nome = $local ?: '-';
+            $evento->evento_local_rotulo = 'Sede/Congregação';
             $evento->evento_instituicao_nome = $instituicao
                 ? trim(($evento->evento_igreja_nome !== '-' ? $evento->evento_igreja_nome . ' / ' : '') . $evento->evento_local_nome)
                 : '-';
