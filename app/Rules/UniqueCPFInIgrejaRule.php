@@ -9,14 +9,19 @@ use Illuminate\Contracts\Validation\Rule;
 class UniqueCPFInIgrejaRule implements Rule
 {
     use Identifiable;
+
+    private $ignoreMembroId;
+    private bool $allowInactiveDuplicate;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($ignoreMembroId = null, bool $allowInactiveDuplicate = false)
     {
-
+        $this->ignoreMembroId = $ignoreMembroId;
+        $this->allowInactiveDuplicate = $allowInactiveDuplicate;
     }
 
     /**
@@ -28,15 +33,36 @@ class UniqueCPFInIgrejaRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (!$value) return true;
+        if (!$value) {
+            return true;
+        }
 
-        $count = MembresiaMembro::where('cpf' , $value)
-            ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
-            ->where('status', MembresiaMembro::STATUS_ATIVO)
-            ->withTrashed()
-            ->count();
+        $cpf = preg_replace('/[^0-9]/', '', $value);
+        if ($cpf === '') {
+            return true;
+        }
 
-        return $count > 1 ? false : true;
+        $query = MembresiaMembro::withTrashed()
+            ->where('cpf', $cpf)
+            ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id);
+
+        if ($this->ignoreMembroId) {
+            $query->where('id', '!=', $this->ignoreMembroId);
+        }
+
+        $duplicados = $query->get(['id', 'status', 'deleted_at']);
+
+        if ($duplicados->isEmpty()) {
+            return true;
+        }
+
+        if ($this->allowInactiveDuplicate) {
+            return $duplicados->every(function ($membro) {
+                return $membro->status !== MembresiaMembro::STATUS_ATIVO || $membro->deleted_at !== null;
+            });
+        }
+
+        return false;
     }
 
     /**
