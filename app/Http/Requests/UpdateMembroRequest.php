@@ -5,8 +5,8 @@ namespace App\Http\Requests;
 use App\Rules\TodaysDeadlineRule;
 use App\Rules\UniqueRolIgrejaRule;
 use App\Rules\ValidaCPF;
-use App\Models\MembresiaMembro;
 use App\Models\MembresiaSituacao;
+use App\Services\ServiceMembros\ConsultaCpfMembroService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -217,27 +217,24 @@ class UpdateMembroRequest extends FormRequest
                     $cpf = preg_replace('/[^0-9]/', '', $value);
                     $isReconciliacao = (int) $this->input('modo_recepcao_id') === MembresiaSituacao::RECEPCAO_RECONCILIACAO;
 
-                    // Verifica se o CPF já existe na tabela membresia_membros, ignorando o membro atual
-                    $query = DB::table('membresia_membros')->where('cpf', $cpf);
+                    $consultaCpf = app(ConsultaCpfMembroService::class);
+                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
-                    if ($membroId) {
-                        $query->where('id', '!=', $membroId);
+                    if (!$membroDuplicado) {
+                        return;
                     }
 
                     if ($isReconciliacao) {
-                        $temMembroAtivo = (clone $query)
-                            ->where('status', MembresiaMembro::STATUS_ATIVO)
-                            ->whereNull('deleted_at')
-                            ->exists();
+                        $membroAtivo = $consultaCpf->findMembroAtivo($cpf, $membroId);
 
-                        if (!$temMembroAtivo) {
+                        if (!$membroAtivo) {
                             return;
                         }
+
+                        $membroDuplicado = $membroAtivo;
                     }
 
-                    if ($query->exists()) {
-                        $fail(__('Este CPF já está sendo utilizado por outra pessoa'));
-                    }
+                    $fail($consultaCpf->mensagemPertence($membroDuplicado));
                 },
             ],
             'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {

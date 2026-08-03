@@ -1968,5 +1968,6 @@
     "Informe um nome ou CPF para realizar a pesquisa.": "Inserisci un nome o CPF per effettuare la ricerca.",
     "Realize uma pesquisa para listar os membros.": "Esegui una ricerca per elencare i membri.",
     "Administração": "Amministrazione",
-    "Busque membros por nome ou CPF.": "Cerca membri per nome o CPF."
+    "Busque membros por nome ou CPF.": "Cerca membri per nome o CPF.",
+    "Esse CPF pertence a :nome, :regiao, :distrito, :igreja": "Questo CPF appartiene a :nome, :regiao, :distrito, :igreja"
 }
