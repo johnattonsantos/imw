@@ -1959,5 +1959,14 @@
     "Órgão Emissor*": "Organismo emisor*",
     "Último": "Último",
     "Últimos movimentos": "Últimos movimientos",
-    "% de presença": "% de asistencia"
+    "% de presença": "% de asistencia",
+    "Pesquisar Membro": "Buscar Miembro",
+    "Busque membros da região logada por nome ou CPF.": "Busque miembros de la región autenticada por nombre o CPF.",
+    "Nome ou parte do nome": "Nombre o parte del nombre",
+    "Digite o CPF": "Ingrese el CPF",
+    "Nome do Membro": "Nombre del Miembro",
+    "Informe um nome ou CPF para realizar a pesquisa.": "Informe un nombre o CPF para realizar la búsqueda.",
+    "Realize uma pesquisa para listar os membros.": "Realice una búsqueda para listar los miembros.",
+    "Administração": "Administración",
+    "Busque membros por nome ou CPF.": "Busque miembros por nombre o CPF."
 }

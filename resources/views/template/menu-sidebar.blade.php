@@ -112,6 +112,22 @@
                      </div>
                  </a>
              </li>
+             @if (auth()->check() && auth()->user()->hasPerfilRegra('admin-index'))
+                 <li class="menu {{ Request::is('admin/pesquisar-membro*') ? 'active' : '' }}">
+                     <a href="{{ route('admin.pesquisar-membro') }}" aria-expanded="false" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-user-search">
+                                 <circle cx="11" cy="11" r="8"></circle>
+                                 <path d="M21 21l-4.35-4.35"></path>
+                                 <path d="M11 8a3 3 0 0 1 3 3"></path>
+                             </svg>
+                             <span>{{ __('Pesquisar Membro') }}</span>
+                         </div>
+                     </a>
+                 </li>
+             @endif
               @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao'))
                   <li class="menu {{ Request::is('comunicacao*') ? 'active' : '' }}">
                      <a href="{{ route('comunicacao.index') }}" aria-expanded="false" class="dropdown-toggle">
@@ -348,7 +364,7 @@
                  <li class="menu mx-3">
                      <a href="">{{ __('Igrejas') }}</a>
                  </li>
-                 <li class="menu {{ Request::is('igreja', 'igreja/*', 'igrejas-regiao*') ? 'active' : '' }}">
+                 <li class="menu {{ Request::is('igreja', 'igreja/*', 'igrejas-regiao') ? 'active' : '' }}">
                      <a href="{{ route('igrejas.regiao.index') }}" class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -359,6 +375,20 @@
                                  <path d="M8 12h8M12 16v4"></path>
                              </svg>
                              <span>{{ __('Igrejas') }}</span>
+                         </div>
+                     </a>
+                 </li>
+                 <li class="menu {{ Request::is('igrejas-regiao/pesquisar-membro*') ? 'active' : '' }}">
+                     <a href="{{ route('igrejas.regiao.pesquisar-membro') }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-user-search">
+                                 <circle cx="11" cy="11" r="8"></circle>
+                                 <path d="M21 21l-4.35-4.35"></path>
+                                 <path d="M11 8a3 3 0 0 1 3 3"></path>
+                             </svg>
+                             <span>{{ __('Pesquisar Membro') }}</span>
                          </div>
                      </a>
                  </li>

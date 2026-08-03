@@ -1970,5 +1970,14 @@
     "___I18N_BLOCK_6___ ___I18N_BLOCK_7___ ___I18N_BLOCK_8___": "___I18N_BLOCK_6___ ___I18N_BLOCK_7___ ___I18N_BLOCK_8___",
     "Órgão Emissor*": "Órgão Emissor*",
     "Último": "Último",
-    "Últimos movimentos": "Últimos movimentos"
+    "Últimos movimentos": "Últimos movimentos",
+    "Pesquisar Membro": "Pesquisar Membro",
+    "Busque membros da região logada por nome ou CPF.": "Pesquise membros da região autenticada por nome ou CPF.",
+    "Nome ou parte do nome": "Nome ou parte do nome",
+    "Digite o CPF": "Introduza o CPF",
+    "Nome do Membro": "Nome do Membro",
+    "Informe um nome ou CPF para realizar a pesquisa.": "Indique um nome ou CPF para realizar a pesquisa.",
+    "Realize uma pesquisa para listar os membros.": "Realize uma pesquisa para listar os membros.",
+    "Administração": "Administração",
+    "Busque membros por nome ou CPF.": "Pesquise membros por nome ou CPF."
 }

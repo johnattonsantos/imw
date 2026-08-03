@@ -13,6 +13,7 @@ use App\Services\ServiceIgrejas\MovimentoDiarioService;
 use App\Traits\LocationUtils;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class IgrejasRegiaoController extends Controller
 {
@@ -31,6 +32,56 @@ class IgrejasRegiaoController extends Controller
             return response()->json(['message' => 'Não foi possível listar as igrejas'], 500);
         }
     }
+
+    public function pesquisarMembro(Request $request)
+    {
+        $nome = trim((string) $request->input('nome'));
+        $cpf = preg_replace('/\D/', '', (string) $request->input('cpf'));
+        $searched = $nome !== '' || $cpf !== '';
+        $membros = collect();
+
+        if ($searched) {
+            $sessionPerfil = session('session_perfil');
+            $regiaoId = (int) data_get($sessionPerfil, 'instituicoes.regiao.id', data_get($sessionPerfil, 'instituicao_id', 0));
+
+            $membros = DB::table('membresia_membros as mm')
+                ->leftJoin('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'mm.distrito_id')
+                ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'mm.igreja_id')
+                ->where('mm.vinculo', 'M')
+                ->whereIn('mm.status', ['A', 'I'])
+                ->where(function ($query) use ($regiaoId) {
+                    $query->where('mm.regiao_id', $regiaoId)
+                        ->orWhere('distrito.instituicao_pai_id', $regiaoId)
+                        ->orWhere('igreja.regiao_id', $regiaoId);
+                })
+                ->when($nome !== '', fn ($query) =>
+                    $query->where('mm.nome', 'like', '%' . $nome . '%'))
+                ->when($cpf !== '', fn ($query) =>
+                    $query->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(mm.cpf, '.', ''), '-', ''), '/', ''), ' ', '') LIKE ?", ['%' . $cpf . '%']))
+                ->select([
+                    'mm.id',
+                    'mm.nome',
+                    'mm.cpf',
+                    'mm.status',
+                    'distrito.nome as distrito_nome',
+                    'igreja.nome as igreja_nome',
+                    DB::raw("(SELECT CASE
+                        WHEN mc.telefone_preferencial IS NOT NULL AND mc.telefone_preferencial <> '' THEN mc.telefone_preferencial
+                        WHEN mc.telefone_alternativo IS NOT NULL AND mc.telefone_alternativo <> '' THEN mc.telefone_alternativo
+                        ELSE mc.telefone_whatsapp
+                    END FROM membresia_contatos mc
+                    WHERE mc.membro_id = mm.id AND mc.deleted_at IS NULL
+                    ORDER BY mc.id DESC
+                    LIMIT 1) as telefone"),
+                ])
+                ->orderBy('mm.nome')
+                ->limit(100)
+                ->get();
+        }
+
+        return view('igrejas-regiao.pesquisar-membro', compact('membros', 'searched', 'nome', 'cpf'));
+    }
+
     public function estatisticaAnoEclesiastico(Request $request, InstituicoesInstituicao $igreja)
     {
         try {

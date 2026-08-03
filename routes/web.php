@@ -95,6 +95,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('index')->middleware(['seguranca:admin-index']);
+            Route::get('/pesquisar-membro', [AdminController::class, 'pesquisarMembro'])->name('pesquisar-membro')->middleware(['seguranca:admin-index']);
             Route::get('/novo', [AdminController::class, 'novo'])->name('novo')->middleware(['seguranca:usuarios-cadastrar']);
             Route::post('/update/{id}', [AdminController::class, 'update'])->name('update')->middleware(['seguranca:usuarios-atualizar']);
             Route::post('/store', [AdminController::class, 'store'])->name('store')->middleware(['seguranca:usuarios-cadastrar']);
@@ -703,6 +704,7 @@ Route::middleware(['auth'])->group(function () {
             function () {
                 Route::get('/', 'index')->name('index');
                 Route::get('/list', 'list')->name('list');
+                Route::get('/pesquisar-membro', 'pesquisarMembro')->name('pesquisar-membro');
                 Route::get('estatistica-ano-eclesiastico/{igreja}', 'estatisticaAnoEclesiastico')->name('estatistica-ano-eclesiastico');
                 Route::get('balancete/{igreja}', 'balancete')->name('balancete');
                 Route::get('balancete-pdf/{igreja}', 'balancetePdf')->name('balancete-pdf');
