@@ -24,7 +24,22 @@ class UpdateQtdPrebendasRequest extends FormRequest
     public function rules()
     {
         return [
-            'qtd_prebendas' => 'required|min:1',
+            'qtd_prebendas' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (!preg_match('/^\d+([,.]\d+)?$/', (string) $value)) {
+                        $fail('A quantidade de prebendas deve ser um número válido.');
+                        return;
+                    }
+
+                    $quantidade = (float) str_replace(',', '.', $value);
+
+                    if ($quantidade < 1) {
+                        $fail('A quantidade de prebendas deve ser no mínimo 1.');
+                    }
+                },
+            ],
+            'vinculo' => ['nullable', 'in:integral,parcial'],
         ];
     }
 

@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
             return redirect()
                 ->back()
                 ->withInput($request->except(['_token', 'password', 'password_confirmation']))
-                ->with('error', 'Sua sessão expirou (erro 419). Atualize a página e tente novamente.');
+                ->with('error', __('Sua sessão expirou (erro 419). Atualize a página e tente novamente.'));
         });
     }
 }

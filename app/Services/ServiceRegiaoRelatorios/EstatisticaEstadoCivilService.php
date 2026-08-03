@@ -20,8 +20,7 @@ class EstatisticaEstadoCivilService
     {
         $regiao = Identifiable::fetchtSessionRegiao();
         $instituicao = null;
-        $vinculosPermitidos = ['C', 'M', 'V'];
-        $vinculo = in_array($vinculo, $vinculosPermitidos, true) ? $vinculo : 'M';
+        $vinculo = 'M';
 
         if (!empty($distritoId) && $distritoId !== 'all') {
             $instituicao = InstituicoesInstituicao::where('id', $distritoId)
@@ -32,7 +31,7 @@ class EstatisticaEstadoCivilService
 
 
         return [
-            'lancamentos' => EstatisticaEstadoCivilUtils::fetch($distritoId, $regiao->id, $vinculo),
+            'lancamentos' => EstatisticaEstadoCivilUtils::fetch($distritoId, $regiao->id),
             'distritos'   => Identifiable::fetchDistritosByRegiao($regiao->id),
             'instituicao' => $instituicao,
             'regiao'      => $regiao,

@@ -13,6 +13,7 @@ use App\Services\ServiceDistritoRelatorios\OrcamentoService;
 use App\Services\ServiceDistritoRelatorios\QuantidadeMembrosService;
 use App\Services\ServiceDistritoRelatorios\SaldoIgrejasService;
 use App\Services\ServiceDistritoRelatorios\VariacaoFinanceiraService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioCongregadosService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioConjugesHierarquiaService;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoAniversariantesDistrito;
 use Illuminate\Http\Request;
@@ -45,16 +46,16 @@ class DistritoRelatorioController extends Controller
     public function quantidademembros(Request $request) {
         $dataInicial = $request->input('data_inicial');
         $dataFinal = $request->input('data_final');
-        $tipo = $request->input('tipo');
-        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $tipo);
+        $periodoAnos = $request->input('periodo_anos');
+        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $periodoAnos);
         return view('distrito.relatorios.quantidademembros', $data);
     }
 
     public function quantidademembrosPdf(Request $request) {
         $dataInicial = $request->input('data_inicial');
         $dataFinal = $request->input('data_final');
-        $tipo = $request->input('tipo');
-        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $tipo);
+        $periodoAnos = $request->input('periodo_anos');
+        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $periodoAnos);
         
         $pdf = FacadePdf::loadView('distrito.relatorios.quantidademembros_pdf', $data)
             ->setPaper('a4', 'landscape');
@@ -98,6 +99,13 @@ class DistritoRelatorioController extends Controller
         return view('relatorios.conjuges-hierarquia', $data + [
             'breadcrumbGrupo' => 'Relatórios Distritais',
         ]);
+    }
+
+    public function congregados()
+    {
+        $data = app(IdentificaDadosRelatorioCongregadosService::class)->executeDistrito();
+
+        return view('relatorios.congregados', $data);
     }
 
 

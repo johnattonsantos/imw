@@ -37,7 +37,7 @@ class UpdateSecretariaRequest extends FormRequest
                 'max:18',
                 function ($attribute, $value, $fail) {
                     if (! CpfCnpj::isValidCnpj($value)) {
-                        $fail('O CNPJ informado é inválido. Para CNPJ alfanumérico, use 12 letras/números e 2 dígitos verificadores numéricos.');
+                        $fail(__('O CNPJ informado é inválido. Para CNPJ alfanumérico, use 12 letras/números e 2 dígitos verificadores numéricos.'));
                     }
                 },
             ],

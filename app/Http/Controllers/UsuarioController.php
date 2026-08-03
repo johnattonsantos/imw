@@ -30,9 +30,9 @@ class UsuarioController extends Controller
             $perfis = app(NovoUsuarioService::class)->execute();
             return view('usuarios.novo', compact('perfis'));
         } catch (MembroNotFoundException $e) {
-            return redirect()->route('usuarios.index')->with('error', 'Registro não encontrado.');
+            return redirect()->route('usuarios.index')->with('error', __('Registro não encontrado.'));
         } catch (\Exception $e) {
-            return redirect()->route('usuarios.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('usuarios.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -63,10 +63,10 @@ class UsuarioController extends Controller
             DB::beginTransaction();
             app(SalvarUsuarioLocalService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('usuarios.novo')->with('success', 'Usuário cadastrado com sucesso.');
+            return redirect()->route('usuarios.novo')->with('success', __('Usuário cadastrado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('usuarios.novo')->with('error', 'Ocorreu um erro ao cadastrar o usuário. Por favor, tente novamente.');
+            return redirect()->route('usuarios.novo')->with('error', __('Ocorreu um erro ao cadastrar o usuário. Por favor, tente novamente.'));
         }
     }
 
@@ -77,7 +77,7 @@ class UsuarioController extends Controller
             $perfis = app(NovoUsuarioService::class)->execute();
             return view('usuarios.editar', compact('user', 'perfis', 'id'));
         } catch (\Exception $e) {
-            return redirect()->route('usuarios.index')->with('error', 'Erro ao abrir a página, por favor, tente mais tarde!');
+            return redirect()->route('usuarios.index')->with('error', __('Erro ao abrir a página, por favor, tente mais tarde!'));
         }
     }
 
@@ -89,7 +89,7 @@ class UsuarioController extends Controller
             DB::beginTransaction();
             app(EditarUsuarioLocalService::class)->execute($request->all(), $id);
             DB::commit();
-            return redirect()->route('usuarios.editar', $id)->with('success', 'Usuário atualizado com sucesso.');
+            return redirect()->route('usuarios.editar', $id)->with('success', __('Usuário atualizado com sucesso.'));
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->route('usuarios.editar', $id)->with('error', $e->getMessage());
@@ -102,7 +102,7 @@ class UsuarioController extends Controller
             DB::beginTransaction();
             app(DeletarUsuarioService::class)->execute($id);
             DB::commit();
-            return redirect()->route('usuarios.index')->with('success', 'O vínculo deste usuário com a instituição foi removido.');
+            return redirect()->route('usuarios.index')->with('success', __('O vínculo deste usuário com a instituição foi removido.'));
         } catch(\Exception $e) {
             DB::rollback();
             return redirect()->route('usuarios.index')->with('error', $e->getMessage());

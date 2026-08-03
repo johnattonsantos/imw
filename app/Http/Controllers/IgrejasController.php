@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InstituicoesInstituicao;
+use App\Models\InstituicoesTipoInstituicao;
 use App\DataTables\IgrejasDataTable;
 use App\Services\ServiceIgrejas\BalanceteService;
 use App\Services\ServiceIgrejas\GetEstatisticaAnoEclesiasticoService;
@@ -36,12 +37,14 @@ class IgrejasController extends Controller
             $data = app(GetEstatisticaAnoEclesiasticoService::class)->execute($igreja, $request->input('ano'));
             return view('igrejas.estatistica-ano-eclesiastico', $data);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Houve um erro ao tentar visualizar o relatório de histórico eclesiástico');
+            return redirect()->back()->with('error', __('Houve um erro ao tentar visualizar o relatório de histórico eclesiástico'));
         }
     }
 
     public function balancete(Request $request, InstituicoesInstituicao $igreja)
     {
+        $this->assertIgrejaLocal($igreja);
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -52,6 +55,8 @@ class IgrejasController extends Controller
 
     public function balancetePdf(Request $request, InstituicoesInstituicao $igreja)
     {
+        $this->assertIgrejaLocal($igreja);
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -63,6 +68,8 @@ class IgrejasController extends Controller
 
     public function movimentoDiario(Request $request, InstituicoesInstituicao $igreja)
     {
+        $this->assertIgrejaLocal($igreja);
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -73,6 +80,8 @@ class IgrejasController extends Controller
 
     public function movimentoDiarioPdf(Request $request, InstituicoesInstituicao $igreja)
     {
+        $this->assertIgrejaLocal($igreja);
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
         $caixaId = $request->input('caixa_id');
@@ -84,6 +93,8 @@ class IgrejasController extends Controller
 
     public function livrorazao(Request $request, InstituicoesInstituicao $igreja)
     {
+        $this->assertIgrejaLocal($igreja);
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
 
@@ -94,6 +105,8 @@ class IgrejasController extends Controller
 
     public function livrorazaoPdf(Request $request, InstituicoesInstituicao $igreja)
     {
+        $this->assertIgrejaLocal($igreja);
+
         $dataInicial = $request->input('dt_inicial');
         $dataFinal = $request->input('dt_final');
 
@@ -101,5 +114,10 @@ class IgrejasController extends Controller
         $data = app(LivroRazaoService::class)->execute($dataInicial, $dataFinal, $igreja);
         $pdf = FacadePdf::loadView('financeiro.relatorios.livrorazao_pdf', $data);
         return $pdf->stream('relatorio_livrorazao.pdf');
+    }
+
+    private function assertIgrejaLocal(InstituicoesInstituicao $igreja): void
+    {
+        abort_if((int) $igreja->tipo_instituicao_id !== InstituicoesTipoInstituicao::IGREJA_LOCAL, 404);
     }
 }

@@ -20,6 +20,7 @@ class PessoaFuncaoministerial extends Model implements Auditable
         'created_at',
         'updated_at',
         'qtd_prebendas',
+        'vinculo',
     ];
 
     // Relacionamento inverso com PessoaNomeacao

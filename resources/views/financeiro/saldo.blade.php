@@ -47,13 +47,13 @@
                             <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th>CAIXA</th>
+                                        <th>{{ __('CAIXA') }}</th>
                                         <th width="300" style="text-align: right">ÚLTIMO SALDO CONSOLIDADO EM {{ \Carbon\Carbon::parse($ultimoCaixa)->isoFormat('MMMM [de] YYYY') }}</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TOTAIS DE SAÍDAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. ENTRADAS</th>
-                                        <th width="120" style="text-align: right">TRANSF. SAÍDAS</th>
-                                        <th width="120" style="text-align: right">SALDO ATUAL</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TOTAIS DE SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. ENTRADAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('TRANSF. SAÍDAS') }}</th>
+                                        <th width="120" style="text-align: right">{{ __('SALDO ATUAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -100,7 +100,7 @@
 
                                     {{-- Total de cada caixa --}}
                                     <tr>
-                                        <td style="text-align: left"><strong>Total dos Caixas</strong></td>
+                                        <td style="text-align: left"><strong>{{ __('Total dos Caixas') }}</strong></td>
                                         <td style="text-align: right">
                                             <strong>{{ 'R$ ' . number_format($totalSaldoFinal, 2, ',', '.') }}</strong>
                                         </td>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 text-center">
-                            <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                            <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                         </div>
                     </div>
                 </div>

@@ -43,30 +43,30 @@
     <input type="hidden" id="url" value="{{ route('regiao.relatorio.gceu') }}">
     <div class="widget-content widget-content-area">
       <form class="form-vertical" id="filter_form">
-        
+
         {{-- Congregação --}}
         <div class="form-group row mb-4">
           <div class="col-lg-5">
-            <label class="control-label">Distrito:</label>
+            <label class="control-label">{{ __('Distrito:') }}</label>
             <select id="distrito_id" name="distrito_id" class="form-control @error('distrito_id') is-invalid @enderror" >
-              <option value="" {{ request()->distrito_id == '' ? 'selected' : '' }}>TODOS</option>
+              <option value="" {{ request()->distrito_id == '' ? 'selected' : '' }}>{{ __('TODOS') }}</option>
               @foreach($distritos as $distrito)
                 <option value="{{ $distrito->id }}" {{ request()->distrito_id == $distrito->id ? 'selected' : '' }}>{{ $distrito->distrito_nome }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-5">
-            <label class="control-label">Igreja:</label>
+            <label class="control-label">{{ __('Igreja:') }}</label>
             <select id="igreja_id" name="igreja_id" class="form-control @error('igreja_id') is-invalid @enderror" >
-              <option value="" {{ request()->igreja_id == '' ? 'selected' : '' }}>TODAS</option>
+              <option value="" {{ request()->igreja_id == '' ? 'selected' : '' }}>{{ __('TODAS') }}</option>
               @foreach($igrejas as $igreja)
                 <option value="{{ $igreja->id_igreja }}" {{ request()->igreja_id == $igreja->id_igreja ? 'selected' : '' }}>{{ $igreja->igreja_nome }}</option>
               @endforeach
             </select>
           </div>
           <div class="col-lg-2">
-            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn" style="margin-top: 30px;">
-              <x-bx-search /> Buscar 
+            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn" style="margin-top: 30px;">
+              <x-bx-search /> {{ __('Buscar') }}
             </button>
           </div>
         </div>
@@ -78,19 +78,19 @@
   <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
-          
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aniversariantes">
                     <thead>
                         <tr>
-                            <th>Nº</th>
-                            <th>DISTRITO</th>
-                            <th>IGREJA</th>
-                            <th>ANFITRIÃO</th>
-                            <th>CONTATO</th>
-                            <th>GCEU</th>
-                            <th>ENDEREÇO GCEU</th>
-                            <th>MAPS</th>
+                            <th>{{ __('Nº') }}</th>
+                            <th>{{ __('DISTRITO') }}</th>
+                            <th>{{ __('IGREJA') }}</th>
+                            <th>{{ __('ANFITRIÃO') }}</th>
+                            <th>{{ __('CONTATO') }}</th>
+                            <th>{{ __('GCEU') }}</th>
+                            <th>{{ __('ENDEREÇO GCEU') }}</th>
+                            <th>{{ __('MAPS') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,7 +103,7 @@
                             <td>{{ formatStr($item->contato, '## (##) #####-####') }}</td>
                             <td>{{ $item->nome }}</td>
                             <td>{{ $item->endereco }} {{ $item->numero }}, {{ $item->bairro }}, {{ $item->cidade }}, {{ $item->uf }}</td>
-                            <td><a href="https://www.google.com/maps/?q={{ $item->endereco }} {{ $item->numero }}, {{ $item->bairro }}, {{ $item->cidade }}, {{ $item->uf }}" title="Acessar no Google Maps" target="_blank" rel="noopener noreferrer"><i class="fas fa-map-marker-alt" style="margin-left: 25px;"></i></a></td>
+                            <td><a href="https://www.google.com/maps/?q={{ $item->endereco }} {{ $item->numero }}, {{ $item->bairro }}, {{ $item->cidade }}, {{ $item->uf }}" title="{{ __('Acessar no Google Maps') }}" target="_blank" rel="noopener noreferrer"><i class="fas fa-map-marker-alt" style="margin-left: 25px;"></i></a></td>
                           </tr>
                       @endforeach
                     </tbody>
@@ -140,7 +140,7 @@
   $('#btn_buscar').click(function () {
     $('#filter_form').removeAttr('target');
   })
-  
+
   $('#btn_relatorio').click(function () {
     $('#filter_form').attr('target', '_blank');
   })
@@ -181,7 +181,7 @@
                         //doc.pageMargins = [20,50,20,30];
                         doc.defaultStyle.fontSize = 9;
                         doc.styles.tableHeader.fontSize = 9;
-                        
+
 
                         const hoje = new Date();
                         const dataFormatada = hoje.toLocaleDateString('pt-BR');
@@ -208,7 +208,7 @@
                             }
                         });
 
-                        var numColumns = doc.content[0].table.body[0].length; 
+                        var numColumns = doc.content[0].table.body[0].length;
                         doc.content[0].table.widths = Array(numColumns).fill('*');
 
 

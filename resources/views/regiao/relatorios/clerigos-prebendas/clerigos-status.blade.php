@@ -38,13 +38,13 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>Relatório Status Clérigos</h4>
+              <h4>{{ __('Relatório Status Clérigos') }}</h4>
           </div>
       </div>
   </div>
   <div class="widget-content widget-content-area">
     <form class="form-vertical" id="filter_form"  method="GET">
-      
+
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
         </div>
@@ -55,11 +55,11 @@
 
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
-          <label class="control-label">Status:</label>
+          <label class="control-label">{{ __('Status:') }}</label>
         </div>
         <div class="col-lg-6">
           <select id="status" name="status" class="form-control @error('mes') is-invalid @enderror" >
-            <option value="" {{ request()->get('status') == '' ? 'selected hidden' : '' }}>Todos</option>
+            <option value="" {{ request()->get('status') == '' ? 'selected hidden' : '' }}>{{ __('Todos') }}</option>
             @foreach($status as $item)
             <option value="{{ $item->id }}" {{ request()->get('status') ==  $item->id ? 'selected' : '' }}>{{ $item->descricao }}</option>
             @endforeach
@@ -70,8 +70,8 @@
       <div class="form-group row mb-4">
         <div class="col-lg-2"></div>
         <div class="col-lg-6">
-          <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-            <x-bx-search /> Buscar 
+          <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+            <x-bx-search /> {{ __('Buscar') }}
           </button>
         </div>
       </div>
@@ -87,10 +87,10 @@
           <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="aniversariantes-clerigos">
             <thead>
                 <tr>
-                    <th>NOME</th>
-                    <th>STATUS</th>
-                    <th>TELEFONE</th>
-                    <th>INSTITUIÇÃO</th>
+                    <th>{{ __('NOME') }}</th>
+                    <th>{{ __('STATUS') }}</th>
+                    <th>{{ __('TELEFONE') }}</th>
+                    <th>{{ __('INSTITUIÇÃO') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -102,10 +102,10 @@
                       <td>{{ $membro->igreja }}</td>
                   </tr>
                 @empty
-                <p class="text-center text-muted">Nenhum resultado encontrado para o período selecionado.</p>
+                <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
                 @endforelse
             </tbody>
-          </table>            
+          </table>
         </div>
       </div>
     </div>

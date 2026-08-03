@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Relatorio Comunicação</title>
+    <title>{{ __('Relatorio Comunicação') }}</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 12px; }
@@ -11,21 +11,21 @@
     </style>
 </head>
 <body>
-    <h2>Relatorio de Comunicação</h2>
-    <p><strong>Gerado em:</strong> {{ now()->format('d/m/Y H:i:s') }}</p>
-    <p><strong>Busca:</strong> {{ $search ?: 'Sem filtro' }}</p>
-    <p><strong>Total:</strong> {{ $comunicacoes->count() }} registro(s)</p>
+    <h2>{{ __('Relatorio de Comunicação') }}</h2>
+    <p><strong>{{ __('Gerado em:') }}</strong> {{ now()->format('d/m/Y H:i:s') }}</p>
+    <p><strong>{{ __('Busca:') }}</strong> {{ $search ?: 'Sem filtro' }}</p>
+    <p><strong>{{ __('Total:') }}</strong> {{ $comunicacoes->count() }} registro(s)</p>
 
     <table>
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Categoria</th>
-                <th>Título</th>
-                <th>Comentário</th>
-                <th>Arquivo</th>
-                <th>Instituicao</th>
-                <th>Criado em</th>
+                <th>{{ __('ID') }}</th>
+                <th>{{ __('Categoria') }}</th>
+                <th>{{ __('Título') }}</th>
+                <th>{{ __('Comentário') }}</th>
+                <th>{{ __('Arquivo') }}</th>
+                <th>{{ __('Instituicao') }}</th>
+                <th>{{ __('Criado em') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -41,7 +41,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" style="text-align: center;">Nenhum registro encontrado.</td>
+                    <td colspan="7" style="text-align: center;">{{ __('Nenhum registro encontrado.') }}</td>
                 </tr>
             @endforelse
         </tbody>

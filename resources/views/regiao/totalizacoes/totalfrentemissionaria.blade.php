@@ -35,13 +35,13 @@
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4">
                         <div class="col-lg-3 text-right">
-                            <label class="control-label">* Instituição:</label>
+                            <label class="control-label">{{ __('* Instituição:') }}</label>
                         </div>
                         <div class="col-lg-3">
                             <select class="form-control" id="instituicao" name="instituicao" required>
-                                <option value="">Selecione</option>
-                                <option value="3">Região</option>
-                                <option value="2">Distrito</option>
+                                <option value="">{{ __('Selecione') }}</option>
+                                <option value="3">{{ __('Região') }}</option>
+                                <option value="2">{{ __('Distrito') }}</option>
                             </select>
                         </div>
 
@@ -50,11 +50,11 @@
                         <div class="col-lg-2"></div>
                         <div class="col-lg-6">
                             <button id="btn_buscar" type="submit" name="action" value="buscar"
-                                title="Buscar dados do Relatório" class="btn btn-primary btn">
-                                <x-bx-search /> Buscar
+                                title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                                <x-bx-search /> {{ __('Buscar') }}
                             </button>
                             <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                                <i class="fa fa-file-pdf"></i> Relatório
+                                <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                             </button>
                         </div>
                     </div>
@@ -85,9 +85,9 @@
                                     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th style="text-align: left;">Instituição</th>
-                                                <th style="text-align: center;">Quantidade de Frentes</th>
-                                                <th style="text-align: center;">Percentual</th>
+                                                <th style="text-align: left;">{{ __('Instituição') }}</th>
+                                                <th style="text-align: center;">{{ __('Quantidade de Frentes') }}</th>
+                                                <th style="text-align: center;">{{ __('Percentual') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -102,7 +102,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th style="text-align: left;">Total Geral</th>
+                                                <th style="text-align: left;">{{ __('Total Geral') }}</th>
                                                 <th style="text-align: center;">{{ $lancamentos->sum('total') }}</th>
                                                 <th style="text-align: center;">100%</th>
                                             </tr>
@@ -116,7 +116,7 @@
                 <div class="row">
                     <div class="col-12 text-center">
                         <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i
-                                class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                                class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                     </div>
                 </div>
                 <!-- Fim do Conteúdo -->
@@ -134,7 +134,7 @@
     <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('.selectpicker').selectpicker();
+            $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
 
             $('#btn_relatorio').on('click', function(event) {
                 var instituicao = $('#instituicao').val();

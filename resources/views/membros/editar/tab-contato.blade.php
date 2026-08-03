@@ -2,7 +2,7 @@
     <blockquote class="blockquote">
       <div class="row mb-4">
       <div class="col-xl-3">
-          <label for="sexo">E-mail</label>
+          <label for="sexo">{{ __('E-mail') }}</label>
           <input type="email" class="form-control @error('email_preferencial') is-invalid @enderror" id="email_preferencial" name="email_preferencial" value="{{ old('email_preferencial', $pessoa->contato->email_preferencial) }}" maxlength="100">
           @error('email_preferencial')
             <span class="help-block text-danger">{{ $message }}</span>
@@ -15,8 +15,8 @@
             <span class="help-block text-danger">{{ $message }}</span>
           @enderror
         </div>
-       
-       
+
+
       </div>
 
       <div class="row mb-4">
@@ -42,7 +42,7 @@
           @enderror
         </div>
         <div class="col-xl-4">
-          <label for="complemento">Complemento</label>
+          <label for="complemento">{{ __('Complemento') }}</label>
           <input type="text" class="form-control" id="complemento" name="complemento"  value="{{ old('complemento', $pessoa->contato->complemento) }}" maxlength="100">
           @error('complemento')
             <span class="help-block text-danger">{{ $message }}</span>
@@ -67,7 +67,7 @@
         <div class="col-xl-4">
           <label for="estado">{{ request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update') ? '* Estado' : 'Estado' }}</label>
           <select class="form-control @error('estado') is-invalid @enderror" id="estado" name="estado" {{ request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update') ? 'required' : '' }}>
-            <option value="">Selecione</option>
+            <option value="">{{ __('Selecione') }}</option>
             @php
               //Colocar no banco de dados , esta estranho assim
               $ufs = [
@@ -88,7 +88,7 @@
       </div>
       <div class="row mb-4">
         <div class="col-xl-12">
-          <label for="observacoes">Observações</label>
+          <label for="observacoes">{{ __('Observações') }}</label>
           <input type="text" class="form-control" id="observacoes" name="observacoes"  value="{{ old('observacoes', $pessoa->contato->observacoes) }}" maxlength="1000">
           @error('observacoes')
             <span class="help-block text-danger">{{ $message }}</span>

@@ -13,6 +13,7 @@ use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroPorcentagemService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaGeneroService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticasGceuService;
 use App\Services\ServiceRegiaoRelatorios\AspirantesIgrejasService;
+use App\Services\ServiceRegiaoRelatorios\AcompanhamentoValidacoesService;
 use App\Services\ServiceRegiaoRelatorios\EstatisticaTotalMembrosService;
 use App\Services\ServiceRegiaoRelatorios\LancamentoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\LivroRazaoGeralService;
@@ -21,15 +22,19 @@ use App\Services\ServiceRegiaoRelatorios\IgrejasPorClerigosService;
 use App\Services\ServiceRegiaoRelatorios\IgrejasPorPastoresService;
 use App\Services\ServiceRegiaoRelatorios\MembrosMinisterioService;
 use App\Services\ServiceRegiaoRelatorios\OrcamentoService;
+use App\Services\ServiceRegiaoRelatorios\PerfilMembrosExcluidosService;
+use App\Services\ServiceRegiaoRelatorios\PerfilMembrosRecebidosService;
 use App\Services\ServiceRegiaoRelatorios\QuantidadeMembrosService;
 use App\Services\ServiceRegiaoRelatorios\SaldoIgrejasService;
 use App\Services\ServiceRegiaoRelatorios\VariacaoFinanceiraService;
+use App\Services\ServiceRelatorio\IdentificaDadosRelatorioCongregadosService;
 use App\Services\ServiceRelatorio\IdentificaDadosRelatorioConjugesHierarquiaService;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoAniversariantes;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoCategorias;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoDados;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoEsposas;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoStatus;
+use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoVinculos;
 use App\Traits\Identifiable;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
@@ -68,10 +73,10 @@ class RegiaoRelatorioController extends Controller
     {
         $dataInicial = $request->input('data_inicial');
         $dataFinal = $request->input('data_final');
-        $tipo = $request->input('tipo');
+        $periodoAnos = $request->input('periodo_anos');
         $distritoId = $request->input('distrito');
 
-        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $tipo, $distritoId);
+        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $distritoId, $periodoAnos);
         return view('regiao.relatorios.quantidademembros', $data);
     }
 
@@ -79,10 +84,10 @@ class RegiaoRelatorioController extends Controller
     {
         $dataInicial = $request->input('data_inicial');
         $dataFinal = $request->input('data_final');
-        $tipo = $request->input('tipo');
+        $periodoAnos = $request->input('periodo_anos');
         $distritoId = $request->input('distrito');
 
-        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $tipo, $distritoId);
+        $data = app(QuantidadeMembrosService::class)->execute($dataInicial, $dataFinal, $distritoId, $periodoAnos);
         $pdf = FacadePdf::loadView('regiao.relatorios.quantidademembros_pdf', $data)
             ->setPaper('a4', 'landscape');
 
@@ -116,7 +121,7 @@ class RegiaoRelatorioController extends Controller
 
             return view('relatorios.esposas-de-pastores', compact('esposas'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de esposas de pastores');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de esposas de pastores'));
         }
     }
 
@@ -164,6 +169,63 @@ class RegiaoRelatorioController extends Controller
         return view('relatorios.conjuges-hierarquia', $data + [
             'breadcrumbGrupo' => 'Relatórios Regionais',
         ]);
+    }
+
+    public function congregados()
+    {
+        $data = app(IdentificaDadosRelatorioCongregadosService::class)->executeRegiao();
+
+        return view('relatorios.congregados', $data);
+    }
+
+    public function acompanhamentoValidacoes()
+    {
+        $data = app(AcompanhamentoValidacoesService::class)->execute();
+
+        return view('regiao.relatorios.acompanhamento-validacoes', $data);
+    }
+
+    public function perfilMembrosRecebidos(Request $request)
+    {
+        $request->merge([
+            'data_inicial' => $request->input('data_inicial') ?: now()->startOfYear()->toDateString(),
+            'data_final' => $request->input('data_final') ?: now()->toDateString(),
+        ]);
+
+        $validated = $request->validate([
+            'data_inicial' => ['required', 'date'],
+            'data_final' => ['required', 'date', 'after_or_equal:data_inicial'],
+        ], [
+            'data_final.after_or_equal' => 'A data final deve ser igual ou posterior à data inicial.',
+        ]);
+
+        $dataInicial = $validated['data_inicial'];
+        $dataFinal = $validated['data_final'];
+        $data = app(PerfilMembrosRecebidosService::class)->execute($dataInicial, $dataFinal);
+
+        return view('regiao.relatorios.perfil-membros-recebidos', $data);
+    }
+
+    public function perfilMembrosExcluidos(Request $request)
+    {
+        $request->merge([
+            'data_inicial' => $request->input('data_inicial') ?: now()->startOfYear()->toDateString(),
+            'data_final' => $request->input('data_final') ?: now()->toDateString(),
+        ]);
+
+        $validated = $request->validate([
+            'data_inicial' => ['required', 'date'],
+            'data_final' => ['required', 'date', 'after_or_equal:data_inicial'],
+        ], [
+            'data_final.after_or_equal' => 'A data final deve ser igual ou posterior à data inicial.',
+        ]);
+
+        $data = app(PerfilMembrosExcluidosService::class)->execute(
+            $validated['data_inicial'],
+            $validated['data_final']
+        );
+
+        return view('regiao.relatorios.perfil-membros-excluidos', $data);
     }
 
     //Escorlaridade
@@ -413,6 +475,12 @@ class RegiaoRelatorioController extends Controller
         return view('regiao.relatorios.clerigos-prebendas.clerigos-status', $data);
     }
 
+    public function clerigoVinculos(Request $request)
+    {
+        $data = app(ClerigoVinculos::class)->execute($request->all());
+        return view('regiao.relatorios.clerigos-prebendas.clerigos-vinculos', $data);
+    }
+
     public function CongregacaoPorIgreja(Request $request){
         $data = app(Igrejas::class)->execute($request->all());
         return view('regiao.relatorios.igreja.congregacoes-por-igreja', $data);
@@ -427,10 +495,10 @@ class RegiaoRelatorioController extends Controller
     public function cnpjIgreja(Request $request)
     {
         $data = app(CnpjIgreja::class)->execute($request->all());
- 
+
         return view('regiao.relatorios.igreja.cnpj-igrejas', $data);
     }
-       
+
     public function contatoIgreja(Request $request)
     {
         $data = app(ContatoIgreja::class)->execute($request->all());

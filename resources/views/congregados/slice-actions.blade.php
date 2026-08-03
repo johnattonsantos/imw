@@ -1,5 +1,5 @@
 @if (!$congregado->deleted_at)
-    <a href="{{ route('membro.receber_novo', ['id' => $congregado->id]) }}" title="Receber congregado como Membro"
+    <a href="{{ route('membro.receber_novo', ['id' => $congregado->id]) }}" title="{{ __('Receber congregado como Membro') }}"
         class="btn btn-sm btn-dark mr-2 btn-rounded bs-tooltip">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -10,11 +10,11 @@
             <line x1="23" y1="11" x2="17" y2="11"></line>
         </svg>
     </a>
-    <button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip" title="Visualizar dados da pessoa"
+    <button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip" title="{{ __('Visualizar dados da pessoa') }}"
         data-membro-id="{{ $congregado->id }}">
         <x-bx-show />
     </button>
-    <a href="{{ route('congregado.editar', $congregado->id) }}" title="Editar"
+    <a href="{{ route('congregado.editar', $congregado->id) }}" title="{{ __('Editar') }}"
         class="btn btn-sm btn-dark mr-2 btn-rounded bs-tooltip">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -27,7 +27,7 @@
         @csrf
         @method('DELETE')
     </form>
-    <button title="Apagar" class="btn btn-sm btn-danger mr-2 btn-rounded btn-confirm-delete bs-tooltip"
+    <button title="{{ __('Apagar') }}" class="btn btn-sm btn-danger mr-2 btn-rounded btn-confirm-delete bs-tooltip"
         data-form-id="form_delete_congregado_{{ $congregado->id }}">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"

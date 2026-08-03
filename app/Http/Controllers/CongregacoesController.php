@@ -31,10 +31,10 @@ class CongregacoesController extends Controller
 
     public function novo()
     {
-        try { 
+        try {
             return view('congregacoes.create', ['ufs' => LocationUtils::fetchUFs()]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível criar uma nova congregação');
+            return redirect()->back()->with('error', __('Não foi possível criar uma nova congregação'));
         }
     }
 
@@ -44,10 +44,10 @@ class CongregacoesController extends Controller
             DB::beginTransaction();
             CongregacoesCongregacao::create($request->all());
             DB::commit();
-            return redirect()->route('congregacao.index')->with('success', 'Nova congregação salva com sucesso');
+            return redirect()->route('congregacao.index')->with('success', __('Nova congregação salva com sucesso'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Não foi possível salvar a congregação');
+            return redirect()->back()->with('error', __('Não foi possível salvar a congregação'));
         }
     }
 
@@ -59,7 +59,7 @@ class CongregacoesController extends Controller
                 'ufs'         => LocationUtils::fetchUFs(),
             ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível editar a congregação');
+            return redirect()->back()->with('error', __('Não foi possível editar a congregação'));
         }
     }
 
@@ -69,10 +69,10 @@ class CongregacoesController extends Controller
             DB::beginTransaction();
             $congregacao->update($request->all());
             DB::commit();
-            return redirect()->route('congregacao.index')->with('success', 'A congregação foi atualizada com sucesso');
+            return redirect()->route('congregacao.index')->with('success', __('A congregação foi atualizada com sucesso'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Não foi possível atualizar a congregação');
+            return redirect()->back()->with('error', __('Não foi possível atualizar a congregação'));
         }
     }
 
@@ -82,9 +82,9 @@ class CongregacoesController extends Controller
             DB::beginTransaction();
             $congregacao->delete();
             DB::commit();
-            return redirect()->route('congregacao.index')->with('success', 'A congregação foi desativada com sucesso');
+            return redirect()->route('congregacao.index')->with('success', __('A congregação foi desativada com sucesso'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível desativar a congregação');
+            return redirect()->back()->with('error', __('Não foi possível desativar a congregação'));
         }
     }
 
@@ -94,9 +94,9 @@ class CongregacoesController extends Controller
             DB::beginTransaction();
             app(RestaurarCongregacaoService::class)->execute($id);
             DB::commit();
-            return redirect()->route('congregacao.index')->with('success', 'A congregação foi restaurada com sucesso');
+            return redirect()->route('congregacao.index')->with('success', __('A congregação foi restaurada com sucesso'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Não foi possível restaurar a congregação');
+            return redirect()->back()->with('error', __('Não foi possível restaurar a congregação'));
         }
     }
 }

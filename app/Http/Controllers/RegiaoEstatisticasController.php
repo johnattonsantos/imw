@@ -198,7 +198,7 @@ class RegiaoEstatisticasController extends Controller
     {
         try {
             $data = app(IdentificaDadosRegiaoRelatorioMembresiaService::class)->execute($request->all());
-            
+
             if ($request->ajax()) {
                 return view('regiao.ajax.membresia', $data);
             }
@@ -206,7 +206,7 @@ class RegiaoEstatisticasController extends Controller
 
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
 
@@ -220,7 +220,7 @@ class RegiaoEstatisticasController extends Controller
             return Excel::download(new MembresiaExport($params), slugDoc($txt).".xlsx");
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
 
@@ -232,14 +232,14 @@ class RegiaoEstatisticasController extends Controller
             $data['regiao_nome'] = $regiao->nome;
 
             $data = app(IdentificaDadosRegiaoRelatorioMembresiaService::class)->exportarPdf($request->all());
-    
+
             $pdf = PDF::loadView('regiao.pdf.membresia', $data)->setPaper('a4', 'landscape');
             return $pdf->stream('RELATORIO_MEMBRESIA_' . date('YmdHis') . '.pdf');
             //return Excel::download(new MembresiaExport($params), slugDoc($txt).".xlsx");
         } catch (\Exception $e) {
             dd($e);
-            return redirect()->back()->with('error', 'Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante');
+            return redirect()->back()->with('error', __('Não foi possível abrir a página de relatórios de membresia, escolha um vínculo: Membro, Congregado ou Visitante'));
         }
     }
-    
+
 }

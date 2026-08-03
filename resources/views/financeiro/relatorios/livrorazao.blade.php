@@ -21,7 +21,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Relatório Livro Razão</h4>
+                        <h4>{{ __('Relatório Livro Razão') }}</h4>
                     </div>
                 </div>
             </div>
@@ -29,7 +29,7 @@
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4" id="filtros_data">
                         <div class="col-lg-2 text-right">
-                            <label class="control-label">* Data Inicial:</label>
+                            <label class="control-label">{{ __('* Data Inicial:') }}</label>
                         </div>
                         <div class="col-lg-3">
                             <input type="date" class="form-control @error('dt_inicial') is-invalid @enderror" id="dt_inicial" name="dt_inicial" value="{{ request()->input('dt_inicial') }}" required>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="for-group row mb-4">
                         <div class="col-lg-2 text-right">
-                            <label class="control-label">* Data Final:</label>
+                            <label class="control-label">{{ __('* Data Final:') }}</label>
                         </div>
                         <div class="col-lg-3">
                             <input type="date" class="form-control @error('dt_final') is-invalid @enderror" id="dt_final" name="dt_final" value="{{ request()->input('dt_final') }}" required>
@@ -46,11 +46,11 @@
                     <div class="form-group row mb-4">
                         <div class="col-lg-2"></div>
                         <div class="col-lg-6">
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                                <x-bx-search /> Buscar
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                                <x-bx-search /> {{ __('Buscar') }}
                             </button>
                             <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                                <i class="fa fa-file-pdf"></i> Relatório
+                                <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                             </button>
                         </div>
                     </div>
@@ -75,9 +75,9 @@
                         <table class="table table-bordered">
                             <thead>
                             <tr>
-                                <th colspan="3">CONTA/DATA/ORIGEM/DESTINO</th>
-                                <th>ENTRADA </th>
-                                <th class="text-right">SAÍDA</th>
+                                <th colspan="3">{{ __('CONTA/DATA/ORIGEM/DESTINO') }}</th>
+                                <th>{{ __('ENTRADA') }} </th>
+                                <th class="text-right">{{ __('SAÍDA') }}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -130,7 +130,7 @@
 
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> Exportar</button>
+                        <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
                     </div>
                 </div>
             </div>

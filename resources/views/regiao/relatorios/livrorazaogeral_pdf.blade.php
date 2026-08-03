@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Relatório de Livro Razão Geral - IMW PGA</title>
+    <title>{{ __('Relatório de Livro Razão Geral - IMW PGA') }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -86,7 +86,7 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">LIVRO RAZÃO GERAL - {{ $instituicao->nome }}</div>
             <div class="period">
@@ -100,10 +100,10 @@
     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
         <thead class="thead-dark">
             <tr>
-                <th width="200" style="text-align: left">CONTAS</th>
-                <th width="100" style="text-align: right">ENTRADAS</th>
-                <th width="100" style="text-align: right">SAÍDAS</th>
-                <th width="100" style="text-align: right">TOTAL</th>
+                <th width="200" style="text-align: left">{{ __('CONTAS') }}</th>
+                <th width="100" style="text-align: right">{{ __('ENTRADAS') }}</th>
+                <th width="100" style="text-align: right">{{ __('SAÍDAS') }}</th>
+                <th width="100" style="text-align: right">{{ __('TOTAL') }}</th>
             </tr>
         </thead>
         <tbody>

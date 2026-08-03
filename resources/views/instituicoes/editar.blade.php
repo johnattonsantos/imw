@@ -35,7 +35,7 @@
 @section('content')
     <div class="container-fluid" style="background: #fff">
         <div class="widget-header">
-            <h4>Dados da Instituição</h4>
+            <h4>{{ __('Dados da Instituição') }}</h4>
         </div>
 
         @if ($errors->any())
@@ -54,7 +54,7 @@
 
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <label for="nome"><span>*</span> Nome</label>
+                    <label for="nome"><span>*</span> {{ __('Nome') }}</label>
                     <input class="form-control @error('nome') is-invalid @enderror" type="text" id="nome"
                         name="nome" value="{{ old('nome', $instituicao['nome']) }}">
                     @error('nome')
@@ -62,7 +62,7 @@
                     @enderror
                 </div>
                 <div class="col-md-3 form-group">
-                    <label for="cnpj"><span>*</span> CNPJ <small>(aceita alfanumérico)</small></label>
+                    <label for="cnpj"><span>*</span> {{ __('CNPJ') }} <small>{{ __('(aceita alfanumérico)') }}</small></label>
                     <input class="form-control @error('cnpj') is-invalid @enderror" type="text" id="cnpj"
                         name="cnpj" value="{{ old('cnpj', \App\Support\CpfCnpj::format($instituicao['cnpj'])) }}" maxlength="18" style="text-transform: uppercase;">
                     @error('cnpj')
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="col-md-3 form-group">
-                    <label for="data_abertura"><span>*</span> Data de Abertura</label>
+                    <label for="data_abertura"><span>*</span> {{ __('Data de Abertura') }}</label>
                     <input class="form-control @error('data_abertura') is-invalid @enderror" type="date"
                         id="data_abertura" name="data_abertura"
                         value="{{ old('data_abertura', \Carbon\Carbon::parse($instituicao['data_abertura'])->format('Y-m-d')) }}"
@@ -82,12 +82,12 @@
                     @enderror
                 </div>
                 <div class="col-md-3 form-group">
-                    <label for="ativo"><span>*</span> Status</label>
+                    <label for="ativo"><span>*</span> {{ __('Status') }}</label>
                     <select class="form-control @error('ativo') is-invalid @enderror" id="ativo" name="ativo">
                         <option value="1" {{ old('ativo', $instituicao['ativo']) == '1' ? 'selected' : '' }}>
-                            Ativo</option>
+                            {{ __('Ativo') }}</option>
                         <option value="0" {{ old('ativo', $instituicao['ativo']) == '0' ? 'selected' : '' }}>
-                            Inativo</option>
+                            {{ __('Inativo') }}</option>
                     </select>
                     @error('ativo')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -98,7 +98,7 @@
 
             <div class="row">
                 <div class="col-md-3 form-group">
-                    <label for="data_encerramento">Data de Encerramento</label>
+                    <label for="data_encerramento">{{ __('Data de Encerramento') }}</label>
                     <input class="form-control @error('data_encerramento') is-invalid @enderror" type="date"
                         id="data_encerramento" name="data_encerramento"
                         value="{{ old('data_encerramento', optional($instituicao->data_encerramento)->format('Y-m-d')) }}"
@@ -111,28 +111,28 @@
 
             <div class="row">
                 <div class="col-md-3 form-group">
-                    <label for="tipo_instituicao_id"><span>*</span> Tipo da Instituição</label>
+                    <label for="tipo_instituicao_id"><span>*</span> {{ __('Tipo da Instituição') }}</label>
                     <select name="tipo_instituicao_id" id="tipo_instituicao_id"
                         class="form-control @error('tipo_instituicao_id') is-invalid @enderror">
                         <option value="1"
                             {{ old('tipo_instituicao_id', $instituicao['tipo_instituicao_id']) == 1 ? 'selected' : '' }}>
-                            Igreja</option>
+                            {{ __('Igreja') }}</option>
                         <option value="2"
                             {{ old('tipo_instituicao_id', $instituicao['tipo_instituicao_id']) == 2 ? 'selected' : '' }}>
-                            Distrito</option>
+                            {{ __('Distrito') }}</option>
                         <option value="5"
                             {{ old('tipo_instituicao_id', $instituicao['tipo_instituicao_id']) == 5 ? 'selected' : '' }}>
-                            Secretaria Regional</option>
+                            {{ __('Secretaria Regional') }}</option>
                     </select>
                     @error('tipo_instituicao_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 form-group">
-                    <label for="instituicao_pai_id"><span>*</span> Instituição Pai</label>
+                    <label for="instituicao_pai_id"><span>*</span> {{ __('Instituição Pai') }}</label>
                     <select name="instituicao_pai_id" id="instituicao_pai_id"
                         class="form-control @error('instituicao_pai_id') is-invalid @enderror">
-                        <option value="" disabled selected>Selecione</option>
+                        <option value="" disabled selected>{{ __('Selecione') }}</option>
                         <!-- As opções serão preenchidas dinamicamente pelo JavaScript -->
                     </select>
                     @error('instituicao_pai_id')
@@ -144,7 +144,7 @@
             <div class="mt-4">
                 <div class="row">
                     <div class="col-md-3 form-group">
-                        <label for="cep"><span>*</span> CEP</label>
+                        <label for="cep"><span>*</span> {{ __('CEP') }}</label>
                         <input class="form-control @error('cep') is-invalid @enderror" type="text" id="cep"
                             name="cep" value="{{ old('cep', $instituicao['cep']) }}">
                         @error('cep')
@@ -153,7 +153,7 @@
                     </div>
 
                     <div class="col-md-7 form-group">
-                        <label for="endereco"><span>*</span> Logradouro (Rua/Av/Beco)</label>
+                        <label for="endereco"><span>*</span> {{ __('Logradouro (Rua/Av/Beco)') }}</label>
                         <input class="form-control @error('endereco') is-invalid @enderror" type="text" id="endereco"
                             name="endereco" value="{{ old('endereco', $instituicao['endereco']) }}">
                         @error('endereco')
@@ -161,7 +161,7 @@
                         @enderror
                     </div>
                     <div class="col-md-2 form-group">
-                        <label for="numero">Número</label>
+                        <label for="numero">{{ __('Número') }}</label>
                         <input class="form-control @error('numero') is-invalid @enderror" type="number" id="numero"
                             name="numero" value="{{ old('numero', $instituicao['numero']) }}">
                         @error('numero')
@@ -171,7 +171,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 form-group">
-                        <label for="bairro"><span>*</span> Bairro</label>
+                        <label for="bairro"><span>*</span> {{ __('Bairro') }}</label>
                         <input class="form-control @error('bairro') is-invalid @enderror" type="text" id="bairro"
                             name="bairro" value="{{ old('bairro', $instituicao['bairro']) }}">
                         @error('bairro')
@@ -180,7 +180,7 @@
                     </div>
 
                     <div class="col-md-6 form-group">
-                        <label for="complemento">Complemento</label>
+                        <label for="complemento">{{ __('Complemento') }}</label>
                         <input class="form-control @error('complemento') is-invalid @enderror" type="text" maxlength="30"
                             id="complemento" name="complemento"
                             value="{{ old('complemento', $instituicao['complemento']) }}">
@@ -193,7 +193,7 @@
                 <div class="row">
                     <div class="col-md-8 form-group">
 
-                        <label for="cidade"><span>*</span>Cidade</label>
+                        <label for="cidade"><span>*</span>{{ __('Cidade') }}</label>
                         <input class="form-control @error('cidade') is-invalid @enderror" type="text" id="cidade"
                             name="cidade" value="{{ old('cidade', $instituicao['cidade']) }}">
                         @error('cidade')
@@ -201,9 +201,9 @@
                         @enderror
                     </div>
                     <div class="col-md-4 form-group">
-                        <label for="uf"><span>*</span> Estado</label>
+                        <label for="uf"><span>*</span> {{ __('Estado') }}</label>
                         <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
-                            <option value="">Selecione</option>
+                            <option value="">{{ __('Selecione') }}</option>
                             @foreach ($ufs as $key => $value)
                                 <option value="{{ $key }}"
                                     {{ old('uf', $instituicao['uf'] ?? '') == $key ? 'selected' : '' }}>
@@ -219,7 +219,7 @@
 
                 <div class="row">
                     <div class="col-md-3 form-group">
-                        <label for="pais"><span>*</span> País</label>
+                        <label for="pais"><span>*</span> {{ __('País') }}</label>
                         <input class="form-control @error('pais') is-invalid @enderror" type="text" id="pais"
                             name="pais" value="{{ old('pais', $instituicao['pais']) }}">
                         @error('pais')
@@ -228,10 +228,10 @@
                     </div>
 
                     <div class="col-md-1 form-group">
-                        <label for="DDD"><span>*</span> DDD</label>
+                        <label for="DDD"><span>*</span> {{ __('DDD') }}</label>
 
                         <input type="text" maxlength="3" class="form-control p-2 @error('ddd') is-invalid @enderror"
-                            id="ddd" name="ddd" style="max-width: 55px" placeholder="DDD"
+                            id="ddd" name="ddd" style="max-width: 55px" placeholder="{{ __('DDD') }}"
                             value="{{ old('ddd', $instituicao['ddd']) }}">
                         @error('ddd')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -239,7 +239,7 @@
                     </div>
 
                     <div class="col-md-3 form-group">
-                        <label for="Telefone"><span>*</span> Telefone</label>
+                        <label for="Telefone"><span>*</span> {{ __('Telefone') }}</label>
                         <input class="form-control @error('telefone') is-invalid @enderror" type="text"
                             id="telefone" name="telefone" value="{{ old('telefone', $instituicao['telefone']) }}">
                         @error('telefone')
@@ -249,7 +249,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary my-4">Atualizar</button>
+            <button type="submit" class="btn btn-primary my-4">{{ __('Atualizar') }}</button>
         </form>
     </div>
 

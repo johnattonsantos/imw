@@ -32,7 +32,7 @@ class StorePrebendaRequest extends FormRequest
         return [
 
             'ano' => ['required', new PrebendaExistis($ano)],
-            'valor' => 'required',
+            'valor' => ['required', new TakeMaxPrebendaForAnoAndFuncaoMinisterial(new MaxPrebendasClerigoCalculator(), $ano, $valor)],
         ];
     }
 

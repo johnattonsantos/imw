@@ -22,7 +22,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Cônjuges dos Clérigos</h4>
+                    <h4>{{ __('Cônjuges dos Clérigos') }}</h4>
                 </div>
             </div>
         </div>
@@ -31,12 +31,12 @@
                 <table class="table table-bordered table-striped table-hover mb-4" id="relatorio-esposas-pastores">
                     <thead>
                         <tr>
-                            <th>Clérigo</th>
-                            <th>Cônjuge</th>
-                            <th>Data de Nascimento</th>
-                            <th>Telefone</th>
-                            <th>Distrito</th>
-                            <th>Igreja</th>
+                            <th>{{ __('Clérigo') }}</th>
+                            <th>{{ __('Cônjuge') }}</th>
+                            <th>{{ __('Data de Nascimento') }}</th>
+                            <th>{{ __('Telefone') }}</th>
+                            <th>{{ __('Distrito') }}</th>
+                            <th>{{ __('Igreja') }}</th>
                         </tr>
                     </thead>
                     <tbody>

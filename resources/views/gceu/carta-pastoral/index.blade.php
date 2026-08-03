@@ -37,7 +37,7 @@
                     <line x1="12" y1="8" x2="12" y2="16"></line>
                     <line x1="8" y1="12" x2="16" y2="12"></line>
                 </svg>
-                <span class="ml-2">INCLUIR CARTA PASTORAL</span>
+                <span class="ml-2">{{ __('INCLUIR CARTA PASTORAL') }}</span>
             </a>
         </div>
 
@@ -50,7 +50,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Lista de Cartas Pastorais - Igreja: <u>{{ $instituicao }}</u></h4>
+                        <h4>{{ __('Lista de Cartas Pastorais - Igreja:') }} <u>{{ $instituicao }}</u></h4>
                     </div>
                 </div>
             </div>
@@ -60,9 +60,9 @@
                     <table class="table table-bordered table-striped table-hover mb-4" id="cartaPastoral">
                         <thead>
                             <tr>
-                                <th>CARTA PASTORAL</th>
-                                <th>PASTOR</th>
-                                <th>CRIADO EM</th>
+                                <th>{{ __('CARTA PASTORAL') }}</th>
+                                <th>{{ __('PASTOR') }}</th>
+                                <th>{{ __('CRIADO EM') }}</th>
                                 <th></th>
                             </tr>
                         </thead>

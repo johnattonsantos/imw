@@ -27,7 +27,7 @@
       <div class="widget-header">
         <div class="row">
             <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                <h4>Relatório de Cônjuges</h4>
+                <h4>{{ __('Relatório de Cônjuges') }}</h4>
                 <p class="pl-3 mb-0">Igreja Local: {{ $igrejaNome }}</p>
                 <p class="pl-3">Registros Encontrados: {{ $membros->count() }}</p>
             </div>
@@ -38,10 +38,10 @@
               <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="relatorio-conjuges-table">
                   <thead>
                       <tr>
-                          <th>NOME DO MEMBRO</th>
-                          <th>NOME DO CÔNJUGE</th>
-                          <th>DATA DO CASAMENTO</th>
-                          <th>CONTATO</th>
+                          <th>{{ __('NOME DO MEMBRO') }}</th>
+                          <th>{{ __('NOME DO CÔNJUGE') }}</th>
+                          <th>{{ __('DATA DO CASAMENTO') }}</th>
+                          <th>{{ __('CONTATO') }}</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -54,7 +54,7 @@
                       </tr>
                     @empty
                       <tr>
-                          <td>Nenhum registro encontrado</td>
+                          <td>{{ __('Nenhum registro encontrado') }}</td>
                           <td>-</td>
                           <td>-</td>
                           <td>-</td>

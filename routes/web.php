@@ -11,6 +11,19 @@ use App\Http\Controllers\CategoriaComunicacaoController;
 use App\Http\Controllers\ComunicacaoController;
 use App\Http\Controllers\ContabilidadeController;
 use App\Http\Controllers\DistritoRelatorioController;
+use App\Http\Controllers\DistritoEbdRelatorioController;
+use App\Http\Controllers\EbdAgendaController;
+use App\Http\Controllers\EbdAlunoController;
+use App\Http\Controllers\EbdClasseController;
+use App\Http\Controllers\EbdDashboardController;
+use App\Http\Controllers\EbdDiarioController;
+use App\Http\Controllers\EbdLiderancaController;
+use App\Http\Controllers\EbdMembroBuscaController;
+use App\Http\Controllers\EbdProfessorController;
+use App\Http\Controllers\EbdRelatorioController;
+use App\Http\Controllers\EbdTurmaController;
+use App\Http\Controllers\EventoController;
+use App\Http\Controllers\EventoFuncaoController;
 use App\Http\Controllers\FinanceiroCaixasController;
 use App\Http\Controllers\FinanceiroController;
 use App\Http\Controllers\FinanceiroPlanoContaController;
@@ -28,15 +41,18 @@ use App\Http\Controllers\InstituicaoRegiaoController;
 use App\Http\Controllers\InstituicaoRegiaoDistritosController;
 use App\Http\Controllers\InstituicaoRegiaoIgrejasController;
 use App\Http\Controllers\InstituicaoRegiaoSecretariasController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\MembresiaGeralController;
 use App\Http\Controllers\MembrosController;
 use App\Http\Controllers\NomeacoesClerigosController;
 use App\Http\Controllers\NotificacoesTranferenciaController;
+use App\Http\Controllers\Patrimonio\PatrimonioRelatoriosController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\PrebendaController;
 use App\Http\Controllers\PrebendasClerigosController;
 use App\Http\Controllers\RegiaoEstatisticasController;
 use App\Http\Controllers\RegiaoRelatorioController;
+use App\Http\Controllers\RegiaoEbdRelatorioController;
 use App\Http\Controllers\RelatorioClerigoPrebendasController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\TotalizacaoController;
@@ -51,6 +67,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/idioma', [LocaleController::class, 'update'])->name('locale.update');
 
 // Rota para mostrar o formulário de esqueci a senha
 Route::get('/esqueci-senha', [AuthController::class, 'showResetRequestForm'])->name('password.request');
@@ -64,6 +81,7 @@ Route::get('/redefinir-senha', [AuthController::class, 'showResetForm'])->name('
 // Rota para processar a redefinição de senha
 Route::post('/redefinir-senha', [AuthController::class, 'reset'])->name('password.reset-post');
 
+require base_path('routes/patrimonio.php');
 
 // Rotas protegidas por autenticação
 Route::middleware(['auth'])->group(function () {
@@ -188,6 +206,31 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export/pdf', 'exportPdf')->name('export.pdf');
         })->middleware(['seguranca:comunicacao']);
 
+        Route::prefix('eventos')->name('eventos.')->controller(EventoController::class)->middleware(['seguranca:evento'])->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/agenda', 'agenda')->name('agenda');
+            Route::get('/novo', 'create')->name('create')->middleware(['seguranca:evento-novo']);
+            Route::post('/store', 'store')->name('store')->middleware(['seguranca:evento-novo']);
+            Route::post('/upload-image', 'uploadEditorImage')->name('upload-image');
+            Route::get('/editor-image/{token}', 'editorImage')->name('editor-image')->middleware('signed');
+            Route::get('/relatorio/eventos', 'relatorio')->name('relatorio');
+            Route::get('/relatorio/eventos/{evento}/pdf', 'relatorioEventoPdf')->name('relatorio.evento-pdf');
+            Route::get('/relatorio/pessoas', 'relatorioPessoas')->name('relatorio.pessoas');
+            Route::get('/detalhes/{evento}', 'show')->name('show');
+            Route::get('/editar/{evento}', 'edit')->name('edit')->middleware(['seguranca:evento-editar']);
+            Route::put('/update/{evento}', 'update')->name('update')->middleware(['seguranca:evento-editar']);
+            Route::delete('/deletar/{evento}', 'destroy')->name('destroy')->middleware(['seguranca:evento-excluir']);
+        });
+
+        Route::prefix('eventos/funcoes')->name('eventos.funcoes.')->controller(EventoFuncaoController::class)->middleware(['seguranca:evento-funcao'])->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/novo', 'create')->name('create')->middleware(['seguranca:evento-funcao-novo']);
+            Route::post('/store', 'store')->name('store')->middleware(['seguranca:evento-funcao-novo']);
+            Route::get('/editar/{funcao}', 'edit')->name('edit')->middleware(['seguranca:evento-funcao-editar']);
+            Route::put('/update/{funcao}', 'update')->name('update')->middleware(['seguranca:evento-funcao-editar']);
+            Route::delete('/deletar/{funcao}', 'destroy')->name('destroy')->middleware(['seguranca:evento-funcao-excluir']);
+        });
+
         Route::prefix('categoria-comunicacao')->name('categoria-comunicacao.')->controller(CategoriaComunicacaoController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/store', 'store')->name('store');
@@ -274,15 +317,27 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio/quantidademembros', [DistritoRelatorioController::class, 'quantidademembros'])->name('relatorio.quantidademembros')->middleware(['seguranca:distrito-menu-relatorio']);
             Route::post('/relatorio/quantidademembros/pdf', [DistritoRelatorioController::class, 'quantidademembrosPdf'])->name('relatorio.quantidademembros-pdf')->middleware(['seguranca:distrito-menu-relatorio']);
             Route::get('/relatorio/conjuges', [DistritoRelatorioController::class, 'conjuges'])->name('relatorio.conjuges')->middleware(['seguranca:distrito-menu-relatorio-conjuges']);
+            Route::get('/relatorio/congregados', [DistritoRelatorioController::class, 'congregados'])->name('relatorio.congregados')->middleware(['seguranca:distrito-menu-relatorio']);
 
             Route::get('/relatorio/estatisticagenero', [DistritoRelatorioController::class, 'estatisticagenero'])->name('relatorio.estatisticagenero')->middleware(['seguranca:distrito-menu-relatorio']);
             Route::post('/relatorio/estatisticagenero/pdf', [DistritoRelatorioController::class, 'estatisticageneroPdf'])->name('relatorio.estatisticagenero-pdf')->middleware(['seguranca:distrito-menu-relatorio']);
             Route::get('/relatorio/estatisticas-gceu', [DistritoRelatorioController::class, 'estatisticasGceu'])->name('relatorio.estatisticas.gceu')->middleware(['seguranca:distrito-estatistica-gceu']);
 
+            Route::get('/relatorio/ebd/dashboard', [DistritoEbdRelatorioController::class, 'dashboard'])->name('relatorio.ebd.dashboard')->middleware(['seguranca:distrito-ebd-dashboard']);
+            Route::get('/relatorio/ebd/estatisticas', [DistritoEbdRelatorioController::class, 'estatisticas'])->name('relatorio.ebd.estatisticas')->middleware(['seguranca:distrito-ebd-estatisticas']);
+            Route::get('/relatorio/ebd/alunos', [DistritoEbdRelatorioController::class, 'alunos'])->name('relatorio.ebd.alunos')->middleware(['seguranca:distrito-ebd-alunos']);
+            Route::get('/relatorio/ebd/professores', [DistritoEbdRelatorioController::class, 'professores'])->name('relatorio.ebd.professores')->middleware(['seguranca:distrito-ebd-professores']);
+            Route::get('/relatorio/ebd/liderancas', [DistritoEbdRelatorioController::class, 'liderancas'])->name('relatorio.ebd.liderancas')->middleware(['seguranca:distrito-ebd-liderancas']);
+            Route::get('/relatorio/ebd/classes', [DistritoEbdRelatorioController::class, 'classes'])->name('relatorio.ebd.classes')->middleware(['seguranca:distrito-ebd-classes']);
+            Route::get('/relatorio/ebd/turmas', [DistritoEbdRelatorioController::class, 'turmas'])->name('relatorio.ebd.turmas')->middleware(['seguranca:distrito-ebd-turmas']);
+            Route::get('/relatorio/ebd/diarios', [DistritoEbdRelatorioController::class, 'diarios'])->name('relatorio.ebd.diarios')->middleware(['seguranca:distrito-ebd-diarios']);
+            Route::get('/relatorio/ebd/agendas', [DistritoEbdRelatorioController::class, 'agendas'])->name('relatorio.ebd.agendas')->middleware(['seguranca:distrito-ebd-agendas']);
+            Route::get('/relatorio/ebd/geral', [DistritoEbdRelatorioController::class, 'geral'])->name('relatorio.ebd.geral')->middleware(['seguranca:distrito-ebd-geral']);
+
             Route::get('/congregacoes-por-igrejas', [DistritoRelatorioController::class, 'CongregacaoPorIgreja'])->name('relatorio.congregacaoporigreja')->middleware('seguranca:distrito-relatorio-congregacoes-igrejas');
 
             Route::get('/apirantes-por-igrejas', [DistritoRelatorioController::class, 'AspirantePorIgreja'])->name('relatorio.apirateporigreja')->middleware('seguranca:distrito-relatorio-aspirantes-igrejas');
-            //clerigos 
+            //clerigos
             Route::get('/clerigos-aniversariantes',[DistritoRelatorioController::class, 'clerigoAniversariante'])->name('relatorio.clerigosaniversariantes')->middleware('seguranca:distrito-clerigos-aniversariantes');
 
             //Orcamentos
@@ -302,8 +357,18 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('regiao/relatorio')->name('regiao.')->group(function () {
-            Route::get('/lancamentodasigrejas', [RegiaoRelatorioController::class, 'lancamentodasigrejas'])->name('relatorio.lancamentodasigrejas')->middleware(['seguranca:regiao-menu-relatorio']);
-            Route::post('/lancamentodasigrejas/pdf', [RegiaoRelatorioController::class, 'lancamentodasigrejasPdf'])->name('relatorio.lancamentodasigrejas-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/ebd/dashboard', [RegiaoEbdRelatorioController::class, 'dashboard'])->name('relatorio.ebd.dashboard')->middleware(['seguranca:regiao-ebd-dashboard']);
+            Route::get('/ebd/estatisticas', [RegiaoEbdRelatorioController::class, 'estatisticas'])->name('relatorio.ebd.estatisticas')->middleware(['seguranca:regiao-ebd-estatisticas']);
+            Route::get('/ebd/alunos', [RegiaoEbdRelatorioController::class, 'alunos'])->name('relatorio.ebd.alunos')->middleware(['seguranca:regiao-ebd-alunos']);
+            Route::get('/ebd/professores', [RegiaoEbdRelatorioController::class, 'professores'])->name('relatorio.ebd.professores')->middleware(['seguranca:regiao-ebd-professores']);
+            Route::get('/ebd/liderancas', [RegiaoEbdRelatorioController::class, 'liderancas'])->name('relatorio.ebd.liderancas')->middleware(['seguranca:regiao-ebd-liderancas']);
+            Route::get('/ebd/classes', [RegiaoEbdRelatorioController::class, 'classes'])->name('relatorio.ebd.classes')->middleware(['seguranca:regiao-ebd-classes']);
+            Route::get('/ebd/turmas', [RegiaoEbdRelatorioController::class, 'turmas'])->name('relatorio.ebd.turmas')->middleware(['seguranca:regiao-ebd-turmas']);
+            Route::get('/ebd/diarios', [RegiaoEbdRelatorioController::class, 'diarios'])->name('relatorio.ebd.diarios')->middleware(['seguranca:regiao-ebd-diarios']);
+            Route::get('/ebd/agendas', [RegiaoEbdRelatorioController::class, 'agendas'])->name('relatorio.ebd.agendas')->middleware(['seguranca:regiao-ebd-agendas']);
+            Route::get('/ebd/geral', [RegiaoEbdRelatorioController::class, 'geral'])->name('relatorio.ebd.geral')->middleware(['seguranca:regiao-ebd-geral']);
+            Route::get('/lancamentodasigrejas', [RegiaoRelatorioController::class, 'lancamentodasigrejas'])->name('relatorio.lancamentodasigrejas')->middleware(['seguranca:regiao-ebd-lancamentodasigrejas']);
+            Route::post('/lancamentodasigrejas/pdf', [RegiaoRelatorioController::class, 'lancamentodasigrejasPdf'])->name('relatorio.lancamentodasigrejas-pdf')->middleware(['seguranca:regiao-ebd-relatorio']);
 
             Route::get('/saldodasigrejas', [RegiaoRelatorioController::class, 'saldodasigrejas'])->name('relatorio.saldodasigrejas')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/saldodasigrejas/pdf', [RegiaoRelatorioController::class, 'saldodasigrejasPdf'])->name('relatorio.saldodasigrejas-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
@@ -318,7 +383,7 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/variacaofinanceira/pdf', [RegiaoRelatorioController::class, 'variacaofinanceiraPdf'])->name('relatorio.variacaofinanceira-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
 
             Route::get('/financeiro-por-categoria', [RegiaoRelatorioController::class, 'financeiroPorCategoria'])->name('relatorio.financeiroPorCategoria')->middleware(['seguranca:regiao-menu-relatorio']);
-            
+
             //Membresia DEV
             Route::get('/membrosministerio', [RegiaoRelatorioController::class, 'membrosministerio'])->name('relatorio.membrosministerio')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/membrosministerio/pdf', [RegiaoRelatorioController::class, 'membrosministerioPdf'])->name('relatorio.membrosministerio-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
@@ -328,11 +393,15 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/quantidademembros', [RegiaoRelatorioController::class, 'quantidademembros'])->name('relatorio.quantidademembros')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/quantidademembros/pdf', [RegiaoRelatorioController::class, 'quantidademembrosPdf'])->name('relatorio.quantidademembros-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/conjuges', [RegiaoRelatorioController::class, 'conjuges'])->name('relatorio.conjuges')->middleware(['seguranca:regiao-menu-relatorio-conjuges']);
+            Route::get('/congregados', [RegiaoRelatorioController::class, 'congregados'])->name('relatorio.congregados')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/acompanhamento-validacoes', [RegiaoRelatorioController::class, 'acompanhamentoValidacoes'])->name('relatorio.acompanhamento-validacoes')->middleware(['seguranca:regiao-relatorio-acompanhamento-validacoes']);
+            Route::get('/perfil-membros-recebidos', [RegiaoRelatorioController::class, 'perfilMembrosRecebidos'])->name('relatorio.perfil-membros-recebidos')->middleware(['seguranca:regiao-relatorio-perfil-membros-recebidos']);
+            Route::get('/perfil-membros-excluidos', [RegiaoRelatorioController::class, 'perfilMembrosExcluidos'])->name('relatorio.perfil-membros-excluidos')->middleware(['seguranca:regiao-relatorio-perfil-membros-excluidos']);
 
             Route::get('/estatisticagenero', [RegiaoRelatorioController::class, 'estatisticagenero'])->name('relatorio.estatisticagenero')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/estatisticagenero/pdf', [RegiaoRelatorioController::class, 'estatisticageneroPdf'])->name('relatorio.estatisticagenero-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/estatisticas-gceu', [RegiaoRelatorioController::class, 'estatisticasGceu'])->name('relatorio.estatisticas.gceu')->middleware(['seguranca:regiao-estatistica-gceu']);
-            
+
             Route::get('/irrf', [ContabilidadeController::class,'irrf'])->name('relatorio.irrf')->middleware('seguranca:regiao-menu-relatorio');
 
             Route::get('/ano-eclesiastico', [RegiaoRelatorioController::class,'anoEclesiastico'])->name('relatorio.ano.eclesiastico')->middleware('seguranca:regiao-menu-relatorio');
@@ -349,6 +418,25 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/carta-pastoral/visualizar-html/{id}', [GceuController::class, 'cartaPastoralVisualizarHtmlRegiao'])->name('carta-pastoral-visualizar-html');
             Route::get('/carta-pastoral/visualizar-pdf/{id}', [GceuController::class, 'cartaPastoralPdfRegiao'])->name('carta-pastoral.pdf');
+
+            // Patrimônio
+            Route::get('/patrimonio', [PatrimonioRelatoriosController::class, 'indexRegiao'])->name('relatorio.patrimonio.index')->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
+            Route::get('/patrimonio/export/xlsx', [PatrimonioRelatoriosController::class, 'exportXlsxRegiao'])->name('relatorio.patrimonio.export.xlsx')->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
+            Route::get('/patrimonio/export/pdf', [PatrimonioRelatoriosController::class, 'exportPdfRegiao'])->name('relatorio.patrimonio.export.pdf')->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
+            Route::get('/patrimonio/{relatorio}', [PatrimonioRelatoriosController::class, 'listaRegiao'])
+                ->name('relatorio.patrimonio.lista')
+                ->whereIn('relatorio', [
+                    'imoveis_cadastrados',
+                    'bens_moveis_cadastrados',
+                    'imoveis_regularizacao_pendente',
+                    'documentos_vencidos',
+                    'avcb_vencido',
+                    'bens_depreciados',
+                    'baixas_patrimoniais',
+                    'valor_total_por_categoria',
+                    'bens_por_igreja_unidade',
+                ])
+                ->middleware(['seguranca:regiao-menu-relatorio-patrimonio']);
         });
 
         // Relatórios Região Clérigos
@@ -358,6 +446,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/clerigos-dados', 'clerigoDados')->name('relatorio.clerigosdados')->middleware('seguranca:relatorio-clerigos-dados');
             Route::get('/clerigos-categorias', 'clerigoCategoria')->name('relatorio.clerigoscategoria')->middleware('seguranca:relatorio-clerigos-categoria');
             Route::get('/clerigos-status', 'clerigoStatus')->name('relatorio.clerigosstatus')->middleware('seguranca:relatorio-clerigos-status');
+            Route::get('/clerigos-vinculos', 'clerigoVinculos')->name('relatorio.clerigosvinculos')->middleware('seguranca:relatorio-clerigos-vinculos');
             Route::get('/historiconomeacoes', [RegiaoEstatisticasController::class, 'historiconomeacoes'])->name('estatistica.historiconomeacoes.regionais')->middleware(['seguranca:relatorio-clerigos-categoria']);
             Route::post('/historiconomeacoes/pdf', [RegiaoEstatisticasController::class, 'historiconomeacoesPdf'])->name('relatorio.historiconomeacoes-pdf')->middleware(['seguranca:relatorio-clerigos-categoria']);
         });
@@ -379,7 +468,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio/estatistica-membros-evolucao', [RegiaoEstatisticasController::class, 'estatisticaEvolucao'])->name('estatistica.evolucao')->middleware(['seguranca:regiao-menu-estatistica']);
             //Estatitisca de Membros
             Route::get('/relatorio/estatistica-total-membresia', [RegiaoEstatisticasController::class, 'totalMembresia'])->name('estatistica.totalMembresia')->middleware(['seguranca:regiao-menu-estatistica']);
-            
+
             Route::get('/relatorio/estatisticaescolaridade', [RegiaoRelatorioController::class, 'estatisticaescolaridade'])->name('relatorio.estatisticaescolaridade')->middleware(['seguranca:regiao-menu-estatistica']);
             Route::post('/relatorio/estatisticaescolaridade/pdf', [RegiaoRelatorioController::class, 'estatisticaescolaridadePdf'])->name('relatorio.estatisticaescolaridade-pdf')->middleware(['seguranca:regiao-menu-estatistica']);
 
@@ -498,7 +587,40 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio-carta-pastoral', [GceuController::class, 'cartaPastoralRelatorio'])->name('carta-pastoral-relatorio')->middleware(['seguranca:gceu-carta-pastoral-relatorio']);
             Route::get('/relatorio-diario', [GceuController::class, 'diarioRelatorio'])->name('diario-relatorio')->middleware(['seguranca:gceu-relatorio-diario']);
             Route::get('/relatorio-reuniao-pessoas', [GceuController::class, 'relatorioReuniaoPessoas'])->name('relatorio.reuniao-pessoas')->middleware(['seguranca:gceu-relatorio-diario']);
-            
+
+        });
+
+        // Módulo EBD
+        Route::prefix('ebd')->name('ebd.')->group(function () {
+            Route::get('/', [EbdDashboardController::class, 'index'])->name('dashboard')->middleware(['seguranca:ebd-dashboard']);
+
+            Route::resource('liderancas', EbdLiderancaController::class)->except(['show'])->middleware(['seguranca:ebd-liderancas']);
+            Route::resource('professores', EbdProfessorController::class)->except(['show'])->middleware(['seguranca:ebd-professores']);
+            Route::resource('alunos', EbdAlunoController::class)->except(['show'])->middleware(['seguranca:ebd-alunos']);
+            Route::resource('classes', EbdClasseController::class)->except(['show'])->middleware(['seguranca:ebd-classes']);
+            Route::resource('turmas', EbdTurmaController::class)->except(['show'])->middleware(['seguranca:ebd-turmas']);
+            Route::resource('diarios', EbdDiarioController::class)->except(['show'])->middleware(['seguranca:ebd-diarios']);
+            Route::resource('agendas', EbdAgendaController::class)->except(['show'])->middleware(['seguranca:ebd-agendas']);
+
+            Route::get('alunos/{aluno}/vinculos', [EbdAlunoController::class, 'vinculos'])->name('alunos.vinculos')->middleware(['seguranca:ebd-alunos']);
+            Route::post('alunos/{aluno}/vinculos', [EbdAlunoController::class, 'vincularTurma'])->name('alunos.vinculos.store')->middleware(['seguranca:ebd-alunos']);
+            Route::delete('alunos/{aluno}/vinculos/{turma}', [EbdAlunoController::class, 'removerTurma'])->name('alunos.vinculos.destroy')->middleware(['seguranca:ebd-alunos']);
+
+            Route::get('professores/{professore}/vinculos', [EbdProfessorController::class, 'vinculos'])->name('professores.vinculos')->middleware(['seguranca:ebd-professores']);
+            Route::post('professores/{professore}/vinculos', [EbdProfessorController::class, 'vincularTurma'])->name('professores.vinculos.store')->middleware(['seguranca:ebd-professores']);
+
+            Route::get('relatorios/alunos', [EbdRelatorioController::class, 'alunos'])->name('relatorios.alunos')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/professores', [EbdRelatorioController::class, 'professores'])->name('relatorios.professores')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/liderancas', [EbdRelatorioController::class, 'liderancas'])->name('relatorios.liderancas')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/classes', [EbdRelatorioController::class, 'classes'])->name('relatorios.classes')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/turmas', [EbdRelatorioController::class, 'turmas'])->name('relatorios.turmas')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/diarios', [EbdRelatorioController::class, 'diarios'])->name('relatorios.diarios')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/agendas', [EbdRelatorioController::class, 'agendas'])->name('relatorios.agendas')->middleware(['seguranca:ebd-dashboard']);
+            Route::get('relatorios/geral', [EbdRelatorioController::class, 'geral'])->name('relatorios.geral')->middleware(['seguranca:ebd-dashboard']);
+
+            Route::get('buscar-membro', [EbdMembroBuscaController::class, 'buscar'])->name('buscar-membro')->middleware(['seguranca:ebd-buscar-membro']);
+            Route::post('cadastrar-visitante', [EbdMembroBuscaController::class, 'cadastrarVisitante'])->name('cadastrar-visitante')->middleware(['seguranca:ebd-cadastrar-visitante']);
+            Route::get('diarios/turma/{turma}/alunos', [EbdDiarioController::class, 'turmaAlunos'])->name('diarios.turma-alunos')->middleware(['seguranca:ebd-diarios']);
         });
 
         /* Por enquanto somente visualiações */
@@ -531,6 +653,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/membros-por-bairro', 'membrosPorBairro')->name('membros-por-bairro')->middleware('seguranca:relatorio-membros-por-bairro');
             Route::get('/aniversariantes', 'aniversariantes')->name('aniversariantes')->middleware('seguranca:relatorio-aniversariantes');
             Route::get('/conjuges', 'conjuges')->name('conjuges')->middleware('seguranca:relatorio-conjuges');
+            Route::get('/congregados', 'congregados')->name('congregados')->middleware('seguranca:menu-relatorios-secretaria');
+            Route::get('/familia', 'familia')->name('familia')->middleware('seguranca:relatorio-familia');
             Route::get('/membros-por-ministerios', 'membrosPorMinisterios')->name('membros-por-ministerios')->middleware('seguranca:relatorio-historico-eclesiastico');
             Route::get('/historico-eclesiastico', 'historicoEclesiastico')->name('historico-eclesiastico')->middleware('seguranca:relatorio-historico-eclesiastico');
             Route::get('/membros-disciplinados', 'membrosDisciplinados')->name('membros-disciplinados')->middleware('seguranca:relatorio-membro-disciplinado');

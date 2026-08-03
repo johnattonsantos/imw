@@ -35,30 +35,30 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Diário dos GCEUs da Igreja: <u id="instituicao">{{ $instituicao }}</u></h4>
+                        <h4>{{ __('Diário dos GCEUs da Igreja:') }} <u id="instituicao">{{ $instituicao }}</u></h4>
                     </div>
                 </div>
             </div>
-                        
+
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="row">
                         <div class="mb-3 col-lg-4 col-md-6 col-sm-12" id="filtros_data">
-                            <label class="control-label">*Data:</label>
-                            <input type="date" class="form-control @error('dt-gceu') is-invalid @enderror" id="dt-gceu" name="dt_gceu" value="{{ request()->input('dt_gceu') }}" required placeholder="ex: 31/12/2000">
+                            <label class="control-label">{{ __('*Data:') }}</label>
+                            <input type="date" class="form-control @error('dt-gceu') is-invalid @enderror" id="dt-gceu" name="dt_gceu" value="{{ request()->input('dt_gceu') }}" required placeholder="{{ __('ex: 31/12/2000') }}">
                         </div>
                         <div class="mb-3 col-lg-5 col-md-6 col-sm-12">
-                            <label class="control-label">GCEU:</label>
+                            <label class="control-label">{{ __('GCEU:') }}</label>
                             <select id="gceu_id" name="gceu_id" class="form-control @error('gceu_id') is-invalid @enderror">
-                                <option value="" {{ request()->input('gceu_id') == '' ? 'selected' : '' }}>TODOS</option>
+                                <option value="" {{ request()->input('gceu_id') == '' ? 'selected' : '' }}>{{ __('TODOS') }}</option>
                                 @foreach($Gceus as $gceu)
                                     <option value="{{ $gceu->id }}" {{ request()->input('gceu_id') == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3 col-lg-2 col-md-6 col-sm-12" style="margin-top: 30px;">
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar GCEU" class="btn btn-primary btn">
-                                <x-bx-search /> Buscar
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar GCEU') }}" class="btn btn-primary btn">
+                                <x-bx-search /> {{ __('Buscar') }}
                             </button>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                 @if(request()->input('dt_gceu'))
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Relatório diário de presença/falta do GCEU: </h4>
+                            <h4>{{ __('Relatório diário de presença/falta do GCEU:') }} </h4>
                             <div class="col-xl-12 col-md-12 col-sm-12 col-12">&nbsp;</div>
                             <div class="row">
 
@@ -76,8 +76,8 @@
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>GCEU</th>
-                                                <th>NOME</th>
+                                                <th>{{ __('GCEU') }}</th>
+                                                <th>{{ __('NOME') }}</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -108,14 +108,14 @@
                                     </table>
                                 </div>
 
-                            
-                                
+
+
                             </div>
                         </div>
                     </div>
                 @endif
             </div>
-                
+
         </div>
     </div>
 @endsection
@@ -161,7 +161,7 @@
                             //doc.pageMargins = [20,50,20,30];
                             doc.defaultStyle.fontSize = 9;
                             doc.styles.tableHeader.fontSize = 9;
-                            
+
 
                             const hoje = new Date();
                             const dataFormatada = hoje.toLocaleDateString('pt-BR');
@@ -188,7 +188,7 @@
                                 }
                             });
 
-                            var numColumns = doc.content[0].table.body[0].length; 
+                            var numColumns = doc.content[0].table.body[0].length;
                             doc.content[0].table.widths = Array(numColumns).fill('*');
 
 

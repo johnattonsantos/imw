@@ -50,9 +50,9 @@
         <div class="col-md-12">
           <div class="alert alert-dark border-0 mb-4" role="alert">
             <strong>
-              ATENÇÃO!!! ESTA AÇÃO NÃO PODE SER REVERTIDA.<br>
-              Após transferir este membro para outra igreja, o mesmo será excluído desta igreja e não será listado no rol atual, apenas no rol permanente.<br>
-              A igreja de destino será notificada da transferência para dar prosseguimento no processo de recepção.
+              {{ __('ATENÇÃO!!! ESTA AÇÃO NÃO PODE SER REVERTIDA.') }}<br>
+              {{ __('Após transferir este membro para outra igreja, o mesmo será excluído desta igreja e não será listado no rol atual, apenas no rol permanente.') }}<br>
+              {{ __('A igreja de destino será notificada da transferência para dar prosseguimento no processo de recepção.') }}
             </strong>
           </div>
         </div>
@@ -60,10 +60,10 @@
 
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
-          <label class="control-label">* Data:</label>
+          <label class="control-label">{{ __('* Data:') }}</label>
         </div>
         <div class="col-lg-6">
-          <input type="date" class="form-control @error('dt_notificacao') is-invalid @enderror" id="dt_notificacao" name="dt_notificacao" value="{{ old('dt_notificacao', date('Y-m-d')) }}" placeholder="ex: 31/12/2000">
+          <input type="date" class="form-control @error('dt_notificacao') is-invalid @enderror" id="dt_notificacao" name="dt_notificacao" value="{{ old('dt_notificacao', date('Y-m-d')) }}" placeholder="{{ __('ex: 31/12/2000') }}">
           @error('dt_notificacao')
           <div class="invalid-feedback">{{ $message }}</div>
           @enderror
@@ -72,11 +72,11 @@
 
       <div class="form-group row mb-4">
         <div class="col-lg-2 text-right">
-          <label class="control-label">Igreja de Destino:</label>
+          <label class="control-label">{{ __('Igreja de Destino:') }}</label>
         </div>
         <div class="col-lg-6">
           <select id="igreja_id" name="igreja_id" class="form-control @error('igreja_id') is-invalid @enderror">
-            <option value="" {{ old('igreja_id') == '' ? 'selected' : '' }}>Selecione</option>
+            <option value="" {{ old('igreja_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
             @foreach ($igrejas as $igreja)
             <option value="{{ $igreja->id }}" {{ old('igreja_id') == $igreja->id ? 'selected' : '' }}>{{ $igreja->instituicaoPai->instituicaoPai->nome ?? 'Sem Região' }} - {{ $igreja->instituicaoPai->nome ?? 'Sem distrito' }} - {{ $igreja->nome }}</option>
             @endforeach
@@ -89,10 +89,10 @@
 
       <div class="form-group mt-4">
         <a href="{{ route('membro.editar', ['id' => $pessoa->id]) }}" class="btn btn-secondary">
-          <x-bx-arrow-back /> Voltar
+          <x-bx-arrow-back /> {{ __('Voltar') }}
         </a>
         <button type="submit" class="btn btn-primary">
-          <x-bx-transfer-alt /> Transferir
+          <x-bx-transfer-alt /> {{ __('Transferir') }}
         </button>
       </div>
     </form>
@@ -105,7 +105,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
   $(document).ready(function() {
-    $.fn.select2.defaults.set("language", "pt-BR");
+    6fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
     $('#igreja_id').select2({
       placeholder: 'Selecione',
       allowClear: true

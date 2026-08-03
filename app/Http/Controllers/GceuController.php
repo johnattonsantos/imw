@@ -95,7 +95,7 @@ class GceuController extends Controller
         $gceu = app(EditarGCeuService::class)->findOne($id);
         $congregacoes = Identifiable::fetchCongregacoes();
         if (!$gceu) {
-            return redirect()->route('gceu.index')->with('error', 'GCEU não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('GCEU não encontrado.'));
         }
         return view('gceu.editar', compact('gceu', 'congregacoes'));
     }
@@ -106,11 +106,11 @@ class GceuController extends Controller
             DB::beginTransaction();
             app(EditarGCeuService::class)->execute($id, $request->all());
             DB::commit();
-            return redirect()->route('gceu.editar', ['id' => $id])->with('success', 'GCEU atualizado com sucesso.');
+            return redirect()->route('gceu.editar', ['id' => $id])->with('success', __('GCEU atualizado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);
-            return redirect()->route('gceu.editar', ['id' => $id])->with('error', 'Falha ao atualizar o GCEU.');
+            return redirect()->route('gceu.editar', ['id' => $id])->with('error', __('Falha ao atualizar o GCEU.'));
         }
     }
 
@@ -120,13 +120,13 @@ class GceuController extends Controller
         try {
             $existe = GCeu::join('gceu_membros', 'gceu_membros.gceu_cadastro_id','gceu_cadastros.id')->where('gceu_cadastros.id',$id)->first();
             if($existe){
-                return back()->with('error', 'Não poderá remover esse CGEU, pois existe membros vinculados.');
+                return back()->with('error', __('Não poderá remover esse CGEU, pois existe membros vinculados.'));
             }else{
                 app(DeletarGCeuService::class)->execute($id);
-                return redirect()->route('gceu.index')->with('success', 'GCEU deletado com sucesso.');
+                return redirect()->route('gceu.index')->with('success', __('GCEU deletado com sucesso.'));
             }
         } catch (\Exception $e) {
-            return back()->with('error', 'Falha ao deletar o GCEU.');
+            return back()->with('error', __('Falha ao deletar o GCEU.'));
         }
     }
 
@@ -135,7 +135,7 @@ class GceuController extends Controller
         try {
             return view('gceu.create', ['congregacoes' => Identifiable::fetchCongregacoes(), 'instituicao_id' => Identifiable::fetchSessionIgrejaLocal()->id]);
         } catch (\Exception $e) {
-            return back()->with('error', 'Falha ao abrir a página de novo visitante');
+            return back()->with('error', __('Falha ao abrir a página de novo visitante'));
         }
     }
 
@@ -145,7 +145,7 @@ class GceuController extends Controller
             DB::beginTransaction();
             app(StoreGCeuService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('gceu.index')->with('success', 'GCEU cadastrado com sucesso.');
+            return redirect()->route('gceu.index')->with('success', __('GCEU cadastrado com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('gceu.index')->with('error', $e->getMessage());
@@ -156,7 +156,7 @@ class GceuController extends Controller
     {
         $gceu = app(VisualizarGCeuService::class)->findOne($id);
         if (!$gceu) {
-            return redirect()->route('gceu.index')->with('error', 'GCEU não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('GCEU não encontrado.'));
         }
         return view('gceu.visualizar', ['gceu' =>  $gceu]);
     }
@@ -169,7 +169,7 @@ class GceuController extends Controller
         $data = app(GCeuMembrosService::class)->getList($igrejaId, $data);
 
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.index')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.membros.index', $data);
     }
@@ -257,7 +257,7 @@ class GceuController extends Controller
             ->first();
 
         if (!$gceu) {
-            return back()->withInput()->with('error', 'GCEU inválido para a igreja logada.');
+            return back()->withInput()->with('error', __('GCEU inválido para a igreja logada.'));
         }
 
         DB::transaction(function () use ($payload) {
@@ -281,7 +281,7 @@ class GceuController extends Controller
             }
         });
 
-        return redirect()->route('gceu.reuniao-pessoas')->with('success', 'Pessoa da reunião cadastrada com sucesso.');
+        return redirect()->route('gceu.reuniao-pessoas')->with('success', __('Pessoa da reunião cadastrada com sucesso.'));
     }
 
     public function marcarNovoConvertidoReuniaoPessoa($id)
@@ -295,7 +295,7 @@ class GceuController extends Controller
             ->first();
 
         if (!$registro) {
-            return back()->with('error', 'Registro não encontrado para a igreja logada.');
+            return back()->with('error', __('Registro não encontrado para a igreja logada.'));
         }
 
         $registro->update([
@@ -303,7 +303,7 @@ class GceuController extends Controller
             'vinculo' => MembresiaMembro::VINCULO_VISITANTE,
         ]);
 
-        return back()->with('success', 'Registro atualizado para Novo Convertido.');
+        return back()->with('success', __('Registro atualizado para Novo Convertido.'));
     }
 
     public function deletarReuniaoPessoa($id)
@@ -317,12 +317,12 @@ class GceuController extends Controller
             ->first();
 
         if (!$registro) {
-            return back()->with('error', 'Registro não encontrado para a igreja logada.');
+            return back()->with('error', __('Registro não encontrado para a igreja logada.'));
         }
 
         MembresiaContato::where('membro_id', $registro->id)->delete();
         $registro->delete();
-        return back()->with('success', 'Registro removido com sucesso.');
+        return back()->with('success', __('Registro removido com sucesso.'));
     }
 
     public function relatorioReuniaoPessoas(Request $request)
@@ -455,7 +455,7 @@ class GceuController extends Controller
         DB::beginTransaction();
         app(GCeuUpdateMembroService::class)->execute($request->all(), $id);
         DB::commit();
-        return back()->with('success', 'Registro atualizado.');
+        return back()->with('success', __('Registro atualizado.'));
 
     }
 
@@ -464,7 +464,7 @@ class GceuController extends Controller
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $data = app(CartaPastoralGCeuService::class)->getList($igrejaId);
         if (!$data) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral.index', $data);
     }
@@ -474,11 +474,11 @@ class GceuController extends Controller
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $data = app(CartaPastoralGCeuService::class)->getList($igrejaId);
         if (!$data) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral.relatorio', $data);
     }
-    
+
     public function cartaPastoralEditar($id)
     {
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
@@ -488,7 +488,7 @@ class GceuController extends Controller
                 ->where(['pessoas_nomeacoes.instituicao_id' => $igrejaId])->whereIn('pessoas_funcaoministerial.ordem', [3,4,5])->whereNull('pessoas_nomeacoes.data_termino')->get();
         $data['cartaPastoral'] = app(EditarGCeuCartaPastoralService::class)->findOne($id);
         if (!$data['cartaPastoral']) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta Pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta Pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral.editar', $data);
     }
@@ -499,11 +499,11 @@ class GceuController extends Controller
             DB::beginTransaction();
             app(EditarGCeuCartaPastoralService::class)->execute($id, $request->all());
             DB::commit();
-            return redirect()->route('gceu.carta-pastoral', ['id' => $id])->with('success', 'Carta Pastoral atualizada com sucesso.');
+            return redirect()->route('gceu.carta-pastoral', ['id' => $id])->with('success', __('Carta Pastoral atualizada com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             dd($e);
-            return redirect()->route('gceu.carta-pastoral.editar', ['id' => $id])->with('error', 'Falha ao atualizar a Carta Pastoral.');
+            return redirect()->route('gceu.carta-pastoral.editar', ['id' => $id])->with('error', __('Falha ao atualizar a Carta Pastoral.'));
         }
     }
 
@@ -511,9 +511,9 @@ class GceuController extends Controller
     {
         try {
             app(DeletarGCeuCartaPastoralService::class)->execute($id);
-            return redirect()->route('gceu.carta-pastoral')->with('success', 'Carta pastoral deletada com sucesso.');
+            return redirect()->route('gceu.carta-pastoral')->with('success', __('Carta pastoral deletada com sucesso.'));
         } catch (\Exception $e) {
-            return back()->with('error', 'Falha ao deletar a carta pastoral.');
+            return back()->with('error', __('Falha ao deletar a carta pastoral.'));
         }
     }
 
@@ -529,7 +529,7 @@ class GceuController extends Controller
             $data['instituicao'] = Identifiable::fetchSessionIgrejaLocal()->nome;
             return view('gceu.carta-pastoral.create', $data);
         } catch (\Exception $e) {
-            return back()->with('error', 'Falha ao abrir a página nova carta pastoral');
+            return back()->with('error', __('Falha ao abrir a página nova carta pastoral'));
         }
     }
 
@@ -539,7 +539,7 @@ class GceuController extends Controller
             DB::beginTransaction();
             app(StoreGCeuCartaPastoralService::class)->execute($request->all());
             DB::commit();
-            return redirect()->route('gceu.carta-pastoral')->with('success', 'Carta pastoral cadastrada com sucesso.');
+            return redirect()->route('gceu.carta-pastoral')->with('success', __('Carta pastoral cadastrada com sucesso.'));
         } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('gceu.carta-pastoral')->with('error', $e->getMessage());
@@ -602,7 +602,7 @@ class GceuController extends Controller
     {
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral.visualizar', ['cartaPastoral' =>  $cartaPastoral]);
     }
@@ -611,7 +611,7 @@ class GceuController extends Controller
     {
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         //return view('gceu.carta-pastoral.visualizar', ['cartaPastoral' =>  $cartaPastoral]);
 
@@ -625,7 +625,7 @@ class GceuController extends Controller
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $data = app(GCeuDiarioService::class)->getList($igrejaId, $data);
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.index')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.diario.index', $data);
     }
@@ -636,18 +636,18 @@ class GceuController extends Controller
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $data = app(GCeuDiarioService::class)->getListRelatorio($igrejaId, $data);
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Diário não encontrada.');
+            return redirect()->route('gceu.index')->with('error', __('Diário não encontrada.'));
         }
         return view('gceu.diario.relatorio', $data);
     }
-    
+
 
     public function diarioPresencaFalta(Request $request)
     {
         $data = $request->all();
         $data = app(GCeuDiarioPresencaFaltaService::class)->salvarDiario($data);
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.index')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.diario.index', $data);
     }
@@ -668,19 +668,19 @@ class GceuController extends Controller
             $data['titulo'] =  "Relatório da função: $funcao->funcao do GCEU da Igreja: ".$data['igreja'];
         }
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório líderes GCEU não encontradd.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório líderes GCEU não encontradd.'));
         }
         return view('gceu.relatorio-igreja.funcoes', $data);
     }
 
     public function gceuRelatorioGceu()
     {
-        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;        
+        $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
         $data = app(GCeuRelatorioGceuService::class)->getList($igrejaId);
         $data['titulo'] =  "Relatório de GCEU da Igreja: ".Identifiable::fetchSessionIgrejaLocal()->nome;
 
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório de GCEU não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório de GCEU não encontrado.'));
         }
         return view('gceu.relatorio-igreja.gceu', $data);
     }
@@ -692,7 +692,7 @@ class GceuController extends Controller
         $data['titulo'] =  "Relatório de Aniversariantes GCEU da Igreja: ".Identifiable::fetchSessionIgrejaLocal()->nome;
 
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório de Aniversariantes não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório de Aniversariantes não encontrado.'));
         }
         return view('gceu.relatorio-igreja.aniversariantes', $data);
     }
@@ -700,12 +700,12 @@ class GceuController extends Controller
     ////////////////////////////GCEU DISTRITO/////////////////////////////
     public function gceuRelatorioDistritoGceu()
     {
-        $distritoId = Identifiable::fetchtSessionDistrito()->id;    
+        $distritoId = Identifiable::fetchtSessionDistrito()->id;
         $data = app(GCeuRelatorioDistritoGceuService::class)->getList($distritoId);
         $data['titulo'] =  "Relatório de GCEU do Distrito: ".Identifiable::fetchtSessionDistrito()->nome;
 
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório de GCEU não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório de GCEU não encontrado.'));
         }
         return view('gceu.relatorio-distrito.gceu', $data);
     }
@@ -715,7 +715,7 @@ class GceuController extends Controller
         $distritoId = Identifiable::fetchtSessionDistrito()->id;
         $data = app(CartaPastoralGCeuDistritoService::class)->getList($distritoId);
         if (!$data) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral-distrito.relatorio', $data);
     }
@@ -725,7 +725,7 @@ class GceuController extends Controller
     {
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral-distrito.visualizar', ['cartaPastoral' =>  $cartaPastoral]);
     }
@@ -734,7 +734,7 @@ class GceuController extends Controller
     {
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         //return view('gceu.carta-pastoral.visualizar', ['cartaPastoral' =>  $cartaPastoral]);
 
@@ -752,7 +752,7 @@ class GceuController extends Controller
         }
         $funcao = app(GCeuRelatorioDistritoFuncoesService::class)->getFuncao(request()->funcao_id);
         $data = app(GCeuRelatorioDistritoFuncoesService::class)->getList($distritoId, request()->funcao_id, request()->gceu_id, $tipo);
-        
+
         $data['igreja'] = Identifiable::fetchtSessionDistrito()->nome;
         if($funcao == null){
             $data['titulo'] =  "Relatório de todas as funções do GCEU do Distrito: ".$data['igreja'];
@@ -760,7 +760,7 @@ class GceuController extends Controller
             $data['titulo'] =  "Relatório da função: $funcao->funcao do GCEU do Distrito: ".$data['igreja'];
         }
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório funções GCEU não encontradd.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório funções GCEU não encontradd.'));
         }
         return view('gceu.relatorio-distrito.funcoes', $data);
     }
@@ -773,20 +773,20 @@ class GceuController extends Controller
         $data['titulo'] =  "Relatório de Aniversariantes GCEU do Distrito: ".Identifiable::fetchtSessionDistrito()->nome;
 
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório de Aniversariantes não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório de Aniversariantes não encontrado.'));
         }
         return view('gceu.relatorio-distrito.aniversariantes', $data);
     }
-    
+
      ////////////////////////////GCEU REGIAO/////////////////////////////
     public function gceuRelatorioRegiaoGceu()
     {
-        $regiaoId = Identifiable::fetchtSessionRegiao()->id;  
+        $regiaoId = Identifiable::fetchtSessionRegiao()->id;
         $data = app(GCeuRelatorioRegiaoGceuService::class)->getList($regiaoId);
         $data['titulo'] =  "Relatório de GCEU da região: ".Identifiable::fetchtSessionRegiao()->nome;
 
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório de GCEU não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório de GCEU não encontrado.'));
         }
         return view('gceu.relatorio-regiao.gceu', $data);
     }
@@ -796,7 +796,7 @@ class GceuController extends Controller
         $regiaoId = Identifiable::fetchtSessionRegiao()->id;
         $data = app(CartaPastoralGCeuRegiaoService::class)->getList($regiaoId);
         if (!$data) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral-regiao.relatorio', $data);
     }
@@ -806,7 +806,7 @@ class GceuController extends Controller
     {
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         return view('gceu.carta-pastoral-regiao.visualizar', ['cartaPastoral' =>  $cartaPastoral]);
     }
@@ -815,7 +815,7 @@ class GceuController extends Controller
     {
         $cartaPastoral = app(VisualizarGCeuCartaPastoralService::class)->findOne($id);
         if (!$cartaPastoral) {
-            return redirect()->route('gceu.carta-pastoral')->with('error', 'Carta pastoral não encontrada.');
+            return redirect()->route('gceu.carta-pastoral')->with('error', __('Carta pastoral não encontrada.'));
         }
         //return view('gceu.carta-pastoral.visualizar', ['cartaPastoral' =>  $cartaPastoral]);
 
@@ -840,7 +840,7 @@ class GceuController extends Controller
             request()->gceu_id,
             $tipo
         );
-        
+
         $data['igreja'] = Identifiable::fetchtSessionRegiao()->nome;
         if($funcao == null){
             $data['titulo'] =  "Relatório de todas as funções do GCEU da Região: ".$data['igreja'];
@@ -848,11 +848,11 @@ class GceuController extends Controller
             $data['titulo'] =  "Relatório da função: $funcao->funcao do GCEU da Região: ".$data['igreja'];
         }
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório funções GCEU não encontradd.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório funções GCEU não encontradd.'));
         }
         return view('gceu.relatorio-regiao.funcoes', $data);
     }
-    
+
     public function gceuRelatorioRegiaoAniversariantes()
     {
         $regiaoId = Identifiable::fetchtSessionRegiao()->id;
@@ -861,7 +861,7 @@ class GceuController extends Controller
         $data['titulo'] =  "Relatório de Aniversariantes GCEU da Região: ".Identifiable::fetchtSessionRegiao()->nome;
 
         if (!$data) {
-            return redirect()->route('gceu.index')->with('error', 'Relatório de Aniversariantes não encontrado.');
+            return redirect()->route('gceu.index')->with('error', __('Relatório de Aniversariantes não encontrado.'));
         }
         return view('gceu.relatorio-regiao.aniversariantes', $data);
     }

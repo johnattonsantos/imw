@@ -31,7 +31,7 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Incluir Usuário</h4>
+                    <h4>{{ __('Incluir Usuário') }}</h4>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 <div class="row mb-1">
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label>* E-mail</label>
+                            <label>{{ __('* E-mail') }}</label>
                             <div class="input-group">
                                 <input type="email" name="email" id="email"
                                     class="form-control @error('email') is-invalid @enderror" autocomplete="off"
@@ -50,7 +50,7 @@
                                 <input type="hidden" name="email_hidden" id="email_hidden"
                                     value="{{ old('email_hidden') }}" />
                                 <button type="button" id="checkEmailButton" class="btn btn-secondary">
-                                    <i class="fa fa-search"></i> Analisar
+                                    <i class="fa fa-search"></i> {{ __('Analisar') }}
                                 </button>
                             </div>
                             @error('email')
@@ -63,10 +63,10 @@
                     <div class="row mt-4">
                         <div class="col-lg-4" id="col-perfil">
                             <div class="form-group">
-                                <label>* Perfil de Acesso</label>
+                                <label>{{ __('* Perfil de Acesso') }}</label>
                                 <select class="form-control @error('perfil_id') is-invalid @enderror" name="perfil_id"
                                     required>
-                                    <option value="">Selecione um perfil</option>
+                                    <option value="">{{ __('Selecione um perfil') }}</option>
                                     @foreach ($perfis as $perfil)
                                         <option value="{{ $perfil->id }}" @if(old('perfil_id') == $perfil->id) selected
                                         @endif>{{ $perfil->nome }}</option>
@@ -80,7 +80,7 @@
 
                         <div class="col-lg-6" id="col-nome">
                             <div class="form-group">
-                                <label>* Nome Completo</label>
+                                <label>{{ __('* Nome Completo') }}</label>
                                 <div class="controls">
                                     <input type="text" name="name" id="name"
                                         class="form-control @error('name') is-invalid @enderror" minlength="8"
@@ -98,7 +98,7 @@
                     <div class="row">
                         <div class="col-lg-5" id="col-cpf">
                             <div class="form-group">
-                                <label>* CPF</label>
+                                <label>{{ __('* CPF') }}</label>
                                 <div class="input-group">
                                     <input type="text" name="cpf" id="cpf"
                                         class="form-control @error('cpf') is-invalid @enderror" autocomplete="off"
@@ -112,7 +112,7 @@
 
                         <div class="col-lg-5" id="col-telefone">
                             <div class="form-group">
-                                <label>* Telefone</label>
+                                <label>{{ __('* Telefone') }}</label>
                                 <div class="input-group">
                                     <input type="text" name="telefone" id="telefone"
                                         class="form-control @error('telefone') is-invalid @enderror" autocomplete="off"
@@ -128,7 +128,7 @@
                     <div class="row">
                         <div class="col-lg-5" id="col-senha">
                             <div class="form-group">
-                                <label>* Senha</label>
+                                <label>{{ __('* Senha') }}</label>
                                 <div class="controls">
                                     <input type="password" name="password" id="password"
                                         class="form-control @error('password') is-invalid @enderror"
@@ -141,7 +141,7 @@
                         </div>
                         <div class="col-lg-5">
                             <div class="form-group" id="col-confirmar-senha">
-                                <label>* Confirmar Senha</label>
+                                <label>{{ __('* Confirmar Senha') }}</label>
                                 <div class="controls">
                                     <input type="password" name="password_confirmation" id="confirmPassword"
                                         class="form-control @error('password_confirmation') is-invalid @enderror"
@@ -162,10 +162,10 @@
                                         <input id="chk_clerigo_id" data-clerigoId="{{ old('pessoa_id') }}"
                                             name="chk_clerigo_id" type="checkbox" class="new-control-input" {{ old('pessoa_id') ? 'checked' : '' }}> <span
                                             class="new-control-indicator"></span>
-                                        <p>Vincular Vincular Clérigo(a) <span id="clerigo_nome"
+                                        <p>{{ __('Vincular Vincular Clérigo(a)') }} <span id="clerigo_nome"
                                                 class="font-weight-bold font-italic">
                                                 {{ old('pessoa_id') ? \App\Models\PessoasPessoa::find(old('pessoa_id'))->nome : '' }}
-                                            </span> ao cadastro?</p>
+                                            </span> {{ __('ao cadastro?') }}</p>
                                     </label>
                                     <input type="hidden" name="pessoa_id" id="pessoa_id" value="{{ old('pessoa_id') }}">
                                 </div>
@@ -176,8 +176,8 @@
                 <input type="text" name="tipo" id="tipo" hidden />
                 <br><br>
                 <div class="ocultar" hidden>
-                    <button type="button" id="btn-reset" class="btn btn-secondary btn-rounded mr-2">Resetar</button>
-                    <button type="submit" id="btn-salvar" class="btn btn-primary btn-rounded">Salvar</button>
+                    <button type="button" id="btn-reset" class="btn btn-secondary btn-rounded mr-2">{{ __('Resetar') }}</button>
+                    <button type="submit" id="btn-salvar" class="btn btn-primary btn-rounded">{{ __('Salvar') }}</button>
                 </div>
             </form>
 

@@ -31,19 +31,19 @@
           <div class="col-md-12">
             <div class="alert alert-primary border-0 mb-4" role="alert">
               <strong>
-                Atualmente este membro se encontra em {{ optional($pessoa->congregacao)->nome ?? 'IGREJA PRINCIPAL' }}.<br> 
-                Escolha para onde deseja transferir o membro
+                Atualmente este membro se encontra em {{ optional($pessoa->congregacao)->nome ?? 'IGREJA PRINCIPAL' }}.<br>
+                {{ __('Escolha para onde deseja transferir o membro') }}
               </strong>
-            </div> 
+            </div>
           </div>
         </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">* Data Transferência:</label>
+            <label class="control-label">{{ __('* Data Transferência:') }}</label>
           </div>
           <div class="col-lg-6">
-            <input type="date" class="form-control @error('dt_transferencia') is-invalid @enderror" id="dt_transferencia" name="dt_transferencia" value="{{ old('dt_transferencia', date('Y-m-d')) }}" placeholder="ex: 31/12/2000">
+            <input type="date" class="form-control @error('dt_transferencia') is-invalid @enderror" id="dt_transferencia" name="dt_transferencia" value="{{ old('dt_transferencia', date('Y-m-d')) }}" placeholder="{{ __('ex: 31/12/2000') }}">
             @error('dt_transferencia')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -52,11 +52,11 @@
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">* Destino:</label>
+            <label class="control-label">{{ __('* Destino:') }}</label>
           </div>
           <div class="col-lg-6">
             <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" >
-              <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>Selecione</option>
+              <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
               @foreach ($congregacoes as $congregacao)
                 <option value="{{ $congregacao->id }}" {{ old('congregacao_id') == $congregacao->id ? 'selected' : '' }}>{{ $congregacao->nome }}</option>
               @endforeach
@@ -65,15 +65,15 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">* Pastor:</label>
+            <label class="control-label">{{ __('* Pastor:') }}</label>
           </div>
           <div class="col-lg-6">
             <select id="clerigo_id" name="clerigo_id" class="form-control @error('clerigo_id') is-invalid @enderror" >
-              <option value="" {{ old('clerigo_id') == '' ? 'selected' : '' }}>Selecione</option>
+              <option value="" {{ old('clerigo_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
               @foreach ($pastores as $pastor)
                 <option value="{{ $pastor->id }}" {{ old('clerigo_id') == $pastor->id ? 'selected' : '' }}>{{ $pastor->nome }}</option>
               @endforeach
@@ -82,14 +82,14 @@
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
           </div>
-        </div> 
+        </div>
 
         <div class="form-group mt-4">
           <a href="{{ route('membro.editar', ['id' => $pessoa->id]) }}" class="btn btn-secondary">
-            <x-bx-arrow-back/> Voltar
+            <x-bx-arrow-back/> {{ __('Voltar') }}
           </a>
           <button type="submit" class="btn btn-primary">
-            <x-bx-transfer-alt/> Transferir
+            <x-bx-transfer-alt/> {{ __('Transferir') }}
           </button>
         </div>
       </form>

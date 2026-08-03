@@ -44,7 +44,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Lista de Membresia Validação</h4>
+                        <h4>{{ __('Lista de Membresia Validação') }}</h4>
                     </div>
                 </div>
             </div>
@@ -54,9 +54,9 @@
                         <!-- <div class="form-check form-check-inline">
                             <div class="n-chk">
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                                    <input type="radio" name="status" value="rol_atual" class="new-control-input" 
+                                    <input type="radio" name="status" value="rol_atual" class="new-control-input"
                                            {{ request()->input('status') == 'rol_atual' || request()->input('status') == null ? 'checked' : '' }}>
-                                    <span class="new-control-indicator"></span>Ativos
+                                    <span class="new-control-indicator"></span>{{ __('Ativos') }}
                                 </label>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                     <input type="radio" name="status" value="inativo" class="new-control-input"
                                            {{ request()->input('status') == 'inativo' ? 'checked' : '' }}>
-                                    <span class="new-control-indicator"></span>Inativos
+                                    <span class="new-control-indicator"></span>{{ __('Inativos') }}
                                 </label>
                             </div>
                         </div>
@@ -74,7 +74,7 @@
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                     <input type="radio" name="status" value="rol_permanente" class="new-control-input"
                                            {{ request()->input('status') == 'rol_permanente' ? 'checked' : '' }}>
-                                    <span class="new-control-indicator"></span>Rol Permanente
+                                    <span class="new-control-indicator"></span>{{ __('Rol Permanente') }}
                                 </label>
                             </div>
                         </div>
@@ -83,30 +83,30 @@
                                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
                                     <input type="radio" name="status" value="has_errors" class="new-control-input"
                                            {{ request()->input('status') == 'has_errors' ? 'checked' : '' }}>
-                                    <span class="new-control-indicator"></span>Erros de Cadastro
+                                    <span class="new-control-indicator"></span>{{ __('Erros de Cadastro') }}
                                 </label>
                             </div>
                         </div> -->
                     </div>
                     <div class="col-4">
-                        <label for="searchInput">Pesquisar por nome</label>
-                        <input type="text" name="search" id="searchInput" class="form-control form-control-sm" placeholder="Pesquisar..."
+                        <label for="searchInput">{{ __('Pesquisar por nome') }}</label>
+                        <input type="text" name="search" id="searchInput" class="form-control form-control-sm" placeholder="{{ __('Pesquisar...') }}"
                                value="{{ request()->input('search') }}">
                     </div>
                     <div class="col-auto" style="margin-left: -19px; margin-top:30px">
-                        <button type="submit" id="searchButton" class="btn btn-primary btn-rounded"><x-bx-search /> Pesquisar</button>
+                        <button type="submit" id="searchButton" class="btn btn-primary btn-rounded"><x-bx-search /> {{ __('Pesquisar') }}</button>
                     </div>
                 </form>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover mb-4" id="datatable" data-url="{{ route('recadastramento-membro.listRecadastramento') }}">
                         <thead>
                             <tr>
-                                <th>ROL</th>
-                                <th>NOME</th>
-                                <th>STATUS</th>
-                                <th>RECEPÇÃO</th>
-                                <th>EXCLUSÃO</th>
-                                <th>CONGREGAÇÃO</th>
+                                <th>{{ __('ROL') }}</th>
+                                <th>{{ __('NOME') }}</th>
+                                <th>{{ __('STATUS') }}</th>
+                                <th>{{ __('RECEPÇÃO') }}</th>
+                                <th>{{ __('EXCLUSÃO') }}</th>
+                                <th>{{ __('CONGREGAÇÃO') }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -115,7 +115,7 @@
             </div>
         </div>
     </div>
-    
+
 @endsection
 
 @section('extras-scripts')

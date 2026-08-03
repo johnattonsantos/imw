@@ -39,16 +39,16 @@
                 <div class="widget-header">
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Cota Orçamentária - {{ $instituicao }}</h4>
+                            <h4>{{ __('Cota Orçamentária') }} - {{ $instituicao }}</h4>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="form-group row mb-4" id="filtros_data">
                         <div class="col-lg-2 text-right">
-                            <label class="control-label">* Ano/Mês:</label>
+                            <label class="control-label">{{ __('* Ano/Mês:') }}</label>
                         </div>
                             <div class="col-lg-5 ano_mes">
                                 <div class="input-group">
@@ -66,7 +66,7 @@
                                         <select class="form-control " id="mes" name="mes" required="">
                                             @foreach($meses as $mes)
                                                 @if($mes->id != 13)
-                                                    <option value="{{ $mes->id }}" {{ request()->input('mes') == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ $mes->descricao }}</option>
+                                                    <option value="{{ $mes->id }}" {{ request()->input('mes') == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ __($mes->descricao) }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -84,18 +84,18 @@
                                         <select class="form-control " id="mes" name="mes" required="">
                                             @foreach($meses as $mes)
                                                 @if($mes->id != 13)
-                                                    <option value="{{ $mes->id }}" {{ $mesAtual == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ $mes->descricao }}</option>
+                                                    <option value="{{ $mes->id }}" {{ $mesAtual == zeroEsqueda($mes->id) ? 'selected' : '' }}>{{ __($mes->descricao) }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
                                     @endif
                                 </div>
                             </div>
-                        
 
-                            
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar dados do Relatório" class="btn btn-primary btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg> Buscar
+
+
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="none" viewBox="0 0 24 24"><path d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path></svg> {{ __('Buscar') }}
                                 </button>
 
 
@@ -117,42 +117,42 @@
                                 @endphp
                                 <thead class="thead-light">
                                     <tr>
-                                        <th>TIPO</th>
-                                        <th>CRITÉRIO</th>
-                                        <th>VALOR DA COTA LOCAL</th>
+                                        <th>{{ __('TIPO') }}</th>
+                                        <th>{{ __('CRITÉRIO') }}</th>
+                                        <th>{{ __('VALOR DA COTA LOCAL') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Arrecadado</td>
-                                        <td>Dízimos + Ofertas de Cultos</td>
+                                        <td>{{ __('Arrecadado') }}</td>
+                                        <td>{{ __('Dízimos + Ofertas de Cultos') }}</td>
                                         <td>
                                             R$ {{ number_format($dizimosOfertas, 2,",",".") }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Cota</td>
+                                        <td>{{ __('Cota') }}</td>
                                         <td>19%</td>
                                         <td>
                                             R$ {{ number_format($cotaOrcamentariaTotal, 2,",",".") }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>Dízimo Pastoral</td>
+                                        <td>{{ __('Dízimo Pastoral') }}</td>
                                         <td>100%</td>
                                         <td>
                                             R$ {{ number_format($dizimosPastoralFiw, 2,",",".") }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>IRRF Titular</td>
-                                        <td>100% da Tabela</td>
+                                        <td>{{ __('IRRF Titular') }}</td>
+                                        <td>{{ __('100% da Tabela') }}</td>
                                         <td>
                                             R$ {{ number_format($irrfRepasse, 2,",",".") }}
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><b>TOTAL</b></td>
+                                        <td><b>{{ __('TOTAL') }}</b></td>
                                         <td></td>
                                         <td>
                                             R$ {{ number_format($total, 2,",",".") }}
@@ -234,7 +234,7 @@
                                         }
                                     });
 
-                                    var numColumns = doc.content[0].table.body[0].length; 
+                                    var numColumns = doc.content[0].table.body[0].length;
                                     doc.content[0].table.widths = Array(numColumns).fill('*');
 
 
@@ -276,5 +276,5 @@
             });
         </script>
     @endsection
-    
+
 @endsection

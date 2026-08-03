@@ -39,12 +39,12 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Editar Registro de Entrada</h4>
+                        <h4>{{ __('Editar Registro de Entrada') }}</h4>
                     </div>
                 </div>
             </div>
 
-           
+
             <form action="{{ route('financeiro.entrada.update', $entrada->id) }}" method="POST"
                 class="widget-content widget-content-area">
                 @csrf
@@ -52,10 +52,10 @@
 
                 <div class="row mb-4">
                     <div class="col-md-6">
-                        <label for="caixa_id">* Caixa</label>
+                        <label for="caixa_id">{{ __('* Caixa') }}</label>
                         <select class="form-control @error('caixa_id') is-invalid @enderror" id="caixa_id" name="caixa_id"
                             required>
-                            <option value="" hidden disabled>Selecione</option>
+                            <option value="" hidden disabled>{{ __('Selecione') }}</option>
                             @foreach ($caixas as $caixa)
                                 <option value="{{ $caixa->id }}"
                                     {{ $entrada->caixa_id == $caixa->id ? 'selected' : '' }}>{{ $caixa->descricao }}
@@ -68,10 +68,10 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="plano_conta_id">* Plano de contas</label>
+                        <label for="plano_conta_id">{{ __('* Plano de contas') }}</label>
                         <select class="form-control @error('plano_conta_id') is-invalid @enderror" id="plano_conta_id"
                             name="plano_conta_id" required>
-                            <option value="" hidden disabled>Selecione</option>
+                            <option value="" hidden disabled>{{ __('Selecione') }}</option>
                             @foreach ($planoContas as $pc)
                                 <option {{ !$pc->selecionavel ? 'disabled' : '' }} value="{{ $pc->id }}"
                                     data-numeracao="{{ $pc->numeracao }}"
@@ -88,7 +88,7 @@
 
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label for="valor">* Valor</label>
+                        <label for="valor">{{ __('* Valor') }}</label>
                         <input type="text" class="form-control @error('valor') is-invalid @enderror" id="valor"
                             name="valor" value="{{ $entrada->valor }}" required autofocus>
                         @error('valor')
@@ -96,7 +96,7 @@
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="data_movimento">* Data do Movimento</label>
+                        <label for="data_movimento">{{ __('* Data do Movimento') }}</label>
                         <input type="date" class="form-control @error('data_movimento') is-invalid @enderror"
                             id="data_movimento" name="data_movimento"
                             value="{{ old('data_movimento', \Carbon\Carbon::parse($entrada->data_movimento)->format('Y-m-d')) }}"
@@ -107,10 +107,10 @@
                         @enderror
                     </div>
                     <div class="col-md-4">
-                        <label for="tipo_pagante_favorecido_id">* Tipo do Pagante</label>
+                        <label for="tipo_pagante_favorecido_id">{{ __('* Tipo do Pagante') }}</label>
                         <select class="form-control @error('tipo_pagante_favorecido_id') is-invalid @enderror"
                             id="tipo_pagante_favorecido_id" name="tipo_pagante_favorecido_id" required>
-                            <option value="" hidden>Selecione</option>
+                            <option value="" hidden>{{ __('Selecione') }}</option>
                             @foreach ($tiposPagantesFavorecidos as $tipoPaganteFavorecido)
                                 @if ($tipoPaganteFavorecido->id == 1 || $tipoPaganteFavorecido->id == 3 || $tipoPaganteFavorecido->id == 99)
                                     <option value="{{ $tipoPaganteFavorecido->id }}"
@@ -128,7 +128,7 @@
                 </div>
                 <div class="row mb-4" id="show_pagante_favorecido">
                     <div class="col-6">
-                        <label for="pagante_favorecido">Pagante</label>
+                        <label for="pagante_favorecido">{{ __('Pagante') }}</label>
                         <input type="text" class="form-control @error('pagante_favorecido') is-invalid @enderror"
                             id="pagante_favorecido" name="pagante_favorecido"
                             value="{{ $entrada->pagante_favorecido ?? old('pagante_favorecido') }}">
@@ -138,9 +138,9 @@
                         @enderror
                     </div>
                 </div>
-                
+
                 <div class="col-4 ano_mes">
-                    <label for="ano_mes">Mês/Ano</label>
+                    <label for="ano_mes">{{ __('Mês/Ano') }}</label>
                     <div class="input-group">
                         <select class="form-control " id="ano" name="ano" required="">
                             @php
@@ -168,7 +168,7 @@
 
                 <div class="row mb-4">
                     <div class="col-12">
-                        <label for="descricao">Descrição</label>
+                        <label for="descricao">{{ __('Descrição') }}</label>
                         <textarea class="form-control @error('descricao') is-invalid @enderror" id="descricao" name="descricao" rows="3"
                             >{{ $entrada->descricao }}</textarea>
                         @error('descricao')
@@ -178,8 +178,8 @@
                 </div>
 
                 <div class="row mb-4 justify-content-center">
-                    <button type="submit" title="Atualizar movimentação de entrada" class="btn btn-primary btn-lg ml-4">
-                        <x-bx-save /> Atualizar
+                    <button type="submit" title="{{ __('Atualizar movimentação de entrada') }}" class="btn btn-primary btn-lg ml-4">
+                        <x-bx-save /> {{ __('Atualizar') }}
                     </button>
                 </div>
             </form>
@@ -222,17 +222,17 @@
             reverse: true
         });
         // definir o idioma padrão do Select2 para português
-        $.fn.select2.defaults.set("language", "pt-BR");
+        $.fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
         $('#caixa_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
-    
+
         $('#plano_conta_id').select2({
            placeholder: 'Selecione',
             allowClear: true
-        }); 
+        });
 
         $(document).ready(function() {
             aplicarRegraTipoPagantePorPlanoConta();

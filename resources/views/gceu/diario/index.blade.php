@@ -35,30 +35,30 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Diário dos GCEUs da Igreja: <u id="instituicao">{{ $instituicao }}</u></h4>
+                        <h4>{{ __('Diário dos GCEUs da Igreja:') }} <u id="instituicao">{{ $instituicao }}</u></h4>
                     </div>
                 </div>
             </div>
-                        
+
             <div class="widget-content widget-content-area">
                 <form class="form-vertical" id="filter_form" method="GET">
                     <div class="row">
                         <div class="mb-3 col-lg-4 col-md-6 col-sm-12" id="filtros_data">
-                            <label class="control-label">*Data:</label>
-                            <input type="date" class="form-control @error('dt-gceu') is-invalid @enderror" id="dt-gceu" name="dt_gceu" value="{{ request()->input('dt_gceu') }}" required placeholder="ex: 31/12/2000">
+                            <label class="control-label">{{ __('*Data:') }}</label>
+                            <input type="date" class="form-control @error('dt-gceu') is-invalid @enderror" id="dt-gceu" name="dt_gceu" value="{{ request()->input('dt_gceu') }}" required placeholder="{{ __('ex: 31/12/2000') }}">
                         </div>
                         <div class="mb-3 col-lg-5 col-md-6 col-sm-12">
-                            <label class="control-label">GCEU:</label>
+                            <label class="control-label">{{ __('GCEU:') }}</label>
                             <select id="gceu_id" name="gceu_id" class="form-control @error('gceu_id') is-invalid @enderror" required>
-                                <option value="" {{ request()->input('gceu_id') == '' ? 'selected' : '' }}>Selecione</option>
+                                <option value="" {{ request()->input('gceu_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
                                 @foreach($Gceus as $gceu)
                                     <option value="{{ $gceu->id }}" {{ request()->input('gceu_id') == $gceu->id ? 'selected' : '' }}>{{ $gceu->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="mb-3 col-lg-2 col-md-6 col-sm-12" style="margin-top: 30px;">
-                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="Buscar GCEU" class="btn btn-primary btn">
-                                <x-bx-plus /> Registrar presença
+                            <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar GCEU') }}" class="btn btn-primary btn">
+                                <x-bx-plus /> {{ __('Registrar presença') }}
                             </button>
                         </div>
                     </div>
@@ -66,30 +66,30 @@
                 @if(request()->input('gceu_id'))
                     <div class="row">
                         <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                            <h4>Diário para registro de presença/ausência do GCEU: </h4>
+                            <h4>{{ __('Diário para registro de presença/ausência do GCEU:') }} </h4>
                             <div class="col-xl-12 col-md-12 col-sm-12 col-12">&nbsp;</div>
                             <div class="row">
                                 @foreach($membros as $membro)
                                     <div class="col-sm-4">
                                         <div class="card">
                                             <div class="card-body">
-                                                
+
                                                 <p>
-                                                    {{ $membro->nome }} 
+                                                    {{ $membro->nome }}
                                                     @if($membro->presenca === 0)
-                                                        <i class="fas fa-times-circle" style="float: right; color: red;"></i> 
+                                                        <i class="fas fa-times-circle" style="float: right; color: red;"></i>
                                                     @elseif($membro->presenca === 1)
                                                         <i class="fas fa-check-circle"  style="float: right; color: green;"></i>
                                                     @endif
                                                 </p>
-                                                Presença:
+                                                {{ __('Presença:') }}
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input cursor-pointer cgeu-presenca-falta" onclick="presencaDiario()" type="radio" data-nome="{{ $membro->nome }}" data-membroid="{{ $membro->membro_id }}" data-gceuid="{{ $membro->gceu_id }}" data-valor="1" name="{{ $membro->membro_id }}" id="{{ $membro->membro_id }}" {{ $membro->presenca === 1 ? 'checked' : '' }} value="1">
-                                                    <label class="form-check-label cursor-pointer" for="{{ $membro->membro_id }}">Sim</label>
+                                                    <label class="form-check-label cursor-pointer" for="{{ $membro->membro_id }}">{{ __('Sim') }}</label>
                                                     </div>
                                                     <div class="form-check form-check-inline">
                                                     <input class="form-check-input cursor-pointer cgeu-presenca-falta" onclick="presencaDiario()" type="radio" data-nome="{{ $membro->nome }}" data-membroid="{{ $membro->membro_id }}" data-gceuid="{{ $membro->gceu_id }}"  data-valor="0" name="{{ $membro->membro_id }}" id="{{ $membro->membro_id }}{{ $membro->membro_id }}" {{ $membro->presenca === 0 ? 'checked' : '' }} value="0">
-                                                    <label class="form-check-label cursor-pointer" for="{{ $membro->membro_id }}{{ $membro->membro_id }}">Não</label>
+                                                    <label class="form-check-label cursor-pointer" for="{{ $membro->membro_id }}{{ $membro->membro_id }}">{{ __('Não') }}</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -100,7 +100,7 @@
                     </div>
                 @endif
             </div>
-                
+
         </div>
     </div>
 @endsection
@@ -126,7 +126,7 @@
             dataType: "json",
             data: {
                 valor, gceu_id, membro_id, dt_gceu, nome
-            },            
+            },
             success: function (response) {
                 if(valor == 1){
                     var msg = `Presença confirmada com sucesso para ${nome}`

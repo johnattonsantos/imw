@@ -86,18 +86,18 @@
 
 <body>
     <div class="header">
-        <img src="{{ public_path('auth/images/login.png') }}" alt="Logotipo">
+        <img src="{{ public_path('auth/images/login.png') }}" alt="{{ __('Logotipo') }}">
         <div class="info">
             <div class="title">CARTA PASTORAL - {{ $cartaPastoral->nome_igreja }} / {{ session('session_perfil')->instituicao_nome }}</div>
         </div>
         <div class="date">Data do Relatório: {{ now()->format('d/m/Y') }}</div>
     </div>
     <div>
-        <div><h4>Titulo</h4></div>
+        <div><h4>{{ __('Titulo') }}</h4></div>
         <div style="margin-bottom: 15px;">{{ $cartaPastoral->titulo }}</div>
-        <div><h4>Carta Pastoral</h4></div>
+        <div><h4>{{ __('Carta Pastoral') }}</h4></div>
         <div style="margin-bottom: 15px;">{!! $cartaPastoral->conteudo !!}</div>
-        <div><h4>Pastor</h4></div>
+        <div><h4>{{ __('Pastor') }}</h4></div>
         <div>{{ $cartaPastoral->pastor }}</div>
     </div>
 </body>

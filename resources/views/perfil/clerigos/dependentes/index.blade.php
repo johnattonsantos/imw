@@ -27,7 +27,7 @@
     <div>
       <a href="{{ route('clerigos.perfil.dependentes.create') }}" class="btn btn-primary position-relative mt-3 mb-3 ml-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
-        <span class="ml-2">INCLUIR DEPENDENTE</span>
+        <span class="ml-2">{{ __('INCLUIR DEPENDENTE') }}</span>
       </a>
     </div>
   </div>
@@ -38,7 +38,7 @@
       <div class="widget-header">
         <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-            <h4>Lista de Dependentes</h4>
+            <h4>{{ __('Lista de Dependentes') }}</h4>
           </div>
         </div>
       </div>
@@ -47,10 +47,10 @@
           <table class="table table-bordered table-striped table-hover mb-4" id="datatable">
             <thead>
               <tr>
-                <th>NOME</th>
-                <th>DATA DE NASCIMENTO</th>
-                <th>PARENTESCO</th>
-                <th>DECLARADO EM IRPF</th>
+                <th>{{ __('NOME') }}</th>
+                <th>{{ __('DATA DE NASCIMENTO') }}</th>
+                <th>{{ __('PARENTESCO') }}</th>
+                <th>{{ __('DECLARADO EM IRPF') }}</th>
                 <th></th>
               </tr>
             </thead>
@@ -62,17 +62,17 @@
                   <td>{{ $dependente->parentesco }}</td>
                   <td>{{ $dependente->declarar_em_irpf ? 'Sim' : 'Não' }}</td>
                   <td>
-                    <a href="{{ route('clerigos.perfil.dependentes.edit', $dependente) }}" class="btn btn-primary btn-sm btn-rounded bs-tooltip" title="Editar dependente">
+                    <a href="{{ route('clerigos.perfil.dependentes.edit', $dependente) }}" class="btn btn-primary btn-sm btn-rounded bs-tooltip" title="{{ __('Editar dependente') }}">
                       <x-bx-edit/>
                     </a>
-                    
+
                     <form action="{{ route('clerigos.perfil.dependentes.delete', $dependente) }}" method="POST" style="display: inline-block;" id="form_delete_dependente_{{ $dependente->id }}">
                       @csrf
                       @method('DELETE')
-                      <button 
+                      <button
                           type="button"
-                          class="btn btn-danger btn-sm btn-rounded bs-tooltip btn-confirm-delete" 
-                          title="Excluir dependente" 
+                          class="btn btn-danger btn-sm btn-rounded bs-tooltip btn-confirm-delete"
+                          title="{{ __('Excluir dependente') }}"
                           data-form-id="form_delete_dependente_{{ $dependente->id }}">
                         <x-bx-trash/>
                       </button>
@@ -81,7 +81,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="5" class="text-center">Ainda não há dependentes cadastrados.</td>
+                  <td colspan="5" class="text-center">{{ __('Ainda não há dependentes cadastrados.') }}</td>
                 </tr>
               @endforelse
             </tbody>

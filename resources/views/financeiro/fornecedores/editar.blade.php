@@ -16,7 +16,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Editar Fornecedor</h4>
+                        <h4>{{ __('Editar Fornecedor') }}</h4>
                     </div>
                 </div>
             </div>
@@ -28,7 +28,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="mb-3 col-lg-3 col-md-3 col-sm-6">
-                                    <label for="cpf_cnpj">* CPF/CNPJ <small>(aceita CNPJ alfanumérico)</small></label>
+                                    <label for="cpf_cnpj">{{ __('* CPF/CNPJ') }} <small>{{ __('(aceita CNPJ alfanumérico)') }}</small></label>
                                     <input class="form-control @error('cpf_cnpj') is-invalid @enderror" id="cpf_cnpj"
                                         name="cpf_cnpj" value="{{ old('cpf_cnpj', \App\Support\CpfCnpj::format($fornecedor->cpfcnpj)) }}"
                                         type="text" maxlength="18" style="text-transform: uppercase" required>
@@ -38,7 +38,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-9 col-md-9 col-sm-6">
-                                    <label for="nome">* Nome</label>
+                                    <label for="nome">{{ __('* Nome') }}</label>
                                     <input class="form-control @error('nome') is-invalid @enderror" id="nome"
                                         name="nome" maxlength="100" value="{{ $fornecedor->nome }}" type="text"
                                         placeholder="" required>
@@ -49,7 +49,7 @@
                             </div>
                             <div class="row">
                                 <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
-                                    <label for="email">E-mail</label>
+                                    <label for="email">{{ __('E-mail') }}</label>
                                     <input class="form-control @error('email') is-invalid @enderror" id="email"
                                         name="email" maxlength="100" type="email" value="{{ $fornecedor->email }}">
                                     @error('email')
@@ -58,7 +58,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
-                                    <label for="site">Site</label>
+                                    <label for="site">{{ __('Site') }}</label>
                                     <input class="form-control @error('site') is-invalid @enderror" id="site"
                                         name="site" maxlength="100" type="text" value="{{ $fornecedor->site }}">
                                     @error('site')
@@ -71,12 +71,12 @@
 
                     <div class="card mb-3">
                         <div class="card-header">
-                            <h5 class="mb-0">Localização</h5>
+                            <h5 class="mb-0">{{ __('Localização') }}</h5>
                         </div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="mb-3 col-lg-3 col-md-3 col-sm-6">
-                                    <label for="cep">* CEP</label>
+                                    <label for="cep">{{ __('* CEP') }}</label>
                                     <input class="form-control cep @error('cep') is-invalid @enderror" id="cep"
                                         name="cep" maxlength="8" value="{{ $fornecedor->cep }}" type="number" required>
                                     @error('cep')
@@ -85,7 +85,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-9 col-md-9 col-sm-12">
-                                    <label for="endereco">Logradouro (Rua/Av/Beco)</label>
+                                    <label for="endereco">{{ __('Logradouro (Rua/Av/Beco)') }}</label>
                                     <input class="form-control @error('endereco') is-invalid @enderror" id="endereco"
                                         name="endereco" maxlength="255" type="text" value="{{ $fornecedor->logradouro }}">
                                     @error('endereco')
@@ -95,7 +95,7 @@
                             </div>
                             <div class="row">
                                 <div class="mb-3 col-lg-3 col-md-3 col-sm-6">
-                                    <label for="numero">Número</label>
+                                    <label for="numero">{{ __('Número') }}</label>
                                     <input class="form-control @error('numero') is-invalid @enderror" id="numero"
                                         name="numero" maxlength="20" type="number" value="{{ $fornecedor->numero }}">
                                     @error('numero')
@@ -104,7 +104,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-3 col-md-3 col-sm-6">
-                                    <label for="complemento">Complemento</label>
+                                    <label for="complemento">{{ __('Complemento') }}</label>
                                     <input class="form-control @error('complemento') is-invalid @enderror" id="complemento"
                                         name="complemento" maxlength="255" value="{{ $fornecedor->complemento }}" type="text">
                                     @error('complemento')
@@ -113,7 +113,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-6 col-md-6 col-sm-6">
-                                    <label for="bairro">Bairro</label>
+                                    <label for="bairro">{{ __('Bairro') }}</label>
                                     <input class="form-control @error('bairro') is-invalid @enderror" id="bairro"
                                         name="bairro" maxlength="255" value="{{ $fornecedor->bairro }}" type="text">
                                     @error('bairro')
@@ -122,7 +122,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
-                                    <label for="cidade">Cidade</label>
+                                    <label for="cidade">{{ __('Cidade') }}</label>
                                     <input class="form-control @error('cidade') is-invalid @enderror" id="cidade"
                                         name="cidade" maxlength="255" value="{{ $fornecedor->cidade }}" type="text">
                                     @error('cidade')
@@ -131,62 +131,55 @@
                                 </div>
 
                                 <div class="mb-3 col-6">
-                                    <label for="uf">UF</label>
+                                    <label for="uf">{{ __('UF') }}</label>
                                     <select class="form-control select2 @error('uf') is-invalid @enderror"
                                         data-bs-toggle="select2" name="uf" id="uf">
-                                        <option value="" disabled {{ $fornecedor->uf == '' ? 'selected' : '' }}>Nenhum
+                                        <option value="" disabled {{ $fornecedor->uf == '' ? 'selected' : '' }}>{{ __('Nenhum') }}
                                         </option>
-                                        <option value="AC" {{ $fornecedor->uf == 'AC' ? 'selected' : '' }}>Acre</option>
-                                        <option value="AL" {{ $fornecedor->uf == 'AL' ? 'selected' : '' }}>Alagoas
+                                        <option value="AC" {{ $fornecedor->uf == 'AC' ? 'selected' : '' }}>{{ __('Acre') }}</option>
+                                        <option value="AL" {{ $fornecedor->uf == 'AL' ? 'selected' : '' }}>{{ __('Alagoas') }}
                                         </option>
-                                        <option value="AP" {{ $fornecedor->uf == 'AP' ? 'selected' : '' }}>Amapá
+                                        <option value="AP" {{ $fornecedor->uf == 'AP' ? 'selected' : '' }}>{{ __('Amapá') }}
                                         </option>
-                                        <option value="AM" {{ $fornecedor->uf == 'AM' ? 'selected' : '' }}>Amazonas
+                                        <option value="AM" {{ $fornecedor->uf == 'AM' ? 'selected' : '' }}>{{ __('Amazonas') }}
                                         </option>
-                                        <option value="BA" {{ $fornecedor->uf == 'BA' ? 'selected' : '' }}>Bahia
+                                        <option value="BA" {{ $fornecedor->uf == 'BA' ? 'selected' : '' }}>{{ __('Bahia') }}
                                         </option>
-                                        <option value="CE" {{ $fornecedor->uf == 'CE' ? 'selected' : '' }}>Ceará
+                                        <option value="CE" {{ $fornecedor->uf == 'CE' ? 'selected' : '' }}>{{ __('Ceará') }}
                                         </option>
-                                        <option value="DF" {{ $fornecedor->uf == 'DF' ? 'selected' : '' }}>Distrito
-                                            Federal</option>
-                                        <option value="ES" {{ $fornecedor->uf == 'ES' ? 'selected' : '' }}>Espírito
-                                            Santo</option>
-                                        <option value="GO" {{ $fornecedor->uf == 'GO' ? 'selected' : '' }}>Goiás
+                                        <option value="DF" {{ $fornecedor->uf == 'DF' ? 'selected' : '' }}>{{ __('Distrito Federal') }}</option>
+                                        <option value="ES" {{ $fornecedor->uf == 'ES' ? 'selected' : '' }}>{{ __('Espírito Santo') }}</option>
+                                        <option value="GO" {{ $fornecedor->uf == 'GO' ? 'selected' : '' }}>{{ __('Goiás') }}
                                         </option>
-                                        <option value="MA" {{ $fornecedor->uf == 'MA' ? 'selected' : '' }}>Maranhão
+                                        <option value="MA" {{ $fornecedor->uf == 'MA' ? 'selected' : '' }}>{{ __('Maranhão') }}
                                         </option>
-                                        <option value="MT" {{ $fornecedor->uf == 'MT' ? 'selected' : '' }}>Mato Grosso
+                                        <option value="MT" {{ $fornecedor->uf == 'MT' ? 'selected' : '' }}>{{ __('Mato Grosso') }}
                                         </option>
-                                        <option value="MS" {{ $fornecedor->uf == 'MS' ? 'selected' : '' }}>Mato Grosso
-                                            do Sul</option>
-                                        <option value="MG" {{ $fornecedor->uf == 'MG' ? 'selected' : '' }}>Minas Gerais
+                                        <option value="MS" {{ $fornecedor->uf == 'MS' ? 'selected' : '' }}>{{ __('Mato Grosso do Sul') }}</option>
+                                        <option value="MG" {{ $fornecedor->uf == 'MG' ? 'selected' : '' }}>{{ __('Minas Gerais') }}
                                         </option>
-                                        <option value="PA" {{ $fornecedor->uf == 'PA' ? 'selected' : '' }}>Pará</option>
-                                        <option value="PB" {{ $fornecedor->uf == 'PB' ? 'selected' : '' }}>Paraíba
+                                        <option value="PA" {{ $fornecedor->uf == 'PA' ? 'selected' : '' }}>{{ __('Pará') }}</option>
+                                        <option value="PB" {{ $fornecedor->uf == 'PB' ? 'selected' : '' }}>{{ __('Paraíba') }}
                                         </option>
-                                        <option value="PR" {{ $fornecedor->uf == 'PR' ? 'selected' : '' }}>Paraná
+                                        <option value="PR" {{ $fornecedor->uf == 'PR' ? 'selected' : '' }}>{{ __('Paraná') }}
                                         </option>
-                                        <option value="PE" {{ $fornecedor->uf == 'PE' ? 'selected' : '' }}>Pernambuco
+                                        <option value="PE" {{ $fornecedor->uf == 'PE' ? 'selected' : '' }}>{{ __('Pernambuco') }}
                                         </option>
-                                        <option value="PI" {{ $fornecedor->uf == 'PI' ? 'selected' : '' }}>Piauí
+                                        <option value="PI" {{ $fornecedor->uf == 'PI' ? 'selected' : '' }}>{{ __('Piauí') }}
                                         </option>
-                                        <option value="RJ" {{ $fornecedor->uf == 'RJ' ? 'selected' : '' }}>Rio de
-                                            Janeiro</option>
-                                        <option value="RN" {{ $fornecedor->uf == 'RN' ? 'selected' : '' }}>Rio Grande do
-                                            Norte</option>
-                                        <option value="RS" {{ $fornecedor->uf == 'RS' ? 'selected' : '' }}>Rio Grande do
-                                            Sul</option>
-                                        <option value="RO" {{ $fornecedor->uf == 'RO' ? 'selected' : '' }}>Rondônia
+                                        <option value="RJ" {{ $fornecedor->uf == 'RJ' ? 'selected' : '' }}>{{ __('Rio de Janeiro') }}</option>
+                                        <option value="RN" {{ $fornecedor->uf == 'RN' ? 'selected' : '' }}>{{ __('Rio Grande do Norte') }}</option>
+                                        <option value="RS" {{ $fornecedor->uf == 'RS' ? 'selected' : '' }}>{{ __('Rio Grande do Sul') }}</option>
+                                        <option value="RO" {{ $fornecedor->uf == 'RO' ? 'selected' : '' }}>{{ __('Rondônia') }}
                                         </option>
-                                        <option value="RR" {{ $fornecedor->uf == 'RR' ? 'selected' : '' }}>Roraima
+                                        <option value="RR" {{ $fornecedor->uf == 'RR' ? 'selected' : '' }}>{{ __('Roraima') }}
                                         </option>
-                                        <option value="SC" {{ $fornecedor->uf == 'SC' ? 'selected' : '' }}>Santa
-                                            Catarina</option>
-                                        <option value="SP" {{ $fornecedor->uf == 'SP' ? 'selected' : '' }}>São Paulo
+                                        <option value="SC" {{ $fornecedor->uf == 'SC' ? 'selected' : '' }}>{{ __('Santa Catarina') }}</option>
+                                        <option value="SP" {{ $fornecedor->uf == 'SP' ? 'selected' : '' }}>{{ __('São Paulo') }}
                                         </option>
-                                        <option value="SE" {{ $fornecedor->uf == 'SE' ? 'selected' : '' }}>Sergipe
+                                        <option value="SE" {{ $fornecedor->uf == 'SE' ? 'selected' : '' }}>{{ __('Sergipe') }}
                                         </option>
-                                        <option value="TO" {{ $fornecedor->uf == 'TO' ? 'selected' : '' }}>Tocantins
+                                        <option value="TO" {{ $fornecedor->uf == 'TO' ? 'selected' : '' }}>{{ __('Tocantins') }}
                                         </option>
                                     </select>
                                     @error('uf')
@@ -195,7 +188,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-6 col-md-6 col-sm-12">
-                                    <label for="pais">* Pais</label>
+                                    <label for="pais">{{ __('* Pais') }}</label>
                                     <input class="form-control @error('pais') is-invalid @enderror" id="pais"
                                         name="pais" maxlength="20" value="{{ $fornecedor->pais }}" type="text"
                                         required>
@@ -205,7 +198,7 @@
                                 </div>
 
                                 <div class="mb-3 col-lg-3 col-md-3 col-sm-6">
-                                    <label for="telefone">Telefone</label>
+                                    <label for="telefone">{{ __('Telefone') }}</label>
                                     <input class="form-control telefone @error('telefone') is-invalid @enderror"
                                         id="telefone" name="telefone" maxlength="20" value="{{ $fornecedor->telefone }}"
                                         type="text" placeholder="">
@@ -214,7 +207,7 @@
                                     @enderror
                                 </div>
                                 <div class="mb-3 col-lg-3 col-md-3 col-sm-6">
-                                    <label for="celular">Celular*</label>
+                                    <label for="celular">{{ __('Celular*') }}</label>
                                     <input class="form-control celular @error('celular') is-invalid @enderror"
                                         id="celular" name="celular" maxlength="20" value="{{ $fornecedor->celular }}"
                                         type="text" placeholder="" required>
@@ -270,7 +263,7 @@
 
         $('#cpf_cnpj').val(formatCpfCnpj($('#cpf_cnpj').val()));
     </script>
-    
+
     <script>
         $(document).ready(function() {
             function limpa_formulário_cep() {

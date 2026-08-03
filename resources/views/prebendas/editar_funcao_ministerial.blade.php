@@ -39,7 +39,7 @@
             @csrf
             <div class="row">
                 <div class="col-12 mt-3 col-md-4">
-                    <label for="qtd_prebendas">* Quantidade de Prebendas</label>
+                    <label for="qtd_prebendas">{{ __('* Quantidade de Prebendas') }}</label>
                     <input class="form-control" type="text" id="qtd_prebendas" name="qtd_prebendas"
                         value="{{ old('qtd_prebendas', $funcao->qtd_prebendas) }}"
                         @error('qtd_prebendas') is-invalid @enderror>
@@ -47,10 +47,26 @@
                         <span class="help-block text-danger">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="col-12 mt-3 col-md-4">
+                    @php($vinculoSelecionado = strtolower((string) old('vinculo', $funcao->vinculo)))
+                    <label for="vinculo">{{ __('Tipo de vínculo') }}</label>
+                    <select class="form-control" id="vinculo" name="vinculo">
+                        <option value="">{{ __('Não informado') }}</option>
+                        <option value="integral" {{ $vinculoSelecionado === 'integral' ? 'selected' : '' }}>
+                            {{ __('Integral') }}
+                        </option>
+                        <option value="parcial" {{ $vinculoSelecionado === 'parcial' ? 'selected' : '' }}>
+                            {{ __('Parcial') }}
+                        </option>
+                    </select>
+                    @error('vinculo')
+                        <span class="help-block text-danger">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
             <div class="row">
 
-                <button class="btn btn-primary m-3 " type="submit">Salvar</button>
+                <button class="btn btn-primary m-3 " type="submit">{{ __('Salvar') }}</button>
             </div>
 
 

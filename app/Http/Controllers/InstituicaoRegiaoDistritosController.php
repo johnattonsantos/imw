@@ -57,7 +57,7 @@ class InstituicaoRegiaoDistritosController extends Controller
 
         app(StoreRegiaoService::class)->execute($request);
 
-        return redirect()->route('instituicoes-regiao.index')->with('success', 'Instituição criado com sucesso!');
+        return redirect()->route('instituicoes-regiao.index')->with('success', __('Instituição criado com sucesso!'));
     }
 
     public function editar(string $id)
@@ -85,7 +85,7 @@ class InstituicaoRegiaoDistritosController extends Controller
                 ->with('error', $primeiraMensagem);
         }
 
-        return redirect()->route('instituicoes-regiao.index')->with('success', 'Instituição editado com sucesso!');
+        return redirect()->route('instituicoes-regiao.index')->with('success', __('Instituição editado com sucesso!'));
     }
 
 
@@ -96,7 +96,7 @@ class InstituicaoRegiaoDistritosController extends Controller
         // Lógica para inativar a instituição
         app(DeletarRegiaoService::class)->execute($id);
 
-        return redirect()->route('instituicoes-regiao.index', ['search' => $searchTerm])->with('success', 'Instituição inativada com sucesso.');
+        return redirect()->route('instituicoes-regiao.index', ['search' => $searchTerm])->with('success', __('Instituição inativada com sucesso.'));
     }
 
     public function ativar($id, Request $request)
@@ -105,7 +105,7 @@ class InstituicaoRegiaoDistritosController extends Controller
         // Lógica para ativar a instituição
         app(AtivarRegiaoService::class)->execute($id);
 
-        return redirect()->route('instituicoes-regiao.index', ['search' => $searchTerm])->with('success', 'Instituição ativada com sucesso.');
+        return redirect()->route('instituicoes-regiao.index', ['search' => $searchTerm])->with('success', __('Instituição ativada com sucesso.'));
     }
 
     public function detalhes($id)
@@ -118,9 +118,9 @@ class InstituicaoRegiaoDistritosController extends Controller
     {
         $data = app(ListaNomeacoesClerigoService::class)->instituicao($id);
         if (!$data['instituicao']) {
-            return redirect()->back()->with('error', 'Essa instituição não está ativa. Por favor ative ela e tente novamente');
+            return redirect()->back()->with('error', __('Essa instituição não está ativa. Por favor ative ela e tente novamente'));
         }
-        
+
         return view('instituicoes.nomeacoes.index', $data);
     }
 
@@ -138,14 +138,14 @@ class InstituicaoRegiaoDistritosController extends Controller
     {
         app(StoreNomeacoesClerigos::class)->execute($request);
 
-        return redirect()->route('instituicoes-regiao.nomeacoes', $request->instituicao_id)->with('success', 'Nomeação criada com sucesso!');
+        return redirect()->route('instituicoes-regiao.nomeacoes', $request->instituicao_id)->with('success', __('Nomeação criada com sucesso!'));
     }
 
 
     public function finalizarNomeacao($instituicao_id ,string $id, FinalizarNomeacoesRequest $request)
     {
         app(FinalizarNomeacoesClerigos::class)->execute($id, $request);
-        return redirect()->route('instituicoes-regiao.nomeacoes', $instituicao_id)->with('success', 'Nomeação finalizada com sucesso!');
+        return redirect()->route('instituicoes-regiao.nomeacoes', $instituicao_id)->with('success', __('Nomeação finalizada com sucesso!'));
     }
 
     private function regiaoLogadaId(): int
