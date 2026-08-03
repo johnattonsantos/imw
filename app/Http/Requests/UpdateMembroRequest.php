@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\TodaysDeadlineRule;
 use App\Rules\UniqueRolIgrejaRule;
 use App\Rules\ValidaCPF;
+use App\Services\ServiceMembros\ConsultaCpfMembroService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -214,15 +215,11 @@ class UpdateMembroRequest extends FormRequest
                     // Remove todos os caracteres que não são números
                     $cpf = preg_replace('/[^0-9]/', '', $value);
 
-                    // Verifica se o CPF já existe na tabela membresia_membros, ignorando o membro atual
-                    $query = DB::table('membresia_membros')->where('cpf', $cpf);
+                    $consultaCpf = app(ConsultaCpfMembroService::class);
+                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
-                    if ($membroId) {
-                        $query->where('id', '!=', $membroId);
-                    }
-
-                    if ($query->exists()) {
-                        $fail(__('Este CPF já está sendo utilizado por outra pessoa'));
+                    if ($membroDuplicado) {
+                        $fail($consultaCpf->mensagemPertence($membroDuplicado));
                     }
                 },
             ],

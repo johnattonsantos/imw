@@ -66,6 +66,13 @@ class ConsultaCpfMembroService
 
     public function origemFormatada(MembresiaMembro $membro): string
     {
+        $partes = array_filter($this->origemDetalhada($membro));
+
+        return $partes ? implode(' / ', $partes) : 'igreja de origem não identificada';
+    }
+
+    public function origemDetalhada(MembresiaMembro $membro): array
+    {
         $rol = $this->ultimoRol($membro);
 
         $regiao = optional($rol)->regiao_id ?: $membro->regiao_id;
@@ -76,13 +83,11 @@ class ConsultaCpfMembroService
             ->whereIn('id', array_filter([$regiao, $distrito, $igreja]))
             ->pluck('nome', 'id');
 
-        $partes = array_filter([
-            $regiao ? $nomes->get($regiao) : null,
-            $distrito ? $nomes->get($distrito) : null,
-            $igreja ? $nomes->get($igreja) : null,
-        ]);
-
-        return $partes ? implode(' / ', $partes) : 'igreja de origem não identificada';
+        return [
+            'regiao' => $regiao ? $nomes->get($regiao) : null,
+            'distrito' => $distrito ? $nomes->get($distrito) : null,
+            'igreja' => $igreja ? $nomes->get($igreja) : null,
+        ];
     }
 
     public function dataDesligamentoFormatada(MembresiaMembro $membro): string
@@ -96,6 +101,18 @@ class ConsultaCpfMembroService
     public function mensagemAtivo(MembresiaMembro $membro): string
     {
         return 'Este CPF pertence a um membro ativo em ' . $this->origemFormatada($membro) . '. A igreja de origem deve ser contactada para proceder com a transferência.';
+    }
+
+    public function mensagemPertence(MembresiaMembro $membro): string
+    {
+        $origem = $this->origemDetalhada($membro);
+
+        return __('Esse CPF pertence a :nome, :regiao, :distrito, :igreja', [
+            'nome' => $membro->nome ?: '-',
+            'regiao' => $origem['regiao'] ?: '-',
+            'distrito' => $origem['distrito'] ?: '-',
+            'igreja' => $origem['igreja'] ?: '-',
+        ]);
     }
 
     public function mensagemInativo(MembresiaMembro $membro): string

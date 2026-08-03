@@ -1918,5 +1918,6 @@
     "Informe um nome ou CPF para realizar a pesquisa.": "検索するには名前またはCPFを入力してください。",
     "Realize uma pesquisa para listar os membros.": "メンバーを表示するには検索してください。",
     "Administração": "管理",
-    "Busque membros por nome ou CPF.": "名前またはCPFでメンバーを検索します。"
+    "Busque membros por nome ou CPF.": "名前またはCPFでメンバーを検索します。",
+    "Esse CPF pertence a :nome, :regiao, :distrito, :igreja": "このCPFは:nome、:regiao、:distrito、:igrejaに属しています"
 }

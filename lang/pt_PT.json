@@ -1926,5 +1926,6 @@
     "Informe um nome ou CPF para realizar a pesquisa.": "Indique um nome ou CPF para realizar a pesquisa.",
     "Realize uma pesquisa para listar os membros.": "Realize uma pesquisa para listar os membros.",
     "Administração": "Administração",
-    "Busque membros por nome ou CPF.": "Pesquise membros por nome ou CPF."
+    "Busque membros por nome ou CPF.": "Pesquise membros por nome ou CPF.",
+    "Esse CPF pertence a :nome, :regiao, :distrito, :igreja": "Este NIF pertence a :nome, :regiao, :distrito, :igreja"
 }

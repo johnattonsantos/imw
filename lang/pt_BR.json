@@ -1918,5 +1918,6 @@
     "Informe um nome ou CPF para realizar a pesquisa.": "Informe um nome ou CPF para realizar a pesquisa.",
     "Realize uma pesquisa para listar os membros.": "Realize uma pesquisa para listar os membros.",
     "Administração": "Administração",
-    "Busque membros por nome ou CPF.": "Busque membros por nome ou CPF."
+    "Busque membros por nome ou CPF.": "Busque membros por nome ou CPF.",
+    "Esse CPF pertence a :nome, :regiao, :distrito, :igreja": "Esse CPF pertence a :nome, :regiao, :distrito, :igreja"
 }
