@@ -1909,5 +1909,14 @@
     "TIPO DE VÍNCULO": "TIPO DE VÍNCULO",
     "QTD. PREBENDAS": "CANT. PREBENDAS",
     "INTEGRALIZAÇÃO": "INTEGRACIÓN",
-    "QUANTIDADE DE MEMBROS ATIVOS": "CANTIDAD DE MIEMBROS ACTIVOS"
+    "QUANTIDADE DE MEMBROS ATIVOS": "CANTIDAD DE MIEMBROS ACTIVOS",
+    "Pesquisar Membro": "Buscar Miembro",
+    "Busque membros da região logada por nome ou CPF.": "Busque miembros de la región autenticada por nombre o CPF.",
+    "Nome ou parte do nome": "Nombre o parte del nombre",
+    "Digite o CPF": "Ingrese el CPF",
+    "Nome do Membro": "Nombre del Miembro",
+    "Informe um nome ou CPF para realizar a pesquisa.": "Informe un nombre o CPF para realizar la búsqueda.",
+    "Realize uma pesquisa para listar os membros.": "Realice una búsqueda para listar los miembros.",
+    "Administração": "Administración",
+    "Busque membros por nome ou CPF.": "Busque miembros por nombre o CPF."
 }

@@ -1909,5 +1909,14 @@
     "TIPO DE VÍNCULO": "関係タイプ",
     "QTD. PREBENDAS": "俸給数",
     "INTEGRALIZAÇÃO": "常勤化日",
-    "QUANTIDADE DE MEMBROS ATIVOS": "アクティブメンバー数"
+    "QUANTIDADE DE MEMBROS ATIVOS": "アクティブメンバー数",
+    "Pesquisar Membro": "メンバー検索",
+    "Busque membros da região logada por nome ou CPF.": "ログイン中の地域のメンバーを名前またはCPFで検索します。",
+    "Nome ou parte do nome": "氏名または氏名の一部",
+    "Digite o CPF": "CPFを入力",
+    "Nome do Membro": "メンバー名",
+    "Informe um nome ou CPF para realizar a pesquisa.": "検索するには名前またはCPFを入力してください。",
+    "Realize uma pesquisa para listar os membros.": "メンバーを表示するには検索してください。",
+    "Administração": "管理",
+    "Busque membros por nome ou CPF.": "名前またはCPFでメンバーを検索します。"
 }
