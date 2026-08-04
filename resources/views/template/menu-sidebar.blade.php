@@ -942,16 +942,16 @@
 
                         </li>
                         @endif
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
-                        <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">{{ __('Cônjuges dos Clérigos') }}</a>
-                        </li>
-                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
                         <li {!! Request::is('regiao/relatorio/clerigos-dados') ? 'class="active"' : '' !!}>
 
-                                <a href="{{ route('regiao.relatorio.clerigosdados') }}">{{ __('Clérigos Documentação') }}</a>
+                                <a href="{{ route('regiao.relatorio.clerigosdados') }}">{{ __('Clérigos Dados') }}</a>
 
+                        </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
+                        <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
+                            <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">{{ __('Cônjuges dos Clérigos') }}</a>
                         </li>
                         @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-categoria'))
