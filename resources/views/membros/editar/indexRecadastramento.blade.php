@@ -10,6 +10,9 @@
 @section('extras-css')
   <link href="{{ asset('theme/assets/css/components/tabs-accordian/custom-tabs.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ asset('theme/plugins/loaders/custom-loader.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('theme/plugins/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('theme/assets/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
   <style>
     .centralizado {
         display: flex;
@@ -36,6 +39,8 @@
 <div style="margin: 0px 23px;">
     <form method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
       @csrf
+      <input type="hidden" name="confirmar_cpf_inativo_outra_igreja" id="confirmar_cpf_inativo_outra_igreja" value="{{ old('confirmar_cpf_inativo_outra_igreja', '0') }}">
+      <input type="hidden" name="cpf_membro_existente_id" id="cpf_membro_existente_id" value="{{ old('cpf_membro_existente_id') }}">
     <div class="row">
       <div class="col-md-12">
           <!-- conteudo -->
@@ -72,10 +77,41 @@
 
 @section('extras-scripts')
     <script src="{{ asset('theme/plugins/fullcalendar/moment.min.js') }}"></script>
+    <script src="{{ asset('theme/plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('membros/js/editar.js') }}"></script>
     <script>
 
       $(document).ready(function(){
+          @if (session('cpf_duplicado_confirmacao'))
+              const cpfDuplicadoConfirmacao = @json(session('cpf_duplicado_confirmacao'));
+              const confirmarCpfDuplicado = function () {
+                  $('#confirmar_cpf_inativo_outra_igreja').val('1');
+                  $('#cpf_membro_existente_id').val(cpfDuplicadoConfirmacao.membro_id);
+                  $('form').first().trigger('submit');
+              };
+
+              if (typeof swal === 'function') {
+                  swal({
+                      title: '{{ __('CPF já existente') }}',
+                      text: cpfDuplicadoConfirmacao.message,
+                      type: 'warning',
+                      showCancelButton: true,
+                      confirmButtonText: '{{ __('Sim, continuar') }}',
+                      cancelButtonText: '{{ __('Não') }}',
+                      confirmButtonColor: '#4361ee',
+                      cancelButtonColor: '#d33',
+                      padding: '2em'
+                  }).then(function(result) {
+                      if (result.value) {
+                          confirmarCpfDuplicado();
+                      }
+                  });
+              } else if (window.confirm(cpfDuplicadoConfirmacao.message)) {
+                  confirmarCpfDuplicado();
+              }
+          @endif
+
           // Validação das datas de formação eclesiástica
           function validateFormacaoEclesiastica() {
               let valid = true;

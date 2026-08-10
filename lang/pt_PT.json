@@ -2011,5 +2011,11 @@
     "FUNÇÕES NOMEADAS": "FUNÇÕES NOMEADAS",
     "FORMAÇÃO": "FORMAÇÃO",
     "CONSAGRAÇÃO": "CONSAGRAÇÃO",
-    "ORDENAÇÃO": "ORDENAÇÃO"
+    "ORDENAÇÃO": "ORDENAÇÃO",
+    "Este CPF pertence a :nome, que está registrado como membro INATIVO na igreja :igreja, distrito :distrito, :regiao. Deseja continuar com a inclusão?": "Este CPF pertence a :nome, que está registado como membro INATIVO na igreja :igreja, distrito :distrito, :regiao. Pretende continuar com a inclusão?",
+    "Este CPF pertence a :nome, que já está registrado nesta igreja. Caso necessário, utilize a função de \"Reintegração\" para trazer o membro de volta ao rol ativo.": "Este CPF pertence a :nome, que já está registado nesta igreja. Caso necessário, utilize a função de \"Reintegração\" para trazer o membro de volta ao rol ativo.",
+    "Este CPF pertence a :nome, que está registrado como membro ATIVO na igreja :igreja, distrito :distrito, :regiao. Caso este tenha se transferido para esta igreja, entre em contato com a igreja de origem para que seja iniciado o processo de transferência, ou entre em contato com o suporte do IMWPlus para obter mais informações.": "Este CPF pertence a :nome, que está registado como membro ATIVO na igreja :igreja, distrito :distrito, :regiao. Caso se tenha transferido para esta igreja, contacte a igreja de origem para iniciar o processo de transferência, ou contacte o suporte do IMWPlus para obter mais informações.",
+    "Este CPF pertence a :nome, que está registrado como membro na igreja :igreja, portanto não há como adicioná-lo no sistema.": "Este CPF pertence a :nome, que está registado como membro na igreja :igreja, pelo que não é possível adicioná-lo ao sistema.",
+    "CPF já existente": "CPF já existente",
+    "Sim, continuar": "Sim, continuar"
 }
