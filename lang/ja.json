@@ -1950,5 +1950,11 @@
     "FUNÇÕES NOMEADAS": "任命された職務",
     "FORMAÇÃO": "養成",
     "CONSAGRAÇÃO": "聖別",
-    "ORDENAÇÃO": "按手"
+    "ORDENAÇÃO": "按手",
+    "Este CPF pertence a :nome, que está registrado como membro INATIVO na igreja :igreja, distrito :distrito, :regiao. Deseja continuar com a inclusão?": "このCPFは、教会 :igreja、地区 :distrito、:regiao に非アクティブ会員として登録されている :nome のものです。追加を続行しますか？",
+    "Este CPF pertence a :nome, que já está registrado nesta igreja. Caso necessário, utilize a função de \"Reintegração\" para trazer o membro de volta ao rol ativo.": "このCPFは、すでにこの教会に登録されている :nome のものです。必要な場合は「再統合」機能を使用して会員をアクティブな名簿に戻してください。",
+    "Este CPF pertence a :nome, que está registrado como membro ATIVO na igreja :igreja, distrito :distrito, :regiao. Caso este tenha se transferido para esta igreja, entre em contato com a igreja de origem para que seja iniciado o processo de transferência, ou entre em contato com o suporte do IMWPlus para obter mais informações.": "このCPFは、教会 :igreja、地区 :distrito、:regiao にアクティブ会員として登録されている :nome のものです。この教会へ転入した場合は、転籍手続きを開始するため出身教会へ連絡するか、詳細についてIMWPlusサポートへお問い合わせください。",
+    "Este CPF pertence a :nome, que está registrado como membro na igreja :igreja, portanto não há como adicioná-lo no sistema.": "このCPFは、教会 :igreja に会員として登録されている :nome のものです。そのため、システムに追加できません。",
+    "CPF já existente": "既存のCPF",
+    "Sim, continuar": "はい、続行"
 }

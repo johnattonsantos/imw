@@ -207,7 +207,7 @@ class UpdateMembroRequest extends FormRequest
             'cpf' => [
                 $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
-                function ($attribute, $value, $fail) use ($membroId) {
+                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento) {
                     if (empty($value)) {
                         return;
                     }
@@ -218,8 +218,29 @@ class UpdateMembroRequest extends FormRequest
                     $consultaCpf = app(ConsultaCpfMembroService::class);
                     $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
-                    if ($membroDuplicado) {
+                    if (!$membroDuplicado) {
+                        return;
+                    }
+
+                    if (!$isRecadastramento) {
                         $fail($consultaCpf->mensagemPertence($membroDuplicado));
+                        return;
+                    }
+
+                    $statusInclusao = $this->input('status');
+
+                    if ($statusInclusao === 'I') {
+                        $fail($consultaCpf->mensagemInclusaoInativoBloqueada($membroDuplicado));
+                        return;
+                    }
+
+                    if ($consultaCpf->isMesmaIgreja($membroDuplicado)) {
+                        $fail($consultaCpf->mensagemPropriaIgreja($membroDuplicado));
+                        return;
+                    }
+
+                    if ($consultaCpf->isAtivo($membroDuplicado)) {
+                        $fail($consultaCpf->mensagemAtivoOutraIgreja($membroDuplicado));
                     }
                 },
             ],

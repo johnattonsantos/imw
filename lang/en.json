@@ -1950,5 +1950,11 @@
     "FUNÇÕES NOMEADAS": "APPOINTED ROLES",
     "FORMAÇÃO": "EDUCATION",
     "CONSAGRAÇÃO": "CONSECRATION",
-    "ORDENAÇÃO": "ORDINATION"
+    "ORDENAÇÃO": "ORDINATION",
+    "Este CPF pertence a :nome, que está registrado como membro INATIVO na igreja :igreja, distrito :distrito, :regiao. Deseja continuar com a inclusão?": "This CPF belongs to :nome, who is registered as an INACTIVE member at church :igreja, district :distrito, :regiao. Do you want to continue with the inclusion?",
+    "Este CPF pertence a :nome, que já está registrado nesta igreja. Caso necessário, utilize a função de \"Reintegração\" para trazer o membro de volta ao rol ativo.": "This CPF belongs to :nome, who is already registered in this church. If necessary, use the \"Reintegration\" function to return the member to the active roll.",
+    "Este CPF pertence a :nome, que está registrado como membro ATIVO na igreja :igreja, distrito :distrito, :regiao. Caso este tenha se transferido para esta igreja, entre em contato com a igreja de origem para que seja iniciado o processo de transferência, ou entre em contato com o suporte do IMWPlus para obter mais informações.": "This CPF belongs to :nome, who is registered as an ACTIVE member at church :igreja, district :distrito, :regiao. If this person transferred to this church, contact the church of origin to start the transfer process, or contact IMWPlus support for more information.",
+    "Este CPF pertence a :nome, que está registrado como membro na igreja :igreja, portanto não há como adicioná-lo no sistema.": "This CPF belongs to :nome, who is registered as a member at church :igreja; therefore, it cannot be added to the system.",
+    "CPF já existente": "Existing CPF",
+    "Sim, continuar": "Yes, continue"
 }

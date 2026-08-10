@@ -1950,5 +1950,11 @@
     "FUNÇÕES NOMEADAS": "FUNCIONES NOMBRADAS",
     "FORMAÇÃO": "FORMACIÓN",
     "CONSAGRAÇÃO": "CONSAGRACIÓN",
-    "ORDENAÇÃO": "ORDENACIÓN"
+    "ORDENAÇÃO": "ORDENACIÓN",
+    "Este CPF pertence a :nome, que está registrado como membro INATIVO na igreja :igreja, distrito :distrito, :regiao. Deseja continuar com a inclusão?": "Este CPF pertenece a :nome, que está registrado como miembro INACTIVO en la iglesia :igreja, distrito :distrito, :regiao. ¿Desea continuar con la inclusión?",
+    "Este CPF pertence a :nome, que já está registrado nesta igreja. Caso necessário, utilize a função de \"Reintegração\" para trazer o membro de volta ao rol ativo.": "Este CPF pertenece a :nome, que ya está registrado en esta iglesia. Si es necesario, utilice la función de \"Reintegración\" para devolver al miembro al rol activo.",
+    "Este CPF pertence a :nome, que está registrado como membro ATIVO na igreja :igreja, distrito :distrito, :regiao. Caso este tenha se transferido para esta igreja, entre em contato com a igreja de origem para que seja iniciado o processo de transferência, ou entre em contato com o suporte do IMWPlus para obter mais informações.": "Este CPF pertenece a :nome, que está registrado como miembro ACTIVO en la iglesia :igreja, distrito :distrito, :regiao. Si se transfirió a esta iglesia, comuníquese con la iglesia de origen para iniciar el proceso de transferencia, o contacte al soporte de IMWPlus para obtener más información.",
+    "Este CPF pertence a :nome, que está registrado como membro na igreja :igreja, portanto não há como adicioná-lo no sistema.": "Este CPF pertenece a :nome, que está registrado como miembro en la iglesia :igreja; por lo tanto, no es posible agregarlo al sistema.",
+    "CPF já existente": "CPF existente",
+    "Sim, continuar": "Sí, continuar"
 }
