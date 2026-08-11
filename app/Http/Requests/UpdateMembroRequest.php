@@ -5,8 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\TodaysDeadlineRule;
 use App\Rules\UniqueRolIgrejaRule;
 use App\Rules\ValidaCPF;
-use App\Models\MembresiaMembro;
-use App\Models\MembresiaSituacao;
+use App\Services\ServiceMembros\ConsultaCpfMembroService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
 
@@ -208,36 +207,43 @@ class UpdateMembroRequest extends FormRequest
             'cpf' => [
                 $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
-                function ($attribute, $value, $fail) use ($membroId) {
+                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento) {
                     if (empty($value)) {
                         return;
                     }
 
                     // Remove todos os caracteres que não são números
                     $cpf = preg_replace('/[^0-9]/', '', $value);
-                    $isReconciliacao = (int) $this->input('modo_recepcao_id') === MembresiaSituacao::RECEPCAO_RECONCILIACAO;
+                    $consultaCpf = app(ConsultaCpfMembroService::class);
+                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
-                    // Verifica se o CPF já existe na tabela membresia_membros, ignorando o membro atual
-                    $query = DB::table('membresia_membros')->where('cpf', $cpf);
-
-                    if ($membroId) {
-                        $query->where('id', '!=', $membroId);
+                    if (!$membroDuplicado) {
+                        return;
                     }
 
-                    if ($isReconciliacao) {
-                        $temMembroAtivo = (clone $query)
-                            ->where('status', MembresiaMembro::STATUS_ATIVO)
-                            ->whereNull('deleted_at')
-                            ->exists();
-
-                        if (!$temMembroAtivo) {
-                            return;
-                        }
+                    if (!$isRecadastramento) {
+                        $fail($consultaCpf->mensagemPertence($membroDuplicado));
+                        return;
                     }
 
-                    if ($query->exists()) {
-                        $fail(__('Este CPF já está sendo utilizado por outra pessoa'));
+                    $statusInclusao = $this->input('status');
+
+                    if ($statusInclusao === 'I') {
+                        $fail($consultaCpf->mensagemInclusaoInativoBloqueada($membroDuplicado));
+                        return;
                     }
+
+                    if ($consultaCpf->isMesmaIgreja($membroDuplicado)) {
+                        $fail($consultaCpf->mensagemPropriaIgreja($membroDuplicado));
+                        return;
+                    }
+
+                    if ($consultaCpf->isAtivo($membroDuplicado)) {
+                        $fail($consultaCpf->mensagemAtivoOutraIgreja($membroDuplicado));
+                        return;
+                    }
+
+                    // Membro inativo em outra igreja segue para a confirmação no service.
                 },
             ],
             'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {

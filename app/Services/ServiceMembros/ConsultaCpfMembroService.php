@@ -64,25 +64,35 @@ class ConsultaCpfMembroService
         return $membro->status === MembresiaMembro::STATUS_ATIVO && $membro->deleted_at === null;
     }
 
+    public function isMesmaIgreja(MembresiaMembro $membro, ?int $igrejaId = null): bool
+    {
+        $igrejaId = $igrejaId ?: self::fetchSessionIgrejaLocal()->id;
+
+        return (int) $membro->igreja_id === (int) $igrejaId;
+    }
+
     public function origemFormatada(MembresiaMembro $membro): string
     {
-        $rol = $this->ultimoRol($membro);
+        $partes = array_filter($this->origemDetalhada($membro));
 
-        $regiao = optional($rol)->regiao_id ?: $membro->regiao_id;
-        $distrito = optional($rol)->distrito_id ?: $membro->distrito_id;
-        $igreja = optional($rol)->igreja_id ?: $membro->igreja_id;
+        return $partes ? implode(' / ', $partes) : 'igreja de origem não identificada';
+    }
+
+    public function origemDetalhada(MembresiaMembro $membro): array
+    {
+        $regiao = $membro->regiao_id;
+        $distrito = $membro->distrito_id;
+        $igreja = $membro->igreja_id;
 
         $nomes = DB::table('instituicoes_instituicoes')
             ->whereIn('id', array_filter([$regiao, $distrito, $igreja]))
             ->pluck('nome', 'id');
 
-        $partes = array_filter([
-            $regiao ? $nomes->get($regiao) : null,
-            $distrito ? $nomes->get($distrito) : null,
-            $igreja ? $nomes->get($igreja) : null,
-        ]);
-
-        return $partes ? implode(' / ', $partes) : 'igreja de origem não identificada';
+        return [
+            'regiao' => $regiao ? $nomes->get($regiao) : null,
+            'distrito' => $distrito ? $nomes->get($distrito) : null,
+            'igreja' => $igreja ? $nomes->get($igreja) : null,
+        ];
     }
 
     public function dataDesligamentoFormatada(MembresiaMembro $membro): string
@@ -98,9 +108,62 @@ class ConsultaCpfMembroService
         return 'Este CPF pertence a um membro ativo em ' . $this->origemFormatada($membro) . '. A igreja de origem deve ser contactada para proceder com a transferência.';
     }
 
+    public function mensagemPertence(MembresiaMembro $membro): string
+    {
+        $origem = $this->origemDetalhada($membro);
+
+        return __('Esse CPF pertence a :nome, :regiao, :distrito, :igreja', [
+            'nome' => $membro->nome ?: '-',
+            'regiao' => $origem['regiao'] ?: '-',
+            'distrito' => $origem['distrito'] ?: '-',
+            'igreja' => $origem['igreja'] ?: '-',
+        ]);
+    }
+
     public function mensagemInativo(MembresiaMembro $membro): string
     {
         return 'Este CPF pertence a um membro desligado de ' . $this->origemFormatada($membro) . ', em ' . $this->dataDesligamentoFormatada($membro) . '. Se desejar, confirme a reintegração nesta igreja. Apenas os dados pessoais serão preservados; funções, ministérios e vínculos eclesiásticos locais não serão transferidos.';
+    }
+
+    public function mensagemConfirmacaoInativoOutraIgreja(MembresiaMembro $membro): string
+    {
+        $origem = $this->origemDetalhada($membro);
+
+        return __('Este CPF pertence a :nome, que está registrado como membro INATIVO na igreja :igreja, distrito :distrito, :regiao. Deseja continuar com a inclusão?', [
+            'nome' => $membro->nome ?: '-',
+            'igreja' => $origem['igreja'] ?: '-',
+            'distrito' => $origem['distrito'] ?: '-',
+            'regiao' => $origem['regiao'] ?: '-',
+        ]);
+    }
+
+    public function mensagemPropriaIgreja(MembresiaMembro $membro): string
+    {
+        return __('Este CPF pertence a :nome, que já está registrado nesta igreja. Caso necessário, utilize a função de "Reintegração" para trazer o membro de volta ao rol ativo.', [
+            'nome' => $membro->nome ?: '-',
+        ]);
+    }
+
+    public function mensagemAtivoOutraIgreja(MembresiaMembro $membro): string
+    {
+        $origem = $this->origemDetalhada($membro);
+
+        return __('Este CPF pertence a :nome, que está registrado como membro ATIVO na igreja :igreja, distrito :distrito, :regiao. Caso este tenha se transferido para esta igreja, entre em contato com a igreja de origem para que seja iniciado o processo de transferência, ou entre em contato com o suporte do IMWPlus para obter mais informações.', [
+            'nome' => $membro->nome ?: '-',
+            'igreja' => $origem['igreja'] ?: '-',
+            'distrito' => $origem['distrito'] ?: '-',
+            'regiao' => $origem['regiao'] ?: '-',
+        ]);
+    }
+
+    public function mensagemInclusaoInativoBloqueada(MembresiaMembro $membro): string
+    {
+        $origem = $this->origemDetalhada($membro);
+
+        return __('Este CPF pertence a :nome, que está registrado como membro na igreja :igreja, portanto não há como adicioná-lo no sistema.', [
+            'nome' => $membro->nome ?: '-',
+            'igreja' => $origem['igreja'] ?: '-',
+        ]);
     }
 
     private function ultimoRol(MembresiaMembro $membro): ?MembresiaRolPermanente
