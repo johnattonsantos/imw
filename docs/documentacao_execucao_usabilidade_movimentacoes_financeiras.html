@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Documentação de Execução e Usabilidade das Movimentações Financeiras</title>
+    <style>
+        @page { margin: 22px 18px; }
+        body { font-family: DejaVu Sans, Arial, sans-serif; color: #172033; font-size: 10px; line-height: 1.38; }
+        h1 { font-size: 21px; margin: 0 0 6px; color: #111827; }
+        h2 { font-size: 14px; margin: 18px 0 8px; padding: 8px 10px; background: #0f766e; color: #fff; page-break-after: avoid; }
+        h3 { font-size: 11px; margin: 11px 0 5px; color: #1f2937; page-break-after: avoid; }
+        p { margin: 4px 0; }
+        ul, ol { margin: 4px 0 8px 18px; padding: 0; }
+        li { margin: 2px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+        th { background: #e5e7eb; border: 1px solid #cbd5e1; padding: 5px; text-align: left; font-size: 9px; }
+        td { border: 1px solid #d1d5db; padding: 5px; vertical-align: top; }
+        tr { page-break-inside: avoid; }
+        code { font-family: DejaVu Sans Mono, Consolas, monospace; font-size: 9px; color: #0f172a; }
+        .muted { color: #5b6472; }
+        .note { border-left: 4px solid #0f766e; padding: 8px 10px; background: #ecfdf5; margin: 10px 0; }
+        .warn { border-left: 4px solid #f59e0b; padding: 8px 10px; background: #fffbeb; margin: 10px 0; }
+        .danger { border-left: 4px solid #dc2626; padding: 8px 10px; background: #fef2f2; margin: 10px 0; }
+        .section { page-break-before: always; }
+        .section.first { page-break-before: auto; }
+        .flow { background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 10px; margin: 8px 0 12px; }
+        .small { font-size: 8.7px; }
+    </style>
+</head>
+<body>
+    <h1>Documentação de Execução e Usabilidade das Movimentações Financeiras</h1>
+    <p><strong>Sistema:</strong> IMWplus</p>
+    <p><strong>Módulo:</strong> Financeiro / Movimento de Caixa</p>
+    <p class="muted">Gerado em 30/07/2026. Documento baseado nas telas e regras existentes no código atual.</p>
+
+    <div class="note">
+        Objetivo: orientar o usuário na execução das movimentações financeiras e documentar como a tela deve ser usada para evitar lançamentos incorretos.
+    </div>
+
+    <div class="section first">
+        <h2>1. Visão geral do fluxo</h2>
+        <div class="flow">
+            A rotina financeira parte da tela <strong>Financeiro &gt; Movimento de Caixa</strong>. Nela o usuário consulta lançamentos, cria entrada, cria saída, faz transferência, consulta saldo, edita/exclui movimentos permitidos e manipula anexos de saídas.
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ação</th>
+                    <th>Quando usar</th>
+                    <th>Resultado esperado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Entrada</td><td>Quando houver recebimento de valor.</td><td>Cria lançamento positivo no caixa escolhido.</td></tr>
+                <tr><td>Saída</td><td>Quando houver pagamento, despesa ou repasse.</td><td>Cria lançamento negativo no caixa escolhido e permite anexar comprovantes.</td></tr>
+                <tr><td>Transferência</td><td>Quando o valor sai de um caixa e entra em outro.</td><td>Cria dois lançamentos vinculados: saída na origem e entrada no destino.</td></tr>
+                <tr><td>Saldo</td><td>Quando precisar consultar posição atual dos caixas.</td><td>Exibe composição de saldos por caixa.</td></tr>
+                <tr><td>Consolidação</td><td>Quando o mês financeiro deve ser fechado.</td><td>Grava saldos consolidados e marca lançamentos como conciliados.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>2. Acesso e permissões</h2>
+        <p>O acesso depende das regras vinculadas ao perfil do usuário. As principais permissões são:</p>
+        <table>
+            <thead>
+                <tr><th>Tela</th><th>Rota</th><th>Permissão</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Movimento de Caixa</td><td><code>/financeiro/movimento-caixa</code></td><td><code>financeiro-movimentocaixa-index</code></td></tr>
+                <tr><td>Entrada, Saída, Transferência, Saldo e anexos</td><td><code>/financeiro/*</code></td><td><code>financeiro-caixas</code></td></tr>
+                <tr><td>Consolidação de Caixa</td><td><code>/financeiro/consolidar-caixa</code></td><td><code>financeiro-consolidarcaixa</code></td></tr>
+            </tbody>
+        </table>
+        <p>Se uma opção não aparecer no menu ou retornar bloqueio, verificar se o perfil possui a regra correspondente.</p>
+    </div>
+
+    <div class="section">
+        <h2>3. Tela Movimento de Caixa</h2>
+        <h3>Filtros disponíveis</h3>
+        <table>
+            <thead>
+                <tr><th>Filtro</th><th>Uso</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Caixa</td><td>Filtra lançamentos de um caixa específico.</td></tr>
+                <tr><td>Plano de Contas</td><td>Filtra lançamentos de uma conta específica.</td></tr>
+                <tr><td>Data Início</td><td>Define o início do período de consulta.</td></tr>
+                <tr><td>Data Fim</td><td>Define o fim do período de consulta.</td></tr>
+                <tr><td>Consolidado</td><td>Selecionar <strong>Não</strong> para lançamentos em aberto ou <strong>Sim</strong> para lançamentos já conciliados.</td></tr>
+            </tbody>
+        </table>
+        <h3>Botões da tela</h3>
+        <table>
+            <thead>
+                <tr><th>Botão</th><th>Função</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Pesquisar</td><td>Aplica os filtros informados.</td></tr>
+                <tr><td>Entrada</td><td>Abre a tela Novo Registro de Entrada.</td></tr>
+                <tr><td>Saída</td><td>Abre a tela Novo Registro de Saída.</td></tr>
+                <tr><td>Transferência</td><td>Abre a tela de transferência entre caixas.</td></tr>
+                <tr><td>Saldo</td><td>Abre a consulta de saldo atual.</td></tr>
+                <tr><td>Exportar</td><td>Exporta a lista exibida para planilha.</td></tr>
+            </tbody>
+        </table>
+        <p>A lista apresenta: Data, Caixa, Entrada, Saída, Plano de Conta, Pagante/Favorecido e ações.</p>
+    </div>
+
+    <div class="section">
+        <h2>4. Lançar Entrada</h2>
+        <p>Acesse <strong>Financeiro &gt; Movimento de Caixa &gt; Entrada</strong>.</p>
+        <h3>Campos da tela</h3>
+        <table>
+            <thead>
+                <tr><th>Campo</th><th>Obrigatório</th><th>Orientação de uso</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Caixa</td><td>Sim</td><td>Escolha o caixa que receberá o valor.</td></tr>
+                <tr><td>Plano de contas</td><td>Sim</td><td>Escolha a conta correta de receita/entrada. Contas não selecionáveis aparecem desabilitadas.</td></tr>
+                <tr><td>Valor</td><td>Sim</td><td>Informar em formato brasileiro, exemplo: <code>1.250,00</code>.</td></tr>
+                <tr><td>Data do Movimento</td><td>Sim</td><td>Não pode ser data futura.</td></tr>
+                <tr><td>Tipo de Pagante</td><td>Sim</td><td>Define se o pagante será membro, clérigo ou outro tipo disponível para a instituição.</td></tr>
+                <tr><td>Pagante</td><td>Dinâmico</td><td>Aparece após selecionar o tipo. Pode abrir lista de membros/clérigos ou campo livre.</td></tr>
+                <tr><td>Mês/Ano</td><td>Dinâmico</td><td>Aparece para planos específicos de contribuição quando o tipo é membro.</td></tr>
+                <tr><td>Descrição</td><td>Não</td><td>Use para detalhar o motivo do lançamento.</td></tr>
+            </tbody>
+        </table>
+        <h3>Passo a passo</h3>
+        <ol>
+            <li>Selecione o Caixa.</li>
+            <li>Selecione o Plano de contas.</li>
+            <li>Informe o Valor.</li>
+            <li>Confira a Data do Movimento.</li>
+            <li>Selecione o Tipo de Pagante.</li>
+            <li>Quando o campo Pagante aparecer, selecione ou digite o pagante correto.</li>
+            <li>Se aparecer Mês/Ano, confira o mês de referência da contribuição.</li>
+            <li>Preencha a Descrição, se necessário.</li>
+            <li>Clique em Salvar.</li>
+        </ol>
+        <div class="warn">
+            Após clicar em Salvar, o botão é desabilitado e mostra Aguarde para evitar duplicidade de lançamento.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>5. Regras de usabilidade da Entrada</h2>
+        <table>
+            <thead>
+                <tr><th>Regra</th><th>Comportamento na tela</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Plano com força para Clérigo</td><td>Quando o plano selecionado estiver relacionado a dízimo pastoral ou IRRF, o tipo de pagante é forçado para Clérigo quando a opção existir.</td></tr>
+                <tr><td>Mês/Ano para contribuição</td><td>Para planos com ID <code>4</code>, <code>5</code> ou <code>110186</code>, o campo Mês/Ano é exibido.</td></tr>
+                <tr><td>Pagante tipo Membro</td><td>Abre lista de membros.</td></tr>
+                <tr><td>Pagante tipo Clérigo</td><td>Abre lista de clérigos.</td></tr>
+                <tr><td>Outro tipo</td><td>Exibe campo livre para digitação.</td></tr>
+                <tr><td>Instituição local</td><td>A tela de entrada não mostra fornecedor como tipo de pagante.</td></tr>
+                <tr><td>Instituição não local</td><td>A tela remove tipos membro, fornecedor e clérigo, ficando apenas os demais tipos cadastrados.</td></tr>
+            </tbody>
+        </table>
+        <h3>Contas que forçam Clérigo na entrada</h3>
+        <table>
+            <thead>
+                <tr><th>Numeração</th><th>Nome da conta</th><th>Uso prático</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>1.01.07</code></td><td>Dízimo dos Clérigos (100% conforme FIW 2022/2023)</td><td>Dízimo pastoral / contribuição de clérigo.</td></tr>
+                <tr><td><code>1.07.01</code></td><td>Imposto de Renda Retido - Clérigos</td><td>Registro de IRRF retido de clérigo.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>6. Lançar Saída</h2>
+        <p>Acesse <strong>Financeiro &gt; Movimento de Caixa &gt; Saída</strong>.</p>
+        <h3>Campos da tela</h3>
+        <table>
+            <thead>
+                <tr><th>Campo</th><th>Obrigatório</th><th>Orientação de uso</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Caixa</td><td>Sim</td><td>Escolha o caixa de onde sairá o valor.</td></tr>
+                <tr><td>Plano de contas</td><td>Sim</td><td>Escolha a conta correta de despesa/saída.</td></tr>
+                <tr><td>Valor</td><td>Sim</td><td>Informar em formato brasileiro, exemplo: <code>380,50</code>.</td></tr>
+                <tr><td>Data do Movimento</td><td>Sim</td><td>Não pode ser data futura.</td></tr>
+                <tr><td>Tipo de Beneficiário</td><td>Sim</td><td>Normalmente fornecedor, clérigo ou outro tipo disponível.</td></tr>
+                <tr><td>Beneficiário</td><td>Dinâmico</td><td>Aparece após selecionar o tipo. Pode abrir lista ou campo livre.</td></tr>
+                <tr><td>Descrição</td><td>Não</td><td>Use para detalhar o pagamento.</td></tr>
+                <tr><td>Anexo 1, 2 e 3</td><td>Não</td><td>Use para comprovantes, boletos, contratos e documentos da saída.</td></tr>
+            </tbody>
+        </table>
+        <h3>Passo a passo</h3>
+        <ol>
+            <li>Selecione o Caixa.</li>
+            <li>Selecione o Plano de contas.</li>
+            <li>Informe o Valor.</li>
+            <li>Confira a Data do Movimento.</li>
+            <li>Selecione o Tipo de Beneficiário.</li>
+            <li>Selecione ou digite o Beneficiário.</li>
+            <li>Preencha a Descrição, se necessário.</li>
+            <li>Anexe comprovantes, se houver.</li>
+            <li>Clique em Salvar.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>7. Regras de usabilidade da Saída</h2>
+        <table>
+            <thead>
+                <tr><th>Regra</th><th>Comportamento na tela</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Plano com força para Clérigo</td><td>Quando o plano selecionado estiver relacionado a dízimo pastoral ou repasse de IRRF, o tipo de beneficiário é forçado para Clérigo quando a opção existir.</td></tr>
+                <tr><td>Beneficiário tipo Fornecedor</td><td>Abre lista de fornecedores.</td></tr>
+                <tr><td>Beneficiário tipo Clérigo</td><td>Abre lista de clérigos.</td></tr>
+                <tr><td>Outro tipo</td><td>Exibe campo livre para digitação.</td></tr>
+                <tr><td>Anexos</td><td>A saída permite anexar comprovantes no cadastro e depois pelo botão Anexos na lista de Movimento de Caixa.</td></tr>
+            </tbody>
+        </table>
+        <h3>Contas que forçam Clérigo na saída</h3>
+        <table>
+            <thead>
+                <tr><th>Numeração</th><th>Nome da conta</th><th>Uso prático</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>2.18.23</code></td><td>SECRETARIAS - SRA/FIW 100%</td><td>Repasse relacionado ao dízimo pastoral / FIW.</td></tr>
+                <tr><td><code>2.18.11</code></td><td>SECRETARIAS - SRF/SRA - IR - Repasse Imposto Retido de Clérigos</td><td>Repasse do IRRF retido de clérigos.</td></tr>
+            </tbody>
+        </table>
+        <div class="warn">
+            A regra de forçar Clérigo vale para entrada e saída. Ela evita que lançamentos de dízimo pastoral ou IRRF sejam gravados sem vínculo com o clérigo correspondente.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>8. Anexos de Saída</h2>
+        <table>
+            <thead>
+                <tr><th>Uso</th><th>Orientação</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>No cadastro da saída</td><td>Até três anexos podem ser enviados junto com o lançamento.</td></tr>
+                <tr><td>Depois do cadastro</td><td>Na lista Movimento de Caixa, clique no botão Anexos da saída.</td></tr>
+                <tr><td>Baixar anexo</td><td>No modal de anexos, use o botão de download.</td></tr>
+                <tr><td>Excluir anexo</td><td>No modal de anexos, use o botão de lixeira.</td></tr>
+                <tr><td>Adicionar novo anexo</td><td>Use a opção Adicione um novo anexo.</td></tr>
+            </tbody>
+        </table>
+        <p>Arquivos aceitos pela validação: <code>jpeg</code>, <code>png</code>, <code>gif</code>, <code>pdf</code>, <code>doc</code>, <code>docx</code>, <code>xls</code>, <code>xlsx</code>, <code>ppt</code>, <code>pptx</code>, até 10 MB.</p>
+    </div>
+
+    <div class="section">
+        <h2>9. Fazer Transferência</h2>
+        <p>Acesse <strong>Financeiro &gt; Movimento de Caixa &gt; Transferência</strong>.</p>
+        <table>
+            <thead>
+                <tr><th>Campo</th><th>Obrigatório</th><th>Orientação de uso</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Caixa Origem</td><td>Sim</td><td>Caixa de onde o valor será retirado.</td></tr>
+                <tr><td>Caixa Destino</td><td>Sim</td><td>Caixa que receberá o valor.</td></tr>
+                <tr><td>Plano de contas</td><td>Sim</td><td>Escolha uma conta de transferência.</td></tr>
+                <tr><td>Valor</td><td>Sim</td><td>Valor transferido entre os caixas.</td></tr>
+                <tr><td>Data do Movimento</td><td>Sim</td><td>Data da transferência.</td></tr>
+                <tr><td>Descrição</td><td>Sim</td><td>Explique o motivo da transferência.</td></tr>
+            </tbody>
+        </table>
+        <h3>Passo a passo</h3>
+        <ol>
+            <li>Selecione o Caixa Origem.</li>
+            <li>Selecione o Caixa Destino.</li>
+            <li>Selecione o Plano de contas.</li>
+            <li>Informe o Valor.</li>
+            <li>Confira a Data do Movimento.</li>
+            <li>Preencha a Descrição.</li>
+            <li>Clique em Salvar.</li>
+        </ol>
+        <div class="warn">
+            Conferir manualmente se o caixa origem é diferente do caixa destino antes de salvar.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>10. Consultar Saldo</h2>
+        <p>Acesse <strong>Financeiro &gt; Movimento de Caixa &gt; Saldo</strong>.</p>
+        <p>A tela exibe a composição de saldos por caixa com as seguintes colunas:</p>
+        <ul>
+            <li>Caixa.</li>
+            <li>Último saldo consolidado.</li>
+            <li>Totais de entradas.</li>
+            <li>Totais de saídas.</li>
+            <li>Transferências de entrada.</li>
+            <li>Transferências de saída.</li>
+            <li>Saldo atual.</li>
+        </ul>
+        <p>Use essa tela para validar se os lançamentos do período estão refletindo corretamente no caixa antes de consolidar.</p>
+    </div>
+
+    <div class="section">
+        <h2>11. Editar e excluir movimentação</h2>
+        <table>
+            <thead>
+                <tr><th>Ação</th><th>Como executar</th><th>Observação</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Editar</td><td>Na lista Movimento de Caixa, clique no botão de edição do lançamento.</td><td>A edição abre tela específica para entrada ou saída. Transferência não possui edição própria como par.</td></tr>
+                <tr><td>Excluir</td><td>Na lista Movimento de Caixa, clique no botão Apagar e confirme.</td><td>Se for transferência, a exclusão remove os dois movimentos vinculados pelo mesmo identificador.</td></tr>
+                <tr><td>Excluir anexo</td><td>Abra Anexos e clique na lixeira do arquivo.</td><td>Remove o registro do anexo.</td></tr>
+            </tbody>
+        </table>
+        <div class="danger">
+            Antes de excluir, confira se o movimento não pertence a lançamento operacional importante. A exclusão é lógica, mas afeta saldos e relatórios em aberto.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>12. Consolidar Caixa</h2>
+        <p>Acesse <strong>Financeiro &gt; Consolidação de Caixa</strong>.</p>
+        <h3>O que conferir antes de consolidar</h3>
+        <ul>
+            <li>Composição de saldos por caixa.</li>
+            <li>Total de entradas.</li>
+            <li>Total de saídas.</li>
+            <li>Transferências de entrada e saída.</li>
+            <li>Saldo atual por caixa.</li>
+            <li>Discriminação dos lançamentos por conta.</li>
+            <li>Alertas de contas essenciais sem lançamento.</li>
+        </ul>
+        <h3>Bloqueios visuais antes da consolidação</h3>
+        <table>
+            <thead>
+                <tr><th>Situação</th><th>Comportamento</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Total de entradas dos caixas igual a zero</td><td>Exibe alerta e desabilita o botão de consolidar.</td></tr>
+                <tr><td>Algum caixa com saldo atual negativo</td><td>Exibe alerta com os caixas negativos e desabilita o botão de consolidar.</td></tr>
+                <tr><td>Sem bloqueios</td><td>Botão Consolidar fica disponível.</td></tr>
+            </tbody>
+        </table>
+        <h3>Execução</h3>
+        <ol>
+            <li>Revise os saldos e discriminações.</li>
+            <li>Corrija lançamentos se houver inconsistência.</li>
+            <li>Clique no botão <strong>Consolidar mês/ano</strong>.</li>
+            <li>Confirme a mensagem: <strong>Deseja realmente consolidar? Esta ação é irreversível.</strong></li>
+        </ol>
+        <div class="danger">
+            Após consolidar, o mês fica fechado para o fluxo normal de novos lançamentos. Essa operação deve ser feita somente depois de revisar os movimentos do período.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>13. Mensagens e erros comuns</h2>
+        <table>
+            <thead>
+                <tr><th>Mensagem/Situação</th><th>Causa provável</th><th>Ação recomendada</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>A data não deve ultrapassar a data atual.</td><td>Data do movimento maior que a data atual.</td><td>Corrigir a data para hoje ou data anterior.</td></tr>
+                <tr><td>Não é permitido lançar um movimento em um mês já consolidado.</td><td>Entrada com data em mês já consolidado.</td><td>Verificar se o mês correto foi escolhido ou avaliar necessidade de ajuste administrativo.</td></tr>
+                <tr><td>Este mês já foi consolidado.</td><td>Saída no mesmo mês/ano já consolidado.</td><td>Conferir a data ou revisar o fechamento do mês.</td></tr>
+                <tr><td>Botão consolidar desabilitado.</td><td>Total de entradas zero ou saldo atual negativo em algum caixa.</td><td>Corrigir lançamentos antes de consolidar.</td></tr>
+                <tr><td>Campo Pagante/Beneficiário não apareceu.</td><td>Tipo ainda não selecionado ou regra de tela não ativada.</td><td>Selecionar Tipo de Pagante/Beneficiário e conferir o plano de contas.</td></tr>
+                <tr><td>Anexo não salva.</td><td>Arquivo fora do tamanho/extensão permitida ou falha no armazenamento S3.</td><td>Validar formato, tamanho e configuração de armazenamento.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>14. Boas práticas de uso</h2>
+        <ul>
+            <li>Antes de lançar, confirmar caixa, plano de contas e data.</li>
+            <li>Usar descrição clara para facilitar auditoria e relatórios.</li>
+            <li>Em dízimos/ofertas de membro, selecionar o membro correto para alimentar a grade financeira.</li>
+            <li>Anexar comprovantes em saídas sempre que houver documento de suporte.</li>
+            <li>Usar transferência somente para movimentação entre caixas da mesma instituição.</li>
+            <li>Revisar saldo e relatório de movimento antes da consolidação.</li>
+            <li>Evitar lançar ou editar movimentos durante o fechamento mensal sem conferência do tesoureiro/responsável.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>15. Checklist rápido para o operador</h2>
+        <table>
+            <thead>
+                <tr><th>Antes de salvar</th><th>Entrada</th><th>Saída</th><th>Transferência</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Caixa correto</td><td>Sim</td><td>Sim</td><td>Origem e destino</td></tr>
+                <tr><td>Plano de contas correto</td><td>Sim</td><td>Sim</td><td>Sim</td></tr>
+                <tr><td>Valor conferido</td><td>Sim</td><td>Sim</td><td>Sim</td></tr>
+                <tr><td>Data correta e não futura</td><td>Sim</td><td>Sim</td><td>Conferir manualmente</td></tr>
+                <tr><td>Pagante/Beneficiário correto</td><td>Sim</td><td>Sim</td><td>Não se aplica</td></tr>
+                <tr><td>Anexos conferidos</td><td>Não se aplica</td><td>Quando houver</td><td>Não se aplica</td></tr>
+                <tr><td>Descrição suficiente</td><td>Recomendado</td><td>Recomendado</td><td>Obrigatório</td></tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

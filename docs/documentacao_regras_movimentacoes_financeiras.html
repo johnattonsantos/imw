@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Documentação das Regras de Movimentações Financeiras</title>
+    <style>
+        @page { margin: 22px 18px; }
+        body { font-family: DejaVu Sans, Arial, sans-serif; color: #172033; font-size: 10px; line-height: 1.35; }
+        h1 { font-size: 22px; margin: 0 0 6px; color: #111827; }
+        h2 { font-size: 14px; margin: 18px 0 8px; padding: 8px 10px; background: #1e3a8a; color: #fff; page-break-after: avoid; }
+        h3 { font-size: 11px; margin: 10px 0 5px; color: #1f2937; page-break-after: avoid; }
+        p { margin: 4px 0; }
+        ul { margin: 4px 0 8px 18px; padding: 0; }
+        li { margin: 2px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; }
+        th { background: #e5e7eb; border: 1px solid #cbd5e1; padding: 5px; text-align: left; font-size: 9px; }
+        td { border: 1px solid #d1d5db; padding: 5px; vertical-align: top; }
+        tr { page-break-inside: avoid; }
+        code { font-family: DejaVu Sans Mono, Consolas, monospace; font-size: 9px; color: #0f172a; }
+        .muted { color: #5b6472; }
+        .note { border-left: 4px solid #2563eb; padding: 8px 10px; background: #eff6ff; margin: 10px 0; }
+        .warn { border-left: 4px solid #f59e0b; padding: 8px 10px; background: #fffbeb; margin: 10px 0; }
+        .danger { border-left: 4px solid #dc2626; padding: 8px 10px; background: #fef2f2; margin: 10px 0; }
+        .section { page-break-before: always; }
+        .section.first { page-break-before: auto; }
+        .small { font-size: 8.5px; }
+        .nowrap { white-space: nowrap; }
+    </style>
+</head>
+<body>
+    <h1>Documentação das Regras de Movimentações Financeiras</h1>
+    <p><strong>Sistema:</strong> IMWplus</p>
+    <p><strong>Escopo:</strong> Financeiro / Movimento de Caixa / Entradas / Saídas / Transferências / Consolidação / Anexos</p>
+    <p class="muted">Gerado em 30/07/2026. Documento baseado na leitura do código-fonte da branch atual.</p>
+
+    <div class="note">
+        Esta documentação descreve as regras implementadas no código. Ela não altera o comportamento do sistema e deve ser revisada quando houver mudança em requests, services, models ou rotas financeiras.
+    </div>
+
+    <div class="section first">
+        <h2>1. Fontes analisadas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Arquivo</th>
+                    <th>Responsabilidade principal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>routes/web.php</code></td><td>Rotas e regras de acesso do módulo financeiro.</td></tr>
+                <tr><td><code>app/Http/Controllers/FinanceiroController.php</code></td><td>Entrada das ações de movimentação, consolidação, saldo, anexos, edição e exclusão.</td></tr>
+                <tr><td><code>app/Http/Requests/FinanceiroStoreEntradaRequest.php</code></td><td>Validação de cadastro de entrada.</td></tr>
+                <tr><td><code>app/Http/Requests/FinanceiroStoreSaidaRequest.php</code></td><td>Validação de cadastro de saída e anexos.</td></tr>
+                <tr><td><code>app/Http/Requests/FinanceiroUpdateEntradaRequest.php</code></td><td>Validação de edição de entrada.</td></tr>
+                <tr><td><code>app/Http/Requests/FinanceiroUpdateSaidaRequest.php</code></td><td>Validação de edição de saída e anexos.</td></tr>
+                <tr><td><code>app/Http/Requests/FinanceiroTransferenciaRequest.php</code></td><td>Validação de transferência entre caixas.</td></tr>
+                <tr><td><code>app/Http/Requests/FinanceiroStoreNewAnexoRequest.php</code></td><td>Validação de inclusão avulsa de anexo.</td></tr>
+                <tr><td><code>app/Services/ServiceFinanceiro/*.php</code></td><td>Regras de criação, edição, exclusão, saldo, consolidação e anexos.</td></tr>
+                <tr><td><code>app/Traits/FinanceiroUtils.php</code></td><td>Consultas auxiliares, filtros de lançamentos, caixas, membros, fornecedores e plano de contas.</td></tr>
+                <tr><td><code>app/Models/FinanceiroLancamento.php</code></td><td>Modelo da tabela <code>financeiro_lancamentos</code>.</td></tr>
+                <tr><td><code>app/Models/FinanceiroCaixa.php</code></td><td>Modelo de caixa e cálculo de saldo por caixa.</td></tr>
+                <tr><td><code>app/Models/FinanceiroPlanoConta.php</code></td><td>Tipos de plano de conta e filtros por tipo de instituição.</td></tr>
+                <tr><td><code>app/Models/FinanceiroSaldoConsolidadoMensal.php</code></td><td>Registro mensal consolidado por caixa e instituição.</td></tr>
+                <tr><td><code>app/Rules/TodaysDeadlineRule.php</code></td><td>Regra que impede data de movimento futura.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>2. Rotas e permissões principais</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Recurso</th>
+                    <th>Rota</th>
+                    <th>Regra/middleware</th>
+                    <th>Observação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Movimento de caixa</td><td><code>financeiro/movimento-caixa</code></td><td><code>seguranca:financeiro-movimentocaixa-index</code></td><td>Lista lançamentos conforme filtros.</td></tr>
+                <tr><td>Consolidar caixa</td><td><code>financeiro/consolidar-caixa</code></td><td><code>seguranca:financeiro-consolidarcaixa</code></td><td>Abre tela de consolidação.</td></tr>
+                <tr><td>Salvar consolidação</td><td><code>financeiro/consolidar/store</code></td><td><code>seguranca:financeiro-caixas</code></td><td>Consolida saldos mensais.</td></tr>
+                <tr><td>Entrada</td><td><code>financeiro/entrada</code> / <code>financeiro/entrada/store</code> / <code>financeiro/entrada/{id}</code></td><td><code>seguranca:financeiro-movimentocaixa-index</code></td><td>Cadastro e edição de entrada.</td></tr>
+                <tr><td>Saída</td><td><code>financeiro/saida</code> / <code>financeiro/saida/store</code> / <code>financeiro/saida/{id}</code></td><td><code>seguranca:financeiro-movimentocaixa-index</code></td><td>Cadastro e edição de saída.</td></tr>
+                <tr><td>Transferência</td><td><code>financeiro/transferencia</code> / <code>financeiro/transferencia/store</code></td><td><code>seguranca:financeiro-movimentocaixa-index</code></td><td>Cria uma saída no caixa origem e uma entrada no caixa destino.</td></tr>
+                <tr><td>Saldo</td><td><code>financeiro/saldo</code></td><td><code>seguranca:financeiro-consolidarcaixa</code></td><td>Consulta saldo por caixa.</td></tr>
+                <tr><td>Editar movimento</td><td><code>financeiro/editar-movimento/{id}/{tipo_lancamento}</code></td><td><code>seguranca:financeiro-movimentocaixa-index</code></td><td>Aceita apenas entrada ou saída.</td></tr>
+                <tr><td>Excluir movimento</td><td><code>financeiro/excluir-movimento/{id}</code></td><td><code>seguranca:financeiro-movimentocaixa-index</code></td><td>Exclui lançamento simples ou par de transferência.</td></tr>
+                <tr><td>Anexos</td><td><code>financeiro/anexos/*</code></td><td><code>seguranca:financeiro-movimentocaixa-index</code></td><td>Consulta, upload, download e exclusão de anexos.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>3. Entidades e tabelas envolvidas</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tabela/modelo</th>
+                    <th>Uso na movimentação</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>financeiro_lancamentos</code></td><td>Guarda entradas, saídas e lançamentos gerados por transferência. Usa <code>tipo_lancamento</code>, <code>valor</code>, <code>data_movimento</code>, <code>caixa_id</code>, <code>plano_conta_id</code>, <code>instituicao_id</code>, <code>conciliado</code> e <code>guid</code>.</td></tr>
+                <tr><td><code>financeiro_caixas</code></td><td>Caixas disponíveis para a instituição logada e base de cálculo de saldo.</td></tr>
+                <tr><td><code>financeiro_plano_conta</code></td><td>Plano usado no lançamento. É filtrado por tipo de movimento e tipo de instituição.</td></tr>
+                <tr><td><code>financeiro_saldo_consolidado_mensal</code></td><td>Registra fechamento mensal por caixa, ano, mês e instituição.</td></tr>
+                <tr><td><code>financeiro_grades</code></td><td>Grade anual de contribuições de membros para planos específicos.</td></tr>
+                <tr><td><code>anexos</code></td><td>Arquivos vinculados ao lançamento, armazenados no S3.</td></tr>
+                <tr><td><code>membresia_membros</code></td><td>Usado quando o pagante/favorecido é membro.</td></tr>
+                <tr><td><code>financeiro_fornecedores</code></td><td>Usado quando o pagante/favorecido é fornecedor.</td></tr>
+                <tr><td><code>pessoas_pessoas</code></td><td>Usado quando o pagante/favorecido é clérigo.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>4. Tipos de movimentação</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Constante</th>
+                    <th>Como é gravado</th>
+                    <th>Regra principal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Entrada</td><td><code>E</code></td><td>Um registro em <code>financeiro_lancamentos</code>.</td><td>Aumenta saldo do caixa quando não é transferência.</td></tr>
+                <tr><td>Saída</td><td><code>S</code></td><td>Um registro em <code>financeiro_lancamentos</code>.</td><td>Diminui saldo do caixa quando não é transferência.</td></tr>
+                <tr><td>Transferência</td><td><code>T</code> no plano de conta; lançamentos gravados como <code>E</code> e <code>S</code></td><td>Dois registros com o mesmo <code>guid</code>: saída no caixa origem e entrada no caixa destino.</td><td>Não altera o saldo geral da instituição, mas altera os saldos entre caixas.</td></tr>
+            </tbody>
+        </table>
+        <p>Os lançamentos de transferência são identificados principalmente pelo <code>guid</code> comum e pelos planos de conta definidos em <code>FinanceiroCaixa::IDS_TRANFERENCIA</code>.</p>
+    </div>
+
+    <div class="section">
+        <h2>5. Validações gerais de movimentação</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Regra</th>
+                    <th>Entrada</th>
+                    <th>Saída</th>
+                    <th>Transferência</th>
+                    <th>Detalhe</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Plano de conta obrigatório</td><td>Sim</td><td>Sim</td><td>Sim</td><td>Campo <code>plano_conta_id</code>.</td></tr>
+                <tr><td>Caixa obrigatório</td><td>Sim</td><td>Sim</td><td>Origem e destino</td><td>Entrada/saída usam <code>caixa_id</code>; transferência usa <code>caixa_origem_id</code> e <code>caixa_destino_id</code>.</td></tr>
+                <tr><td>Valor obrigatório</td><td>Sim</td><td>Sim</td><td>Sim</td><td>Valor é convertido de formato brasileiro para decimal.</td></tr>
+                <tr><td>Data de movimento obrigatória</td><td>Sim</td><td>Sim</td><td>Sim</td><td>Campo <code>data_movimento</code>.</td></tr>
+                <tr><td>Bloqueio de data futura</td><td>Sim</td><td>Sim</td><td>Não localizado</td><td><code>TodaysDeadlineRule</code> permite somente data menor ou igual à data atual.</td></tr>
+                <tr><td>Pagante/favorecido obrigatório</td><td>Sim</td><td>Sim</td><td>Não</td><td>Campo <code>tipo_pagante_favorecido_id</code>.</td></tr>
+                <tr><td>Descrição obrigatória</td><td>Não</td><td>Não</td><td>Sim</td><td>Em transferência, a descrição também alimenta <code>pagante_favorecido</code>.</td></tr>
+                <tr><td>Instituição do lançamento</td><td>Sim</td><td>Sim</td><td>Sim</td><td>Usa <code>session_perfil.instituicao_id</code>.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>6. Regra de mês consolidado</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ação</th>
+                    <th>Regra implementada</th>
+                    <th>Mensagem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Cadastrar entrada</td>
+                    <td>Busca o último mês consolidado da instituição em <code>financeiro_saldo_consolidado_mensal</code>. Se a data do movimento for menor ou igual ao mês já consolidado, bloqueia.</td>
+                    <td><code>Não é permitido lançar um movimento em um mês já consolidado.</code></td>
+                </tr>
+                <tr>
+                    <td>Cadastrar saída</td>
+                    <td>Verifica se existe consolidação exatamente para o mesmo ano/mês/instituição. Se existir, bloqueia.</td>
+                    <td><code>Este mês já foi consolidado.</code></td>
+                </tr>
+                <tr>
+                    <td>Editar entrada</td>
+                    <td>Não foi localizada validação customizada de mês consolidado no request de edição.</td>
+                    <td>Somente validações básicas.</td>
+                </tr>
+                <tr>
+                    <td>Editar saída</td>
+                    <td>Não foi localizada validação customizada de mês consolidado no request de edição.</td>
+                    <td>Somente validações básicas.</td>
+                </tr>
+                <tr>
+                    <td>Transferência</td>
+                    <td>Não foi localizada validação customizada de mês consolidado no request de transferência.</td>
+                    <td>Somente validações básicas.</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="warn">
+            Ponto de atenção: entrada e saída usam critérios diferentes para bloquear mês consolidado. Entrada bloqueia qualquer data menor ou igual ao último mês consolidado; saída bloqueia apenas quando existe consolidação no mesmo mês/ano.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>7. Pagante/Favorecido</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Valor do tipo</th>
+                    <th>Entidade consultada</th>
+                    <th>Campo preenchido no lançamento</th>
+                    <th>Texto salvo em <code>pagante_favorecido</code></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>1</code></td><td><code>MembresiaMembro</code></td><td><code>membro_id</code></td><td>Nome do membro.</td></tr>
+                <tr><td><code>2</code></td><td><code>FinanceiroFornecedores</code></td><td><code>fornecedores_id</code></td><td>Nome do fornecedor.</td></tr>
+                <tr><td><code>3</code></td><td><code>PessoasPessoa</code></td><td><code>clerigo_id</code></td><td>Nome do clérigo.</td></tr>
+                <tr><td>Outro</td><td>Não consulta entidade</td><td>Nenhum vínculo específico</td><td>Texto digitado em <code>pagante_favorecido</code>.</td></tr>
+            </tbody>
+        </table>
+        <p>Na edição, o mesmo mapeamento é refeito e os campos antigos podem ser sobrescritos conforme o tipo escolhido.</p>
+    </div>
+
+    <div class="section">
+        <h2>8. Cadastro de entrada</h2>
+        <ul>
+            <li>A entrada é gravada com <code>tipo_lancamento = E</code>.</li>
+            <li><code>data_lancamento</code> recebe a data atual.</li>
+            <li>O valor é normalizado removendo ponto de milhar e trocando vírgula por ponto.</li>
+            <li>A instituição vem da sessão: <code>session_perfil.instituicao_id</code>.</li>
+            <li>Quando <code>ano</code> é informado, grava <code>data_ano_mes</code> usando <code>formatMesAnoDizimo(mes/ano)</code>.</li>
+            <li>Quando <code>mes = 13</code>, grava <code>decimo_terceiro = 1</code> e a data-base fica em dezembro do mesmo ano.</li>
+        </ul>
+        <h3>Integração com Livro Grade</h3>
+        <p>Quando a entrada é vinculada a membro e o plano de conta está na lista abaixo, o sistema atualiza/cria um registro em <code>financeiro_grades</code>:</p>
+        <p><code>3, 4, 5, 6, 110172, 110173, 110174, 110186</code></p>
+        <p>O mês informado atualiza a coluna correspondente: <code>jan</code>, <code>fev</code>, <code>mar</code>, <code>abr</code>, <code>mai</code>, <code>jun</code>, <code>jul</code>, <code>ago</code>, <code>set</code>, <code>out</code>, <code>nov</code>, <code>dez</code> ou <code>o13</code>.</p>
+    </div>
+
+    <div class="section">
+        <h2>9. Cadastro de saída</h2>
+        <ul>
+            <li>A saída é gravada com <code>tipo_lancamento = S</code>.</li>
+            <li><code>data_lancamento</code> recebe a data atual.</li>
+            <li>O valor é normalizado no mesmo padrão da entrada.</li>
+            <li>A instituição vem da sessão.</li>
+            <li>Permite anexar até 3 arquivos durante o cadastro.</li>
+        </ul>
+        <h3>Anexos no cadastro de saída</h3>
+        <table>
+            <thead>
+                <tr><th>Campo</th><th>Regra</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>anexo1</code>, <code>anexo2</code>, <code>anexo3</code></td><td>Arquivos opcionais, até 10 MB cada.</td></tr>
+                <tr><td>Extensões aceitas</td><td><code>jpeg</code>, <code>png</code>, <code>gif</code>, <code>pdf</code>, <code>doc</code>, <code>docx</code>, <code>xls</code>, <code>xlsx</code>, <code>ppt</code>, <code>pptx</code>.</td></tr>
+                <tr><td>Armazenamento</td><td>S3, no caminho <code>anexos/{uuid}.{extensao}</code>.</td></tr>
+                <tr><td>Descrição</td><td>Campos <code>descricao_anexo1</code>, <code>descricao_anexo2</code>, <code>descricao_anexo3</code>, até 255 caracteres.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>10. Transferência entre caixas</h2>
+        <ul>
+            <li>É gerado um <code>guid</code> para agrupar os dois lançamentos.</li>
+            <li>O sistema cria uma saída no caixa de origem.</li>
+            <li>O sistema cria uma entrada no caixa de destino.</li>
+            <li>Os dois lançamentos têm mesmo valor, plano de conta, data de movimento, descrição, instituição e <code>guid</code>.</li>
+            <li>O campo <code>pagante_favorecido</code> recebe a descrição da transferência.</li>
+        </ul>
+        <div class="warn">
+            Ponto de atenção: não foi localizada validação impedindo que o caixa origem e o caixa destino sejam iguais no request de transferência.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>11. Edição de movimentação</h2>
+        <table>
+            <thead>
+                <tr><th>Ação</th><th>Regra implementada</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Editar entrada</td><td>Regrava dados principais, tipo de lançamento, valor, caixa, plano de conta, instituição, data de movimento, pagante/favorecido, <code>data_ano_mes</code> e décimo terceiro.</td></tr>
+                <tr><td>Editar saída</td><td>Regrava dados principais, tipo de lançamento, valor, caixa, plano de conta, instituição, data de movimento e pagante/favorecido. Também permite adicionar novos anexos.</td></tr>
+                <tr><td>Editar transferência</td><td>A rota de edição aceita apenas entrada ou saída. Não foi localizada tela própria de edição da transferência como par vinculado por <code>guid</code>.</td></tr>
+                <tr><td>Livro Grade na edição de entrada</td><td>Quando a entrada é de membro e plano de conta elegível, o sistema ajusta a grade removendo o valor antigo do mês antigo e somando o novo valor no mês novo.</td></tr>
+            </tbody>
+        </table>
+        <div class="warn">
+            Ponto de atenção: os requests de edição de entrada e saída não possuem a mesma validação customizada de mês consolidado existente no cadastro.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>12. Exclusão de movimentação</h2>
+        <ul>
+            <li>A exclusão é executada dentro de transação.</li>
+            <li>Se o lançamento possui <code>guid</code>, todos os lançamentos com o mesmo <code>guid</code> são excluídos, preservando a consistência do par de transferência.</li>
+            <li>Se o lançamento é de membro e plano elegível para Livro Grade, o valor é subtraído da coluna mensal correspondente antes da exclusão.</li>
+            <li>Para lançamentos sem tratamento de Livro Grade, o serviço confere se <code>lancamento.instituicao_id</code> é igual à instituição da sessão.</li>
+            <li>A exclusão usa <code>SoftDeletes</code>, ou seja, o registro é marcado como excluído logicamente.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>13. Consolidação mensal</h2>
+        <p>A consolidação grava ou atualiza o saldo mensal por caixa em <code>financeiro_saldo_consolidado_mensal</code>.</p>
+        <table>
+            <thead>
+                <tr><th>Campo consolidado</th><th>Regra de cálculo</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><code>total_entradas</code></td><td>Soma das entradas não conciliadas do mês/ano, excluindo lançamentos identificados como transferência.</td></tr>
+                <tr><td><code>total_saidas</code></td><td>Soma das saídas não conciliadas do mês/ano, excluindo lançamentos identificados como transferência.</td></tr>
+                <tr><td><code>saldo_anterior</code></td><td>Último saldo final consolidado do caixa.</td></tr>
+                <tr><td><code>saldo_final</code></td><td>Saldo anterior + entradas + transferências de entrada - saídas - transferências de saída, considerando lançamentos não conciliados até o mês/ano informado.</td></tr>
+                <tr><td><code>total_transferencia_entrada</code></td><td>Soma das entradas de transferência não conciliadas do mês/ano.</td></tr>
+                <tr><td><code>total_transferencia_saida</code></td><td>Soma das saídas de transferência não conciliadas do mês/ano.</td></tr>
+            </tbody>
+        </table>
+        <p>Após calcular e salvar a consolidação, o sistema marca todos os lançamentos não conciliados da instituição no mês/ano como <code>conciliado = 1</code> e define <code>data_conciliacao</code> como a data atual.</p>
+    </div>
+
+    <div class="section">
+        <h2>14. Regras de saldo</h2>
+        <p>O saldo do caixa usa como base o último saldo mensal consolidado e soma/subtrai os lançamentos ainda não conciliados.</p>
+        <table>
+            <thead>
+                <tr><th>Componente</th><th>Efeito no saldo</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Entradas não conciliadas</td><td>Somam no saldo.</td></tr>
+                <tr><td>Transferências de entrada não conciliadas</td><td>Somam no saldo do caixa destino.</td></tr>
+                <tr><td>Saídas não conciliadas</td><td>Subtraem do saldo.</td></tr>
+                <tr><td>Transferências de saída não conciliadas</td><td>Subtraem do saldo do caixa origem.</td></tr>
+                <tr><td>Último saldo consolidado</td><td>É somado como saldo inicial.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>15. Filtros de listagem de movimentações</h2>
+        <p>A listagem de movimentos usa <code>FinanceiroUtils::lancamentos()</code>.</p>
+        <ul>
+            <li>Filtra por caixa quando <code>caixa_id</code> é informado.</li>
+            <li>Filtra por plano de conta quando <code>plano_conta_id</code> é informado.</li>
+            <li>Filtra por período usando <code>dt_inicio</code> e <code>dt_fim</code> no formato <code>d/m/Y</code>.</li>
+            <li>Sempre limita pela instituição logada.</li>
+            <li>Sem filtro de consolidado, exibe apenas lançamentos não conciliados ou com <code>conciliado</code> nulo.</li>
+            <li>Com <code>consolidado = 1</code>, exibe somente conciliados.</li>
+            <li>Com <code>consolidado = 0</code>, exibe somente não conciliados ou nulos.</li>
+            <li>Ordena por <code>data_movimento</code> decrescente.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>16. Plano de contas e caixas</h2>
+        <ul>
+            <li>O plano de contas exibido na movimentação é filtrado pelo tipo solicitado: entrada, saída ou transferência.</li>
+            <li>O plano também é filtrado pelo tipo da instituição logada, via relacionamento <code>tiposInstituicoes</code>.</li>
+            <li>Caixas são listados apenas para a instituição da sessão.</li>
+            <li>Um caixa não pode ser excluído se houver lançamento vinculado a ele.</li>
+            <li>Um caixa não pode ser excluído se houver saldo mensal consolidado vinculado a ele com ano/mês preenchidos.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>17. Anexos avulsos</h2>
+        <ul>
+            <li>Permite enviar um arquivo por vez pela rota de novo anexo.</li>
+            <li>O arquivo é obrigatório e limitado a 10 MB.</li>
+            <li>As extensões aceitas são as mesmas da saída: imagens, PDF, documentos Office e planilhas/apresentações.</li>
+            <li>O arquivo é gravado no S3 em <code>anexos/{uuid}.{extensao}</code>.</li>
+            <li>O download busca o arquivo diretamente do disco S3.</li>
+        </ul>
+        <div class="warn">
+            Ponto de atenção: a mensagem de validação cita apenas PDF/DOC/DOCX, mas a regra aceita mais extensões.
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>18. Pontos de atenção técnicos</h2>
+        <table>
+            <thead>
+                <tr><th>Ponto</th><th>Impacto possível</th><th>Arquivo/área</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Validação de mês consolidado diferente entre entrada e saída.</td><td>Pode permitir comportamentos diferentes para datas anteriores já consolidadas.</td><td>Requests de store entrada/saída.</td></tr>
+                <tr><td>Edição não repete bloqueio customizado de mês consolidado.</td><td>Pode permitir alteração de lançamento para mês já consolidado, dependendo do fluxo usado.</td><td>Requests de update entrada/saída.</td></tr>
+                <tr><td>Transferência não valida caixa origem diferente do caixa destino.</td><td>Pode gerar entrada e saída no mesmo caixa.</td><td><code>FinanceiroTransferenciaRequest</code>.</td></tr>
+                <tr><td>Planos elegíveis para Livro Grade estão fixos no código.</td><td>Mudança de plano exige alteração de código se não houver parametrização em banco.</td><td>Services de entrada, edição e exclusão.</td></tr>
+                <tr><td><code>storeEntrada</code> possui tratamento de exceção comentado.</td><td>Falha pode não retornar mensagem padronizada ao usuário.</td><td><code>FinanceiroController</code>.</td></tr>
+                <tr><td>Alguns fluxos usam <code>dd($e)</code> no catch.</td><td>Em produção, pode interromper a tela com dump técnico.</td><td>Transferência e consolidação no controller.</td></tr>
+                <tr><td>Constante <code>IDS_TRANFERENCIA</code> mantém grafia incorreta.</td><td>Não quebra a aplicação se usada de forma consistente, mas pode confundir manutenção.</td><td><code>FinanceiroCaixa</code>.</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>19. Checklist operacional</h2>
+        <ul>
+            <li>Antes de lançar entrada ou saída, conferir se o mês não está consolidado.</li>
+            <li>Para dízimos/ofertas de membro, selecionar corretamente o tipo de pagante/favorecido como membro para alimentar Livro Grade.</li>
+            <li>Para transferência, conferir caixa origem e caixa destino antes de salvar.</li>
+            <li>Após consolidar um mês, validar saldos por caixa e relatórios dependentes.</li>
+            <li>Ao excluir transferência, considerar que o sistema remove os dois lados do movimento pelo mesmo <code>guid</code>.</li>
+            <li>Ao anexar documentos, confirmar que o S3 está configurado e acessível.</li>
+        </ul>
+    </div>
+</body>
+</html>
