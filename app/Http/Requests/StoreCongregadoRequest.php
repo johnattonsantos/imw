@@ -97,19 +97,9 @@ class StoreCongregadoRequest extends FormRequest
                     $cpf = preg_replace('/[^0-9]/', '', $value);
                     $consultaCpf = app(ConsultaCpfMembroService::class);
 
-                    $membroAtivo = $consultaCpf->findMembroAtivo($cpf, $membroId);
-                    if ($membroAtivo) {
-                        $fail($consultaCpf->mensagemAtivo($membroAtivo));
-                        return;
-                    }
-
-                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
-                    if ($membroDuplicado) {
-                        if (!$membroId && !$consultaCpf->isAtivo($membroDuplicado)) {
-                            return;
-                        }
-
-                        $fail('Este CPF já está sendo utilizado por outra pessoa');
+                    $pessoaDuplicada = $consultaCpf->findPessoaDuplicada($cpf, $membroId);
+                    if ($pessoaDuplicada) {
+                        $fail(__('Esta pessoa já existe no sistema. Para recebê-la novamente, utilize a opção "Reintegração de membros e congregados".'));
                         return;
                     }
 
@@ -120,7 +110,7 @@ class StoreCongregadoRequest extends FormRequest
                     }
 
                     if ($query->exists()) {
-                        $fail(__('Este CPF já está sendo utilizado por outra pessoa'));
+                        $fail(__('Esta pessoa já existe no sistema. Para recebê-la novamente, utilize a opção "Reintegração de membros e congregados".'));
                     }
                 }
             ],
@@ -152,7 +142,7 @@ class StoreCongregadoRequest extends FormRequest
     public function messages()
     {
         return [
-            'cpf.unique' => 'Este CPF já está sendo utilizado por outra pessoa'
+            'cpf.unique' => 'Esta pessoa já existe no sistema. Para recebê-la novamente, utilize a opção "Reintegração de membros e congregados".'
         ];
     }
 

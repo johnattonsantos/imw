@@ -53,6 +53,7 @@ use App\Http\Controllers\PrebendasClerigosController;
 use App\Http\Controllers\RegiaoEstatisticasController;
 use App\Http\Controllers\RegiaoRelatorioController;
 use App\Http\Controllers\RegiaoEbdRelatorioController;
+use App\Http\Controllers\ReintegracaoMembrosCongregadosController;
 use App\Http\Controllers\RelatorioClerigoPrebendasController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\TotalizacaoController;
@@ -169,6 +170,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/editar/{id}', [VisitantesController::class, 'editar'])->name('editar')->middleware(['seguranca:visitantes-atualizar'])->can('checkSameChurch', [\App\Models\MembresiaMembro::class, 'id']);
             Route::post('/visitante/{id}', [VisitantesController::class, 'update'])->name('update')->middleware(['seguranca:visitantes-atualizar']);
             Route::post('/deletar/{id}', [VisitantesController::class, 'deletar'])->name('deletar')->middleware(['seguranca:visitantes-excluir']);
+        });
+
+        Route::prefix('secretaria/reintegracao-membros-congregados')->name('reintegracao-membros-congregados.')->group(function () {
+            Route::get('/', [ReintegracaoMembrosCongregadosController::class, 'index'])->name('index')->middleware(['seguranca:membros-reintegrar']);
+            Route::post('/store', [ReintegracaoMembrosCongregadosController::class, 'store'])->name('store')->middleware(['seguranca:membros-reintegrar']);
         });
 
         // Grupo de rotas para 'congregado'

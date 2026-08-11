@@ -25,6 +25,21 @@ class ConsultaCpfMembroService
             ->first();
     }
 
+    public function findPessoaDuplicada(?string $cpf, ?string $ignoreMembroId = null): ?MembresiaMembro
+    {
+        $cpf = $this->normalizeCpf($cpf);
+        if ($cpf === '') {
+            return null;
+        }
+
+        return MembresiaMembro::withTrashed()
+            ->where('cpf', $cpf)
+            ->when($ignoreMembroId, fn ($query) => $query->where('id', '!=', $ignoreMembroId))
+            ->orderByRaw("CASE WHEN status = 'A' AND deleted_at IS NULL THEN 0 ELSE 1 END")
+            ->orderByDesc('updated_at')
+            ->first();
+    }
+
     public function findMembroAtivo(?string $cpf, ?string $ignoreMembroId = null): ?MembresiaMembro
     {
         $cpf = $this->normalizeCpf($cpf);
