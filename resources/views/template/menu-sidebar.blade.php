@@ -296,6 +296,11 @@
                                  <a href="{{ route('visitante.index') }}">{{ __('Visitantes') }}</a>
                              @endif
                          </li>
+                         <li {!! Request::is('secretaria/reintegracao-membros-congregados*') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('membros-reintegrar'))
+                                 <a href="{{ route('reintegracao-membros-congregados.index') }}">{{ __('Reintegração de membros') }}</a>
+                             @endif
+                         </li>
                          <li class="submenu-fixo mt-3 mb-3">
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-secretaria'))
                                  <span>{{ __('Relatórios') }}</span>
