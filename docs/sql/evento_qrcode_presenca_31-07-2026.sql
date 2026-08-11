@@ -1,7 +1,6 @@
-ALTER TABLE `evento_inscricoes` ADD COLUMN `qr_token` varchar(64) COLLATE utf8mb4_unicode_ci NULL AFTER `cpf`
+ALTER TABLE `evento_inscricoes` ADD COLUMN `qr_token` varchar(64) COLLATE utf8mb4_unicode_ci NULL AFTER `cpf`;
 
-ALTER TABLE `evento_inscricoes` ADD UNIQUE KEY `evento_inscricoes_qr_token_unique` (`qr_token`)
-
+ALTER TABLE `evento_inscricoes` ADD UNIQUE KEY `evento_inscricoes_qr_token_unique` (`qr_token`);
 
 CREATE TABLE `evento_inscricao_movimentos` (
   `id` bigint(20) UNSIGNED NOT NULL,
