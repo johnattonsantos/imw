@@ -68,7 +68,12 @@ class UpdateMembroRecadastramentoService
         }
 
         $consultaCpf = app(ConsultaCpfMembroService::class);
-        $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroMigracaoId);
+        $membroMigracao = MembresiaMembroRecadastramento::find($membroMigracaoId);
+        $membroDuplicado = $consultaCpf->findMembroDuplicadoRecadastramento(
+            $cpf,
+            $membroMigracaoId,
+            $membroMigracao->igreja_id ?? null
+        );
 
         if (!$membroDuplicado || $consultaCpf->isAtivo($membroDuplicado) || $consultaCpf->isMesmaIgreja($membroDuplicado)) {
             return $membroMigracaoId;

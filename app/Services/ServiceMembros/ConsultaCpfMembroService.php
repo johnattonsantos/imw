@@ -22,7 +22,34 @@ class ConsultaCpfMembroService
             ->where('cpf', $cpf)
             ->where('vinculo', MembresiaMembro::VINCULO_MEMBRO)
             ->when($ignoreMembroId, fn ($query) => $query->where('id', '!=', $ignoreMembroId))
+            ->orderByRaw("CASE WHEN status = ? AND deleted_at IS NULL THEN 0 ELSE 1 END", [MembresiaMembro::STATUS_ATIVO])
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
             ->first();
+    }
+
+    public function findMembroDuplicadoRecadastramento(?string $cpf, ?string $membroMigracaoId, ?int $igrejaId = null): ?MembresiaMembro
+    {
+        $cpf = $this->normalizeCpf($cpf);
+        if ($cpf === '') {
+            return null;
+        }
+
+        $igrejaId = $igrejaId ?: self::fetchSessionIgrejaLocal()->id;
+
+        return MembresiaMembro::withTrashed()
+            ->where('cpf', $cpf)
+            ->where('vinculo', MembresiaMembro::VINCULO_MEMBRO)
+            ->orderByRaw("CASE WHEN status = ? AND deleted_at IS NULL THEN 0 ELSE 1 END", [MembresiaMembro::STATUS_ATIVO])
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->get()
+            ->first(function (MembresiaMembro $membro) use ($membroMigracaoId, $igrejaId) {
+                $mesmoRegistroDaIgrejaValidada = (string) $membro->id === (string) $membroMigracaoId
+                    && (int) $membro->igreja_id === (int) $igrejaId;
+
+                return !$mesmoRegistroDaIgrejaValidada;
+            });
     }
 
     public function findMembroAtivo(?string $cpf, ?string $ignoreMembroId = null): ?MembresiaMembro

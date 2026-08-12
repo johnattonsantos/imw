@@ -37,7 +37,7 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-    <form method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
+    <form id="membro-recadastramento-form" method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
       @csrf
       <input type="hidden" name="confirmar_cpf_inativo_outra_igreja" id="confirmar_cpf_inativo_outra_igreja" value="{{ old('confirmar_cpf_inativo_outra_igreja', '0') }}">
       <input type="hidden" name="cpf_membro_existente_id" id="cpf_membro_existente_id" value="{{ old('cpf_membro_existente_id') }}">
@@ -88,7 +88,7 @@
               const confirmarCpfDuplicado = function () {
                   $('#confirmar_cpf_inativo_outra_igreja').val('1');
                   $('#cpf_membro_existente_id').val(cpfDuplicadoConfirmacao.membro_id);
-                  $('form').first().trigger('submit');
+                  $('#membro-recadastramento-form').trigger('submit');
               };
 
               if (typeof swal === 'function') {
