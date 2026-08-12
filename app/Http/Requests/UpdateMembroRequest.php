@@ -49,9 +49,19 @@ class UpdateMembroRequest extends FormRequest
         $isRecadastramento = $this->routeIs('recadastramento-membro.update');
         $cpf = preg_replace('/[^0-9]/', '', $this->input('cpf', ''));
         $membroIdRegraRol = $membroId;
+        $igrejaRecadastramentoId = null;
 
         if ($isRecadastramento && $cpf !== '') {
-            $membroOficialId = DB::table('membresia_membros')->where('cpf', $cpf)->value('id');
+            $igrejaRecadastramentoId = DB::table('membresia_migracao')
+                ->where('id', $membroId)
+                ->value('igreja_id');
+            $membroOficialId = DB::table('membresia_membros')
+                ->where('cpf', $cpf)
+                ->where('vinculo', 'M')
+                ->orderByRaw("CASE WHEN status = 'A' AND deleted_at IS NULL THEN 0 ELSE 1 END")
+                ->orderByDesc('updated_at')
+                ->orderByDesc('id')
+                ->value('id');
             if (!empty($membroOficialId)) {
                 $membroIdRegraRol = $membroOficialId;
             }
@@ -207,7 +217,7 @@ class UpdateMembroRequest extends FormRequest
             'cpf' => [
                 $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
-                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento) {
+                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento, $igrejaRecadastramentoId) {
                     if (empty($value)) {
                         return;
                     }
@@ -215,7 +225,9 @@ class UpdateMembroRequest extends FormRequest
                     // Remove todos os caracteres que não são números
                     $cpf = preg_replace('/[^0-9]/', '', $value);
                     $consultaCpf = app(ConsultaCpfMembroService::class);
-                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
+                    $membroDuplicado = $isRecadastramento
+                        ? $consultaCpf->findMembroDuplicadoRecadastramento($cpf, $membroId, $igrejaRecadastramentoId)
+                        : $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
                     if (!$membroDuplicado) {
                         return;
