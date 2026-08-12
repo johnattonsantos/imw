@@ -64,8 +64,8 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="nacionalidade">{{ __('* Nacionalidade') }}</label>
-                <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade" required>
+                <label for="nacionalidade">{{ __('Nacionalidade') }}</label>
+                <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade">
                   <option value="">{{ __('Selecione') }}</option>
                   @php
                     //Colocar no banco de dados
@@ -330,16 +330,16 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="naturalidade">{{ __('* Naturalidade') }}</label>
-                <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50" required>
+                <label for="naturalidade">{{ __('Naturalidade') }}</label>
+                <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50">
                 @error('naturalidade')
                   <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
               </div>
 
               <div class="col-xl-3">
-                <label for="uf">{{ __('* UF') }}</label>
-                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" required>
+                <label for="uf">{{ __('UF') }}</label>
+                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                   <option value="">{{ __('Selecione') }}</option>
                   @php
                     //Colocar no banco de dados , esta estranho assim
