@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 class DocumentosIgrejasController extends Controller
 {
     use Identifiable;
 
-    private const STORAGE_DISK = 'local';
-    private const STORAGE_PREFIX = 'documentos-igrejas';
+    private const STORAGE_DISK = 's3';
 
     public function regionalIndex()
     {
@@ -62,10 +62,9 @@ class DocumentosIgrejasController extends Controller
                 ]);
 
                 foreach ($request->file('arquivos', []) as $index => $arquivo) {
-                    $extension = strtolower((string) $arquivo->getClientOriginalExtension());
-                    $path = self::STORAGE_PREFIX . '/' . $regiao->id . '/' . (string) Str::uuid() . '.' . $extension;
+                    $path = $this->makeStoragePath((int) $regiao->id, strtolower((string) $arquivo->getClientOriginalExtension()));
 
-                    Storage::disk(self::STORAGE_DISK)->put($path, file_get_contents($arquivo->getRealPath()));
+                    $this->putArquivoS3($path, $arquivo);
                     $storedPaths[] = $path;
 
                     $documento->arquivos()->create([
@@ -134,10 +133,9 @@ class DocumentosIgrejasController extends Controller
                         continue;
                     }
 
-                    $extension = strtolower((string) $arquivo->getClientOriginalExtension());
-                    $path = self::STORAGE_PREFIX . '/' . $documento->regiao_id . '/' . (string) Str::uuid() . '.' . $extension;
+                    $path = $this->makeStoragePath((int) $documento->regiao_id, strtolower((string) $arquivo->getClientOriginalExtension()));
 
-                    Storage::disk(self::STORAGE_DISK)->put($path, file_get_contents($arquivo->getRealPath()));
+                    $this->putArquivoS3($path, $arquivo);
                     $storedPaths[] = $path;
 
                     $documento->arquivos()->create([
@@ -222,10 +220,9 @@ class DocumentosIgrejasController extends Controller
 
         $fileName = str_replace(['"', "\r", "\n"], '', $arquivo->nome_original);
 
-        return response()->file(Storage::disk(self::STORAGE_DISK)->path($arquivo->caminho), [
+        return Storage::disk(self::STORAGE_DISK)->response($arquivo->caminho, $fileName, [
             'Content-Type' => $arquivo->mime_type ?: 'application/octet-stream',
-            'Content-Disposition' => 'inline; filename="' . $fileName . '"',
-        ]);
+        ], 'inline');
     }
 
     private function queryByRegiao(int $regiaoId)
@@ -250,5 +247,49 @@ class DocumentosIgrejasController extends Controller
     private function formatosPermitidosTexto(): string
     {
         return 'PDF';
+    }
+
+    private function storagePrefix(): string
+    {
+        $prefix = trim((string) config('filesystems.documentos_igrejas_prefix', 'documentos_igrejas'), '/');
+
+        return $prefix !== '' ? $prefix : 'documentos_igrejas';
+    }
+
+    private function makeStoragePath(int $regiaoId, string $extension): string
+    {
+        return $this->storagePrefix() . '/' . $regiaoId . '/' . (string) Str::uuid() . '.' . $extension;
+    }
+
+    private function putArquivoS3(string $path, $arquivo): void
+    {
+        $this->ensureStoragePrefixExists();
+
+        $stream = fopen($arquivo->getRealPath(), 'r');
+
+        try {
+            $saved = Storage::disk(self::STORAGE_DISK)->put($path, $stream, [
+                'visibility' => 'private',
+                'ContentType' => $arquivo->getMimeType() ?: 'application/pdf',
+            ]);
+        } finally {
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+        }
+
+        if (!$saved) {
+            throw new RuntimeException('Não foi possível enviar o documento para o S3.');
+        }
+    }
+
+    private function ensureStoragePrefixExists(): void
+    {
+        $markerPath = $this->storagePrefix() . '/.keep';
+        $saved = Storage::disk(self::STORAGE_DISK)->put($markerPath, '', ['visibility' => 'private']);
+
+        if (!$saved) {
+            throw new RuntimeException('Não foi possível criar o diretório de documentos no S3.');
+        }
     }
 }

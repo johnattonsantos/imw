@@ -72,21 +72,17 @@
                                                 <circle cx="12" cy="12" r="3"></circle>
                                             </svg>
                                         </button>
-                                        <form method="POST" action="{{ route('documentos-igrejas.arquivo.destroy', $arquivo) }}" class="d-inline" onsubmit="return confirm('{{ __('Deseja excluir este arquivo?') }}')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-rounded bs-tooltip" title="{{ __('Excluir') }}" aria-label="{{ __('Excluir') }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-trash-2">
-                                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                                    <path d="M19 6l-1 14H6L5 6"></path>
-                                                    <path d="M10 11v6"></path>
-                                                    <path d="M14 11v6"></path>
-                                                    <path d="M9 6V4h6v2"></path>
-                                                </svg>
-                                            </button>
-                                        </form>
+                                        <button type="submit" form="excluir-arquivo-{{ $arquivo->id }}" class="btn btn-sm btn-danger btn-rounded bs-tooltip" title="{{ __('Excluir') }}" aria-label="{{ __('Excluir') }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-trash-2">
+                                                <polyline points="3 6 5 6 21 6"></polyline>
+                                                <path d="M19 6l-1 14H6L5 6"></path>
+                                                <path d="M10 11v6"></path>
+                                                <path d="M14 11v6"></path>
+                                                <path d="M9 6V4h6v2"></path>
+                                            </svg>
+                                        </button>
                                     </td>
                                 </tr>
                             @empty
@@ -101,6 +97,13 @@
                 <button type="submit" class="btn btn-primary btn-rounded">{{ __('Atualizar') }}</button>
                 <a href="{{ route('documentos-igrejas.index') }}" class="btn btn-light btn-rounded">{{ __('Voltar') }}</a>
             </form>
+
+            @foreach ($documento->arquivos as $arquivo)
+                <form id="excluir-arquivo-{{ $arquivo->id }}" method="POST" action="{{ route('documentos-igrejas.arquivo.destroy', $arquivo) }}" class="d-none" onsubmit="return confirm('{{ __('Deseja excluir este arquivo?') }}')">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            @endforeach
         </div>
     </div>
 </div>
