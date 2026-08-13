@@ -526,16 +526,7 @@
                           </div>
                       </div>
                       <div class="row mb-4">
-                          <div class="col-lg-6">
-                              <label for="historico">{{ __('Pastor Oficiante') }}</label>
-                              <input type="text" class="form-control" id="historico" name="historico"
-                                  value="{{ old('historico', $pessoa->historico) }}" maxlength="100">
-                              @error('historico')
-                                  <span class="help-block text-danger">{{ $message }}</span>
-                              @enderror
-                          </div>
-
-                          <div class="form-group mb-4 col-md-6">
+                          <div class="form-group mb-4 col-md-12">
                                 <label class="control-label">{{ __('Congregação:') }}</label>
                                 <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" >
                                     <option value="" {{ !$pessoa->congregacao_id ? 'selected' : '' }}>{{ __('Sede') }}</option>
