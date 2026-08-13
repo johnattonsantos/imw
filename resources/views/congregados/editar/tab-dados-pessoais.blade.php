@@ -83,7 +83,7 @@
 
                       <div class="row mb-4">
                           <div class="col-xl-4">
-                              <label for="nacionalidade">{{ __('* Nacionalidade') }}</label>
+                              <label for="nacionalidade">{{ __('Nacionalidade') }}</label>
                               <select class="form-control @error('estado_civil') is-invalid @enderror"
                                   id="nacionalidade" name="nacionalidade">
                                   <option value="">{{ __('Selecione') }}</option>
@@ -352,7 +352,7 @@
                           </div>
 
                           <div class="col-xl-4">
-                              <label for="naturalidade">{{ __('* Naturalidade') }}</label>
+                              <label for="naturalidade">{{ __('Naturalidade') }}</label>
                               <input type="text" class="form-control @error('naturalidade') is-invalid @enderror"
                                   id="naturalidade" name="naturalidade"
                                   value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50">
@@ -362,7 +362,7 @@
                           </div>
 
                           <div class="col-xl-4">
-                              <label for="uf">{{ __('* UF') }}</label>
+                              <label for="uf">{{ __('UF') }}</label>
                               <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" {{ $pessoa->nacionalidade != 'BR' ? 'disabled' : '' }}>
                                   <option value="">{{ __('Selecione') }}</option>
                                   @php

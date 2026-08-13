@@ -32,6 +32,7 @@ return [
 
     'comunicacao_disk' => env('COMUNICACAO_FILESYSTEM_DISK', 'public'),
     'editor_disk' => env('EDITOR_FILESYSTEM_DISK', 's3'),
+    'documentos_igrejas_prefix' => env('UPLOAD_S3', 'documentos_igrejas'),
 
 
     'disks' => [

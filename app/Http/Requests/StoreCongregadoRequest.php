@@ -83,9 +83,9 @@ class StoreCongregadoRequest extends FormRequest
                 },
             ],
             'estado_civil' => 'required',
-            'nacionalidade' => 'required',
-            'naturalidade' => 'required',
-            'uf' => 'sometimes|required',
+            'nacionalidade' => 'nullable',
+            'naturalidade' => 'nullable',
+            'uf' => 'nullable',
             'cpf' => [
                 'nullable',
                 new ValidaCPF,

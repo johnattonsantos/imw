@@ -180,8 +180,8 @@ class UpdateMembroRequest extends FormRequest
                 ? 'nullable|exists:membresia_situacoes,id|required_if:status,I'
                 : 'nullable|exists:membresia_situacoes,id',
             'estado_civil' => 'required',
-            'nacionalidade' => 'required',
-            'naturalidade' => 'required',
+            'nacionalidade' => 'nullable',
+            'naturalidade' => 'nullable',
             'profissao' => $isRecadastramento ? 'required|exists:membresia_profissoes,id' : 'nullable|string|max:100',
             'status' => $isRecadastramento
                 ? [
@@ -200,7 +200,7 @@ class UpdateMembroRequest extends FormRequest
                     },
                 ]
                 : 'nullable|in:A,I',
-            'uf' => 'sometimes|required',
+            'uf' => 'nullable',
             'rol_atual' => $isRecadastramento
                 ? [
                     'nullable',
