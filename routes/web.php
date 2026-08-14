@@ -403,6 +403,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/financeiro-por-categoria', [RegiaoRelatorioController::class, 'financeiroPorCategoria'])->name('relatorio.financeiroPorCategoria')->middleware(['seguranca:regiao-menu-relatorio']);
 
             //Membresia DEV
+            Route::get('/mapao', [RegiaoRelatorioController::class, 'mapao'])->name('relatorio.mapao')->middleware(['seguranca:regiao-mapao']);
             Route::get('/membrosministerio', [RegiaoRelatorioController::class, 'membrosministerio'])->name('relatorio.membrosministerio')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/membrosministerio/pdf', [RegiaoRelatorioController::class, 'membrosministerioPdf'])->name('relatorio.membrosministerio-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/esposas-de-pastores', [RegiaoRelatorioController::class, 'esposasDePastores'])->name('relatorio.esposas-de-pastores')->middleware(['seguranca:regiao-menu-relatorio']);

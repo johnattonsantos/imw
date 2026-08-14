@@ -891,13 +891,20 @@
 
                         </li>
                         @endif
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
+                        @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio') || auth()->user()->hasPerfilRegra('regiao-mapao')))
                          <li class="submenu-fixo mt-3 mb-3">
 
                                  <span>{{ __('Membresia') }}</span>
 
                          </li>
                          @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-mapao'))
+                         <li {!! Request::is('regiao/relatorio/mapao') ? 'class="active"' : '' !!}>
+
+                                 <a href="{{ route('regiao.relatorio.mapao') }}">{{ __('Mapão') }}</a>
+
+                         </li>
+                        @endif
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
                          <li {!! Request::is('regiao/relatorio/membrosministerio') ? 'class="active"' : '' !!}>
 
