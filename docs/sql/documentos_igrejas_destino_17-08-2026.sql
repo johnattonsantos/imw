@@ -18,4 +18,3 @@ FROM regras r
 WHERE r.nome = 'documentos-igrejas-gerenciar'
 ORDER BY r.id DESC
 LIMIT 1;
-
