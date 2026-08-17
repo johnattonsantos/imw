@@ -20,6 +20,8 @@ class DocumentosIgrejasController extends Controller
     use Identifiable;
 
     private const STORAGE_DISK = 's3';
+    private const MAX_FILE_SIZE_KB = 10240;
+    private const MAX_FILE_SIZE_MB = 10;
 
     public function regionalIndex()
     {
@@ -40,6 +42,7 @@ class DocumentosIgrejasController extends Controller
         return view('documentos-igrejas.regional.create', [
             'accept' => $this->acceptAttribute(),
             'formatosPermitidos' => $this->formatosPermitidosTexto(),
+            'tamanhoMaximoMb' => self::MAX_FILE_SIZE_MB,
             'igrejas' => $this->igrejasDaRegiao((int) $regiao->id),
         ]);
     }
@@ -53,12 +56,12 @@ class DocumentosIgrejasController extends Controller
             'destino' => ['required', Rule::in(['todas', 'igreja'])],
             'igreja_id' => ['nullable', 'required_if:destino,igreja', 'integer', Rule::in($this->igrejaIdsDaRegiao((int) $regiao->id))],
             'arquivos' => ['required', 'array', 'min:1'],
-            'arquivos.*' => ['required', 'file', 'max:20480', 'mimes:pdf'],
+            'arquivos.*' => ['required', 'file', 'max:' . self::MAX_FILE_SIZE_KB, 'mimes:pdf'],
         ], [
             'igreja_id.required_if' => __('Selecione a igreja específica que poderá acessar este documento.'),
             'arquivos.required' => __('Escolha pelo menos um documento.'),
             'arquivos.*.mimes' => __('Arquivo inválido. Envie apenas: :formatos.', ['formatos' => $this->formatosPermitidosTexto()]),
-            'arquivos.*.max' => __('Cada documento deve ter no máximo 20 MB.'),
+            'arquivos.*.max' => __('Cada documento deve ter no máximo :tamanho MB.', ['tamanho' => self::MAX_FILE_SIZE_MB]),
         ]);
 
         $storedPaths = [];
@@ -114,6 +117,7 @@ class DocumentosIgrejasController extends Controller
             'documento' => $documento,
             'accept' => $this->acceptAttribute(),
             'formatosPermitidos' => $this->formatosPermitidosTexto(),
+            'tamanhoMaximoMb' => self::MAX_FILE_SIZE_MB,
             'igrejas' => $this->igrejasDaRegiao((int) $regiao->id),
         ]);
     }
@@ -127,11 +131,11 @@ class DocumentosIgrejasController extends Controller
             'destino' => ['required', Rule::in(['todas', 'igreja'])],
             'igreja_id' => ['nullable', 'required_if:destino,igreja', 'integer', Rule::in($this->igrejaIdsDaRegiao((int) $documento->regiao_id))],
             'arquivos' => ['nullable', 'array'],
-            'arquivos.*' => ['nullable', 'file', 'max:20480', 'mimes:pdf'],
+            'arquivos.*' => ['nullable', 'file', 'max:' . self::MAX_FILE_SIZE_KB, 'mimes:pdf'],
         ], [
             'igreja_id.required_if' => __('Selecione a igreja específica que poderá acessar este documento.'),
             'arquivos.*.mimes' => __('Arquivo inválido. Envie apenas: :formatos.', ['formatos' => $this->formatosPermitidosTexto()]),
-            'arquivos.*.max' => __('Cada documento deve ter no máximo 20 MB.'),
+            'arquivos.*.max' => __('Cada documento deve ter no máximo :tamanho MB.', ['tamanho' => self::MAX_FILE_SIZE_MB]),
         ]);
 
         $storedPaths = [];

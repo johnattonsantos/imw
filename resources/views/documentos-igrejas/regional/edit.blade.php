@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form method="POST" action="{{ route('documentos-igrejas.update', $documento) }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('documentos-igrejas.update', $documento) }}" enctype="multipart/form-data" class="documentos-igrejas-form">
                 @csrf
                 @method('PUT')
 
@@ -81,7 +81,7 @@
                             </div>
                         </div>
                         <small class="form-text text-muted">
-                            {{ __('Você pode enviar novos documentos para este mesmo título.') }} {{ __('Formatos permitidos') }}: {{ $formatosPermitidos }}. {{ __('Tamanho máximo por arquivo') }}: 20 MB.
+                            {{ __('Você pode enviar novos documentos para este mesmo título.') }} {{ __('Formatos permitidos') }}: {{ $formatosPermitidos }}. {{ __('Tamanho máximo por arquivo') }}: {{ $tamanhoMaximoMb }} MB.
                         </small>
                     </div>
                 </div>
@@ -152,8 +152,24 @@
         const destino = document.getElementById('destino');
         const igrejaWrapper = document.getElementById('igreja-destino-wrapper');
         const igrejaSelect = document.getElementById('igreja_id');
+        const form = document.querySelector('.documentos-igrejas-form');
+        const tamanhoMaximoArquivo = {{ (int) $tamanhoMaximoMb }} * 1024 * 1024;
+        const mensagemArquivoGrande = @json(__('Cada documento deve ter no máximo :tamanho MB.', ['tamanho' => $tamanhoMaximoMb]));
         const normalizarBusca = function (value) {
             return (value || '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        };
+        const exibirErroArquivoGrande = function () {
+            if (window.toastr) {
+                toastr.error(mensagemArquivoGrande);
+                return;
+            }
+
+            alert(mensagemArquivoGrande);
+        };
+        const arquivoExcedeLimite = function (input) {
+            return Array.from(input.files || []).some(function (file) {
+                return file.size > tamanhoMaximoArquivo;
+            });
         };
 
         if (igrejaSelect && window.jQuery && jQuery.fn.select2) {
@@ -225,6 +241,29 @@
                 removeButton.closest('.documento-arquivo-row').remove();
             }
         });
+
+        document.addEventListener('change', function (event) {
+            const fileInput = event.target.closest('input[type="file"][name="arquivos[]"]');
+
+            if (!fileInput || !arquivoExcedeLimite(fileInput)) {
+                return;
+            }
+
+            fileInput.value = '';
+            exibirErroArquivoGrande();
+        });
+
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                const hasLargeFile = Array.from(form.querySelectorAll('input[type="file"][name="arquivos[]"]'))
+                    .some(arquivoExcedeLimite);
+
+                if (hasLargeFile) {
+                    event.preventDefault();
+                    exibirErroArquivoGrande();
+                }
+            });
+        }
     });
 </script>
 @endsection
