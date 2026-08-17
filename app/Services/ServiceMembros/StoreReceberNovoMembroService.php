@@ -20,7 +20,7 @@ class StoreReceberNovoMembroService
                 DB::raw("TIMESTAMPDIFF(YEAR, data_nascimento, curdate()) idade")
             )->find($id);
 
-            if (!$pessoa || $pessoa->idade <= 10) {
+            if (!$pessoa || $pessoa->idade < 12) {
                 return 'idade';
             }
 
