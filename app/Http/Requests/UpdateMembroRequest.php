@@ -70,6 +70,7 @@ class UpdateMembroRequest extends FormRequest
         $minDate = '1910-01-01';
         $minDateRecepcao = '1967-01-05';
         $currentDate = date('Y-m-d');
+        $maxBirthDateForMembro = date('Y-m-d', strtotime('-12 years'));
 
         return [
             'foto' => 'image|nullable|max:10240',
@@ -78,9 +79,13 @@ class UpdateMembroRequest extends FormRequest
             'data_nascimento' => [
                 'required',
                 'date',
-                function ($attribute, $value, $fail) use ($minDate, $currentDate) {
+                function ($attribute, $value, $fail) use ($minDate, $currentDate, $maxBirthDateForMembro) {
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
                         $fail(__('A data de nascimento deve estar entre 01/01/1910 e a data atual.'));
+                    }
+
+                    if (strtotime($value) > strtotime($maxBirthDateForMembro)) {
+                        $fail(__('Não pode ser membro, pois a idade é menor que 12 anos.'));
                     }
                 },
             ],
