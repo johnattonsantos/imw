@@ -20,6 +20,7 @@ use App\Services\ServiceRegiaoRelatorios\LivroRazaoGeralService;
 use App\Services\ServiceRegiaoRelatorios\FinanceiroPorCategoriaService;
 use App\Services\ServiceRegiaoRelatorios\IgrejasPorClerigosService;
 use App\Services\ServiceRegiaoRelatorios\IgrejasPorPastoresService;
+use App\Services\ServiceRegiaoRelatorios\MapaoRegionalService;
 use App\Services\ServiceRegiaoRelatorios\MembrosMinisterioService;
 use App\Services\ServiceRegiaoRelatorios\OrcamentoService;
 use App\Services\ServiceRegiaoRelatorios\PerfilMembrosExcluidosService;
@@ -36,12 +37,56 @@ use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoEsposas;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoStatus;
 use App\Services\ServiceRelatorioClerigoPrebendas\ClerigoVinculos;
 use App\Traits\Identifiable;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 
 class RegiaoRelatorioController extends Controller
 {
     //Membresia
+    public function mapao(Request $request)
+    {
+        $dataInicial = $this->normalizarDataMapao($request->input('data_inicial'), now()->startOfMonth()->toDateString());
+        $dataFinal = $this->normalizarDataMapao($request->input('data_final'), now()->toDateString());
+
+        $request->merge([
+            'data_inicial' => $dataInicial,
+            'data_final' => $dataFinal,
+        ]);
+
+        $request->validate([
+            'data_inicial' => ['required', 'date'],
+            'data_final' => ['required', 'date', 'after_or_equal:data_inicial'],
+        ]);
+
+        $data = app(MapaoRegionalService::class)->execute($dataInicial, $dataFinal);
+
+        return view('regiao.relatorios.mapao', $data);
+    }
+
+    private function normalizarDataMapao(?string $data, string $padrao): string
+    {
+        if (empty($data)) {
+            return $padrao;
+        }
+
+        $data = trim($data);
+
+        if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $data)) {
+            try {
+                $dataConvertida = Carbon::createFromFormat('d/m/Y', $data);
+
+                if ($dataConvertida && $dataConvertida->format('d/m/Y') === $data) {
+                    return $dataConvertida->toDateString();
+                }
+            } catch (\Exception $e) {
+                return $data;
+            }
+        }
+
+        return $data;
+    }
+
     public function membrosministerio(Request $request)
     {
         $dataInicial = $request->input('data_inicial');

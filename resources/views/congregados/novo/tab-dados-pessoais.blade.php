@@ -75,7 +75,7 @@
 
 
               <div class="col-xl-4">
-                <label for="nacionalidade">{{ __('* Nacionalidade') }}</label>
+                <label for="nacionalidade">{{ __('Nacionalidade') }}</label>
                 <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade">
                   <option value="">{{ __('Selecione') }}</option>
                   @php
@@ -340,7 +340,7 @@
               </div>
 
               <div class="col-xl-4">
-                <label for="naturalidade">{{ __('* Naturalidade') }}</label>
+                <label for="naturalidade">{{ __('Naturalidade') }}</label>
                 <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade') }}" >
                 @error('naturalidade')
                   <span class="help-block text-danger">{{ $message }}</span>
@@ -348,7 +348,7 @@
               </div>
 
               <div class="col-xl-4">
-                <label for="uf">{{ __('* UF') }}</label>
+                <label for="uf">{{ __('UF') }}</label>
                 <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                   <option value="">{{ __('Selecione') }}</option>
                   @php
@@ -478,15 +478,7 @@
               </div>
             </div>
             <div class="row mb-4">
-              <div class="col-lg-6">
-                <label for="historico">{{ __('Pastor Oficiante') }}</label>
-                <input type="text" class="form-control" id="historico" name="historico" value="{{ old('historico') }}">
-                @error('historico')
-                  <span class="help-block text-danger">{{ $message }}</span>
-                @enderror
-              </div>
-
-              <div class="col-lg-6">
+              <div class="col-lg-12">
                   <label class="control-label">{{ __('Congregação:') }}</label>
                   <select id="congregacao_id" name="congregacao_id" class="form-control @error('congregacao_id') is-invalid @enderror" >
                       <option value="" {{ old('congregacao_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>

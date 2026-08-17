@@ -12,6 +12,7 @@ use App\Http\Controllers\ComunicacaoController;
 use App\Http\Controllers\ContabilidadeController;
 use App\Http\Controllers\DistritoRelatorioController;
 use App\Http\Controllers\DistritoEbdRelatorioController;
+use App\Http\Controllers\DocumentosIgrejasController;
 use App\Http\Controllers\EbdAgendaController;
 use App\Http\Controllers\EbdAlunoController;
 use App\Http\Controllers\EbdClasseController;
@@ -207,6 +208,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export/pdf', 'exportPdf')->name('export.pdf');
         })->middleware(['seguranca:comunicacao']);
 
+        Route::prefix('documentos-para-igrejas')->name('documentos-igrejas.')->controller(DocumentosIgrejasController::class)->middleware(['seguranca:documentos-igrejas-gerenciar'])->group(function () {
+            Route::get('/', 'regionalIndex')->name('index');
+            Route::get('/novo', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/editar/{documento}', 'edit')->name('edit');
+            Route::put('/update/{documento}', 'update')->name('update');
+            Route::delete('/deletar/{documento}', 'destroy')->name('destroy');
+            Route::delete('/arquivo/{arquivo}/deletar', 'destroyArquivo')->name('arquivo.destroy');
+            Route::get('/arquivo/{arquivo}/visualizar', 'visualizar')->name('visualizar');
+        });
+
+        Route::prefix('documentos')->name('documentos-local.')->controller(DocumentosIgrejasController::class)->middleware(['seguranca:documentos-igrejas-visualizar'])->group(function () {
+            Route::get('/', 'localIndex')->name('index');
+            Route::get('/arquivo/{arquivo}/visualizar', 'visualizar')->name('visualizar');
+        });
+
         Route::prefix('eventos')->name('eventos.')->controller(EventoController::class)->middleware(['seguranca:evento'])->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/agenda', 'agenda')->name('agenda');
@@ -386,6 +403,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/financeiro-por-categoria', [RegiaoRelatorioController::class, 'financeiroPorCategoria'])->name('relatorio.financeiroPorCategoria')->middleware(['seguranca:regiao-menu-relatorio']);
 
             //Membresia DEV
+            Route::get('/mapao', [RegiaoRelatorioController::class, 'mapao'])->name('relatorio.mapao')->middleware(['seguranca:regiao-mapao']);
             Route::get('/membrosministerio', [RegiaoRelatorioController::class, 'membrosministerio'])->name('relatorio.membrosministerio')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::post('/membrosministerio/pdf', [RegiaoRelatorioController::class, 'membrosministerioPdf'])->name('relatorio.membrosministerio-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/esposas-de-pastores', [RegiaoRelatorioController::class, 'esposasDePastores'])->name('relatorio.esposas-de-pastores')->middleware(['seguranca:regiao-menu-relatorio']);
