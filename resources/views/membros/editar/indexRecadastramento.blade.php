@@ -10,6 +10,9 @@
 @section('extras-css')
   <link href="{{ asset('theme/assets/css/components/tabs-accordian/custom-tabs.css') }}" rel="stylesheet" type="text/css" />
   <link href="{{ asset('theme/plugins/loaders/custom-loader.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('theme/plugins/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
+  <link href="{{ asset('theme/assets/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
   <style>
     .centralizado {
         display: flex;
@@ -34,8 +37,9 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-    <form method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
+    <form id="recadastramento-membro-form" method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
       @csrf
+      <input type="hidden" id="confirmar_membro_inativo_id" name="confirmar_membro_inativo_id" value="{{ old('confirmar_membro_inativo_id') }}">
     <div class="row">
       <div class="col-md-12">
           <!-- conteudo -->
@@ -71,9 +75,49 @@
 @endsection
 
 @section('extras-scripts')
+    <script src="{{ asset('theme/plugins/sweetalerts/promise-polyfill.js') }}"></script>
+    <script src="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('theme/plugins/fullcalendar/moment.min.js') }}"></script>
     <script src="{{ asset('membros/js/editar.js') }}"></script>
     <script>
+      @if(session('confirmar_membro_inativo'))
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('recadastramento-membro-form');
+            const confirmarInput = document.getElementById('confirmar_membro_inativo_id');
+
+            swal({
+                title: 'Atenção',
+                text: @json(session('confirmar_membro_inativo.mensagem')),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim',
+                cancelButtonText: 'Não',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                padding: '2em'
+            }).then(function(result) {
+                if (result.value) {
+                    confirmarInput.value = @json(session('confirmar_membro_inativo.id'));
+                    form.submit();
+                }
+            });
+        });
+      @endif
+
+      @if(session('cpf_recepcao_invalida_message'))
+        document.addEventListener('DOMContentLoaded', function () {
+            swal({
+                title: 'Atenção',
+                text: @json(session('cpf_recepcao_invalida_message')),
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonText: 'Fechar',
+                confirmButtonColor: '#3085d6',
+                padding: '2em'
+            });
+        });
+      @endif
+
 
       $(document).ready(function(){
           // Validação das datas de formação eclesiástica

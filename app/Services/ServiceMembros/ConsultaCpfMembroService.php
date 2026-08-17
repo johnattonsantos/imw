@@ -90,10 +90,38 @@ class ConsultaCpfMembroService
         ];
     }
 
-    public function dataDesligamentoFormatada(MembresiaMembro $membro): string
+    public function igrejaOrigemId(MembresiaMembro $membro): ?int
+    {
+        $rol = $this->ultimoRol($membro);
+        $igrejaId = optional($rol)->igreja_id ?: $membro->igreja_id;
+
+        return $igrejaId ? (int) $igrejaId : null;
+    }
+
+    public function isOutraIgreja(MembresiaMembro $membro, ?int $igrejaDestinoId): bool
+    {
+        $igrejaOrigemId = $this->igrejaOrigemId($membro);
+
+        return $igrejaOrigemId !== null
+            && $igrejaDestinoId !== null
+            && $igrejaOrigemId !== (int) $igrejaDestinoId;
+    }
+
+    public function dataDesligamento(MembresiaMembro $membro): ?\Carbon\Carbon
     {
         $rol = $this->ultimoRolInativo($membro) ?: $this->ultimoRol($membro);
         $data = optional($rol)->dt_exclusao;
+
+        if ($data) {
+            return \Carbon\Carbon::parse($data);
+        }
+
+        return $membro->deleted_at ? \Carbon\Carbon::parse($membro->deleted_at) : null;
+    }
+
+    public function dataDesligamentoFormatada(MembresiaMembro $membro): string
+    {
+        $data = $this->dataDesligamento($membro);
 
         return $data ? $data->format('d/m/Y') : 'data não informada';
     }
@@ -118,6 +146,30 @@ class ConsultaCpfMembroService
     public function mensagemInativo(MembresiaMembro $membro): string
     {
         return 'Este CPF pertence a um membro desligado de ' . $this->origemFormatada($membro) . ', em ' . $this->dataDesligamentoFormatada($membro) . '. Se desejar, confirme a reintegração nesta igreja. Apenas os dados pessoais serão preservados; funções, ministérios e vínculos eclesiásticos locais não serão transferidos.';
+    }
+
+    public function mensagemConfirmacaoInativo(MembresiaMembro $membro): string
+    {
+        $origem = $this->origemDetalhada($membro);
+
+        return sprintf(
+            'Este CPF pertence a %s, que está registrado como membro INATIVO na igreja %s, distrito %s, %s. Deseja continuar com a inclusão?',
+            $membro->nome ?: '-',
+            $origem['igreja'] ?: '-',
+            $origem['distrito'] ?: '-',
+            $origem['regiao'] ?: '-'
+        );
+    }
+
+    public function mensagemDataRecepcaoInvalida(MembresiaMembro $membro): string
+    {
+        $origem = $this->origemDetalhada($membro);
+
+        return sprintf(
+            'Data de recepção não permitida, pois o membro estava ativo na igreja %s até o dia %s. Volte à tela inicial, corrija a data de recepção e continue com a validação.',
+            $origem['igreja'] ?: '-',
+            $this->dataDesligamentoFormatada($membro)
+        );
     }
 
     private function ultimoRol(MembresiaMembro $membro): ?MembresiaRolPermanente

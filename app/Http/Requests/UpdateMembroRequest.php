@@ -207,7 +207,7 @@ class UpdateMembroRequest extends FormRequest
             'cpf' => [
                 $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
-                function ($attribute, $value, $fail) use ($membroId) {
+                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento) {
                     if (empty($value)) {
                         return;
                     }
@@ -216,6 +216,21 @@ class UpdateMembroRequest extends FormRequest
                     $cpf = preg_replace('/[^0-9]/', '', $value);
 
                     $consultaCpf = app(ConsultaCpfMembroService::class);
+
+                    if ($isRecadastramento) {
+                        $membroAtivo = $consultaCpf->findMembroAtivo($cpf, $membroId);
+                        if ($membroAtivo) {
+                            $fail($consultaCpf->mensagemAtivo($membroAtivo));
+                            return;
+                        }
+
+                        $membroInativo = $consultaCpf->findMembroInativo($cpf, $membroId);
+                        $igrejaDestinoId = $this->igrejaDestinoRecadastramentoId($membroId);
+                        if ($membroInativo && $consultaCpf->isOutraIgreja($membroInativo, $igrejaDestinoId)) {
+                            return;
+                        }
+                    }
+
                     $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
                     if ($membroDuplicado) {
@@ -283,5 +298,18 @@ class UpdateMembroRequest extends FormRequest
             'estado.required' => 'O campo Estado é obrigatório.',
             'profissao.required' => 'O campo Profissão é obrigatório.',
         ];
+    }
+
+    private function igrejaDestinoRecadastramentoId($membroId): ?int
+    {
+        if (empty($membroId)) {
+            return null;
+        }
+
+        $igrejaId = DB::table('membresia_migracao')
+            ->where('id', $membroId)
+            ->value('igreja_id');
+
+        return $igrejaId ? (int) $igrejaId : null;
     }
 }
