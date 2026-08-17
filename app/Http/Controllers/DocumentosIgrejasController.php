@@ -91,15 +91,13 @@ class DocumentosIgrejasController extends Controller
                 }
             });
         } catch (\Throwable $exception) {
-            foreach ($storedPaths as $path) {
-                Storage::disk(self::STORAGE_DISK)->delete($path);
-            }
+            $this->deleteStoredPathsSilently($storedPaths);
 
             report($exception);
 
             return back()
                 ->withInput()
-                ->with('error', __('Não foi possível cadastrar o documento. Tente novamente.'));
+                ->with('error', $this->documentoErrorMessage($exception, 'cadastrar'));
         }
 
         return redirect()
@@ -169,15 +167,13 @@ class DocumentosIgrejasController extends Controller
                 }
             });
         } catch (\Throwable $exception) {
-            foreach ($storedPaths as $path) {
-                Storage::disk(self::STORAGE_DISK)->delete($path);
-            }
+            $this->deleteStoredPathsSilently($storedPaths);
 
             report($exception);
 
             return back()
                 ->withInput()
-                ->with('error', __('Não foi possível atualizar o documento. Tente novamente.'));
+                ->with('error', $this->documentoErrorMessage($exception, 'atualizar'));
         }
 
         return redirect()
@@ -366,6 +362,8 @@ class DocumentosIgrejasController extends Controller
                 'visibility' => 'private',
                 'ContentType' => $arquivo->getMimeType() ?: 'application/pdf',
             ]);
+        } catch (\Throwable $exception) {
+            throw new RuntimeException('Não foi possível enviar o documento para o S3.', 0, $exception);
         } finally {
             if (is_resource($stream)) {
                 fclose($stream);
@@ -380,10 +378,50 @@ class DocumentosIgrejasController extends Controller
     private function ensureStoragePrefixExists(): void
     {
         $markerPath = $this->storagePrefix() . '/.keep';
-        $saved = Storage::disk(self::STORAGE_DISK)->put($markerPath, '', ['visibility' => 'private']);
+
+        try {
+            $saved = Storage::disk(self::STORAGE_DISK)->put($markerPath, '', ['visibility' => 'private']);
+        } catch (\Throwable $exception) {
+            throw new RuntimeException('Não foi possível criar o diretório de documentos no S3.', 0, $exception);
+        }
 
         if (!$saved) {
             throw new RuntimeException('Não foi possível criar o diretório de documentos no S3.');
         }
+    }
+
+    private function deleteStoredPathsSilently(array $storedPaths): void
+    {
+        foreach ($storedPaths as $path) {
+            try {
+                Storage::disk(self::STORAGE_DISK)->delete($path);
+            } catch (\Throwable $exception) {
+                report($exception);
+            }
+        }
+    }
+
+    private function documentoErrorMessage(\Throwable $exception, string $action): string
+    {
+        if ($this->isS3DocumentException($exception)) {
+            return __('Não foi possível enviar o documento para o S3 no momento. Verifique a configuração ou conexão com o S3 e tente novamente.');
+        }
+
+        return $action === 'atualizar'
+            ? __('Não foi possível atualizar o documento. Tente novamente.')
+            : __('Não foi possível cadastrar o documento. Tente novamente.');
+    }
+
+    private function isS3DocumentException(\Throwable $exception): bool
+    {
+        do {
+            if (str_contains($exception->getMessage(), 'S3')) {
+                return true;
+            }
+
+            $exception = $exception->getPrevious();
+        } while ($exception);
+
+        return false;
     }
 }
