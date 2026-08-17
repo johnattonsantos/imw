@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 
 class MapaoRegionalService
 {
-    public function execute(?string $dataInicial = null, ?string $dataFinal = null): array
+    public function execute(): array
     {
         $regiao = Identifiable::fetchtSessionRegiao();
         $regiaoId = (int) $regiao->id;
@@ -17,12 +17,7 @@ class MapaoRegionalService
         $distritoIds = $this->distritoIds($regiaoId);
         $igrejaIds = $this->igrejaIds($distritoIds);
 
-        $dataInicialPeriodo = $dataInicial
-            ? Carbon::parse($dataInicial)->startOfDay()
-            : Carbon::now()->startOfYear()->startOfDay();
-        $dataFinalPeriodo = $dataFinal
-            ? Carbon::parse($dataFinal)->endOfDay()
-            : Carbon::now()->endOfDay();
+        [$dataInicialPeriodo, $dataFinalPeriodo] = $this->periodoBienioCorrente();
         $mesesPeriodo = $this->mesesNoPeriodo($dataInicialPeriodo, $dataFinalPeriodo);
         $trimestresPeriodo = $this->trimestresNoPeriodo($dataInicialPeriodo, $dataFinalPeriodo);
 
@@ -52,8 +47,17 @@ class MapaoRegionalService
                 'data_final' => $dataFinalPeriodo,
                 'meses_periodo' => $mesesPeriodo,
                 'trimestres_periodo' => $trimestresPeriodo,
+                'descricao' => 'Biênio corrente',
             ],
         ];
+    }
+
+    private function periodoBienioCorrente(): array
+    {
+        $dataFinal = Carbon::now()->endOfDay();
+        $dataInicial = Carbon::create((int) $dataFinal->format('Y') - 1, 11, 1)->startOfDay();
+
+        return [$dataInicial, $dataFinal];
     }
 
     private function mesesNoPeriodo(Carbon $dataInicial, Carbon $dataFinal): int

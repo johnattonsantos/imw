@@ -31,12 +31,17 @@
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
 
-    .mapao-filter {
+    .mapao-period {
         background: #f8faff;
         border: 1px solid #e4e9f2;
         border-radius: 12px;
+        color: #59657d;
         margin-bottom: 18px;
         padding: 16px;
+    }
+
+    .mapao-period strong {
+        color: #26304d;
     }
 
     .mapao-card {
@@ -125,38 +130,13 @@
         </div>
 
         <div class="widget-content widget-content-area">
-            <form method="GET" action="{{ route('regiao.relatorio.mapao') }}" class="mapao-filter">
-                <div class="row align-items-end">
-                    <div class="col-md-3 col-lg-2 mb-2">
-                        <label for="data_inicial">{{ __('Data Inicial') }}</label>
-                        <input
-                            type="date"
-                            name="data_inicial"
-                            id="data_inicial"
-                            class="form-control form-control-sm @error('data_inicial') is-invalid @enderror"
-                            value="{{ $periodos['data_inicial']->toDateString() }}"
-                        >
-                    </div>
-                    <div class="col-md-3 col-lg-2 mb-2">
-                        <label for="data_final">{{ __('Data Final') }}</label>
-                        <input
-                            type="date"
-                            name="data_final"
-                            id="data_final"
-                            class="form-control form-control-sm @error('data_final') is-invalid @enderror"
-                            value="{{ $periodos['data_final']->toDateString() }}"
-                        >
-                    </div>
-                    <div class="col-md-4 col-lg-3 mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm">{{ __('Filtrar') }}</button>
-                        <a href="{{ route('regiao.relatorio.mapao') }}" class="btn btn-light btn-sm">{{ __('Limpar') }}</a>
-                    </div>
-                </div>
-
-                @error('data_final')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </form>
+            <div class="mapao-period">
+                <strong>{{ __($periodos['descricao']) }}:</strong>
+                {{ $periodos['data_inicial']->format('d/m/Y') }}
+                {{ __('até') }}
+                {{ $periodos['data_final']->format('d/m/Y') }}.
+                {{ __('As informações são calculadas automaticamente, sem filtro manual de data.') }}
+            </div>
 
             <div class="mapao-grid">
                 @foreach ($cards as $card)
