@@ -245,7 +245,7 @@ class UpdateMembroRequest extends FormRequest
                         return;
                     }
 
-                    if ($consultaCpf->isMesmaIgreja($membroDuplicado)) {
+                    if ($consultaCpf->isMesmaIgreja($membroDuplicado, $igrejaRecadastramentoId)) {
                         $fail($consultaCpf->mensagemPropriaIgreja($membroDuplicado));
                         return;
                     }
@@ -318,5 +318,18 @@ class UpdateMembroRequest extends FormRequest
             'estado.required' => 'O campo Estado é obrigatório.',
             'profissao.required' => 'O campo Profissão é obrigatório.',
         ];
+    }
+
+    private function igrejaDestinoRecadastramentoId($membroId): ?int
+    {
+        if (empty($membroId)) {
+            return null;
+        }
+
+        $igrejaId = DB::table('membresia_migracao')
+            ->where('id', $membroId)
+            ->value('igreja_id');
+
+        return $igrejaId ? (int) $igrejaId : null;
     }
 }

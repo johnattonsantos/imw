@@ -32,6 +32,7 @@
 @endsection
 
 @include('extras.alerts')
+@include('extras.alerts-error-all')
 
 @section('content')
 <div class="statbox widget box box-shadow">
@@ -105,7 +106,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
   $(document).ready(function() {
-    6fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
+    $.fn.select2.defaults.set("language", window.IMW_SELECT2_LANGUAGE || "pt-BR");
     $('#igreja_id').select2({
       placeholder: 'Selecione',
       allowClear: true

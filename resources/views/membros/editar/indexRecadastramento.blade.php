@@ -76,11 +76,25 @@
 @endsection
 
 @section('extras-scripts')
-    <script src="{{ asset('theme/plugins/fullcalendar/moment.min.js') }}"></script>
     <script src="{{ asset('theme/plugins/sweetalerts/promise-polyfill.js') }}"></script>
     <script src="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.js') }}"></script>
+    <script src="{{ asset('theme/plugins/fullcalendar/moment.min.js') }}"></script>
     <script src="{{ asset('membros/js/editar.js') }}"></script>
     <script>
+      @if(session('cpf_recepcao_invalida_message'))
+        document.addEventListener('DOMContentLoaded', function () {
+            swal({
+                title: 'Atenção',
+                text: @json(session('cpf_recepcao_invalida_message')),
+                type: 'warning',
+                showCancelButton: false,
+                confirmButtonText: 'Fechar',
+                confirmButtonColor: '#3085d6',
+                padding: '2em'
+            });
+        });
+      @endif
+
 
       $(document).ready(function(){
           @if (session('cpf_duplicado_confirmacao'))
