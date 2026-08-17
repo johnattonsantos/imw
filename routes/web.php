@@ -230,6 +230,7 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('documentos')->name('documentos-local.')->controller(DocumentosIgrejasController::class)->middleware(['seguranca:documentos-igrejas-visualizar'])->group(function () {
             Route::get('/', 'localIndex')->name('index');
             Route::get('/arquivo/{arquivo}/visualizar', 'visualizar')->name('visualizar');
+            Route::get('/arquivo/{arquivo}/download', 'download')->name('download');
         });
 
         Route::prefix('eventos')->name('eventos.')->controller(EventoController::class)->middleware(['seguranca:evento'])->group(function () {
