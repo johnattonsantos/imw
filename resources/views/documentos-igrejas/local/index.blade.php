@@ -26,9 +26,10 @@
                     <thead>
                         <tr>
                             <th>{{ __('Título') }}</th>
+                            <th>{{ __('Tipo') }}</th>
                             <th>{{ __('Data do cadastramento') }}</th>
                             <th>{{ __('Arquivos') }}</th>
-                            <th style="width: 160px;">{{ __('Ações') }}</th>
+                            <th style="width: 190px;">{{ __('Ações') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,9 +37,17 @@
                             @php
                                 $arquivosCount = $documento->arquivos->count();
                                 $primeiroArquivo = $documento->arquivos->first();
+                                $permiteDownload = !is_null($documento->igreja_id);
                             @endphp
                             <tr>
                                 <td>{{ $documento->titulo }}</td>
+                                <td>
+                                    @if ($permiteDownload)
+                                        <span class="badge badge-success">{{ __('Específico da igreja') }}</span>
+                                    @else
+                                        <span class="badge badge-primary">{{ __('Geral da região') }}</span>
+                                    @endif
+                                </td>
                                 <td>{{ optional($documento->created_at)->format('d/m/Y H:i') }}</td>
                                 <td>{{ $documento->arquivos->count() }}</td>
                                 <td>
@@ -49,6 +58,17 @@
                                                 <circle cx="12" cy="12" r="3"></circle>
                                             </svg>
                                         </button>
+                                        @if ($permiteDownload)
+                                            <a href="{{ route('documentos-local.download', $primeiroArquivo) }}" class="btn btn-sm btn-success btn-rounded bs-tooltip mb-1" title="{{ __('Baixar') }}" aria-label="{{ __('Baixar') }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="feather feather-download">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                    <polyline points="7 10 12 15 17 10"></polyline>
+                                                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                                                </svg>
+                                            </a>
+                                        @endif
                                     @elseif ($arquivosCount > 1)
                                         <button type="button" class="btn btn-sm btn-info btn-rounded bs-tooltip mb-1" title="{{ __('Visualizar') }}" aria-label="{{ __('Visualizar') }}" data-toggle="modal" data-target="#documentosModal{{ $documento->id }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
@@ -61,7 +81,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">{{ __('Nenhum documento cadastrado.') }}</td>
+                                <td colspan="5" class="text-center">{{ __('Nenhum documento cadastrado.') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -83,10 +103,19 @@
                                     <p class="mb-3"><strong>{{ $documento->titulo }}</strong></p>
                                     <div class="list-group">
                                         @foreach ($documento->arquivos as $arquivo)
-                                            <button type="button" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center btn-visualizar-documento" data-documento-url="{{ route('documentos-local.visualizar', $arquivo) }}" data-documento-nome="{{ $arquivo->nome_original }}">
+                                            <div class="list-group-item d-flex justify-content-between align-items-center">
                                                 <span>{{ $arquivo->nome_original }}</span>
-                                                <span class="btn btn-sm btn-info btn-rounded">{{ __('Visualizar') }}</span>
-                                            </button>
+                                                <span>
+                                                    <button type="button" class="btn btn-sm btn-info btn-rounded btn-visualizar-documento" data-documento-url="{{ route('documentos-local.visualizar', $arquivo) }}" data-documento-nome="{{ $arquivo->nome_original }}">
+                                                        {{ __('Visualizar') }}
+                                                    </button>
+                                                    @if (!is_null($documento->igreja_id))
+                                                        <a href="{{ route('documentos-local.download', $arquivo) }}" class="btn btn-sm btn-success btn-rounded">
+                                                            {{ __('Baixar') }}
+                                                        </a>
+                                                    @endif
+                                                </span>
+                                            </div>
                                         @endforeach
                                     </div>
                                 </div>
