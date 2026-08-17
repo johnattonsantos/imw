@@ -16,6 +16,7 @@ class DocumentoIgreja extends Model implements Auditable
 
     protected $fillable = [
         'regiao_id',
+        'igreja_id',
         'user_id',
         'titulo',
     ];
@@ -28,6 +29,11 @@ class DocumentoIgreja extends Model implements Auditable
     public function usuario()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function igreja()
+    {
+        return $this->belongsTo(InstituicoesInstituicao::class, 'igreja_id');
     }
 
     public function arquivos()

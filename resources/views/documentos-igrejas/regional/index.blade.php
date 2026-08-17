@@ -37,6 +37,7 @@
                     <thead>
                         <tr>
                             <th>{{ __('Título') }}</th>
+                            <th>{{ __('Destino') }}</th>
                             <th>{{ __('Data do cadastramento') }}</th>
                             <th>{{ __('Arquivos') }}</th>
                             <th style="width: 160px;">{{ __('Ações') }}</th>
@@ -50,6 +51,14 @@
                             @endphp
                             <tr>
                                 <td>{{ $documento->titulo }}</td>
+                                <td>
+                                    @if ($documento->igreja_id)
+                                        <span class="badge badge-info">{{ __('Igreja específica') }}</span>
+                                        <div class="small text-muted mt-1">{{ optional($documento->igreja)->nome }}</div>
+                                    @else
+                                        <span class="badge badge-primary">{{ __('Todas as igrejas') }}</span>
+                                    @endif
+                                </td>
                                 <td>{{ optional($documento->created_at)->format('d/m/Y H:i') }}</td>
                                 <td>{{ $documento->arquivos_count }}</td>
                                 <td>
@@ -94,7 +103,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">{{ __('Nenhum documento cadastrado.') }}</td>
+                                <td colspan="5" class="text-center">{{ __('Nenhum documento cadastrado.') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
