@@ -9,7 +9,6 @@
                         <th>{{ __('MODO/FORMA') }}</th>
                         <th>{{ __('IGREJA') }}</th>
                         <th>{{ __('CONGREGAÇÃO') }}</th>
-                        <th>{{ __('PASTOR') }}</th>
                     </tr>
                 </thead>
                 <tbody id="historico-tbody">
@@ -23,7 +22,6 @@
                                     'mode' => optional($rolPermanente->modoExclusao)->nome,
                                     'church' => $rolPermanente->igreja->nome,
                                     'congregation' => optional($rolPermanente->congregacao)->nome,
-                                    'cleric' => optional($rolPermanente->clerigo)->nome,
                                 ];
                             } elseif ($rolPermanente->status == 'A') {
                                 $class = 'tr-green';
@@ -33,7 +31,6 @@
                                     'mode' => optional($rolPermanente->modoRecepcao)->nome,
                                     'church' => $rolPermanente->igreja->nome,
                                     'congregation' => optional($rolPermanente->congregacao)->nome,
-                                    'cleric' => optional($rolPermanente->clerigo)->nome,
                                 ];
                             } elseif ($rolPermanente->status == 'T') {
                                 $class = 'tr-green';
@@ -43,7 +40,6 @@
                                     'mode' => optional($rolPermanente->modoRecepcao)->nome,
                                     'church' => $rolPermanente->igreja->nome,
                                     'congregation' => optional($rolPermanente->congregacao)->nome,
-                                    'cleric' => optional($rolPermanente->clerigo)->nome,
                                 ];
                             }
                         @endphp
@@ -53,7 +49,6 @@
                             <td>{{ $data['mode'] }}</td>
                             <td>{{ $data['church'] }}</td>
                             <td>{{ $data['congregation'] }}</td>
-                            <td>{{ $data['cleric'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>

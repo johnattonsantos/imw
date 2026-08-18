@@ -20,6 +20,7 @@ use App\Services\ServiceRegiaoRelatorios\LivroRazaoGeralService;
 use App\Services\ServiceRegiaoRelatorios\FinanceiroPorCategoriaService;
 use App\Services\ServiceRegiaoRelatorios\IgrejasPorClerigosService;
 use App\Services\ServiceRegiaoRelatorios\IgrejasPorPastoresService;
+use App\Services\ServiceRegiaoRelatorios\MapaoRegionalService;
 use App\Services\ServiceRegiaoRelatorios\MembrosMinisterioService;
 use App\Services\ServiceRegiaoRelatorios\OrcamentoService;
 use App\Services\ServiceRegiaoRelatorios\PerfilMembrosExcluidosService;
@@ -42,6 +43,13 @@ use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 class RegiaoRelatorioController extends Controller
 {
     //Membresia
+    public function mapao(Request $request)
+    {
+        $data = app(MapaoRegionalService::class)->execute();
+
+        return view('regiao.relatorios.mapao', $data);
+    }
+
     public function membrosministerio(Request $request)
     {
         $dataInicial = $request->input('data_inicial');

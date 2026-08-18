@@ -9,7 +9,6 @@
                      <th>{{ __('MODO/FORMA') }}</th>
                      <th>{{ __('IGREJA') }}</th>
                      <th>{{ __('CONGREGAÇÃO') }}</th>
-                     <th>{{ __('PASTOR') }}</th>
                  </tr>
              </thead>
              <tbody id="historico-tbody">
@@ -19,14 +18,12 @@
                      <td class="text-success">{{ __('Adesão') }}</td>
                      <td class="text-success">{{ __('IMW Gardênia Azul( Rio de Janeiro - RJ)') }}</td>
                      <td class="text-success">-</td>
-                     <td class="text-success">-</td>
                   <tr>
                   <tr>
                      <td class="text-danger">04/02/2005</td>
                      <td class="text-danger">{{ __('Exclusão') }}</td>
                      <td class="text-danger">{{ __('Abandono') }}</td>
                      <td class="text-danger">{{ __('IMW Gardênia Azul( Rio de Janeiro - RJ)') }}</td>
-                     <td class="text-danger">-</td>
                      <td class="text-danger">-</td>
                   <tr> --}}
              </tbody>

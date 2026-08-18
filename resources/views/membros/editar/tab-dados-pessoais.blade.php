@@ -64,8 +64,8 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="nacionalidade">{{ __('* Nacionalidade') }}</label>
-                <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade" required>
+                <label for="nacionalidade">{{ __('Nacionalidade') }}</label>
+                <select class="form-control @error('estado_civil') is-invalid @enderror" id="nacionalidade" name="nacionalidade">
                   <option value="">{{ __('Selecione') }}</option>
                   @php
                     //Colocar no banco de dados
@@ -330,16 +330,16 @@
               </div>
 
               <div class="col-xl-3">
-                <label for="naturalidade">{{ __('* Naturalidade') }}</label>
-                <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50" required>
+                <label for="naturalidade">{{ __('Naturalidade') }}</label>
+                <input type="text" class="form-control @error('naturalidade') is-invalid @enderror" id="naturalidade" name="naturalidade" value="{{ old('naturalidade', $pessoa->naturalidade) }}" maxlength="50">
                 @error('naturalidade')
                   <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
               </div>
 
               <div class="col-xl-3">
-                <label for="uf">{{ __('* UF') }}</label>
-                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf" required>
+                <label for="uf">{{ __('UF') }}</label>
+                <select class="form-control @error('uf') is-invalid @enderror" id="uf" name="uf">
                   <option value="">{{ __('Selecione') }}</option>
                   @php
                     //Colocar no banco de dados , esta estranho assim
@@ -552,16 +552,7 @@
               </div>
             @endif
             <div class="row mb-4">
-              @if(!request()->routeIs('recadastramento-membro.editar') && !request()->routeIs('recadastramento-membro.update'))
-                <div class="col-md-6">
-                  <label for="historico">{{ __('Pastor Oficiante') }}</label>
-                  <input type="text" class="form-control" id="historico" name="historico" value="{{ old('historico', $pessoa->historico) }}">
-                  @error('historico')
-                    <span class="help-block text-danger">{{ $message }}</span>
-                  @enderror
-                </div>
-              @endif
-                <div class="form-group mb-4 col-md-6">
+                <div class="form-group mb-4 col-md-12">
                     <label class="control-label">{{ __('Congregação:') }}</label>
                     <select id="congregacao_id" name="congregacao_id"
                         class="form-control @error('congregacao_id') is-invalid @enderror">

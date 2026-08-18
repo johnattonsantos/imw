@@ -4,7 +4,7 @@
     <x-breadcrumb :breadcrumbs="[
         ['text' => 'Home', 'url' => '/', 'active' => false],
         ['text' => 'Clérigos', 'url' => '#', 'active' => false],
-        ['text' => 'Documentação', 'url' => '#', 'active' => true],
+        ['text' => 'Clérigos Dados', 'url' => '#', 'active' => true],
     ]"></x-breadcrumb>
 @endsection
 
@@ -38,7 +38,7 @@
     <div class="widget-header">
       <div class="row">
           <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-              <h4>{{ __('Relatório Documentação dos Clérigos') }}</h4>
+              <h4>{{ __('Relatório Clérigos Dados') }}</h4>
           </div>
       </div>
   </div>
@@ -54,19 +54,19 @@
             <div class="form-check form-check-inline">
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                  <input {{ request()->get('status') == '' ? 'checked' : 'checked' }} type="radio" name="status" value="" class="new-control-input">
+                  <input {{ request()->get('status') == '' ? 'checked' : '' }} type="radio" name="status" value="" class="new-control-input">
                   <span class="new-control-indicator"></span>{{ __('Todos') }}
                 </label>
               </div>
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                  <input {{ request()->get('status') == '1' ? 'checked' : '' }} type="radio" name="status" value="1" class="new-control-input">
+                  <input {{ request()->get('status') == 'ativo' ? 'checked' : '' }} type="radio" name="status" value="ativo" class="new-control-input">
                   <span class="new-control-indicator"></span>{{ __('Ativos') }}
                 </label>
               </div>
               <div class="n-chk">
                 <label class="new-control new-checkbox new-checkbox-rounded checkbox-outline-info">
-                  <input {{ request()->get('status') == '0' ? 'checked' : '' }} type="radio" name="status" value="0" class="new-control-input">
+                  <input {{ request()->get('status') == 'inativo' ? 'checked' : '' }} type="radio" name="status" value="inativo" class="new-control-input">
                   <span class="new-control-indicator"></span>{{ __('Inativos') }}
                 </label>
               </div>
@@ -94,22 +94,88 @@
             <thead>
               <tr>
                   <th>{{ __('NOME') }}</th>
+                  <th>{{ __('SITUAÇÃO') }}</th>
+                  <th>{{ __('CATEGORIA') }}</th>
+                  <th>{{ __('SEXO') }}</th>
+                  <th>{{ __('ESTADO CIVIL') }}</th>
+                  <th>{{ __('FORMAÇÃO') }}</th>
+                  <th>{{ __('NASCIMENTO') }}</th>
+                  <th>{{ __('CONSAGRAÇÃO') }}</th>
+                  <th>{{ __('ORDENAÇÃO') }}</th>
+                  <th>{{ __('INTEGRALIZAÇÃO') }}</th>
+                  <th>{{ __('IDADE') }}</th>
+                  <th>{{ __('ROL') }}</th>
+                  <th>{{ __('NATURALIDADE') }}</th>
+                  <th>{{ __('CÔNJUGE') }}</th>
+                  <th>{{ __('MÃE') }}</th>
+                  <th>{{ __('PAI') }}</th>
                   <th>{{ __('E-MAIL') }}</th>
+                  <th>{{ __('TELEFONE') }}</th>
+                  <th>{{ __('TELEFONE ALTERNATIVO') }}</th>
                   <th>{{ __('IDENTIDADE') }}</th>
-                  <th>{{ __('ORGÃO') }}</th>
+                  <th>{{ __('UF IDENTIDADE') }}</th>
+                  <th>{{ __('ÓRGÃO EMISSOR') }}</th>
                   <th>{{ __('DATA EMISSÃO') }}</th>
                   <th>{{ __('CPF') }}</th>
+                  <th>{{ __('RESIDÊNCIA PRÓPRIA') }}</th>
+                  <th>{{ __('FGTS') }}</th>
+                  <th>{{ __('REGIÃO') }}</th>
+                  <th>{{ __('DISTRITO') }}</th>
+                  <th>{{ __('IGREJA') }}</th>
+                  <th>{{ __('INSTITUIÇÕES NOMEADAS') }}</th>
+                  <th>{{ __('FUNÇÕES NOMEADAS') }}</th>
+                  <th>{{ __('PAÍS') }}</th>
+                  <th>{{ __('UF') }}</th>
+                  <th>{{ __('CEP') }}</th>
+                  <th>{{ __('CIDADE') }}</th>
+                  <th>{{ __('BAIRRO') }}</th>
+                  <th>{{ __('ENDEREÇO') }}</th>
+                  <th>{{ __('NÚMERO') }}</th>
+                  <th>{{ __('COMPLEMENTO') }}</th>
               </tr>
             </thead>
             <tbody>
                 @forelse ($clerigos as $item)
                   <tr>
                       <td>{{ $item->nome }}</td>
+                      <td>{{ $item->situacao }}</td>
+                      <td>{{ $item->categoria }}</td>
+                      <td>{{ __($item->sexo ?: '-') }}</td>
+                      <td>{{ __($item->estado_civil ?: '-') }}</td>
+                      <td>{{ $item->formacao }}</td>
+                      <td>{{ $item->data_nascimento }}</td>
+                      <td>{{ $item->data_consagracao }}</td>
+                      <td>{{ $item->data_ordenacao }}</td>
+                      <td>{{ $item->data_integralizacao }}</td>
+                      <td>{{ $item->idade }}</td>
+                      <td>{{ $item->rol }}</td>
+                      <td>{{ trim(($item->natural_cidade ?? '') . '/' . ($item->natural_uf ?? ''), '/') }}</td>
+                      <td>{{ $item->nome_conjuge }}</td>
+                      <td>{{ $item->nome_mae }}</td>
+                      <td>{{ $item->nome_pai }}</td>
                       <td>{{ $item->email }}</td>
+                      <td>{{ $item->telefone_preferencial ? formatStr($item->telefone_preferencial, '## (##) #####-####') : '' }}</td>
+                      <td>{{ $item->telefone_alternativo ? formatStr($item->telefone_alternativo, '## (##) #####-####') : '' }}</td>
                       <td>{{ $item->identidade }}</td>
+                      <td>{{ $item->identidade_uf }}</td>
                       <td>{{ $item->orgao_emissor }}</td>
                       <td>{{ $item->data_emissao }}</td>
-                      <td>{{ formatStr($item->cpf, '###.###.###-##') }}</td>
+                      <td>{{ $item->cpf ? formatStr($item->cpf, '###.###.###-##') : '' }}</td>
+                      <td>{{ __($item->residencia_propria ?: '-') }}</td>
+                      <td>{{ __($item->residencia_propria_fgts ?: '-') }}</td>
+                      <td>{{ $item->regiao }}</td>
+                      <td>{{ $item->distrito }}</td>
+                      <td>{{ $item->igreja }}</td>
+                      <td>{{ $item->instituicoes_nomeadas }}</td>
+                      <td>{{ $item->funcoes_nomeadas }}</td>
+                      <td>{{ $item->pais }}</td>
+                      <td>{{ $item->uf }}</td>
+                      <td>{{ $item->cep ? formatStr($item->cep, '#####-###') : '' }}</td>
+                      <td>{{ $item->cidade }}</td>
+                      <td>{{ $item->bairro }}</td>
+                      <td>{{ $item->endereco }}</td>
+                      <td>{{ $item->numero }}</td>
+                      <td>{{ $item->complemento }}</td>
                   </tr>
                 @empty
                   <p class="text-center text-muted">{{ __('Nenhum resultado encontrado para o período selecionado.') }}</p>
@@ -131,10 +197,7 @@
     <script src="https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.dataTables.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js"></script>
     <script>
     $('#btn_buscar').click(function () {
         $('#filter_form').removeAttr('target');
@@ -154,32 +217,7 @@
                   className: 'btn btn-primary btn-rounded',
                   text: '<i class="fas fa-file-excel"></i> Excel',
                   titleAttr: 'Excel',
-                  title: "IMW - RELATÓRIO DOCUMENTAÇÃO - CLÉRIGOS"
-                },
-                {
-                  extend: 'pdf',
-                  orientation: 'landscape',
-                  className: 'btn btn-primary btn-rounded',
-                  text: '<i class="fas fa-file-pdf"></i> PDF',
-                  titleAttr: 'PDF',
-                  title: "IMW - RELATÓRIO DOCUMENTAÇÃO - CLÉRIGOS",
-                },
-                {
-                  extend: 'print',
-                  className: 'btn btn-primary btn-rounded',
-                  text: '<i class="fas fa-print"></i> Imprimir',
-                  titleAttr: 'Imprimir',
-                  title: "IMW - RELATÓRIO DOCUMENTAÇÃO - CLÉRIGOS",
-                  customize: function ( win ) {
-                      $(win.document.body)
-                      .css( 'font-size', '14pt' )
-                      .find( 'h1' )
-                              .css( 'text-align', 'center' ).css( 'font-size', '18pt' ).css( 'font-weight', 'bold');
-
-                      $(win.document.body).find('table')
-                      .addClass('compact')
-                      .css('font-size', 'inherit');
-                  }
+                  title: "IMW - RELATÓRIO CLÉRIGOS DADOS"
                 }]
             },
             topEnd: 'search',

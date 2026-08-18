@@ -81,9 +81,9 @@ class UpdateCongregadoRequest extends FormRequest
                 },
             ],
             'estado_civil' => 'required',
-            'nacionalidade' => 'required',
-            'naturalidade' => 'required',
-            'uf' => 'required',
+            'nacionalidade' => 'nullable',
+            'naturalidade' => 'nullable',
+            'uf' => 'nullable',
             'cpf' => [
                 'nullable',
                 Rule::unique('membresia_membros', 'cpf')->ignore($membroId),

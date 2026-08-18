@@ -54,10 +54,6 @@
                         <span class="text-center d-block" style="font-weight: bold">{{ $rol->congregacao->nome ?? 'Sem informações' }}</span>
                         <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Congregação') }}</span>
                     </p>
-                    <p class="card-text">
-                        <span class="text-center d-block" style="font-weight: bold">{{ $rol->clerigo->nome ?? 'Sem informações' }}</span>
-                        <span class="text-center d-block" style="font-size: .8rem; color: #6c757d">{{ __('Pastor') }}</span>
-                    </p>
                 </div>
             @endforeach
         @else

@@ -23,6 +23,51 @@ class AdminController extends Controller
         return view('admin.index', $data);
     }
 
+    public function pesquisarMembro(Request $request)
+    {
+        $nome = trim((string) $request->input('nome'));
+        $cpf = preg_replace('/\D/', '', (string) $request->input('cpf'));
+        $searched = $nome !== '' || $cpf !== '';
+        $membros = collect();
+
+        if ($searched) {
+            $membros = DB::table('membresia_membros as mm')
+                ->leftJoin('instituicoes_instituicoes as regiao', 'regiao.id', '=', 'mm.regiao_id')
+                ->leftJoin('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'mm.distrito_id')
+                ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'mm.igreja_id')
+                ->where('mm.vinculo', 'M')
+                ->whereIn('mm.status', ['A', 'I'])
+                ->when($nome !== '', fn ($query) =>
+                    $query->where('mm.nome', 'like', '%' . $nome . '%'))
+                ->when($cpf !== '', fn ($query) =>
+                    $query->whereRaw("REPLACE(REPLACE(REPLACE(REPLACE(mm.cpf, '.', ''), '-', ''), '/', ''), ' ', '') LIKE ?", ['%' . $cpf . '%']))
+                ->select([
+                    'mm.id',
+                    'mm.nome',
+                    'mm.cpf',
+                    'mm.status',
+                    DB::raw('COALESCE(regiao.nome, regiao_distrito.nome, regiao_igreja.nome) as regiao_nome'),
+                    'distrito.nome as distrito_nome',
+                    'igreja.nome as igreja_nome',
+                    DB::raw("(SELECT CASE
+                        WHEN mc.telefone_preferencial IS NOT NULL AND mc.telefone_preferencial <> '' THEN mc.telefone_preferencial
+                        WHEN mc.telefone_alternativo IS NOT NULL AND mc.telefone_alternativo <> '' THEN mc.telefone_alternativo
+                        ELSE mc.telefone_whatsapp
+                    END FROM membresia_contatos mc
+                    WHERE mc.membro_id = mm.id AND mc.deleted_at IS NULL
+                    ORDER BY mc.id DESC
+                    LIMIT 1) as telefone"),
+                ])
+                ->leftJoin('instituicoes_instituicoes as regiao_distrito', 'regiao_distrito.id', '=', 'distrito.instituicao_pai_id')
+                ->leftJoin('instituicoes_instituicoes as regiao_igreja', 'regiao_igreja.id', '=', 'igreja.regiao_id')
+                ->orderBy('mm.nome')
+                ->limit(100)
+                ->get();
+        }
+
+        return view('admin.pesquisar-membro', compact('membros', 'searched', 'nome', 'cpf'));
+    }
+
     public function novo()
     {
         try {

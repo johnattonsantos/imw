@@ -112,6 +112,22 @@
                      </div>
                  </a>
              </li>
+             @if (auth()->check() && auth()->user()->hasPerfilRegra('admin-index'))
+                 <li class="menu {{ Request::is('admin/pesquisar-membro*') ? 'active' : '' }}">
+                     <a href="{{ route('admin.pesquisar-membro') }}" aria-expanded="false" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-user-search">
+                                 <circle cx="11" cy="11" r="8"></circle>
+                                 <path d="M21 21l-4.35-4.35"></path>
+                                 <path d="M11 8a3 3 0 0 1 3 3"></path>
+                             </svg>
+                             <span>{{ __('Pesquisar Membro') }}</span>
+                         </div>
+                     </a>
+                 </li>
+             @endif
               @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao'))
                   <li class="menu {{ Request::is('comunicacao*') ? 'active' : '' }}">
                      <a href="{{ route('comunicacao.index') }}" aria-expanded="false" class="dropdown-toggle">
@@ -130,6 +146,24 @@
                          </div>
                      </a>
                  </li>
+            @endif
+            @if (auth()->check() && auth()->user()->hasPerfilRegra('documentos-igrejas-visualizar'))
+                <li class="menu {{ Request::is('documentos', 'documentos/*') ? 'active' : '' }}">
+                    <a href="{{ route('documentos-local.index') }}" aria-expanded="false" class="dropdown-toggle">
+                        <div class="">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>{{ __('Documentos') }}</span>
+                        </div>
+                    </a>
+                </li>
             @endif
             @if (auth()->check() && auth()->user()->hasPerfilRegra('evento'))
                  <li class="menu {{ Request::is('eventos*') ? 'active' : '' }}">
@@ -344,11 +378,30 @@
                  </li>
              @endif
 
+             @if (auth()->check() && auth()->user()->hasPerfilRegra('documentos-igrejas-gerenciar'))
+                 <li class="menu {{ Request::is('documentos-para-igrejas*') ? 'active' : '' }}">
+                     <a href="{{ route('documentos-igrejas.index') }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text">
+                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                 <polyline points="14 2 14 8 20 8"></polyline>
+                                 <line x1="16" y1="13" x2="8" y2="13"></line>
+                                 <line x1="16" y1="17" x2="8" y2="17"></line>
+                                 <polyline points="10 9 9 9 8 9"></polyline>
+                             </svg>
+                             <span>{{ __('Documentos para Igrejas') }}</span>
+                         </div>
+                     </a>
+                 </li>
+             @endif
+
              @if (auth()->check() && auth()->user()->hasPerfilRegra('instituicoes-igrejas'))
                  <li class="menu mx-3">
                      <a href="">{{ __('Igrejas') }}</a>
                  </li>
-                 <li class="menu {{ Request::is('igreja', 'igreja/*', 'igrejas-regiao*') ? 'active' : '' }}">
+                 <li class="menu {{ Request::is('igreja', 'igreja/*', 'igrejas-regiao') ? 'active' : '' }}">
                      <a href="{{ route('igrejas.regiao.index') }}" class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -362,7 +415,20 @@
                          </div>
                      </a>
                  </li>
-
+                 <li class="menu {{ Request::is('igrejas-regiao/pesquisar-membro*') ? 'active' : '' }}">
+                     <a href="{{ route('igrejas.regiao.pesquisar-membro') }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-user-search">
+                                 <circle cx="11" cy="11" r="8"></circle>
+                                 <path d="M21 21l-4.35-4.35"></path>
+                                 <path d="M11 8a3 3 0 0 1 3 3"></path>
+                             </svg>
+                             <span>{{ __('Pesquisar Membro') }}</span>
+                         </div>
+                     </a>
+                 </li>
                  {{-- Menu Clérigos --}}
                  <li class="menu mx-3">
                      <a href="">{{ __('Clérigos') }}</a>
@@ -834,13 +900,20 @@
 
                         </li>
                         @endif
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
+                        @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio') || auth()->user()->hasPerfilRegra('regiao-mapao')))
                          <li class="submenu-fixo mt-3 mb-3">
 
                                  <span>{{ __('Membresia') }}</span>
 
                          </li>
                          @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-mapao'))
+                         <li {!! Request::is('regiao/relatorio/mapao') ? 'class="active"' : '' !!}>
+
+                                 <a href="{{ route('regiao.relatorio.mapao') }}">{{ __('Mapão') }}</a>
+
+                         </li>
+                        @endif
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio'))
                          <li {!! Request::is('regiao/relatorio/membrosministerio') ? 'class="active"' : '' !!}>
 
@@ -912,16 +985,16 @@
 
                         </li>
                         @endif
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
-                        <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
-                            <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">{{ __('Cônjuges dos Clérigos') }}</a>
-                        </li>
-                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
                         <li {!! Request::is('regiao/relatorio/clerigos-dados') ? 'class="active"' : '' !!}>
 
-                                <a href="{{ route('regiao.relatorio.clerigosdados') }}">{{ __('Clérigos Documentação') }}</a>
+                                <a href="{{ route('regiao.relatorio.clerigosdados') }}">{{ __('Clérigos Dados') }}</a>
 
+                        </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-dados'))
+                        <li {!! Request::is('regiao/relatorio/esposas-de-pastores') ? 'class="active"' : '' !!}>
+                            <a href="{{ route('regiao.relatorio.esposas-de-pastores') }}">{{ __('Cônjuges dos Clérigos') }}</a>
                         </li>
                         @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-categoria'))
