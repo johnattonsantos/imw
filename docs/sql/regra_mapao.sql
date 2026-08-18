@@ -6,4 +6,3 @@ FROM regras r
 WHERE r.nome = 'regiao-mapao'
 ORDER BY r.id DESC
 LIMIT 1;
-

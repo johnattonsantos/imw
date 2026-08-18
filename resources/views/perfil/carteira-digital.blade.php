@@ -26,14 +26,20 @@
             font-family: Arial, Helvetica, sans-serif;
             font-size: 20px;
         }
+        .carteira-viewport{
+            width: 100%;
+            overflow: hidden;
+        }
         .carteira-wrapper{
             position: relative;
-            max-width: 900px;
+            width: 900px;
+            height: 1110px;
             margin: 0 auto;
+            transform-origin: top center;
         }
         .carteira-bg{
-            width: 100%;
-            height: auto;
+            width: 900px;
+            height: 1110px;
             display: block;
             position: relative;
             z-index: 0;
@@ -111,6 +117,44 @@
         .regiao_bottom{
             position: absolute; top:1030px; left: 240px; font-size: 14px; color: #4361ee; z-index: 1;
         }
+        @media (max-width: 991px) {
+            .widget-content.widget-content-area{
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            .carteira-viewport{
+                height: 666px;
+            }
+            .carteira-wrapper{
+                left: 50%;
+                margin-left: -450px;
+                transform: scale(.6);
+            }
+        }
+        @media (max-width: 767px) {
+            .carteira-viewport{
+                height: 500px;
+            }
+            .carteira-wrapper{
+                transform: scale(.45);
+            }
+        }
+        @media (max-width: 575px) {
+            .carteira-viewport{
+                height: 400px;
+            }
+            .carteira-wrapper{
+                transform: scale(.36);
+            }
+        }
+        @media (max-width: 390px) {
+            .carteira-viewport{
+                height: 377px;
+            }
+            .carteira-wrapper{
+                transform: scale(.34);
+            }
+        }
     </style>
 @endsection
 
@@ -134,23 +178,25 @@
                     $superintendenteRegiao = trim('Superintendente da ' . $regiaoEclesiastica);
                     $telefoneSedeAdministrativa = $usuario->telefone_sede_administrativa ?? '';
                 @endphp
-                <div class="carteira-wrapper">
-                    <div class="regiao_top">{{ $regiaoEclesiastica }}</div>
-                    <div class="superintendente-nome">{{ $usuario->superintendente_regional_nome }}</div>
-                    <div class="superintendente-regiao">{{ $superintendenteRegiao }}</div>
-                    <img src="{{ $usuario->foto }}" class="foto" alt="">
-                    <div class="rol">{{ $usuario->rol }}</div>
-                    <div class="nome">{{ $usuario->nome }}</div>
-                    <div class="cpf">{{ $usuario->cpf }}</div>
-                    <div class="rg">{{ $usuario->identidade }}</div>
-                    <div class="dt-nascimento">{{ formatDate($usuario->data_nascimento) }}</div>
-                    <div class="categoria">{{ isset($usuario->categoria) ? mb_convert_case($usuario->categoria, MB_CASE_TITLE, "UTF-8") : '' }}</div>
-                    <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
-                    <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
-                    <div class="validade">{{ __('Validade') }}: 31/10/2027</div>
-                    <div class="contato-sede">{{ __('Sede Administrativa') }}: {{ $telefoneSedeAdministrativa }}</div>
-                    <div class="regiao_bottom">{{ $regiaoEclesiastica }}</div>
-                    <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
+                <div class="carteira-viewport">
+                    <div class="carteira-wrapper">
+                        <div class="regiao_top">{{ $regiaoEclesiastica }}</div>
+                        <div class="superintendente-nome">{{ $usuario->superintendente_regional_nome }}</div>
+                        <div class="superintendente-regiao">{{ $superintendenteRegiao }}</div>
+                        <img src="{{ $usuario->foto }}" class="foto" alt="">
+                        <div class="rol">{{ $usuario->rol }}</div>
+                        <div class="nome">{{ $usuario->nome }}</div>
+                        <div class="cpf">{{ $usuario->cpf }}</div>
+                        <div class="rg">{{ $usuario->identidade }}</div>
+                        <div class="dt-nascimento">{{ formatDate($usuario->data_nascimento) }}</div>
+                        <div class="categoria">{{ isset($usuario->categoria) ? mb_convert_case($usuario->categoria, MB_CASE_TITLE, "UTF-8") : '' }}</div>
+                        <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
+                        <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
+                        <div class="validade">{{ __('Validade') }}: 31/10/2027</div>
+                        <div class="contato-sede">{{ __('Sede Administrativa') }}: {{ $telefoneSedeAdministrativa }}</div>
+                        <div class="regiao_bottom">{{ $regiaoEclesiastica }}</div>
+                        <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
+                    </div>
                 </div>
             </div>
             @else

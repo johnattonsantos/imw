@@ -62,5 +62,3 @@ CREATE TABLE IF NOT EXISTS `documentos_igrejas_arquivos` (
   CONSTRAINT `documentos_igrejas_arquivos_documento_igreja_id_foreign`
     FOREIGN KEY (`documento_igreja_id`) REFERENCES `documentos_igrejas` (`id`) ON DELETE CASCADE
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE 'utf8mb4_unicode_ci';
-
-
