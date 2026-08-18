@@ -19,6 +19,7 @@ use App\Models\MembresiaFuncaoEclesiastica;
 use App\Models\MembresiaFormacaoEclesiastica;
 use App\Models\MembresiaMembroRecadastramento;
 use App\Services\ServiceMembros\ConsultaCpfMembroService;
+use App\Models\InstituicoesInstituicao;
 use App\Traits\Identifiable;
 
 class UpdateMembroRecadastramentoService
@@ -98,7 +99,8 @@ class UpdateMembroRecadastramentoService
             return (int) $data['rol_atual'];
         }
 
-        $igrejaId = $membroMigracao->igreja_id ?? self::fetchSessionIgrejaLocal()->id;
+        $localidade = $this->resolveLocalidadeValidacao($membroMigracao);
+        $igrejaId = $localidade['igreja_id'];
         $maxRol = (int) MembresiaRolPermanente::where('igreja_id', $igrejaId)->max('numero_rol');
 
         return $maxRol + 1;
@@ -135,9 +137,7 @@ class UpdateMembroRecadastramentoService
     private function prepareMembroData(array $data, $vinculo, ?MembresiaMembroRecadastramento $membroMigracao = null): array
     {
         $cpf = preg_replace('/[^0-9]/', '', $data['cpf']);
-        $igrejaId = $membroMigracao->igreja_id ?? self::fetchSessionIgrejaLocal()->id;
-        $distritoId = $membroMigracao->distrito_id ?? self::fetchtSessionDistrito()->id;
-        $regiaoId = $membroMigracao->regiao_id ?? self::fetchtSessionRegiao()->id;
+        $localidade = $this->resolveLocalidadeValidacao($membroMigracao);
 
         $result = [
             'membro_id' => $data['membro_id'],
@@ -155,9 +155,9 @@ class UpdateMembroRecadastramentoService
             'profissao'  => $data['profissao'],
             'funcao_eclesiastica_id'  => $data['funcao_eclesiastica_id'],
             'cpf'  => $cpf !== '' ? $cpf : null,
-            'distrito_id' => $distritoId,
-            'igreja_id' => $igrejaId,
-            'regiao_id' => $regiaoId,
+            'distrito_id' => $localidade['distrito_id'],
+            'igreja_id' => $localidade['igreja_id'],
+            'regiao_id' => $localidade['regiao_id'],
             'tipo_documento'  => $data['tipo_documento'],
             'documento'  => $data['documento'],
             'documento_complemento'  => $data['documento_complemento'],
@@ -177,6 +177,55 @@ class UpdateMembroRecadastramentoService
         }
 
         return $result;
+    }
+
+    private function resolveLocalidadeValidacao(?MembresiaMembroRecadastramento $membroMigracao = null): array
+    {
+        $igrejaId = (int) ($membroMigracao->igreja_id ?? self::fetchSessionIgrejaLocal()->id);
+        $distritoId = (int) ($membroMigracao->distrito_id ?? 0);
+        $regiaoId = 0;
+
+        $igreja = $igrejaId > 0
+            ? InstituicoesInstituicao::query()
+                ->select(['id', 'instituicao_pai_id', 'regiao_id'])
+                ->find($igrejaId)
+            : null;
+
+        if ($distritoId <= 0 && $igreja && !empty($igreja->instituicao_pai_id)) {
+            $distritoId = (int) $igreja->instituicao_pai_id;
+        }
+
+        $distrito = $distritoId > 0
+            ? InstituicoesInstituicao::query()
+                ->select(['id', 'instituicao_pai_id', 'regiao_id'])
+                ->find($distritoId)
+            : null;
+
+        if ($distrito && !empty($distrito->instituicao_pai_id)) {
+            $regiaoId = (int) $distrito->instituicao_pai_id;
+        }
+
+        if ($regiaoId <= 0 && $igreja && !empty($igreja->regiao_id)) {
+            $regiaoId = (int) $igreja->regiao_id;
+        }
+
+        if ($regiaoId <= 0 && $distrito && !empty($distrito->regiao_id)) {
+            $regiaoId = (int) $distrito->regiao_id;
+        }
+
+        if ($regiaoId <= 0) {
+            $regiaoId = (int) ($membroMigracao->regiao_id ?? self::fetchtSessionRegiao()->id);
+        }
+
+        if ($distritoId <= 0) {
+            $distritoId = (int) self::fetchtSessionDistrito()->id;
+        }
+
+        return [
+            'regiao_id' => $regiaoId,
+            'distrito_id' => $distritoId,
+            'igreja_id' => $igrejaId,
+        ];
     }
 
     private function prepareContatoData(array $data): array
