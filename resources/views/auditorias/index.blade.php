@@ -11,6 +11,38 @@
 @include('extras.alerts')
 @include('extras.alerts-error-all')
 
+@section('extras-css')
+<link href="{{ asset('theme/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
+<style>
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .auditorias-filtros .select2-container--default .select2-selection--single {
+        height: 43px;
+        border: 1px solid #bfc9d4;
+        border-radius: 4px;
+    }
+
+    .auditorias-filtros .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 41px;
+        padding-left: 20px;
+        padding-right: 36px;
+    }
+
+    .auditorias-filtros .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 41px;
+        right: 8px;
+    }
+
+    .auditorias-filtros .select2-container--default .select2-selection--single .select2-selection__clear {
+        height: 41px;
+        line-height: 41px;
+        margin-right: 12px;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
@@ -22,11 +54,11 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form method="GET" action="{{ route('auditorias.index') }}" class="mb-4">
-                <div class="row align-items-end">
+            <form method="GET" action="{{ route('auditorias.index') }}" class="mb-4 auditorias-filtros">
+                <div class="row align-items-start">
                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                         <label for="user_id">{{ __('Usuario') }}</label>
-                        <select name="user_id" id="user_id" class="form-control form-control-sm">
+                        <select name="user_id" id="user_id" class="form-control form-control-sm select2-auditoria" data-placeholder="{{ __('Todos') }}">
                             <option value="">{{ __('Todos') }}</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}" @selected((string) request('user_id') === (string) $user->id)>
@@ -38,7 +70,7 @@
 
                     <div class="col-12 col-md-6 col-lg-2 mb-3">
                         <label for="instituicao_id">{{ __('Instituicao') }}</label>
-                        <select name="instituicao_id" id="instituicao_id" class="form-control form-control-sm">
+                        <select name="instituicao_id" id="instituicao_id" class="form-control form-control-sm select2-auditoria" data-placeholder="{{ __('Todas') }}">
                             <option value="">{{ __('Todas') }}</option>
                             @foreach($instituicoes as $instituicao)
                                 <option value="{{ $instituicao->id }}" @selected((string) request('instituicao_id') === (string) $instituicao->id)>
@@ -192,4 +224,19 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('extras-scripts')
+<script src="{{ asset('theme/plugins/select2/select2.min.js') }}"></script>
+<script>
+    $(document).ready(function () {
+        $('.select2-auditoria').select2({
+            allowClear: true,
+            width: '100%',
+            placeholder: function () {
+                return $(this).data('placeholder');
+            }
+        });
+    });
+</script>
 @endsection
