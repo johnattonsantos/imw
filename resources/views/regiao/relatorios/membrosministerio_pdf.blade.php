@@ -94,8 +94,8 @@ use Carbon\Carbon;
         <div class="info">
             <div class="title">MEMBROS POR MINISTÉRIO - {{ optional($instituicao)->nome ?? $regiao->nome }}</div>
             <div class="period">
-                Período de {{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}
-                a {{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}
+                Período de {{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}
+                a {{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}
             </div>
         </div>
         <div class="date">Data do Relatório: {{ \Carbon\Carbon::now()->format('m/Y') }}</div>
@@ -116,22 +116,22 @@ use Carbon\Carbon;
                 <th width="40px" style="text-align: center" colspan="2">{{ __('TOTAL') }}</th>
             </tr>
             <tr>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                <th width="40px" style="text-align: right">{{ Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+                <th width="40px" style="text-align: right">{{ Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
             </tr>
         </thead>
         <tbody>
