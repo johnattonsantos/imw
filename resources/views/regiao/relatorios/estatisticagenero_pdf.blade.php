@@ -94,8 +94,8 @@ use Carbon\Carbon;
         <div class="info">
             <div class="title">ESTATÍSTICA POR GÊNERO - {{ optional($instituicao)->nome ?? $regiao->nome }}</div>
             <div class="period">
-                Período de {{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}
-                a {{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}
+                Período de {{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}
+                a {{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}
             </div>
         </div>
         <div class="date">Data do Relatório: {{ \Carbon\Carbon::now()->format('m/Y') }}</div>
@@ -112,12 +112,12 @@ use Carbon\Carbon;
         <tr>
             <th width="100px" style="text-align: left">{{ __('DISTRITO') }}</th>
             <th width="200px" style="text-align: left">{{ __('IGREJA') }}</th>
-            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
+            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
+            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}</th>
+            <th width="100px" style="text-align: center">{{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}</th>
         </tr>
     </thead>
     <tbody>

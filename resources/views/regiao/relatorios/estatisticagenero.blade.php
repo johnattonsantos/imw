@@ -18,6 +18,10 @@
 
 @php
 use Carbon\Carbon;
+
+$periodoSelecionado = request()->input('periodo_anos', $periodoAnos ?? 1);
+$dataFinalSelecionada = request()->input('data_final', $dataFinal ?? Carbon::now()->format('Y-m-d'));
+$dataInicialCalculada = $dataInicial ?? Carbon::parse($dataFinalSelecionada)->subYearsNoOverflow((int) $periodoSelecionado)->format('Y-m-d');
 @endphp
 
 @section('content')
@@ -46,32 +50,30 @@ use Carbon\Carbon;
                         </select>
                     </div>
                 </div>
-                <div class="form-group row mb-4" id="filtros_data_inicial">
-                    <div class="col-lg-3 text-right">
-                        <label class="control-label">{{ __('* Data Inicial:') }}</label>
-                    </div>
-                    <div class="col-lg-3">
-                        <input type="date" class="form-control @error('data_inicial') is-invalid @enderror" id="data_inicial" name="data_inicial" value="{{ request()->input('data_inicial') }}" required>
-                    </div>
-                </div>
+                <input type="hidden" id="data_inicial" name="data_inicial" value="{{ $dataInicialCalculada }}">
+
                 <div class="form-group row mb-4" id="filtros_data_final">
                     <div class="col-lg-3 text-right">
                         <label class="control-label">{{ __('* Data Final:') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <input type="date" class="form-control @error('data_final') is-invalid @enderror" id="data_final" name="data_final" value="{{ request()->input('data_final') }}" required>
+                        <input type="date" class="form-control @error('data_final') is-invalid @enderror" id="data_final" name="data_final" value="{{ $dataFinalSelecionada }}" required>
                     </div>
                 </div>
-                <div class="form-group row mb-4" id="filtros_congregados">
+                <div class="form-group row mb-4" id="filtros_periodo">
                     <div class="col-lg-3 text-right">
-                        <label class="control-label">{{ __('* Incluir Congregados:') }}</label>
+                        <label class="control-label">{{ __('* Período:') }}</label>
                     </div>
                     <div class="col-lg-3">
-                        <select class="form-control" id="tipo" name="tipo">
-                            <option value="">{{ __('Selecione') }}</option>
-                            <option value="C" {{ request()->input('tipo') == 'C' ? 'selected' : '' }}>{{ __('Sim') }}</option>
-                            <option value="M" {{ request()->input('tipo') == 'M' ? 'selected' : '' }}>{{ __('Não') }}</option>
+                        <select class="form-control" id="periodo_anos" name="periodo_anos" required>
+                            <option value="1" {{ (string) $periodoSelecionado === '1' ? 'selected' : '' }}>{{ __('Anual') }}</option>
+                            <option value="2" {{ (string) $periodoSelecionado === '2' ? 'selected' : '' }}>{{ __('Bienal') }}</option>
+                            <option value="3" {{ (string) $periodoSelecionado === '3' ? 'selected' : '' }}>{{ __('3 anos') }}</option>
+                            <option value="4" {{ (string) $periodoSelecionado === '4' ? 'selected' : '' }}>{{ __('4 anos') }}</option>
+                            <option value="5" {{ (string) $periodoSelecionado === '5' ? 'selected' : '' }}>{{ __('5 anos') }}</option>
+                            <option value="6" {{ (string) $periodoSelecionado === '6' ? 'selected' : '' }}>{{ __('Sexênio') }}</option>
                         </select>
+                        <small class="form-text text-muted">{{ __('Intervalo máximo permitido: 6 anos.') }}</small>
                     </div>
                 </div>
                 <div class="form-group row mb-4">
@@ -92,13 +94,13 @@ use Carbon\Carbon;
                 <input type="hidden" name="distrito" id="report_distrito">
                 <input type="hidden" name="data_inicial" id="report_data_inicial">
                 <input type="hidden" name="data_final" id="report_data_final">
-                <input type="hidden" name="tipo" id="report_tipo">
+                <input type="hidden" name="periodo_anos" id="report_periodo_anos">
             </form>
         </div>
     </div>
 </div>
 
-@if(request()->input('data_inicial') && request()->input('data_final'))
+@if(request()->input('data_final') || request()->input('periodo_anos') || request()->input('data_inicial'))
 <div class="col-lg-12 col-12 layout-spacing">
     <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area">
@@ -120,12 +122,12 @@ use Carbon\Carbon;
                                         <tr>
                                             <th width="40px" style="text-align: left">{{ __('DISTRITO') }}</th>
                                             <th width="200px" style="text-align: left">{{ __('IGREJA') }}</th>
-                                            <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                                            <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                                            <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                                            <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
-                                            <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_inicial'))->format('d/m/Y') }}</th>
-                                            <th width="140px" style="text-align: center">{{ \Carbon\Carbon::parse(request()->input('data_final'))->format('d/m/Y') }}</th>
+                                            <th width="140px" style="text-align: center">{{ Carbon::parse($dataInicialCalculada)->format('d/m/Y') }}</th>
+                                            <th width="140px" style="text-align: center">{{ Carbon::parse($dataFinalSelecionada)->format('d/m/Y') }}</th>
+                                            <th width="140px" style="text-align: center">{{ Carbon::parse($dataInicialCalculada)->format('d/m/Y') }}</th>
+                                            <th width="140px" style="text-align: center">{{ Carbon::parse($dataFinalSelecionada)->format('d/m/Y') }}</th>
+                                            <th width="140px" style="text-align: center">{{ Carbon::parse($dataInicialCalculada)->format('d/m/Y') }}</th>
+                                            <th width="140px" style="text-align: center">{{ Carbon::parse($dataFinalSelecionada)->format('d/m/Y') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -205,16 +207,16 @@ use Carbon\Carbon;
             var distrito = $('#distrito').val();
             var dataInicial = $('#data_inicial').val();
             var dataFinal = $('#data_final').val();
-            var tipo = $('#tipo').val();
+            var periodoAnos = $('#periodo_anos').val();
 
-            if (!dataInicial || !dataFinal || !tipo || !distrito) {
+            if (!dataInicial || !dataFinal || !periodoAnos || !distrito) {
                 event.preventDefault();
                 alert('Por favor, preencha todos os campos.');
             } else {
                 $('#report_distrito').val(distrito);
                 $('#report_data_inicial').val(dataInicial);
                 $('#report_data_final').val(dataFinal);
-                $('#report_tipo').val(tipo);
+                $('#report_periodo_anos').val(periodoAnos);
                 $('#report_form').submit();
             }
         });
@@ -223,9 +225,9 @@ use Carbon\Carbon;
             var distrito = $('#distrito').val();
             var dataInicial = $('#data_inicial').val();
             var dataFinal = $('#data_final').val();
-            var tipo = $('#tipo').val();
+            var periodoAnos = $('#periodo_anos').val();
 
-            if (!dataInicial || !dataFinal || !tipo || !distrito) {
+            if (!dataInicial || !dataFinal || !periodoAnos || !distrito) {
                 event.preventDefault();
                 alert('Por favor, preencha todos os campos.');
             }
