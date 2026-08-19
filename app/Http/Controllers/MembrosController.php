@@ -36,6 +36,7 @@ use App\Services\ServiceMembros\StoreReceberMembroExternoService;
 use App\Services\ServiceMembros\StoreReceberNovoMembroService;
 use App\Services\ServiceMembros\StoreReintegracaoService;
 use App\Services\ServiceMembros\StoreTransferenciaInternaService;
+use App\Services\ServiceMembros\ConsultaCpfMembroService;
 use App\Services\ServiceMembros\UpdateDisciplinarService;
 use App\Services\ServiceMembrosGeral\EditarMembroRecadastramentoService;
 use App\Services\ServiceMembrosGeral\EditarMembroService;
@@ -163,6 +164,11 @@ class MembrosController extends Controller
     public function updateRecadastramento(UpdateMembroRequest $request, $id)
     {
         try {
+            $interrupcaoCpfInativo = $this->interromperValidacaoPorCpfInativoOutraIgreja($request);
+            if ($interrupcaoCpfInativo) {
+                return $interrupcaoCpfInativo;
+            }
+
             DB::beginTransaction();
             app(UpdateMembroRecadastramentoService::class)->execute($request->all(), MembresiaMembro::VINCULO_MEMBRO);
             DB::commit();
@@ -175,6 +181,56 @@ class MembrosController extends Controller
                 : 'Falha na validação do registro.';
             return redirect()->route('recadastramento-membro.indexRecadastramento')->with('error', $message);
         }
+    }
+
+    private function interromperValidacaoPorCpfInativoOutraIgreja(UpdateMembroRequest $request)
+    {
+        if ($request->input('status') !== MembresiaMembro::STATUS_ATIVO) {
+            return null;
+        }
+
+        $cpf = preg_replace('/[^0-9]/', '', (string) $request->input('cpf'));
+        if ($cpf === '') {
+            return null;
+        }
+
+        $membroMigracaoId = $request->input('membro_id');
+        $igrejaDestinoId = DB::table('membresia_migracao')
+            ->where('id', $membroMigracaoId)
+            ->value('igreja_id');
+
+        if (empty($igrejaDestinoId)) {
+            return null;
+        }
+
+        $consultaCpf = app(ConsultaCpfMembroService::class);
+        $membroInativo = $consultaCpf->findMembroInativo($cpf, $membroMigracaoId);
+
+        if (!$membroInativo || !$consultaCpf->isOutraIgreja($membroInativo, (int) $igrejaDestinoId)) {
+            return null;
+        }
+
+        if ((string) $request->input('confirmar_membro_inativo_id') !== (string) $membroInativo->id) {
+            return redirect()
+                ->back()
+                ->withInput($request->except(['foto', 'confirmar_membro_inativo_id']))
+                ->with('confirmar_membro_inativo', [
+                    'id' => $membroInativo->id,
+                    'mensagem' => $consultaCpf->mensagemConfirmacaoInativo($membroInativo),
+                ]);
+        }
+
+        $dataExclusao = $consultaCpf->dataDesligamento($membroInativo);
+        $dataRecepcao = $request->input('dt_recepcao');
+
+        if (!$dataExclusao || !$dataRecepcao || !\Carbon\Carbon::parse($dataRecepcao)->gt($dataExclusao)) {
+            return redirect()
+                ->back()
+                ->withInput($request->except(['foto']))
+                ->with('cpf_recepcao_invalida_message', $consultaCpf->mensagemDataRecepcaoInvalida($membroInativo));
+        }
+
+        return null;
     }
 
     public function receberNovo($id)
@@ -200,7 +256,7 @@ class MembrosController extends Controller
         try {
             $data = app(StoreReceberNovoMembroService::class)->execute($request->all(), $id);
             if($data == 'idade'){
-                return redirect()->back()->with('error', __('Não pode ser membro, pois a idade desse congregado é menor que 11 anos'));
+                return redirect()->back()->with('error', __('Não pode ser membro, pois a idade desse congregado é menor que 12 anos'));
             }else{
                 return redirect()->route('membro.editar', ['id' => $id])->with('success', __('Novo membro recebido com sucesso!'));
             }

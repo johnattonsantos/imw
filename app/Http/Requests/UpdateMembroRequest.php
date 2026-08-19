@@ -60,6 +60,7 @@ class UpdateMembroRequest extends FormRequest
         $minDate = '1910-01-01';
         $minDateRecepcao = '1967-01-05';
         $currentDate = date('Y-m-d');
+        $maxBirthDateForMembro = date('Y-m-d', strtotime('-12 years'));
 
         return [
             'foto' => 'image|nullable|max:10240',
@@ -68,9 +69,13 @@ class UpdateMembroRequest extends FormRequest
             'data_nascimento' => [
                 'required',
                 'date',
-                function ($attribute, $value, $fail) use ($minDate, $currentDate) {
+                function ($attribute, $value, $fail) use ($minDate, $currentDate, $maxBirthDateForMembro) {
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
                         $fail(__('A data de nascimento deve estar entre 01/01/1910 e a data atual.'));
+                    }
+
+                    if (strtotime($value) > strtotime($maxBirthDateForMembro)) {
+                        $fail(__('Não pode ser membro, pois a idade é menor que 12 anos.'));
                     }
                 },
             ],
@@ -207,7 +212,7 @@ class UpdateMembroRequest extends FormRequest
             'cpf' => [
                 $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
-                function ($attribute, $value, $fail) use ($membroId) {
+                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento) {
                     if (empty($value)) {
                         return;
                     }
@@ -216,6 +221,21 @@ class UpdateMembroRequest extends FormRequest
                     $cpf = preg_replace('/[^0-9]/', '', $value);
 
                     $consultaCpf = app(ConsultaCpfMembroService::class);
+
+                    if ($isRecadastramento) {
+                        $membroAtivo = $consultaCpf->findMembroAtivo($cpf, $membroId);
+                        if ($membroAtivo) {
+                            $fail($consultaCpf->mensagemAtivo($membroAtivo));
+                            return;
+                        }
+
+                        $membroInativo = $consultaCpf->findMembroInativo($cpf, $membroId);
+                        $igrejaDestinoId = $this->igrejaDestinoRecadastramentoId($membroId);
+                        if ($membroInativo && $consultaCpf->isOutraIgreja($membroInativo, $igrejaDestinoId)) {
+                            return;
+                        }
+                    }
+
                     $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
                     if ($membroDuplicado) {
@@ -283,5 +303,18 @@ class UpdateMembroRequest extends FormRequest
             'estado.required' => 'O campo Estado é obrigatório.',
             'profissao.required' => 'O campo Profissão é obrigatório.',
         ];
+    }
+
+    private function igrejaDestinoRecadastramentoId($membroId): ?int
+    {
+        if (empty($membroId)) {
+            return null;
+        }
+
+        $igrejaId = DB::table('membresia_migracao')
+            ->where('id', $membroId)
+            ->value('igreja_id');
+
+        return $igrejaId ? (int) $igrejaId : null;
     }
 }
