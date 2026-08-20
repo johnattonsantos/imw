@@ -35,7 +35,7 @@ class StoreReceberNovoClerigoRequest extends FormRequest
 
         return [
             'nome' => 'required|max:255',
-            'identidade' => 'required|max:20',
+            'identidade' => ['required', 'max:13', 'regex:/^\d{3}\.\d{3}\.\d{3}-\d$/'],
             'identidade_uf' => 'required',
             'orgao_emissor' => 'required|max:50',
             'data_emissao' => ['required', 'date', new RangeDateRule],
@@ -97,6 +97,8 @@ class StoreReceberNovoClerigoRequest extends FormRequest
             'tipo.required' => 'O campo tipo é obrigatório.',
             'nome.required' => 'O campo nome é obrigatório.',
             'identidade.required' => 'O campo identidade é obrigatório.',
+            'identidade.max' => 'O campo identidade deve conter no máximo 10 dígitos.',
+            'identidade.regex' => 'O campo identidade deve estar no formato 123.456.789-0.',
             'identidade_uf.required' => 'O campo estado em identidade é obrigatório.',
             'orgao_emissor.required' => 'O campo órgão emissor é obrigatório.',
             'data_emissao.required' => 'O campo data de emissão é obrigatório.',
