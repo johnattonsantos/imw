@@ -4,7 +4,8 @@
             <div class="col-12 mt-3 col-md-4">
                 <label for="identidade">{{ __('Identidade*') }}</label>
                 <input type="text" class="form-control @error('identidade') is-invalid @enderror" id="identidade"
-                    name="identidade" value="{{ old('identidade', $clerigo->identidade) }}">
+                    name="identidade" value="{{ old('identidade', $clerigo->identidade) }}" maxlength="13"
+                    placeholder="***.***.***-*">
                 @error('identidade')
                     <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
