@@ -32,7 +32,7 @@ class StoreReintegracaoRequest extends FormRequest
             "numero_rol"       => ['required', new UniqueRolIgrejaRule($membroId)],
             "dt_recepcao"      => ['required', 'date', new RangeDateRule],
             "modo_recepcao_id" => 'required|exists:membresia_situacoes,id',
-            "clerigo_id"       => 'required|exists:pessoas_pessoas,id',
+            "clerigo_id"       => 'nullable|exists:pessoas_pessoas,id',
             "congregacao_id"   => 'nullable|exists:congregacoes_congregacoes,id',
         ];
     }
@@ -42,7 +42,6 @@ class StoreReintegracaoRequest extends FormRequest
         return [
             "dt_recepcao.required"      => 'Este campo é obrigatório',
             "modo_recepcao_id.required" => 'Este campo é obrigatório',
-            "clerigo_id.required"       => 'Este campo é obrigatório',
         ];
     }
 }

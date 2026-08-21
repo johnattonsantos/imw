@@ -90,23 +90,6 @@
 
         <div class="form-group row mb-4">
           <div class="col-lg-2 text-right">
-            <label class="control-label">{{ __('* Pastor:') }}</label>
-          </div>
-          <div class="col-lg-6">
-            <select id="clerigo_id" name="clerigo_id" class="form-control @error('clerigo_id') is-invalid @enderror" >
-              <option value="" {{ old('clerigo_id') == '' ? 'selected' : '' }}>{{ __('Selecione') }}</option>
-              @foreach ($pastores as $pastor)
-                <option value="{{ $pastor->id }}" {{ old('clerigo_id') == $pastor->id ? 'selected' : '' }}>{{ $pastor->nome }}</option>
-              @endforeach
-            </select>
-            @error('modo_recepcao_id')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-          </div>
-        </div>
-
-        <div class="form-group row mb-4">
-          <div class="col-lg-2 text-right">
             <label class="control-label">{{ __('Congregação:') }}</label>
           </div>
           <div class="col-lg-6">
