@@ -11,6 +11,7 @@ use App\Models\EventoLocal;
 use App\Models\EventoProposito;
 use App\Models\InstituicoesInstituicao;
 use App\Models\InstituicoesTipoInstituicao;
+use App\Rules\ValidaCPF;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -217,7 +218,7 @@ class EventoController extends Controller
         $this->ensureSameInstituicao($evento);
 
         $request->validate([
-            'cpf' => ['required', 'string'],
+            'cpf' => ['required', 'string', new ValidaCPF],
         ], [
             'cpf.required' => 'Informe o CPF do membro ou clérigo.',
         ]);

@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\RangeDateRule;
 use App\Rules\UniqueCPFInIgrejaRule;
 use App\Rules\UniqueRolIgrejaRule;
+use App\Rules\ValidaCPF;
 use App\Models\PessoaStatus;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,7 +28,7 @@ class StoreReceberNovoClerigoRequest extends FormRequest
      */
     public function rules()
     {
-        $cpfRules = ['nullable', 'max:18'];
+        $cpfRules = ['nullable', 'max:18', new ValidaCPF];
 
         if (!$this->situacaoDispensaCpf()) {
             array_unshift($cpfRules, 'required');

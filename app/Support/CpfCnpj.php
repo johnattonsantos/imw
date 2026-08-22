@@ -14,10 +14,39 @@ class CpfCnpj
         $document = self::normalize($value);
 
         if (preg_match('/^\d{11}$/', $document)) {
-            return true;
+            return self::isValidCpf($document);
         }
 
         return self::isValidCnpj($document);
+    }
+
+    public static function isValidCpf(?string $value): bool
+    {
+        $cpf = preg_replace('/\D/', '', (string) $value);
+
+        if (!preg_match('/^\d{11}$/', $cpf)) {
+            return false;
+        }
+
+        if (preg_match('/^(\d)\1{10}$/', $cpf)) {
+            return false;
+        }
+
+        for ($t = 9; $t < 11; $t++) {
+            $digit = 0;
+
+            for ($c = 0; $c < $t; $c++) {
+                $digit += (int) $cpf[$c] * (($t + 1) - $c);
+            }
+
+            $digit = ((10 * $digit) % 11) % 10;
+
+            if ((int) $cpf[$t] !== $digit) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static function isValidCnpj(?string $value): bool
