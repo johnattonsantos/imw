@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
+use App\Rules\ValidaCPF;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreUsuarioRequest extends FormRequest
@@ -27,6 +29,17 @@ class StoreUsuarioRequest extends FormRequest
             'name' => 'required|string|min:4',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
+            'cpf' => [
+                'required',
+                new ValidaCPF,
+                function ($attribute, $value, $fail) {
+                    $cpf = preg_replace('/\D/', '', (string) $value);
+
+                    if (User::where('cpf', $cpf)->exists()) {
+                        $fail(__('O CPF já está sendo utilizado por outra pessoa.'));
+                    }
+                },
+            ],
             'perfil_id.*' => 'required',
             'instituicao_id.*' => 'required',
             'pessoa_id' => 'nullable'
@@ -45,6 +58,8 @@ class StoreUsuarioRequest extends FormRequest
             'password.required' => 'O campo Senha é obrigatório.',
             'password.min' => 'O campo Senha deve ter no mínimo :min caracteres.',
             'password.confirmed' => 'A confirmação da senha não corresponde.',
+
+            'cpf.required' => 'O campo CPF é obrigatório.',
 
             'perfil_id.*.required' => 'O campo Perfil é obrigatório.',
 
