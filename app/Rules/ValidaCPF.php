@@ -15,7 +15,9 @@ class ValidaCPF implements Rule
 
     public function passes($attribute, $value)
     {
-        if (empty($value)) return true;
+        if ($value === null || trim((string) $value) === '') {
+            return true;
+        }
         
         $cpf = preg_replace('/[^0-9]/', '', $value);
 
@@ -42,6 +44,6 @@ class ValidaCPF implements Rule
 
     public function message()
     {
-        return 'CPF inválido.';
+        return 'CPF inválido. Informe um CPF válido com 11 dígitos.';
     }
 }
