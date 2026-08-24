@@ -6,6 +6,7 @@ use App\Exceptions\IdentificaDadosExcluirMembroException;
 use App\Exceptions\MembroNotFoundException;
 use App\Exceptions\ReceberNovoMembroException;
 use App\Exceptions\ReintegrarMembroException;
+use App\Exceptions\CpfDuplicadoConfirmacaoNecessariaException;
 use App\Http\Requests\DeletarMembroRequest;
 use App\Http\Requests\StoreDisciplinarRequest;
 use App\Http\Requests\StoreReceberNovoMembroRequest;
@@ -173,6 +174,15 @@ class MembrosController extends Controller
             app(UpdateMembroRecadastramentoService::class)->execute($request->all(), MembresiaMembro::VINCULO_MEMBRO);
             DB::commit();
             return redirect()->route('recadastramento-membro.indexRecadastramento')->with('success', __('Registro validado com sucesso.'));
+        } catch(CpfDuplicadoConfirmacaoNecessariaException $e) {
+            DB::rollback();
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('cpf_duplicado_confirmacao', [
+                    'message' => $e->getMessage(),
+                    'membro_id' => $e->membro()->id,
+                ]);
         } catch(\Exception $e) {
             DB::rollback();
             report($e);
@@ -210,13 +220,16 @@ class MembrosController extends Controller
             return null;
         }
 
-        if ((string) $request->input('confirmar_membro_inativo_id') !== (string) $membroInativo->id) {
+        $cpfInativoConfirmado = (string) $request->input('confirmar_cpf_inativo_outra_igreja') === '1'
+            && (string) $request->input('cpf_membro_existente_id') === (string) $membroInativo->id;
+
+        if (!$cpfInativoConfirmado) {
             return redirect()
                 ->back()
-                ->withInput($request->except(['foto', 'confirmar_membro_inativo_id']))
-                ->with('confirmar_membro_inativo', [
-                    'id' => $membroInativo->id,
-                    'mensagem' => $consultaCpf->mensagemConfirmacaoInativo($membroInativo),
+                ->withInput($request->except(['foto']))
+                ->with('cpf_duplicado_confirmacao', [
+                    'message' => $consultaCpf->mensagemConfirmacaoInativoOutraIgreja($membroInativo),
+                    'membro_id' => $membroInativo->id,
                 ]);
         }
 

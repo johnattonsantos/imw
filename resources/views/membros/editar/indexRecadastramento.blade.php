@@ -37,9 +37,10 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-    <form id="recadastramento-membro-form" method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
+    <form id="membro-recadastramento-form" method="POST" action="{{ route('recadastramento-membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
       @csrf
-      <input type="hidden" id="confirmar_membro_inativo_id" name="confirmar_membro_inativo_id" value="{{ old('confirmar_membro_inativo_id') }}">
+      <input type="hidden" name="confirmar_cpf_inativo_outra_igreja" id="confirmar_cpf_inativo_outra_igreja" value="{{ old('confirmar_cpf_inativo_outra_igreja', '0') }}">
+      <input type="hidden" name="cpf_membro_existente_id" id="cpf_membro_existente_id" value="{{ old('cpf_membro_existente_id') }}">
     <div class="row">
       <div class="col-md-12">
           <!-- conteudo -->
@@ -80,30 +81,6 @@
     <script src="{{ asset('theme/plugins/fullcalendar/moment.min.js') }}"></script>
     <script src="{{ asset('membros/js/editar.js') }}"></script>
     <script>
-      @if(session('confirmar_membro_inativo'))
-        document.addEventListener('DOMContentLoaded', function () {
-            const form = document.getElementById('recadastramento-membro-form');
-            const confirmarInput = document.getElementById('confirmar_membro_inativo_id');
-
-            swal({
-                title: 'Atenção',
-                text: @json(session('confirmar_membro_inativo.mensagem')),
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Sim',
-                cancelButtonText: 'Não',
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                padding: '2em'
-            }).then(function(result) {
-                if (result.value) {
-                    confirmarInput.value = @json(session('confirmar_membro_inativo.id'));
-                    form.submit();
-                }
-            });
-        });
-      @endif
-
       @if(session('cpf_recepcao_invalida_message'))
         document.addEventListener('DOMContentLoaded', function () {
             swal({
@@ -120,6 +97,35 @@
 
 
       $(document).ready(function(){
+          @if (session('cpf_duplicado_confirmacao'))
+              const cpfDuplicadoConfirmacao = @json(session('cpf_duplicado_confirmacao'));
+              const confirmarCpfDuplicado = function () {
+                  $('#confirmar_cpf_inativo_outra_igreja').val('1');
+                  $('#cpf_membro_existente_id').val(cpfDuplicadoConfirmacao.membro_id);
+                  $('#membro-recadastramento-form').trigger('submit');
+              };
+
+              if (typeof swal === 'function') {
+                  swal({
+                      title: '{{ __('CPF já existente') }}',
+                      text: cpfDuplicadoConfirmacao.message,
+                      type: 'warning',
+                      showCancelButton: true,
+                      confirmButtonText: '{{ __('Sim, continuar') }}',
+                      cancelButtonText: '{{ __('Não') }}',
+                      confirmButtonColor: '#4361ee',
+                      cancelButtonColor: '#d33',
+                      padding: '2em'
+                  }).then(function(result) {
+                      if (result.value) {
+                          confirmarCpfDuplicado();
+                      }
+                  });
+              } else if (window.confirm(cpfDuplicadoConfirmacao.message)) {
+                  confirmarCpfDuplicado();
+              }
+          @endif
+
           // Validação das datas de formação eclesiástica
           function validateFormacaoEclesiastica() {
               let valid = true;

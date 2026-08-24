@@ -49,9 +49,19 @@ class UpdateMembroRequest extends FormRequest
         $isRecadastramento = $this->routeIs('recadastramento-membro.update');
         $cpf = preg_replace('/[^0-9]/', '', $this->input('cpf', ''));
         $membroIdRegraRol = $membroId;
+        $igrejaRecadastramentoId = null;
 
         if ($isRecadastramento && $cpf !== '') {
-            $membroOficialId = DB::table('membresia_membros')->where('cpf', $cpf)->value('id');
+            $igrejaRecadastramentoId = DB::table('membresia_migracao')
+                ->where('id', $membroId)
+                ->value('igreja_id');
+            $membroOficialId = DB::table('membresia_membros')
+                ->where('cpf', $cpf)
+                ->where('vinculo', 'M')
+                ->orderByRaw("CASE WHEN status = 'A' AND deleted_at IS NULL THEN 0 ELSE 1 END")
+                ->orderByDesc('updated_at')
+                ->orderByDesc('id')
+                ->value('id');
             if (!empty($membroOficialId)) {
                 $membroIdRegraRol = $membroOficialId;
             }
@@ -212,35 +222,45 @@ class UpdateMembroRequest extends FormRequest
             'cpf' => [
                 $isRecadastramento ? 'required_if:status,A' : 'required',
                 new ValidaCPF,
-                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento) {
+                function ($attribute, $value, $fail) use ($membroId, $isRecadastramento, $igrejaRecadastramentoId) {
                     if (empty($value)) {
                         return;
                     }
 
                     // Remove todos os caracteres que não são números
                     $cpf = preg_replace('/[^0-9]/', '', $value);
-
                     $consultaCpf = app(ConsultaCpfMembroService::class);
+                    $membroDuplicado = $isRecadastramento
+                        ? $consultaCpf->findMembroDuplicadoRecadastramento($cpf, $membroId, $igrejaRecadastramentoId)
+                        : $consultaCpf->findMembroDuplicado($cpf, $membroId);
 
-                    if ($isRecadastramento) {
-                        $membroAtivo = $consultaCpf->findMembroAtivo($cpf, $membroId);
-                        if ($membroAtivo) {
-                            $fail($consultaCpf->mensagemAtivo($membroAtivo));
-                            return;
-                        }
-
-                        $membroInativo = $consultaCpf->findMembroInativo($cpf, $membroId);
-                        $igrejaDestinoId = $this->igrejaDestinoRecadastramentoId($membroId);
-                        if ($membroInativo && $consultaCpf->isOutraIgreja($membroInativo, $igrejaDestinoId)) {
-                            return;
-                        }
+                    if (!$membroDuplicado) {
+                        return;
                     }
 
-                    $membroDuplicado = $consultaCpf->findMembroDuplicado($cpf, $membroId);
-
-                    if ($membroDuplicado) {
+                    if (!$isRecadastramento) {
                         $fail($consultaCpf->mensagemPertence($membroDuplicado));
+                        return;
                     }
+
+                    $statusInclusao = $this->input('status');
+
+                    if ($statusInclusao === 'I') {
+                        $fail($consultaCpf->mensagemInclusaoInativoBloqueada($membroDuplicado));
+                        return;
+                    }
+
+                    if ($consultaCpf->isMesmaIgreja($membroDuplicado, $igrejaRecadastramentoId)) {
+                        $fail($consultaCpf->mensagemPropriaIgreja($membroDuplicado));
+                        return;
+                    }
+
+                    if ($consultaCpf->isAtivo($membroDuplicado)) {
+                        $fail($consultaCpf->mensagemAtivoOutraIgreja($membroDuplicado));
+                        return;
+                    }
+
+                    // Membro inativo em outra igreja segue para a confirmação no service.
                 },
             ],
             'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {
