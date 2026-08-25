@@ -11,6 +11,8 @@
 @section('extras-css')
 <link href="{{ asset('theme/assets/css/elements/alert.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('theme/assets/css/forms/theme-checkbox-radio.css') }}" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/buttons/3.2.3/css/buttons.dataTables.css" rel="stylesheet" type="text/css" />
 <style>
     .toggle-icon {
         cursor: pointer;
@@ -50,7 +52,7 @@
 
             @if (!empty($dados))
             <div class="table-responsive mt-4">
-                <table class="table table-striped" style="font-size: 90%;">
+                <table id="total-membresia-table" class="table table-striped" style="font-size: 90%;">
                     <thead class="thead-dark">
                         <tr>
                             <th style="text-align: left;">{{ __('Nome') }}</th>
@@ -133,7 +135,61 @@
 
 @section('extras-scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
 <script>
+    $(document).ready(function() {
+        if (document.querySelector('#total-membresia-table')) {
+            new DataTable('#total-membresia-table', {
+                paging: false,
+                searching: false,
+                ordering: false,
+                info: false,
+                layout: {
+                    topStart: {
+                        buttons: [
+                            {
+                                extend: 'excel',
+                                className: 'btn btn-primary btn-rounded',
+                                text: '<i class="fas fa-file-excel"></i> {{ __('Excel') }}',
+                                titleAttr: '{{ __('Excel') }}',
+                                title: '{{ __('Estatística Total de Membresia') }}'
+                            },
+                            {
+                                extend: 'pdf',
+                                className: 'btn btn-primary btn-rounded',
+                                text: '<i class="fas fa-file-pdf"></i> {{ __('PDF') }}',
+                                titleAttr: '{{ __('PDF') }}',
+                                title: '{{ __('Estatística Total de Membresia') }}',
+                                orientation: 'landscape',
+                                pageSize: 'A4',
+                                customize: function(doc) {
+                                    doc.defaultStyle.fontSize = 9;
+                                    const tableNode = doc.content.find(function(item) {
+                                        return item.table;
+                                    });
+
+                                    if (tableNode) {
+                                        tableNode.table.widths = Array(tableNode.table.body[0].length).fill('*');
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                language: {
+                    emptyTable: '{{ __('Nenhum registro encontrado') }}',
+                    zeroRecords: '{{ __('Nenhum registro encontrado') }}'
+                }
+            });
+        }
+    });
+
     function toggleDistrito(distritoId) {
         let distritoRow = $(`.distrito-row[data-distrito="${distritoId}"]`);
         let igrejaRows = $(`.igreja-row[data-parent="${distritoId}"]`);

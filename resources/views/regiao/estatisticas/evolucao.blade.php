@@ -10,6 +10,8 @@
 
 @section('extras-css')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<link href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.datatables.net/buttons/3.2.3/css/buttons.dataTables.css" rel="stylesheet" type="text/css" />
 <link href="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('theme/plugins/sweetalerts/sweetalert.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('theme/assets/css/components/custom-sweetalert.css') }}" rel="stylesheet" type="text/css" />
@@ -31,6 +33,13 @@
 @endsection
 
 @section('extras-scripts')
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.3/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
 <script src="{{ asset('theme/plugins/sweetalerts/promise-polyfill.js') }}"></script>
 <script src="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.js') }}"></script>
 <script>
@@ -108,6 +117,51 @@
                 }
             });
         });
+
+        if (document.querySelector('#evolucao-membros-table')) {
+            new DataTable('#evolucao-membros-table', {
+                paging: false,
+                searching: false,
+                ordering: false,
+                info: false,
+                layout: {
+                    topStart: {
+                        buttons: [
+                            {
+                                extend: 'excel',
+                                className: 'btn btn-primary btn-rounded',
+                                text: '<i class="fas fa-file-excel"></i> {{ __('Excel') }}',
+                                titleAttr: '{{ __('Excel') }}',
+                                title: '{{ __('Evolução de Membros') }} - {{ $anoinicio ?? '' }} {{ __('a') }} {{ $anofinal ?? '' }}'
+                            },
+                            {
+                                extend: 'pdf',
+                                className: 'btn btn-primary btn-rounded',
+                                text: '<i class="fas fa-file-pdf"></i> {{ __('PDF') }}',
+                                titleAttr: '{{ __('PDF') }}',
+                                title: '{{ __('Evolução de Membros') }} - {{ $anoinicio ?? '' }} {{ __('a') }} {{ $anofinal ?? '' }}',
+                                orientation: 'landscape',
+                                pageSize: 'A4',
+                                customize: function(doc) {
+                                    doc.defaultStyle.fontSize = 8;
+                                    const tableNode = doc.content.find(function(item) {
+                                        return item.table;
+                                    });
+
+                                    if (tableNode) {
+                                        tableNode.table.widths = Array(tableNode.table.body[0].length).fill('*');
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                },
+                language: {
+                    emptyTable: '{{ __('Nenhum registro encontrado') }}',
+                    zeroRecords: '{{ __('Nenhum registro encontrado') }}'
+                }
+            });
+        }
         // Validação do formulário
         document.getElementById('filter_form').addEventListener('submit', function(event) {
             let anoinicio = parseInt(document.getElementById('anoinicio').value);
@@ -212,9 +266,9 @@
 
             @if(request()->has('anoinicio') && request()->has('anofinal'))
             @if(isset($instituicoes_pais) && count($instituicoes_pais) > 0)
-            <h4>Resultados de {{ $anoinicio }} a {{ $anofinal }}</h4>
+            <h4>{{ __('Resultados de') }} {{ $anoinicio }} {{ __('a') }} {{ $anofinal }}</h4>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table id="evolucao-membros-table" class="table table-bordered">
                     <thead>
                         <tr>
                             <th>{{ __('Nome') }}</th>

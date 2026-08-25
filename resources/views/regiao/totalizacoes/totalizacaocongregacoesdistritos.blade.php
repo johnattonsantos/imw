@@ -12,6 +12,7 @@
 @section('extras-css')
     <link href="{{ asset('theme/assets/css/elements/alert.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('theme/assets/css/forms/theme-checkbox-radio.css') }}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.css') }}"
         rel="stylesheet" type="text/css" />
 @endsection
@@ -87,8 +88,14 @@
                                 <div class="col-12">
                                     <h6 class="mt-3 text-uppercase">Total de Congregações por Distritos -
                                         {{ $regiao->nome }}</h6>
+                                    @include('regiao.partials.table-export-buttons', [
+                                        'tableId' => 'total-congregacoes-distritos-table',
+                                        'title' => 'Total de Congregações por Distritos - ' . $regiao->nome,
+                                        'filename' => 'total-congregacoes-por-distritos',
+                                        'sheetName' => 'Congregações Distritos',
+                                    ])
                                     <div class="table-responsive">
-                                        <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                                        <table id="total-congregacoes-distritos-table" class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th style="text-align: left;">{{ __('Igrejas') }}</th>
@@ -119,12 +126,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i
-                                    class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
-                        </div>
-                    </div>
                     <!-- Fim do Conteúdo -->
                 </div>
             </div>
@@ -138,6 +139,7 @@
     <script src="{{ asset('theme/assets/js/planilha/planilha.js') }}"></script>
     <script src="{{ asset('theme/assets/js/pages/movimentocaixa.js') }}"></script>
     <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
+    @include('regiao.partials.table-export-scripts')
     <script>
         $(document).ready(function() {
             $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
