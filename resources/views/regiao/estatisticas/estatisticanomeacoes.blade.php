@@ -32,9 +32,75 @@
 @endsection
 
 @section('extras-scripts')
+    <script src="{{ asset('theme/assets/js/planilha/xlsx.full.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
     <script src="{{ asset('theme/plugins/sweetalerts/promise-polyfill.js') }}"></script>
     <script src="{{ asset('theme/plugins/sweetalerts/sweetalert2.min.js') }}"></script>
     <script>
+        function getHistoricoNomeacoesData() {
+            const table = document.getElementById('historico-nomeacoes-table');
+            if (!table) {
+                return [];
+            }
+
+            const headers = Array.from(table.querySelectorAll('thead th')).map(function(th) {
+                return th.innerText.trim();
+            });
+
+            const rows = Array.from(table.querySelectorAll('tbody tr.export-row')).map(function(row) {
+                return Array.from(row.querySelectorAll('td')).map(function(td) {
+                    return td.innerText.trim();
+                });
+            });
+
+            return [headers].concat(rows);
+        }
+
+        function exportHistoricoNomeacoesExcel() {
+            const data = getHistoricoNomeacoesData();
+            if (data.length <= 1) {
+                return;
+            }
+
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, 'Histórico Nomeações');
+            XLSX.writeFile(workbook, 'historico-nomeacoes.xlsx');
+        }
+
+        function exportHistoricoNomeacoesPdf() {
+            const data = getHistoricoNomeacoesData();
+            if (data.length <= 1) {
+                return;
+            }
+
+            pdfMake.createPdf({
+                pageOrientation: 'landscape',
+                pageSize: 'A4',
+                content: [
+                    { text: '{{ __('Histórico Nomeações') }}', style: 'header' },
+                    {
+                        table: {
+                            headerRows: 1,
+                            widths: Array(data[0].length).fill('*'),
+                            body: data
+                        }
+                    }
+                ],
+                styles: {
+                    header: {
+                        fontSize: 14,
+                        bold: true,
+                        margin: [0, 0, 0, 10]
+                    }
+                },
+                defaultStyle: {
+                    fontSize: 8
+                }
+            }).download('historico-nomeacoes.pdf');
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.toggle-icon').forEach(function(icon) {
                 icon.addEventListener('click', function() {
@@ -146,8 +212,16 @@
                 </div>
                 @if (request('visao') == 1)
                     <div class="widget-content widget-content-area">
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-primary btn-rounded" onclick="exportHistoricoNomeacoesExcel()">
+                                <i class="fas fa-file-excel"></i> {{ __('Excel') }}
+                            </button>
+                            <button type="button" class="btn btn-primary btn-rounded" onclick="exportHistoricoNomeacoesPdf()">
+                                <i class="fas fa-file-pdf"></i> {{ __('PDF') }}
+                            </button>
+                        </div>
                         <div class="table-responsive mt-4">
-                            <table class="table table-striped" style="font-size: 90%;">
+                            <table id="historico-nomeacoes-table" class="table table-striped" style="font-size: 90%;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>{{ __('Nome') }}</th>
@@ -169,7 +243,7 @@
                                             </td>
                                         </tr>
                                         @foreach ($lancamento as $nomeacao)
-                                            <tr class="child-row" data-parent="pai-{{ $nomeacao->id }}">
+                                            <tr class="child-row export-row" data-parent="pai-{{ $nomeacao->id }}">
                                                 <td>{{ $nomeacao->nome }}</td>
                                                 <td>{{ $nomeacao->distrito }}</td>
                                                 <td>{{ $nomeacao->igreja }}</td>
@@ -191,8 +265,16 @@
                     </div>
                 @elseif (request('visao') == 2)
                   <div class="widget-content widget-content-area">
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-primary btn-rounded" onclick="exportHistoricoNomeacoesExcel()">
+                                <i class="fas fa-file-excel"></i> {{ __('Excel') }}
+                            </button>
+                            <button type="button" class="btn btn-primary btn-rounded" onclick="exportHistoricoNomeacoesPdf()">
+                                <i class="fas fa-file-pdf"></i> {{ __('PDF') }}
+                            </button>
+                        </div>
                         <div class="table-responsive mt-4">
-                            <table class="table table-striped" style="font-size: 90%;">
+                            <table id="historico-nomeacoes-table" class="table table-striped" style="font-size: 90%;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>{{ __('Nome') }}</th>
@@ -214,7 +296,7 @@
                                             </td>
                                         </tr>
                                         @foreach ($lancamento as $nomeacao)
-                                            <tr class="child-row" data-parent="pai-{{ $nomeacao->id }}">
+                                            <tr class="child-row export-row" data-parent="pai-{{ $nomeacao->id }}">
                                                 <td>{{ $nomeacao->nome }}</td>
                                                 <td>{{ $nomeacao->clerigo }}</td>
                                                 <td>{{ $nomeacao->distrito }}</td>

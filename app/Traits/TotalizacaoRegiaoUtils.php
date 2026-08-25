@@ -18,6 +18,7 @@ trait TotalizacaoRegiaoUtils
             ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
             ->where('ip.id', $regiaoId)
             ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
             ->groupBy('ii.instituicao_pai_id', 'ip.nome')
             ->get();
 
@@ -31,10 +32,15 @@ trait TotalizacaoRegiaoUtils
             ->join('instituicoes_instituicoes as ip', 'ii.instituicao_pai_id', '=', 'ip.id')
             ->selectRaw('COUNT(*) as total, ip.nome')
             ->where('ip.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
-            ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_GERAL)
-            ->orWhere('ii.tipo_instituicao_id', operator: InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->where(function ($query) {
+                $query->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_GERAL)
+                    ->orWhere('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL);
+            })
             ->where('ip.regiao_id', $regiaoId)
+            ->where('ip.ativo', 1)
+            ->whereNull('ip.data_encerramento')
             ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
             ->groupBy('ii.instituicao_pai_id', 'ip.nome')
             ->orderByDesc('total')
             ->get();
@@ -49,12 +55,17 @@ trait TotalizacaoRegiaoUtils
     {
         $result = DB::table('instituicoes_instituicoes as ii')
             ->join('congregacoes_congregacoes as cc', 'ii.id', '=', 'cc.instituicao_id')
+            ->join('instituicoes_instituicoes as ip', 'ip.id', '=', 'ii.instituicao_pai_id')
             ->selectRaw('COUNT(*) as total, ii.nome')
             ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('ii.regiao_id', $regiaoId)
             ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
+            ->where('ip.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where('ip.ativo', 1)
+            ->whereNull('ip.data_encerramento')
             ->where('cc.ativo', 1)
-            ->groupBy('ii.instituicao_pai_id', 'ii.nome')
+            ->groupBy('ii.id', 'ii.nome')
             ->orderByDesc('total')
             ->get();
 
@@ -73,8 +84,12 @@ trait TotalizacaoRegiaoUtils
             ->join('instituicoes_instituicoes as ip', 'ip.id', '=', 'ii.instituicao_pai_id')
             ->selectRaw('COUNT(*) as total, ip.nome')
             ->where('ip.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
             ->where('ip.regiao_id', $regiaoId)
+            ->where('ip.ativo', 1)
+            ->whereNull('ip.data_encerramento')
             ->where('cc.ativo', 1)
             ->groupBy('ii.instituicao_pai_id', 'ip.nome')
             ->orderByDesc('total')

@@ -24,12 +24,6 @@
     @endif
 @endif
 
-@if ($rolMembro->status == \App\Models\MembresiaMembro::STATUS_INATIVO && $rolMembro->transferido == 0)
-    <a href="{{ route('membro.reintegrar', $rolMembro->membro_id) }}" title="{{ __('Reintegrar membro') }}" class="btn btn-sm btn-secondary mr-2 btn-rounded bs-tooltip">
-        <x-bx-log-in-circle />
-    </a>
-@endif
-
 <button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip"
         title="{{ __('Visualizar dados da pessoa') }}"
         data-membro-id="{{ $rolMembro->membro_id }}">

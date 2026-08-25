@@ -19,9 +19,19 @@ trait TotalClerigosUtils
             })
             ->join('instituicoes_instituicoes as ii', function ($join) {
                 $join->on('pn.instituicao_id', '=', 'ii.id')
-                    ->where('ii.ativo', '=', 1);
+                    ->where('ii.ativo', '=', 1)
+                    ->whereNull('ii.data_encerramento');
             })
+            ->leftJoin('instituicoes_instituicoes as ip', 'ip.id', '=', 'ii.instituicao_pai_id')
+            ->whereNull('pn.deleted_at')
             ->where('pp.regiao_id', '=', $regiaoId)
+            ->where(function ($query) {
+                $query->whereNull('ip.id')
+                    ->orWhere(function ($parentQuery) {
+                        $parentQuery->where('ip.ativo', 1)
+                            ->whereNull('ip.data_encerramento');
+                    });
+            })
             ->select(DB::raw('COUNT(DISTINCT pp.id) as total'), 'ps.descricao')
             ->groupBy('pp.status_id', 'ps.descricao')
             ->orderByDesc('total')
@@ -32,16 +42,26 @@ trait TotalClerigosUtils
 
     public static function fetchTotalClerigosNomeacoes($regiaoId)
     {
-        $results = DB::table('pessoas_funcaoministerial as pf')
-            ->select(DB::raw('COUNT(*) as total'), 'pf.funcao')
-            ->leftJoin('pessoas_nomeacoes as pn', 'pf.id', '=', 'pn.funcao_ministerial_id')
-            ->leftJoin('pessoas_pessoas as pp', function ($join) {
-                $join->on('pp.id', '=', 'pn.pessoa_id')
-                    ->where('pp.regiao_id', '=', 23);
+        $results = DB::table('pessoas_nomeacoes as pn')
+            ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
+            ->join('pessoas_pessoas as pp', 'pp.id', '=', 'pn.pessoa_id')
+            ->join('instituicoes_instituicoes as ii', function ($join) {
+                $join->on('pn.instituicao_id', '=', 'ii.id')
+                    ->where('ii.ativo', '=', 1)
+                    ->whereNull('ii.data_encerramento');
             })
+            ->leftJoin('instituicoes_instituicoes as ip', 'ip.id', '=', 'ii.instituicao_pai_id')
+            ->select(DB::raw('COUNT(DISTINCT pp.id) as total'), 'pf.funcao')
             ->whereNull('pn.deleted_at')
             ->where('pp.regiao_id', '=', $regiaoId)
             ->whereNull('pn.data_termino')
+            ->where(function ($query) {
+                $query->whereNull('ip.id')
+                    ->orWhere(function ($parentQuery) {
+                        $parentQuery->where('ip.ativo', 1)
+                            ->whereNull('ip.data_encerramento');
+                    });
+            })
             ->groupBy('pf.funcao')
             ->orderByDesc('total')
             ->get();
@@ -58,6 +78,26 @@ trait TotalClerigosUtils
                 DB::raw('FLOOR(DATEDIFF(CURDATE(), pp.data_nascimento) / 365.25) as idade')
             )->where('pp.status_id', 1)
             ->where('pp.regiao_id', '=', $regiaoId)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('pessoas_nomeacoes as pn')
+                    ->join('instituicoes_instituicoes as ii', function ($join) {
+                        $join->on('pn.instituicao_id', '=', 'ii.id')
+                            ->where('ii.ativo', '=', 1)
+                            ->whereNull('ii.data_encerramento');
+                    })
+                    ->leftJoin('instituicoes_instituicoes as ip', 'ip.id', '=', 'ii.instituicao_pai_id')
+                    ->whereColumn('pn.pessoa_id', 'pp.id')
+                    ->whereNull('pn.deleted_at')
+                    ->whereNull('pn.data_termino')
+                    ->where(function ($parentQuery) {
+                        $parentQuery->whereNull('ip.id')
+                            ->orWhere(function ($activeParentQuery) {
+                                $activeParentQuery->where('ip.ativo', 1)
+                                    ->whereNull('ip.data_encerramento');
+                            });
+                    });
+            })
             ->groupBy('pp.data_nascimento')
             ->orderByDesc('total')
             ->get();
@@ -109,13 +149,27 @@ trait TotalClerigosUtils
     {
         $results = DB::table('pessoas_nomeacoes as pn')
             ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
-            ->leftJoin('pessoas_pessoas as pp', function ($join) {
+            ->join('pessoas_pessoas as pp', function ($join) use ($regiaoId) {
                 $join->on('pp.id', '=', 'pn.pessoa_id')
-                    ->where('pp.status_id', '=', 1);  // Condição do status na junção
+                    ->where('pp.status_id', '=', 1)
+                    ->where('pp.regiao_id', '=', $regiaoId);
             })
+            ->join('instituicoes_instituicoes as ii', function ($join) {
+                $join->on('pn.instituicao_id', '=', 'ii.id')
+                    ->where('ii.ativo', '=', 1)
+                    ->whereNull('ii.data_encerramento');
+            })
+            ->leftJoin('instituicoes_instituicoes as ip', 'ip.id', '=', 'ii.instituicao_pai_id')
             ->whereNull('pn.deleted_at')
             ->whereNull('pn.data_termino')
-            ->select(DB::raw('COUNT(*) as total'), 'pf.onus')
+            ->where(function ($query) {
+                $query->whereNull('ip.id')
+                    ->orWhere(function ($parentQuery) {
+                        $parentQuery->where('ip.ativo', 1)
+                            ->whereNull('ip.data_encerramento');
+                    });
+            })
+            ->select(DB::raw('COUNT(DISTINCT pp.id) as total'), 'pf.onus')
             ->groupBy('pf.onus')
             ->get();
 
