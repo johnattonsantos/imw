@@ -35,10 +35,14 @@ class StoreReceberNovoRequest extends FormRequest
             'cep' => 'required',
             'cidade' => 'required',
             'cnpj' => [
-                'required',
+                'nullable',
                 'string',
                 'max:18',
                 function ($attribute, $value, $fail) {
+                    if ($value === null || trim((string) $value) === '') {
+                        return;
+                    }
+
                     if (! CpfCnpj::isValidCnpj($value)) {
                         $fail(__('O CNPJ informado é inválido. Para CNPJ alfanumérico, use 12 letras/números e 2 dígitos verificadores numéricos.'));
                     }
@@ -72,7 +76,6 @@ class StoreReceberNovoRequest extends FormRequest
             'bairro.required' => 'O bairro é obrigatório.',
             'cep.required' => 'O CEP é obrigatório.',
             'cidade.required' => 'A cidade é obrigatória.',
-            'cnpj.required' => 'O CNPJ é obrigatório.',
             'cnpj.max' => 'O CNPJ não pode ter mais de 18 caracteres.',
             'data_abertura.required' => 'A data de abertura é obrigatória.',
             'data_abertura.date' => 'A data de abertura deve ser uma data válida.',
