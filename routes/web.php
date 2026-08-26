@@ -539,6 +539,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/relatorio/totalcongregacoesigrejas', [TotalizacaoController::class, 'totalcongregacoesigrejas'])->name('totalizacao.totalcongregacoesigrejas')->middleware(['seguranca:regiao-menu-estatistica']);
             Route::get('/relatorio/totalcongregacoesdistritos', [TotalizacaoController::class, 'totalcongregacoesdistritos'])->name('totalizacao.totalcongregacoesdistritos')->middleware(['seguranca:regiao-menu-estatistica']);
             Route::get('/relatorio/totalfrentemissionaria', [TotalizacaoController::class, 'totalfrentemissionaria'])->name('totalizacao.totalfrentemissionaria')->middleware(['seguranca:regiao-menu-estatistica']);
+            Route::post('/relatorio/totalfrentemissionaria/pdf', [TotalizacaoController::class, 'totalfrentemissionariaPdf'])->name('totalizacao.totalfrentemissionaria-pdf')->middleware(['seguranca:regiao-menu-estatistica']);
 
 
 

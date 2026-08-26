@@ -40,8 +40,8 @@
                         <div class="col-lg-3">
                             <select class="form-control" id="instituicao" name="instituicao" required>
                                 <option value="">{{ __('Selecione') }}</option>
-                                <option value="3">{{ __('Região') }}</option>
-                                <option value="2">{{ __('Distrito') }}</option>
+                                <option value="3" {{ request()->input('instituicao') == 3 ? 'selected' : '' }}>{{ __('Região') }}</option>
+                                <option value="2" {{ request()->input('instituicao') == 2 ? 'selected' : '' }}>{{ __('Distrito') }}</option>
                             </select>
                         </div>
 
@@ -60,11 +60,10 @@
                     </div>
                 </form>
 
-                <form id="report_form" action="{{ url('regiao/relatorio/estatisticaestadocivil/pdf') }}" method="POST"
+                <form id="report_form" action="{{ route('regiao.totalizacao.totalfrentemissionaria-pdf') }}" method="POST"
                     target="_blank" style="display: none;">
                     @csrf
                     <input type="hidden" name="instituicao" id="report_instituicao">
-                    <input type="hidden" name="estado_civil" id="report_estado_civil">
                 </form>
             </div>
         </div>
@@ -138,7 +137,6 @@
 
             $('#btn_relatorio').on('click', function(event) {
                 var instituicao = $('#instituicao').val();
-
 
                 if (!instituicao) {
                     event.preventDefault();

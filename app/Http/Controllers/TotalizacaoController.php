@@ -17,6 +17,7 @@ use App\Services\TotalizacaoRegiaoService\TotalizacaoCongregacoesIgrejas;
 use App\Services\TotalizacaoRegiaoService\TotalizacaoDistritosRegiaoService;
 use App\Services\TotalizacaoRegiaoService\TotalizacaoFrenteMissionaria;
 use App\Services\TotalizacaoRegiaoService\TotalizacaoIgrejasDistritosService;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
 
 class TotalizacaoController extends Controller
@@ -65,6 +66,22 @@ class TotalizacaoController extends Controller
         $data = app(TotalizacaoFrenteMissionaria::class)->execute($instituicao);
 
         return view('regiao.totalizacoes.totalfrentemissionaria', $data);
+    }
+
+    public function totalfrentemissionariaPdf(Request $request)
+    {
+        $request->validate([
+            'instituicao' => ['required', 'in:2,3'],
+        ]);
+
+        $instituicao = $request->input('instituicao');
+        $data = app(TotalizacaoFrenteMissionaria::class)->execute($instituicao);
+        $data['tipoInstituicao'] = $instituicao == 3 ? __('Região') : __('Distrito');
+
+        $pdf = FacadePdf::loadView('regiao.totalizacoes.totalfrentemissionaria_pdf', $data)
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->stream('frentes-missionarias-' . now()->format('YmdHis') . '.pdf');
     }
 
 
