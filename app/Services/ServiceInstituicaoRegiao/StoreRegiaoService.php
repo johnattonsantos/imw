@@ -29,7 +29,7 @@ class StoreRegiaoService
             'bairro' => $request->input('bairro'),
             'cep' => $cep,
             'cidade' => $request->input('cidade'),
-            'cnpj' => $request->input('cnpj'),
+            'cnpj' => $request->input('cnpj') ?: null,
             'complemento' => $request->input('complemento'),
             'data_abertura' => $dataAbertura,
             'numero' => $request->input('numero'),
