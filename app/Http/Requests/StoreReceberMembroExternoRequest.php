@@ -28,7 +28,6 @@ class StoreReceberMembroExternoRequest extends FormRequest
         $notificacao = Route::current()->parameter('notificacao');
 
         return [
-            'clerigo_id'  => 'required|exists:pessoas_pessoas,.id',
             'dt_resposta' => 'required|date',
             'congregacao' => 'nullable|exists:congregacoes_congregacoes,id',
             'action'      => 'required',

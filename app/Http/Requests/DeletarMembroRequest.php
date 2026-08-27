@@ -26,7 +26,6 @@ class DeletarMembroRequest extends FormRequest
         return [
             'modo_exclusao_id' => 'required|exists:membresia_situacoes,id',
             'dt_exclusao'      => 'required|date',
-            'clerigo_id'       => 'required|exists:pessoas_pessoas,id'
         ];
     }
 
@@ -35,7 +34,6 @@ class DeletarMembroRequest extends FormRequest
         return [
             'modo_exclusao_id.required' => 'Você precisa preencher esta informação.',
             'dt_exclusao.required'      => 'Você precisa preencher esta informação.',
-            'clerigo_id.required'       => 'Você precisa preencher esta informação.',
         ];
     }
 }

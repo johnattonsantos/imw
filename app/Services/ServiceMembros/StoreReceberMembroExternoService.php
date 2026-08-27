@@ -78,7 +78,7 @@ class StoreReceberMembroExternoService
             'status'           => MembresiaRolPermanente::STATUS_RECEBIMENTO,
             'numero_rol'       => $params['numero_rol'],
             'dt_recepcao'      => $params['dt_resposta'],
-            'clerigo_id'       => $params['clerigo_id'],
+            'clerigo_id'       => $params['clerigo_id'] ?? null,
             'membro_id'        => $membro->id,
             'modo_recepcao_id' => 4, // Membros vindos de outras Igrejas Wesleyana
             'congregacao_id'   => $params['congregacao_id'],
