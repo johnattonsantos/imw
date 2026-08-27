@@ -127,7 +127,7 @@
                                                                 <button type="button" class="btn btn-sm btn-danger btn-rounded"
                                                                     data-bs-toggle="modal" data-bs-target="#modalFinalizar"
                                                                     data-nomeacao-id="{{ $nomeacao->id }}"
-                                                                    onclick="abrirModal({{ $instituicao->id }},{{ $nomeacao->id }}, {{ $nomeacao->funcao }})">
+                                                                    onclick="abrirModal({{ $instituicao->id }}, {{ $nomeacao->id }}, @js($nomeacao->funcaoMinisterial?->funcao))">
                                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                                         height="24" viewBox="0 0 24 24" fill="none"
                                                                         stroke="currentColor" stroke-width="2"
