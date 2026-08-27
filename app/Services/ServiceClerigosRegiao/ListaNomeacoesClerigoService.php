@@ -35,8 +35,9 @@ class ListaNomeacoesClerigoService
     public function instituicao($id): array
     { 
         $instituicao = Identifiable::fetchInstituicao($id);
-        $nomeacoes = PessoaNomeacao::where('instituicao_id', $id)
+        $nomeacoes = PessoaNomeacao::where('pessoas_nomeacoes.instituicao_id', $id)
             ->join('pessoas_pessoas', 'pessoas_pessoas.id', 'pessoas_nomeacoes.pessoa_id')
+            ->select('pessoas_nomeacoes.*')
             ->with('funcaoministerial')
             ->with('pessoa')
             ->with('instituicao')
