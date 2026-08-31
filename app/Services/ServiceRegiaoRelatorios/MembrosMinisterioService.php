@@ -3,6 +3,7 @@
 namespace App\Services\ServiceRegiaoRelatorios;
 
 use App\Models\InstituicoesInstituicao;
+use App\Support\PeriodoEclesiastico;
 use App\Traits\Identifiable;
 use App\Traits\MembrosMinisterioUtils;
 use Carbon\Carbon;
@@ -38,7 +39,7 @@ class MembrosMinisterioService
 
         if ($periodoAnos !== null && $periodoAnos !== '') {
             $periodoAnos = max(1, min(6, (int) $periodoAnos));
-            $dataInicial = $dataFinal->copy()->subYearsNoOverflow($periodoAnos);
+            [$dataInicial, $dataFinal] = PeriodoEclesiastico::porQuantidadeAnos($periodoAnos, $dataFinal);
 
             return [$dataInicial->format('Y-m-d'), $dataFinal->format('Y-m-d'), $periodoAnos];
         }
