@@ -21,8 +21,8 @@ trait BalanceteUtils
     public static function handleLancamentos($dt_inicial, $dt_final, $caixaID, $instituicaoId)
     {
         // Usando Carbon para manipulação de datas
-        $dataInicial = Carbon::createFromFormat('m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
-        $dataFinal = Carbon::createFromFormat('m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
+        $dataInicial = Carbon::createFromFormat('!m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
+        $dataFinal = Carbon::createFromFormat('!m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
 
         $tipoInstituicao = InstituicoesInstituicao::where('id', $instituicaoId)->first();
         
@@ -67,8 +67,8 @@ trait BalanceteUtils
         return $lancamentos;
 
         // Usando Carbon para manipulação de datas
-        // $dataInicial = Carbon::createFromFormat('m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
-        // $dataFinal = Carbon::createFromFormat('m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
+        // $dataInicial = Carbon::createFromFormat('!m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
+        // $dataFinal = Carbon::createFromFormat('!m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
 
         // $sql = "SELECT 
         //             fpc.numeracao,
@@ -112,8 +112,8 @@ trait BalanceteUtils
     public static function handleLancamentosRegiao($dt_inicial, $dt_final, $caixaID, $instituicaoId)
     {
         // Usando Carbon para manipulação de datas
-        $dataInicial = Carbon::createFromFormat('m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
-        $dataFinal = Carbon::createFromFormat('m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
+        $dataInicial = Carbon::createFromFormat('!m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
+        $dataFinal = Carbon::createFromFormat('!m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
         $tipoIgreja = InstituicoesTipoInstituicao::IGREJA_LOCAL;
 
         $sql = "SELECT 
@@ -157,11 +157,11 @@ trait BalanceteUtils
     public static function handleCaixas($dt_inicial, $dt_final, $caixaId, $instituicaoId)
     {
         // Usando Carbon para manipulação de datas
-        $dataInicial = Carbon::createFromFormat('m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
-        $dataFinal = Carbon::createFromFormat('m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
+        $dataInicial = Carbon::createFromFormat('!m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
+        $dataFinal = Carbon::createFromFormat('!m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
 
         // Calculando o mês anterior usando Carbon
-        $dataMesAnterior = Carbon::createFromFormat('m/Y', $dt_inicial)->subMonth();
+        $dataMesAnterior = Carbon::createFromFormat('!m/Y', $dt_inicial)->subMonth();
         $mesAnterior = $dataMesAnterior->format('m');
         $anoAnterior = $dataMesAnterior->format('Y');
 
@@ -233,11 +233,11 @@ trait BalanceteUtils
         $dataFin = explode('/',$dt_final); 
         $tdFinal  = $dataFin[1].$dataFin[0];
         // Usando Carbon para manipulação de datas
-        $dataInicial = Carbon::createFromFormat('m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
-        $dataFinal = Carbon::createFromFormat('m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
+        $dataInicial = Carbon::createFromFormat('!m/Y', $dt_inicial)->startOfMonth()->format('Y-m-d');
+        $dataFinal = Carbon::createFromFormat('!m/Y', $dt_final)->endOfMonth()->format('Y-m-d');
 
         // Calculando o mês anterior usando Carbon
-        $dataMesAnterior = Carbon::createFromFormat('m/Y', $dt_inicial)->subMonth();
+        $dataMesAnterior = Carbon::createFromFormat('!m/Y', $dt_inicial)->subMonth();
         $mesAnterior = $dataMesAnterior->format('m');
         $anoAnterior = $dataMesAnterior->format('Y');
 

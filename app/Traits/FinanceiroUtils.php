@@ -124,7 +124,7 @@ trait FinanceiroUtils
 
         if ($mesAno) {
             list($mes, $ano) = explode('/', $mesAno);
-            $ultimoDiaMes = Carbon::createFromFormat('Y-m', $ano . '-' . $mes)->endOfMonth();
+            $ultimoDiaMes = Carbon::createFromFormat('!Y-m', $ano . '-' . $mes)->endOfMonth();
             $query->where('data_hora', '<', $ultimoDiaMes);
         }
 

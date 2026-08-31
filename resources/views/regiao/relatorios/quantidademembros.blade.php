@@ -18,10 +18,12 @@
 
 @php
 use Carbon\Carbon;
+use App\Support\PeriodoEclesiastico;
 
 $periodoSelecionado = request()->input('periodo_anos', $periodoAnos ?? 1);
 $dataFinalSelecionada = request()->input('data_final', $dataFinal ?? Carbon::now()->format('Y-m-d'));
-$dataInicialCalculada = $dataInicial ?? Carbon::parse($dataFinalSelecionada)->subYearsNoOverflow((int) $periodoSelecionado)->format('Y-m-d');
+$dataInicialPeriodo = PeriodoEclesiastico::porQuantidadeAnos((int) $periodoSelecionado, Carbon::parse($dataFinalSelecionada))[0]->format('Y-m-d');
+$dataInicialCalculada = $dataInicial ?? $dataInicialPeriodo;
 $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_final') || request()->filled('data_inicial');
 @endphp
 
@@ -67,8 +69,8 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                     </div>
                     <div class="col-lg-3">
                         <select class="form-control" id="periodo_anos" name="periodo_anos" required>
-                            <option value="1" {{ (string) $periodoSelecionado === '1' ? 'selected' : '' }}>{{ __('Anual') }}</option>
-                            <option value="2" {{ (string) $periodoSelecionado === '2' ? 'selected' : '' }}>{{ __('Bienal') }}</option>
+                            <option value="1" {{ (string) $periodoSelecionado === '1' ? 'selected' : '' }}>{{ __('Anuênio') }}</option>
+                            <option value="2" {{ (string) $periodoSelecionado === '2' ? 'selected' : '' }}>{{ __('Biênio') }}</option>
                             <option value="3" {{ (string) $periodoSelecionado === '3' ? 'selected' : '' }}>{{ __('3 anos') }}</option>
                             <option value="4" {{ (string) $periodoSelecionado === '4' ? 'selected' : '' }}>{{ __('4 anos') }}</option>
                             <option value="5" {{ (string) $periodoSelecionado === '5' ? 'selected' : '' }}>{{ __('5 anos') }}</option>

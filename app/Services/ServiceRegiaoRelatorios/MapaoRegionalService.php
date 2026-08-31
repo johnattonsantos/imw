@@ -2,6 +2,7 @@
 
 namespace App\Services\ServiceRegiaoRelatorios;
 
+use App\Support\PeriodoEclesiastico;
 use App\Traits\Identifiable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -54,10 +55,7 @@ class MapaoRegionalService
 
     private function periodoBienioCorrente(): array
     {
-        $dataFinal = Carbon::now()->endOfDay();
-        $dataInicial = Carbon::create((int) $dataFinal->format('Y') - 1, 11, 1)->startOfDay();
-
-        return [$dataInicial, $dataFinal];
+        return PeriodoEclesiastico::bienioCorrente();
     }
 
     private function mesesNoPeriodo(Carbon $dataInicial, Carbon $dataFinal): int
