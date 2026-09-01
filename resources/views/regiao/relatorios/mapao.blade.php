@@ -140,6 +140,7 @@
 
             <div class="mapao-grid">
                 @foreach ($cards as $card)
+                    @continue($card['titulo'] === 'Média da arrecadação mensal')
                     <div class="mapao-card">
                         <div class="mapao-card-title">{{ __($card['titulo']) }}</div>
                         <div class="mapao-card-value">{{ $formatarValor($card) }}</div>
@@ -149,11 +150,6 @@
 
             <div class="mapao-note mt-4">
                 <strong>{{ __('Critério das médias') }}:</strong>
-                {{ __('a média da arrecadação mensal considera entradas financeiras de') }}
-                {{ $periodos['data_inicial']->format('d/m/Y') }}
-                {{ __('até') }}
-                {{ $periodos['data_final']->format('d/m/Y') }}
-                {{ __('divididas por') }} {{ $periodos['meses_periodo'] }} {{ __('mês(es) do período.') }}
                 {{ __('As médias de recebimentos e exclusões consideram o mesmo intervalo dividido por') }}
                 {{ $periodos['trimestres_periodo'] }} {{ __('trimestre(s) do período.') }}
             </div>

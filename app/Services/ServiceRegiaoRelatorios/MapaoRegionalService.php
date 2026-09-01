@@ -2,11 +2,11 @@
 
 namespace App\Services\ServiceRegiaoRelatorios;
 
+use App\Models\InstituicoesTipoInstituicao;
 use App\Support\PeriodoEclesiastico;
 use App\Traits\Identifiable;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Schema;
 
 class MapaoRegionalService
 {
@@ -29,14 +29,14 @@ class MapaoRegionalService
         return [
             'regiao' => $regiao,
             'cards' => [
-                ['titulo' => 'Total de membros', 'valor' => $this->totalMembresia($regiaoId, 'M'), 'tipo' => 'numero'],
+                ['titulo' => 'Total de membros', 'valor' => $this->totalMembrosQuantidadeMembros($regiaoId, $dataFinalPeriodo), 'tipo' => 'numero'],
                 ['titulo' => 'Total de clérigos', 'valor' => $this->totalClerigos($regiaoId), 'tipo' => 'numero'],
-                ['titulo' => 'Total de congregados', 'valor' => $this->totalMembresia($regiaoId, 'C'), 'tipo' => 'numero'],
+                ['titulo' => 'Total de congregados', 'valor' => $this->totalCongregadosRelatorio($regiaoId), 'tipo' => 'numero'],
                 ['titulo' => 'Total de distritos', 'valor' => count($distritoIds), 'tipo' => 'numero'],
                 ['titulo' => 'Total de igrejas', 'valor' => count($igrejaIds), 'tipo' => 'numero'],
-                ['titulo' => 'Total de congregações', 'valor' => $this->totalCongregacoes($igrejaIds), 'tipo' => 'numero'],
+                ['titulo' => 'Total de congregações', 'valor' => $this->totalCongregacoes($regiaoId), 'tipo' => 'numero'],
                 ['titulo' => 'Média da arrecadação mensal', 'valor' => $totalArrecadacao / $mesesPeriodo, 'tipo' => 'moeda'],
-                ['titulo' => 'Total de GCEUs', 'valor' => $this->totalGceus($igrejaIds), 'tipo' => 'numero'],
+                ['titulo' => 'Total de GCEUs', 'valor' => $this->totalGceus($regiaoId), 'tipo' => 'numero'],
                 ['titulo' => 'Total de integrantes de GCEUs', 'valor' => $this->totalIntegrantesGceus($igrejaIds), 'tipo' => 'numero'],
                 ['titulo' => 'Total de ministérios', 'valor' => $this->totalMinisterios(), 'tipo' => 'numero'],
                 ['titulo' => 'Total de integrantes nos ministérios', 'valor' => $this->totalIntegrantesMinisterios($regiaoId), 'tipo' => 'numero'],
@@ -73,11 +73,14 @@ class MapaoRegionalService
 
     private function distritoIds(int $regiaoId): array
     {
-        return DB::table('instituicoes_instituicoes')
-            ->where('instituicao_pai_id', $regiaoId)
-            ->where('ativo', 1)
-            ->whereNull('deleted_at')
-            ->pluck('id')
+        return DB::table('instituicoes_instituicoes as ii')
+            ->join('instituicoes_instituicoes as ip', 'ii.instituicao_pai_id', '=', 'ip.id')
+            ->where('ip.tipo_instituicao_id', InstituicoesTipoInstituicao::REGIAO)
+            ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where('ip.id', $regiaoId)
+            ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
+            ->pluck('ii.id')
             ->map(fn ($id) => (int) $id)
             ->all();
     }
@@ -88,50 +91,104 @@ class MapaoRegionalService
             return [];
         }
 
-        return DB::table('instituicoes_instituicoes')
-            ->whereIn('instituicao_pai_id', $distritoIds)
-            ->where('tipo_instituicao_id', 1)
-            ->where('ativo', 1)
-            ->whereNull('deleted_at')
-            ->pluck('id')
+        return DB::table('instituicoes_instituicoes as ii')
+            ->join('instituicoes_instituicoes as ip', 'ii.instituicao_pai_id', '=', 'ip.id')
+            ->where('ip.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where(function ($query) {
+                $query->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_GERAL)
+                    ->orWhere('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL);
+            })
+            ->whereIn('ii.instituicao_pai_id', $distritoIds)
+            ->where('ip.ativo', 1)
+            ->whereNull('ip.data_encerramento')
+            ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
+            ->pluck('ii.id')
             ->map(fn ($id) => (int) $id)
             ->all();
     }
 
-    private function totalMembresia(int $regiaoId, string $vinculo): int
+    private function totalMembrosQuantidadeMembros(int $regiaoId, Carbon $dataFinal): int
     {
-        return (int) DB::table('membresia_membros')
-            ->where('regiao_id', $regiaoId)
-            ->where('status', 'A')
-            ->where('vinculo', $vinculo)
-            ->whereNull('deleted_at')
-            ->count();
+        $distritoIds = Identifiable::fetchDistritosIdByRegiao($regiaoId);
+
+        if (empty($distritoIds)) {
+            return 0;
+        }
+
+        $resultado = DB::table('instituicoes_instituicoes as ii')
+            ->selectRaw(
+                "COUNT(CASE
+                    WHEN mr.dt_recepcao <= ? AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > ?) THEN mm.id
+                    ELSE NULL
+                END) AS total_ate_datafinal",
+                [$dataFinal->toDateString(), $dataFinal->toDateString()]
+            )
+            ->leftJoin('membresia_membros as mm', function ($join) {
+                $join->on('ii.id', '=', 'mm.igreja_id')
+                    ->where('mm.vinculo', 'M')
+                    ->where('mm.status', 'A');
+            })
+            ->leftJoin('membresia_rolpermanente as mr', function ($join) {
+                $join->on('mr.membro_id', '=', 'mm.id');
+            })
+            ->whereIn('ii.instituicao_pai_id', $distritoIds)
+            ->where('ii.ativo', 1)
+            ->first();
+
+        return (int) ($resultado->total_ate_datafinal ?? 0);
+    }
+
+    private function totalCongregadosRelatorio(int $regiaoId): int
+    {
+        return (int) DB::table('membresia_membros as mm')
+            ->leftJoin('membresia_contatos as mc', function ($join) {
+                $join->on('mc.membro_id', '=', 'mm.id')
+                    ->whereNull('mc.deleted_at');
+            })
+            ->leftJoin('congregacoes_congregacoes as cc', 'cc.id', '=', 'mm.congregacao_id')
+            ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'mm.igreja_id')
+            ->leftJoin('instituicoes_instituicoes as dist', 'dist.id', '=', 'igreja.instituicao_pai_id')
+            ->whereNull('mm.deleted_at')
+            ->where('mm.vinculo', 'C')
+            ->where('mm.status', 'A')
+            ->where('dist.instituicao_pai_id', $regiaoId)
+            ->count('mm.id');
     }
 
     private function totalClerigos(int $regiaoId): int
     {
-        $query = DB::table('pessoas_pessoas')
-            ->where('regiao_id', $regiaoId)
-            ->where('situacao_id', 1)
-            ->whereRaw('LOWER(categoria) IN (?, ?, ?, ?)', ['ministro', 'pastor', 'missionária', 'missionaria']);
-
-        if (Schema::hasColumn('pessoas_pessoas', 'deleted_at')) {
-            $query->whereNull('deleted_at');
-        }
-
-        return (int) $query->count();
+        return (int) DB::table('pessoas_pessoas as pp')
+            ->join('pessoas_nomeacoes as pn', function ($join) {
+                $join->on('pp.id', '=', 'pn.pessoa_id');
+            })
+            ->join('instituicoes_instituicoes as ii', function ($join) {
+                $join->on('pn.instituicao_id', '=', 'ii.id')
+                    ->where('ii.ativo', '=', 1);
+            })
+            ->where([
+                'pp.status_id' => 1,
+                'ii.ativo' => 1,
+                'pp.regiao_id' => $regiaoId,
+            ])
+            ->whereNull('pn.data_termino')
+            ->distinct('pp.id')
+            ->count('pp.id');
     }
 
-    private function totalCongregacoes(array $igrejaIds): int
+    private function totalCongregacoes(int $regiaoId): int
     {
-        if (empty($igrejaIds)) {
-            return 0;
-        }
-
-        return (int) DB::table('congregacoes_congregacoes')
-            ->whereIn('instituicao_id', $igrejaIds)
-            ->where('ativo', 1)
-            ->whereNull('deleted_at')
+        return (int) DB::table('instituicoes_instituicoes as ii')
+            ->join('congregacoes_congregacoes as cc', 'ii.id', '=', 'cc.instituicao_id')
+            ->join('instituicoes_instituicoes as ip', 'ip.id', '=', 'ii.instituicao_pai_id')
+            ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->where('ii.regiao_id', $regiaoId)
+            ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento')
+            ->where('ip.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where('ip.ativo', 1)
+            ->whereNull('ip.data_encerramento')
+            ->where('cc.ativo', 1)
             ->count();
     }
 
@@ -156,17 +213,24 @@ class MapaoRegionalService
             ->sum('valor');
     }
 
-    private function totalGceus(array $igrejaIds): int
+    private function totalGceus(int $regiaoId): int
     {
-        if (empty($igrejaIds)) {
-            return 0;
-        }
+        $subGceus = DB::table('gceu_cadastros as gc')
+            ->select('gc.instituicao_id as igreja_id', DB::raw('COUNT(DISTINCT gc.id) as qtd_gceus'))
+            ->where('gc.status', 'A')
+            ->groupBy('gc.instituicao_id');
 
-        return (int) DB::table('gceu_cadastros')
-            ->whereIn('instituicao_id', $igrejaIds)
-            ->where('status', 'A')
-            ->whereNull('deleted_at')
-            ->count();
+        return (int) DB::table('instituicoes_instituicoes as distrito')
+            ->join('instituicoes_instituicoes as igreja', function ($join) {
+                $join->on('igreja.instituicao_pai_id', '=', 'distrito.id')
+                    ->where('igreja.tipo_instituicao_id', 1);
+            })
+            ->leftJoinSub($subGceus, 'sg', function ($join) {
+                $join->on('sg.igreja_id', '=', 'igreja.id');
+            })
+            ->where('distrito.instituicao_pai_id', $regiaoId)
+            ->where('distrito.tipo_instituicao_id', 2)
+            ->sum(DB::raw('COALESCE(sg.qtd_gceus, 0)'));
     }
 
     private function totalIntegrantesGceus(array $igrejaIds): int
