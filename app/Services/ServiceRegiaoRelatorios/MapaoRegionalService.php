@@ -5,11 +5,14 @@ namespace App\Services\ServiceRegiaoRelatorios;
 use App\Models\InstituicoesTipoInstituicao;
 use App\Support\PeriodoEclesiastico;
 use App\Traits\Identifiable;
+use App\Traits\MembrosMinisterioUtils;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class MapaoRegionalService
 {
+    use MembrosMinisterioUtils;
+
     public function execute(): array
     {
         $regiao = Identifiable::fetchtSessionRegiao();
@@ -23,8 +26,13 @@ class MapaoRegionalService
         $trimestresPeriodo = $this->trimestresNoPeriodo($dataInicialPeriodo, $dataFinalPeriodo);
 
         $totalArrecadacao = $this->totalArrecadacao($regiaoId, $distritoIds, $igrejaIds, $dataInicialPeriodo, $dataFinalPeriodo);
-        $totalRecebimentos = $this->totalRolPermanente($regiaoId, 'A', 'dt_recepcao', $dataInicialPeriodo, $dataFinalPeriodo);
-        $totalExclusoes = $this->totalRolPermanente($regiaoId, 'I', 'dt_exclusao', $dataInicialPeriodo, $dataFinalPeriodo);
+        $detalhesIntegrantesGceus = $this->detalhesIntegrantesGceus($igrejaIds);
+        $detalhesMinisterios = $this->detalhesMinisterios($regiaoId, $dataInicialPeriodo, $dataFinalPeriodo);
+        $detalhesRecebimentos = $this->detalhesRolPermanentePorIgreja($regiaoId, 'A', 'dt_recepcao', $dataInicialPeriodo, $dataFinalPeriodo);
+        $detalhesExclusoes = $this->detalhesRolPermanentePorIgreja($regiaoId, 'I', 'dt_exclusao', $dataInicialPeriodo, $dataFinalPeriodo);
+        $totalRecebimentos = (int) $detalhesRecebimentos->sum('total');
+        $totalExclusoes = (int) $detalhesExclusoes->sum('total');
+        $totalMembrosInicioPeriodo = $this->totalMembrosNaData($regiaoId, $dataInicialPeriodo->copy()->subDay());
 
         return [
             'regiao' => $regiao,
@@ -37,11 +45,29 @@ class MapaoRegionalService
                 ['titulo' => 'Total de congregações', 'valor' => $this->totalCongregacoes($regiaoId), 'tipo' => 'numero'],
                 ['titulo' => 'Média da arrecadação mensal', 'valor' => $totalArrecadacao / $mesesPeriodo, 'tipo' => 'moeda'],
                 ['titulo' => 'Total de GCEUs', 'valor' => $this->totalGceus($regiaoId), 'tipo' => 'numero'],
-                ['titulo' => 'Total de integrantes de GCEUs', 'valor' => $this->totalIntegrantesGceus($igrejaIds), 'tipo' => 'numero'],
+                ['titulo' => 'Total de integrantes de GCEUs', 'valor' => $this->totalIntegrantesGceus($detalhesIntegrantesGceus), 'tipo' => 'numero'],
                 ['titulo' => 'Total de ministérios', 'valor' => $this->totalMinisterios(), 'tipo' => 'numero'],
                 ['titulo' => 'Total de integrantes nos ministérios', 'valor' => $this->totalIntegrantesMinisterios($regiaoId), 'tipo' => 'numero'],
-                ['titulo' => 'Média de recebimento de membros no trimestre', 'valor' => $totalRecebimentos / $trimestresPeriodo, 'tipo' => 'decimal'],
-                ['titulo' => 'Média de exclusões por trimestre', 'valor' => $totalExclusoes / $trimestresPeriodo, 'tipo' => 'decimal'],
+                [
+                    'titulo' => 'Média de recebimento de membros no trimestre',
+                    'valor' => $totalRecebimentos / $trimestresPeriodo,
+                    'tipo' => 'decimal',
+                    'detalhe' => 'recebimentos',
+                    'resumo' => [
+                        ['titulo' => 'Total que tinha', 'valor' => $totalMembrosInicioPeriodo],
+                        ['titulo' => 'Total que entrou', 'valor' => $totalRecebimentos],
+                    ],
+                ],
+                [
+                    'titulo' => 'Média de exclusões por trimestre',
+                    'valor' => $totalExclusoes / $trimestresPeriodo,
+                    'tipo' => 'decimal',
+                    'detalhe' => 'exclusoes',
+                    'resumo' => [
+                        ['titulo' => 'Total que tinha', 'valor' => $totalMembrosInicioPeriodo],
+                        ['titulo' => 'Total que saiu', 'valor' => $totalExclusoes],
+                    ],
+                ],
             ],
             'periodos' => [
                 'data_inicial' => $dataInicialPeriodo,
@@ -50,6 +76,11 @@ class MapaoRegionalService
                 'trimestres_periodo' => $trimestresPeriodo,
                 'descricao' => 'Biênio corrente',
             ],
+            'detalhesIntegrantesGceus' => $detalhesIntegrantesGceus,
+            'detalhesMinisterios' => $detalhesMinisterios,
+            'detalhesRecebimentos' => $detalhesRecebimentos,
+            'detalhesExclusoes' => $detalhesExclusoes,
+            'tiposMinisterios' => $this->tiposMinisterios(),
         ];
     }
 
@@ -110,7 +141,12 @@ class MapaoRegionalService
 
     private function totalMembrosQuantidadeMembros(int $regiaoId, Carbon $dataFinal): int
     {
-        $distritoIds = Identifiable::fetchDistritosIdByRegiao($regiaoId);
+        $distritoIds = DB::table('instituicoes_instituicoes')
+            ->where('instituicao_pai_id', $regiaoId)
+            ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->whereNull('data_encerramento')
+            ->pluck('id')
+            ->toArray();
 
         if (empty($distritoIds)) {
             return 0;
@@ -233,27 +269,80 @@ class MapaoRegionalService
             ->sum(DB::raw('COALESCE(sg.qtd_gceus, 0)'));
     }
 
-    private function totalIntegrantesGceus(array $igrejaIds): int
+    private function totalIntegrantesGceus($detalhesIntegrantesGceus): int
+    {
+        return (int) $detalhesIntegrantesGceus->sum('total_integrantes');
+    }
+
+    private function detalhesIntegrantesGceus(array $igrejaIds)
     {
         if (empty($igrejaIds)) {
-            return 0;
+            return collect();
         }
 
-        return (int) DB::table('gceu_membros as gm')
-            ->join('gceu_cadastros as gc', 'gc.id', '=', 'gm.gceu_cadastro_id')
+        return DB::table('gceu_cadastros as gc')
+            ->leftJoin('gceu_membros as gm', function ($join) {
+                $join->on('gm.gceu_cadastro_id', '=', 'gc.id')
+                    ->whereNull('gm.deleted_at');
+            })
+            ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'gc.instituicao_id')
+            ->leftJoin('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'igreja.instituicao_pai_id')
+            ->select(
+                'gc.id',
+                'gc.nome',
+                'igreja.nome as igreja_nome',
+                'distrito.nome as distrito_nome',
+                DB::raw('COUNT(DISTINCT gm.membro_id) as total_integrantes')
+            )
             ->whereIn('gc.instituicao_id', $igrejaIds)
             ->where('gc.status', 'A')
             ->whereNull('gc.deleted_at')
-            ->whereNull('gm.deleted_at')
-            ->distinct('gm.membro_id')
-            ->count('gm.membro_id');
+            ->groupBy('gc.id', 'gc.nome', 'igreja.nome', 'distrito.nome')
+            ->orderBy('gc.nome')
+            ->get();
     }
 
     private function totalMinisterios(): int
     {
-        return (int) DB::table('membresia_setores')
-            ->whereNull('deleted_at')
-            ->count();
+        return count($this->tiposMinisterios());
+    }
+
+    private function detalhesMinisterios(int $regiaoId, Carbon $dataInicial, Carbon $dataFinal)
+    {
+        $rows = self::fetch(
+            $dataInicial->toDateString(),
+            $dataFinal->toDateString(),
+            'M',
+            'all',
+            $regiaoId
+        );
+
+        return $rows->flatMap(function ($row) {
+            return collect($this->tiposMinisterios())->map(function ($tipo) use ($row) {
+                return [
+                    'distrito_id' => $row->distrito_id ?? null,
+                    'distrito_nome' => $row->distrito,
+                    'igreja_id' => $row->igreja_id ?? null,
+                    'igreja_nome' => $row->nome,
+                    'tipo' => $tipo['id'],
+                    'nome' => $tipo['nome'],
+                    'total' => (int) ($row->{$tipo['campo']} ?? 0),
+                ];
+            });
+        })->values();
+    }
+
+    private function tiposMinisterios(): array
+    {
+        return [
+            ['id' => 'kids', 'nome' => 'KIDS', 'campo' => 'Kids_Y'],
+            ['id' => 'conexao', 'nome' => 'CONEXÃO', 'campo' => 'Conexao_Y'],
+            ['id' => 'fire', 'nome' => 'FIRE', 'campo' => 'Fire_Y'],
+            ['id' => 'move', 'nome' => 'MOVE', 'campo' => 'Move_Y'],
+            ['id' => 'homens', 'nome' => 'HOMENS', 'campo' => 'Homens_Y'],
+            ['id' => 'mulheres', 'nome' => 'MULHERES', 'campo' => 'Mulheres_Y'],
+            ['id' => 'sessenta', 'nome' => '60+', 'campo' => 'Sessenta_Y'],
+        ];
     }
 
     private function totalIntegrantesMinisterios(int $regiaoId): int
@@ -270,13 +359,43 @@ class MapaoRegionalService
             ->count('mfm.membro_id');
     }
 
-    private function totalRolPermanente(int $regiaoId, string $status, string $campoData, Carbon $inicioAno, Carbon $hoje): int
+    private function totalMembrosNaData(int $regiaoId, Carbon $data): int
     {
         return (int) DB::table('membresia_rolpermanente')
             ->where('regiao_id', $regiaoId)
-            ->where('status', $status)
             ->whereNull('deleted_at')
-            ->whereBetween($campoData, [$inicioAno->toDateString(), $hoje->toDateString()])
+            ->where('dt_recepcao', '<=', $data->toDateString())
+            ->where(function ($query) use ($data) {
+                $query->whereNull('dt_exclusao')
+                    ->orWhere('dt_exclusao', '>', $data->toDateString());
+            })
             ->count();
+    }
+
+    private function detalhesRolPermanentePorIgreja(
+        int $regiaoId,
+        string $status,
+        string $campoData,
+        Carbon $dataInicial,
+        Carbon $dataFinal
+    ) {
+        return DB::table('membresia_rolpermanente as mr')
+            ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'mr.igreja_id')
+            ->leftJoin('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'mr.distrito_id')
+            ->select(
+                'mr.igreja_id',
+                'igreja.nome as igreja_nome',
+                'mr.distrito_id',
+                'distrito.nome as distrito_nome',
+                DB::raw('COUNT(mr.id) as total')
+            )
+            ->where('mr.regiao_id', $regiaoId)
+            ->where('mr.status', $status)
+            ->whereNull('mr.deleted_at')
+            ->whereBetween("mr.$campoData", [$dataInicial->toDateString(), $dataFinal->toDateString()])
+            ->groupBy('mr.igreja_id', 'igreja.nome', 'mr.distrito_id', 'distrito.nome')
+            ->orderBy('distrito.nome')
+            ->orderBy('igreja.nome')
+            ->get();
     }
 }
