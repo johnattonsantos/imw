@@ -110,6 +110,10 @@ class MembresiaExport implements FromCollection, WithHeadings, WithEvents, WithM
     }
 
     public function formatDate($date){
+        if (empty($date)) {
+            return '';
+        }
+
         return Date::dateTimeToExcel(Carbon::parse($date));
     }
 
