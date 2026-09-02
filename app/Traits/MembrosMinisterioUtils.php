@@ -12,7 +12,7 @@ trait MembrosMinisterioUtils
         $vinculoCondition = $tipo === 'C' ? ['C', 'M'] : ['M'];
 
         $results = DB::table('instituicoes_instituicoes as ii')
-            ->select('ii.nome', 'dist.nome as distrito')
+            ->select('ii.id as igreja_id', 'ii.nome', 'dist.id as distrito_id', 'dist.nome as distrito')
             ->selectRaw("
                 COUNT(CASE 
                     WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 0 AND 9 
@@ -102,10 +102,18 @@ trait MembrosMinisterioUtils
                     ->where('dist.ativo', 1);
 			})
             ->when($distritoId == 'all' && $regiaoId,
-                fn ($query) => $query->whereIn('ii.instituicao_pai_id', Identifiable::fetchDistritosIdByRegiao($regiaoId)),
+                fn ($query) => $query->whereIn(
+                    'ii.instituicao_pai_id',
+                    DB::table('instituicoes_instituicoes')
+                        ->where('instituicao_pai_id', $regiaoId)
+                        ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+                        ->whereNull('data_encerramento')
+                        ->pluck('id')
+                        ->toArray()
+                ),
                 fn ($query) => $query->where('ii.instituicao_pai_id', $distritoId)
             )
-            ->groupBy('ii.nome', 'dist.nome')
+            ->groupBy('ii.id', 'ii.nome', 'dist.id', 'dist.nome')
             ->orderBy('dist.nome', 'asc')
             ->orderBy('ii.nome', 'asc')
             ->get();
