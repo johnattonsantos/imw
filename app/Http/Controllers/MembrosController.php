@@ -269,7 +269,7 @@ class MembrosController extends Controller
         try {
             $data = app(StoreReceberNovoMembroService::class)->execute($request->all(), $id);
             if($data == 'idade'){
-                return redirect()->back()->with('error', __('Não pode ser membro, pois a idade desse congregado é menor que 12 anos'));
+                return redirect()->back()->with('error', __('Por questão de excepcionalidade, nenhuma criança deverá ser cadastrada como membro, com menos de 10 anos.'));
             }else{
                 return redirect()->route('membro.editar', ['id' => $id])->with('success', __('Novo membro recebido com sucesso!'));
             }

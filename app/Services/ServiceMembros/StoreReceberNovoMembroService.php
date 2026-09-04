@@ -6,6 +6,7 @@ use App\Exceptions\StoreRolPermanenteException;
 use App\Models\MembresiaMembro;
 use App\Models\MembresiaRolPermanente;
 use App\Traits\Identifiable;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class StoreReceberNovoMembroService
@@ -20,7 +21,11 @@ class StoreReceberNovoMembroService
                 DB::raw("TIMESTAMPDIFF(YEAR, data_nascimento, curdate()) idade")
             )->find($id);
 
-            if (!$pessoa || $pessoa->idade < 12) {
+            if (
+                !$pessoa ||
+                $pessoa->idade < 10 ||
+                ($pessoa->data_batismo && Carbon::parse($pessoa->data_batismo)->lt(Carbon::parse($pessoa->data_nascimento)->addYears(10)))
+            ) {
                 return 'idade';
             }
 
