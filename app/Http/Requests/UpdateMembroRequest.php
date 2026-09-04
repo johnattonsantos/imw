@@ -70,7 +70,8 @@ class UpdateMembroRequest extends FormRequest
         $minDate = '1910-01-01';
         $minDateRecepcao = '1967-01-05';
         $currentDate = date('Y-m-d');
-        $maxBirthDateForMembro = date('Y-m-d', strtotime('-12 years'));
+        $maxBirthDateForMembro = date('Y-m-d', strtotime('-10 years'));
+        $mensagemIdadeMinimaMembro = 'Por questão de excepcionalidade, nenhuma criança deverá ser cadastrada como membro, com menos de 10 anos.';
 
         return [
             'foto' => 'image|nullable|max:10240',
@@ -79,13 +80,15 @@ class UpdateMembroRequest extends FormRequest
             'data_nascimento' => [
                 'required',
                 'date',
-                function ($attribute, $value, $fail) use ($minDate, $currentDate, $maxBirthDateForMembro) {
+                function ($attribute, $value, $fail) use ($minDate, $currentDate, $maxBirthDateForMembro, $mensagemIdadeMinimaMembro) {
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
                         $fail(__('A data de nascimento deve estar entre 01/01/1910 e a data atual.'));
+                        return;
                     }
 
                     if (strtotime($value) > strtotime($maxBirthDateForMembro)) {
-                        $fail(__('Não pode ser membro, pois a idade é menor que 12 anos.'));
+                        $fail(__($mensagemIdadeMinimaMembro));
+                        return;
                     }
                 },
             ],
@@ -104,12 +107,22 @@ class UpdateMembroRequest extends FormRequest
             'data_batismo' => [
                 'nullable',
                 'date',
-                function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
+                function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate, $mensagemIdadeMinimaMembro) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
                         $fail(__('A data de batismo deve ser após a data de nascimento.'));
+                        return;
                     }
                     if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
                         $fail(__('A data de batismo deve ser após a data de nascimento e a data atual.'));
+                        return;
+                    }
+                    if (
+                        !empty($dataNascimento) &&
+                        strtotime($dataNascimento) <= strtotime('-10 years') &&
+                        strtotime($value) < strtotime($dataNascimento . ' +10 years')
+                    ) {
+                        $fail(__($mensagemIdadeMinimaMembro));
+                        return;
                     }
                 },
             ],
