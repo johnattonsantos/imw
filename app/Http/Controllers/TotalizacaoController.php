@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\IgrejasPorDistritoExport;
 use App\Services\EstatisticaClerigosService\TotalClerigosFaxiaEtaria;
 use App\Services\EstatisticaClerigosService\TotalClerigosNomeacoes;
 use App\Services\EstatisticaClerigosService\TotalClerigosStatus;
@@ -19,6 +20,7 @@ use App\Services\TotalizacaoRegiaoService\TotalizacaoFrenteMissionaria;
 use App\Services\TotalizacaoRegiaoService\TotalizacaoIgrejasDistritosService;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TotalizacaoController extends Controller
 {
@@ -32,13 +34,32 @@ class TotalizacaoController extends Controller
 
         return view('regiao.totalizacoes.totalizacaodistritoregiao', $data);
     }
-    public function totaligrejasdistritos()
+    public function totaligrejasdistritos(Request $request)
     {
 
+        $distritoId = $this->normalizarDistritoId($request);
 
-        $data = app(TotalizacaoIgrejasDistritosService::class)->execute();
+        $data = app(TotalizacaoIgrejasDistritosService::class)->execute($distritoId);
 
         return view('regiao.totalizacoes.totalizacaoigrejasdistritos', $data);
+    }
+
+    public function totaligrejasdistritosExcel(Request $request)
+    {
+        $distritoId = $this->normalizarDistritoId($request);
+        $data = app(TotalizacaoIgrejasDistritosService::class)->execute($distritoId);
+
+        return Excel::download(
+            new IgrejasPorDistritoExport($data['igrejasPorDistrito'], $data['totalIgrejasRegiao']),
+            'igrejas-por-distrito.xlsx'
+        );
+    }
+
+    private function normalizarDistritoId(Request $request): ?int
+    {
+        $distritoId = $request->input('distrito_id');
+
+        return is_numeric($distritoId) && (int) $distritoId > 0 ? (int) $distritoId : null;
     }
     public function totalcongregacoesigrejas()
     {

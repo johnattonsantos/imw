@@ -1,11 +1,10 @@
-
 @extends('template.layout')
 
 @section('breadcrumb')
     <x-breadcrumb :breadcrumbs="[
         ['text' => 'Home', 'url' => '/', 'active' => false],
         ['text' => 'Totalização', 'url' => '#', 'active' => false],
-        ['text' => 'Total de Igrejas nos Distritos', 'url' => '#', 'active' => true],
+        ['text' => 'Igrejas por Distrito', 'url' => '#', 'active' => true],
     ]"></x-breadcrumb>
 @endsection
 
@@ -13,14 +12,61 @@
     <link href="{{ asset('theme/assets/css/elements/alert.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('theme/assets/css/forms/theme-checkbox-radio.css') }}" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.css') }}"
-        rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.css') }}" />
+    <style>
+        .igrejas-distrito-wrapper {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .igrejas-distrito-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 92%;
+        }
+
+        .igrejas-distrito-table td {
+            border: 1px solid #1f1f1f;
+            color: #111;
+            padding: 6px 10px;
+            vertical-align: middle;
+        }
+
+        .igrejas-distrito-table .distrito-header td {
+            background: #ffff00;
+            color: #000;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            padding: 12px 10px;
+        }
+
+        .igrejas-distrito-table .igreja-linha td {
+            background: #fff;
+            text-transform: uppercase;
+        }
+
+        .igrejas-distrito-table .subtotal-linha td,
+        .igrejas-distrito-table .total-geral-linha td {
+            background: #f2f2f2;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .igrejas-distrito-table .espaco-linha td {
+            border-left: 0;
+            border-right: 0;
+            height: 18px;
+            padding: 0;
+            background: #fff;
+        }
+    </style>
 @endsection
 
 @include('extras.alerts')
 
 @php
-    use Carbon\Carbon;
+    $excelParams = !empty($distritoSelecionado) ? ['distrito_id' => $distritoSelecionado] : [];
 @endphp
 
 @section('content')
@@ -29,174 +75,159 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>Total de Igrejas nos Distritos- {{  $regiao->nome }}</h4>
+                        <h4>{{ __('Igrejas por Distrito') }} - {{ $regiao->nome }}</h4>
                     </div>
                 </div>
             </div>
-            {{-- <div class="widget-content widget-content-area">
-                <form class="form-vertical" id="filter_form" method="GET">
-                    <div class="form-group row mb-4">
-                        <div class="col-lg-3 text-right">
-                            <label class="control-label">{{ __('* Distrito:') }}</label>
-                        </div>
-                        <div class="col-lg-3">
-                            <select class="form-control" id="distrito" name="distrito" required>
-                                <option value="">{{ __('Selecione') }}</option>
-                                <option value="all" {{ request()->input('distrito') == 'all' ? 'selected' : '' }}>{{ __('Todos') }}
-                                </option>
-                                @foreach ($distritos as $distrito)
-                                    <option value="{{ $distrito->id }}"
-                                        {{ request()->input('distrito') == $distrito->id ? 'selected' : '' }}>
-                                        {{ $distrito->nome }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                    </div>
-                    <div class="form-group row mb-4">
-                        <div class="col-lg-2"></div>
-                        <div class="col-lg-6">
-                            <button id="btn_buscar" type="submit" name="action" value="buscar"
-                                title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
-                                <x-bx-search /> {{ __('Buscar') }}
-                            </button>
-                            <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                                <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <form id="report_form" action="{{ url('regiao/relatorio/estatisticaestadocivil/pdf') }}" method="POST"
-                    target="_blank" style="display: none;">
-                    @csrf
-                    <input type="hidden" name="distrito" id="report_distrito">
-                    <input type="hidden" name="estado_civil" id="report_estado_civil">
-                </form>
-            </div> --}}
         </div>
     </div>
 
-
-        <div class="col-lg-12 col-12 layout-spacing">
-            <div class="statbox widget box box-shadow">
-                <div class="widget-content widget-content-area">
-                    <!-- Conteúdo -->
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <h6 class="mt-3">TOTAL DE IGREJAS NOS DISTRITOS -
-                                        {{ $regiao->nome }}</h6>
-                                    <div class="mb-3">
-                                        <button type="button" class="btn btn-primary btn-rounded" onclick="exportTotalIgrejasDistritosExcel();">
-                                            <i class="fas fa-file-excel"></i> {{ __('Excel') }}
-                                        </button>
-                                        <button type="button" class="btn btn-primary btn-rounded" onclick="exportTotalIgrejasDistritosPdf();">
-                                            <i class="fas fa-file-pdf"></i> {{ __('PDF') }}
-                                        </button>
-                                    </div>
-                                    <div class="table-responsive">
-                                        <table id="total-igrejas-distritos-table" class="table table-striped" style="font-size: 90%; margin-top: 15px;">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th style="text-align: left;">{{ __('Distritos') }}</th>
-                                                    <th style="text-align: center;">{{ __('Quantidade de Igrejas') }}</th>
-                                                    <th style="text-align: center;">{{ __('Percentual') }}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($lancamentos as $lancamento)
-                                                    <tr>
-                                                        <td>{{ $lancamento->nome }}</td>
-                                                        <td style="text-align: center;">{{ $lancamento->total }}</td>
-                                                        <td style="text-align: center;">
-                                                            {{ number_format($lancamento->percentual, 2) }}%</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th style="text-align: left;">{{ __('Total Geral') }}</th>
-                                                    <th style="text-align: center;">{{ $lancamentos->sum('total') }}</th>
-                                                    <th style="text-align: center;">100%</th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
+    <div class="col-lg-12 col-12 layout-spacing">
+        <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form method="GET" action="{{ route('regiao.relatorio.igrejas') }}" class="mb-4">
+                            <div class="row align-items-end">
+                                <div class="col-lg-6 col-md-8 col-12">
+                                    <label for="distrito_id">{{ __('Distrito') }}</label>
+                                    <select id="distrito_id" name="distrito_id" class="form-control selectpicker" data-live-search="true" data-size="8">
+                                        <option value="">{{ __('Todos') }}</option>
+                                        @foreach ($distritos as $distrito)
+                                            <option value="{{ $distrito->id }}" {{ (int) $distritoSelecionado === (int) $distrito->id ? 'selected' : '' }}>
+                                                {{ $distrito->nome }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-lg-6 col-md-4 col-12 mt-3 mt-md-0">
+                                    <button type="submit" class="btn btn-primary btn-rounded">
+                                        <i class="fas fa-search"></i> {{ __('Buscar') }}
+                                    </button>
+                                    <a href="{{ route('regiao.relatorio.igrejas') }}" class="btn btn-secondary btn-rounded">
+                                        {{ __('Limpar') }}
+                                    </a>
                                 </div>
                             </div>
+                        </form>
+
+                        <div class="row align-items-center mb-3">
+                            <div class="col-md-8 col-12">
+                                <h6 class="mt-2 text-uppercase">
+                                    {{ __('Relação de Igrejas por Distrito') }} - {{ $regiao->nome }}
+                                </h6>
+                                <p class="mb-0">
+                                    {{ __('Total da Região') }}: <strong>{{ $totalIgrejasRegiao }}</strong>
+                                </p>
+                            </div>
+                            <div class="col-md-4 col-12 text-md-right mt-3 mt-md-0">
+                                <a href="{{ route('regiao.relatorio.igrejas-excel', $excelParams) }}" class="btn btn-primary btn-rounded">
+                                    <i class="fas fa-file-excel"></i> {{ __('Excel') }}
+                                </a>
+                                <button type="button" class="btn btn-primary btn-rounded" onclick="exportIgrejasDistritoPdf();">
+                                    <i class="fas fa-file-pdf"></i> {{ __('PDF') }}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive igrejas-distrito-wrapper">
+                            <table id="igrejas-distrito-table" class="igrejas-distrito-table">
+                                <tbody>
+                                    @forelse ($igrejasPorDistrito as $grupo)
+                                        <tr class="distrito-header" data-export-type="district">
+                                            <td>{{ $grupo->distrito_nome }}</td>
+                                        </tr>
+                                        @forelse ($grupo->igrejas as $igreja)
+                                            <tr class="igreja-linha" data-export-type="church">
+                                                <td>{{ $igreja->igreja_nome }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr class="igreja-linha" data-export-type="church">
+                                                <td>{{ __('Nenhuma igreja ativa') }}</td>
+                                            </tr>
+                                        @endforelse
+                                        <tr class="subtotal-linha" data-export-type="subtotal">
+                                            <td>{{ __('Total do Distrito') }}: {{ $grupo->total }}</td>
+                                        </tr>
+                                        <tr class="espaco-linha" data-export-type="blank">
+                                            <td></td>
+                                        </tr>
+                                    @empty
+                                        <tr class="igreja-linha" data-export-type="church">
+                                            <td>{{ __('Nenhum distrito encontrado para esta região.') }}</td>
+                                        </tr>
+                                    @endforelse
+                                    <tr class="total-geral-linha" data-export-type="total">
+                                        <td>{{ __('Total Geral da Região') }}: {{ $totalIgrejasRegiao }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <!-- Fim do Conteúdo -->
                 </div>
             </div>
         </div>
-
+    </div>
+@endsection
 
 @section('extras-scripts')
-    <script src="{{ asset('theme/assets/js/planilha/papaparse.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/planilha/FileSaver.min.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/planilha/xlsx.full.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-    <script src="{{ asset('theme/assets/js/planilha/planilha.js') }}"></script>
-    <script src="{{ asset('theme/assets/js/pages/movimentocaixa.js') }}"></script>
     <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
     <script>
-        function getTotalIgrejasDistritosData() {
-            const table = document.getElementById('total-igrejas-distritos-table');
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
+        });
+
+        function getIgrejasDistritoRows() {
+            const table = document.getElementById('igrejas-distrito-table');
             if (!table) {
                 return [];
             }
 
-            const headers = Array.from(table.querySelectorAll('thead th')).map(function(th) {
-                return th.innerText.trim();
+            return Array.from(table.querySelectorAll('tbody tr')).map(function(row) {
+                return {
+                    type: row.dataset.exportType || 'church',
+                    value: row.querySelector('td').innerText.trim()
+                };
             });
-
-            const bodyRows = Array.from(table.querySelectorAll('tbody tr')).map(function(row) {
-                return Array.from(row.querySelectorAll('td')).map(function(td) {
-                    return td.innerText.trim();
-                });
-            });
-
-            const footerRows = Array.from(table.querySelectorAll('tfoot tr')).map(function(row) {
-                return Array.from(row.querySelectorAll('th, td')).map(function(cell) {
-                    return cell.innerText.trim();
-                });
-            });
-
-            return [headers].concat(bodyRows, footerRows);
         }
 
-        function exportTotalIgrejasDistritosExcel() {
-            const data = getTotalIgrejasDistritosData();
-            if (data.length <= 1) {
+        function exportIgrejasDistritoPdf() {
+            const rows = getIgrejasDistritoRows();
+            if (!rows.length) {
                 return;
             }
 
-            const worksheet = XLSX.utils.aoa_to_sheet(data);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, 'Igrejas por Distrito');
-            XLSX.writeFile(workbook, 'igrejas-por-distrito.xlsx');
-        }
+            const body = rows.map(function(row) {
+                const cell = {
+                    text: row.value,
+                    alignment: row.type === 'church' ? 'left' : 'center',
+                    bold: ['district', 'subtotal', 'total'].includes(row.type),
+                    margin: row.type === 'blank' ? [0, 4, 0, 4] : [4, 2, 4, 2]
+                };
 
-        function exportTotalIgrejasDistritosPdf() {
-            const data = getTotalIgrejasDistritosData();
-            if (data.length <= 1) {
-                return;
-            }
+                if (row.type === 'district') {
+                    cell.fillColor = '#ffff00';
+                    cell.color = '#000000';
+                }
+
+                if (row.type === 'blank') {
+                    cell.border = [false, false, false, false];
+                }
+
+                return [cell];
+            });
 
             pdfMake.createPdf({
-                pageOrientation: 'landscape',
+                pageOrientation: 'portrait',
                 pageSize: 'A4',
                 content: [
-                    { text: '{{ __('Total de Igrejas nos Distritos') }} - {{ $regiao->nome }}', style: 'header' },
+                    { text: '{{ __('Igrejas por Distrito') }} - {{ $regiao->nome }}', style: 'header' },
                     {
                         table: {
-                            headerRows: 1,
-                            widths: Array(data[0].length).fill('*'),
-                            body: data
+                            widths: ['*'],
+                            body: body
                         }
                     }
                 ],
@@ -204,41 +235,14 @@
                     header: {
                         fontSize: 14,
                         bold: true,
+                        alignment: 'center',
                         margin: [0, 0, 0, 10]
                     }
                 },
                 defaultStyle: {
-                    fontSize: 9
+                    fontSize: 10
                 }
             }).download('igrejas-por-distrito.pdf');
         }
-
-        $(document).ready(function() {
-            $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
-
-            $('#btn_relatorio').on('click', function(event) {
-                var distrito = $('#distrito').val();
-
-
-                if (!distrito) {
-                    event.preventDefault();
-                    alert('Por favor, preencha todos os campos.');
-                } else {
-                    $('#report_distrito').val(distrito);
-                    $('#report_form').submit();
-                }
-            });
-
-            $('#filter_form').submit(function(event) {
-                var distrito = $('#distrito').val();
-
-
-                if (!distrito) {
-                    event.preventDefault();
-                    alert('Por favor, preencha todos os campos.');
-                }
-            });
-        });
     </script>
-@endsection
 @endsection

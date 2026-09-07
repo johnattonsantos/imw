@@ -1039,6 +1039,13 @@
 
                         </li>
                         @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio'))
+                        <li {!! Request::is('regiao/relatorio/igrejas*') ? 'class="active"' : '' !!}>
+
+                                <a href="{{ route('regiao.relatorio.igrejas') }}">{{ __('Igrejas por Distrito') }}</a>
+
+                        </li>
+                        @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-cnpj-igreja'))
                         <li {!! Request::is('regiao/relatorio/cnpj-igrejas') ? 'class="active"' : '' !!}>
 
@@ -1242,12 +1249,6 @@
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-totalizacao-distrito'))
                                  <a href="{{ route('regiao.totalizacao.totaldistritoregiao') }}">
                                      {{ __('Distrito por Região') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('regiao/estatistica/relatorio/totaligrejasdistritos') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-totalizacao-igrejas'))
-                                 <a href="{{ route('regiao.totalizacao.totaligrejasdistritos') }}">
-                                     {{ __('Igrejas por Distrito') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totalcongregacoesigrejas') ? 'class="active"' : '' !!}>
