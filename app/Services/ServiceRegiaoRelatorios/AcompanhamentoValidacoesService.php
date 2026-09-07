@@ -28,7 +28,7 @@ class AcompanhamentoValidacoesService
             ])
             ->selectRaw('COUNT(CASE WHEN mm.validado = 1 THEN mm.id END) as validadas')
             ->selectRaw('COUNT(CASE WHEN COALESCE(mm.validado, 0) = 0 THEN mm.id END) as pendentes')
-            ->selectRaw('COUNT(mm.id) as total')
+            ->selectRaw('COUNT(CASE WHEN mm.validado IN (0, 1) THEN mm.id END) as total')
             ->groupBy('re.nome', 'di.nome', 'ig.nome')
             ->orderBy('re.nome')
             ->orderBy('di.nome')
