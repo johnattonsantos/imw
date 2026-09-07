@@ -54,30 +54,26 @@ trait TotalizacaoRegiaoUtils
 
     public static function fetchIgrejasDetalhadasPorDistrito($regiaoId, ?int $distritoId = null): Collection
     {
-        return DB::table('instituicoes_instituicoes as ii')
-            ->leftJoin('instituicoes_instituicoes as dist', function ($join) {
-                $join->on('ii.instituicao_pai_id', '=', 'dist.id')
-                    ->where('dist.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO);
-            })
-            ->leftJoin('instituicoes_tiposinstituicao as tipo_igreja', 'tipo_igreja.id', '=', 'ii.tipo_instituicao_id')
+        return DB::table('instituicoes_instituicoes as ig')
+            ->leftJoin('instituicoes_instituicoes as di', 'ig.instituicao_pai_id', '=', 'di.id')
+            ->leftJoin('instituicoes_tiposinstituicao as tipo_igreja', 'tipo_igreja.id', '=', 'ig.tipo_instituicao_id')
             ->select([
-                'dist.id as distrito_id',
-                'dist.nome as distrito_nome',
-                'ii.id as igreja_id',
-                'ii.nome as igreja_nome',
+                'di.id as distrito_id',
+                'di.nome as distrito_nome',
+                'ig.id as igreja_id',
+                'ig.nome as igreja_nome',
                 'tipo_igreja.nome as tipo_igreja',
-                'ii.cidade',
-                'ii.uf',
+                'ig.cidade',
+                'ig.uf',
             ])
-            ->when(
-                $distritoId,
-                fn ($query) => $query->where('ii.instituicao_pai_id', $distritoId),
-                fn ($query) => $query->whereIn('ii.instituicao_pai_id', Identifiable::fetchDistritosIdByRegiao($regiaoId))
-            )
-            ->where('ii.ativo', 1)
-            ->groupBy('ii.id', 'ii.nome', 'dist.id', 'dist.nome', 'tipo_igreja.nome', 'ii.cidade', 'ii.uf')
-            ->orderBy('dist.nome', 'asc')
-            ->orderBy('ii.nome', 'asc')
+            ->where('di.instituicao_pai_id', $regiaoId)
+            ->when($distritoId, fn ($query) => $query->where('di.id', $distritoId))
+            ->where('ig.ativo', 1)
+            ->whereNull('ig.deleted_at')
+            ->where('ig.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->groupBy('ig.id', 'ig.nome', 'di.id', 'di.nome', 'tipo_igreja.nome', 'ig.cidade', 'ig.uf')
+            ->orderBy('di.nome', 'asc')
+            ->orderBy('ig.nome', 'asc')
             ->get();
     }
 
