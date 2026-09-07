@@ -51,6 +51,41 @@ trait TotalizacaoRegiaoUtils
         });
         return $totalPorcentagem;
     }
+
+    public static function fetchIgrejasDetalhadasPorDistrito($regiaoId, ?int $distritoId = null): Collection
+    {
+        return DB::table('instituicoes_instituicoes as distrito')
+            ->leftJoin('instituicoes_instituicoes as igreja', function ($join) {
+                $join->on('igreja.instituicao_pai_id', '=', 'distrito.id')
+                    ->whereIn('igreja.tipo_instituicao_id', [
+                        InstituicoesTipoInstituicao::IGREJA_GERAL,
+                        InstituicoesTipoInstituicao::IGREJA_LOCAL,
+                    ])
+                    ->where('igreja.ativo', 1)
+                    ->whereNull('igreja.data_encerramento')
+                    ->whereNull('igreja.deleted_at');
+            })
+            ->leftJoin('instituicoes_tiposinstituicao as tipo_igreja', 'tipo_igreja.id', '=', 'igreja.tipo_instituicao_id')
+            ->select([
+                'distrito.id as distrito_id',
+                'distrito.nome as distrito_nome',
+                'igreja.id as igreja_id',
+                'igreja.nome as igreja_nome',
+                'tipo_igreja.nome as tipo_igreja',
+                'igreja.cidade',
+                'igreja.uf',
+            ])
+            ->where('distrito.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+            ->where('distrito.instituicao_pai_id', $regiaoId)
+            ->when($distritoId, fn ($query) => $query->where('distrito.id', $distritoId))
+            ->where('distrito.ativo', 1)
+            ->whereNull('distrito.data_encerramento')
+            ->whereNull('distrito.deleted_at')
+            ->orderBy('distrito.nome')
+            ->orderBy('igreja.nome')
+            ->get();
+    }
+
     public static function fetchTotalCongregacoesPorIgrejas($regiaoId)
     {
         $result = DB::table('instituicoes_instituicoes as ii')
