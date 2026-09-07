@@ -33,6 +33,8 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
+            <p id="totalIgrejasCounter" class="pl-3 mb-4">{{ __('Total de igrejas') }}: 0 {{ __('registro(s)') }}</p>
+
             <form class="row mb-5" id="searchForm">
                 <div class="col-4">
                     <input type="text" name="search" id="searchInput" class="form-control form-control-sm" placeholder="{{ __('Pesquisar...') }}">

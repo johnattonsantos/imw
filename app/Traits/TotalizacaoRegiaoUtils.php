@@ -69,6 +69,7 @@ trait TotalizacaoRegiaoUtils
             ->where('di.instituicao_pai_id', $regiaoId)
             ->when($distritoId, fn ($query) => $query->where('di.id', $distritoId))
             ->where('ig.ativo', 1)
+            ->whereNull('ig.deleted_at')
             ->where('ig.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
             ->groupBy('ig.id', 'ig.nome', 'di.id', 'di.nome', 'tipo_igreja.nome', 'ig.cidade', 'ig.uf')
             ->orderBy('di.nome', 'asc')

@@ -6,6 +6,11 @@ $(document).ready(function() {
         }
     }
 
+    function updateTotalIgrejas(total) {
+        const formattedTotal = Number(total || 0).toLocaleString('pt-BR');
+        $('#totalIgrejasCounter').text(`${__('Total de igrejas')}: ${formattedTotal} ${__('registro(s)')}`);
+    }
+
     // ativa as ações dos botões na datatable
     function activeActions() {
         // ação de remover
@@ -49,6 +54,10 @@ $(document).ready(function() {
             url: $('#datatable').data('url'),
             data: function (d) {
                 d.parameters = getSearchParameters();
+            },
+            dataSrc: function (json) {
+                updateTotalIgrejas(json.recordsFiltered);
+                return json.data || [];
             }
         },
         columns: [
