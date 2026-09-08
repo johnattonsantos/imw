@@ -1,5 +1,5 @@
 <p><strong>{{ __('Nome') }}:</strong> {{ $evento->titulo }}</p>
-<p><strong>{{ __('Propósito') }}:</strong> {{ optional($evento->proposito)->nome ?: '-' }}</p>
+<p><strong>{{ __('Tipo') }}:</strong> {{ optional($evento->proposito)->nome ?: '-' }}</p>
 <p><strong>{{ __('Status') }}:</strong> {{ $statusOptions[$evento->status] ?? $evento->status }}</p>
 @if (($evento->evento_distrito_nome ?? '-') !== '-')
     <p><strong>{{ __('Distrito') }}:</strong> {{ $evento->evento_distrito_nome }}</p>
@@ -7,7 +7,7 @@
 @if (($evento->evento_igreja_nome ?? '-') !== '-')
     <p><strong>{{ __('Igreja') }}:</strong> {{ $evento->evento_igreja_nome }}</p>
 @endif
-<p><strong>{{ __('Sede/Congregação') }}:</strong> {{ $evento->evento_local_nome ?? '-' }}</p>
+<p><strong>{{ __($evento->evento_local_rotulo ?? 'Sede/Congregação') }}:</strong> {{ $evento->evento_local_nome ?? '-' }}</p>
 <p><strong>{{ __('Agenda') }}:</strong>
     {{ optional($evento->data_inicio)->format('d/m/Y') }}
     {{ $evento->hora_inicio ? substr((string) $evento->hora_inicio, 0, 5) : '' }}
@@ -27,7 +27,7 @@
         <thead>
             <tr>
                 <th>{{ __('Nome') }}</th>
-                <th>{{ __('Função') }}</th>
+                <th>{{ __('Equipes/Funções') }}</th>
                 <th>{{ __('Contato') }}</th>
                 <th>{{ __('Líder') }}</th>
             </tr>
