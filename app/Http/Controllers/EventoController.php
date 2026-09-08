@@ -592,10 +592,12 @@ class EventoController extends Controller
         $this->appendInstitutionMeta(collect([$evento]));
 
         $inscricoes = EventoInscricao::query()
+            ->with(['membro', 'clerigo', 'igreja'])
             ->where('evento_id', $evento->id)
             ->orderBy('nome')
             ->get();
         $this->appendQrCodeImages($inscricoes, 4, true);
+        $this->appendBadgeData($inscricoes, $evento);
 
         $filename = 'carteirinhas-' . Str::slug($evento->titulo ?: 'evento') . '.pdf';
 
@@ -925,6 +927,239 @@ class EventoController extends Controller
                 ? SimpleQrCode::pngDataUri($inscricao->qr_token, $scale)
                 : null;
         });
+    }
+
+    private function appendBadgeData($inscricoes, Evento $evento): void
+    {
+        $eventLocal = $this->eventLocationLabel($evento);
+
+        $inscricoes->each(function (EventoInscricao $inscricao) use ($eventLocal) {
+            $participant = $inscricao->clerigo ?: $inscricao->membro;
+            $igreja = $inscricao->igreja;
+            $cidade = trim((string) ($igreja->cidade ?? data_get($participant, 'cidade', '')));
+            $uf = trim((string) ($igreja->uf ?? data_get($participant, 'uf', '')));
+            $local = $eventLocal !== '-' ? $eventLocal : '';
+
+            $inscricao->badge_funcao = $inscricao->funcao_eclesiastica ?: ($inscricao->origem === 'clerigo' ? 'Clérigo' : 'Membro');
+            $inscricao->badge_photo = $this->imageDataUri(data_get($participant, 'foto'), 132, 166);
+            $inscricao->badge_layout = $this->badgeLayoutDataUri($inscricao->badge_photo);
+            $inscricao->badge_local = collect([$local, $cidade])
+                ->filter()
+                ->unique()
+                ->implode(' - ') ?: '-';
+            $inscricao->badge_estado = $uf ?: '-';
+        });
+    }
+
+    private function badgeLayoutDataUri(?string $photoDataUri): ?string
+    {
+        if (!function_exists('imagecreatefrompng')) {
+            return null;
+        }
+
+        $layoutPath = public_path('theme/images/carteira-digital.png');
+
+        if (!is_file($layoutPath)) {
+            return null;
+        }
+
+        $layout = @imagecreatefrompng($layoutPath);
+
+        if (!$layout) {
+            return null;
+        }
+
+        $photo = null;
+
+        if ($photoDataUri && preg_match('/^data:image\/[^;]+;base64,(.+)$/', $photoDataUri, $matches)) {
+            $photo = @imagecreatefromstring(base64_decode($matches[1]));
+        }
+
+        if ($photoDataUri && !$photo) {
+            if ($layout) {
+                imagedestroy($layout);
+            }
+
+            return null;
+        }
+
+        imagealphablending($layout, true);
+        imagesavealpha($layout, true);
+
+        $this->drawBadgeHoles($layout);
+
+        if ($photo) {
+            imagecopyresampled(
+                $layout,
+                $photo,
+                630,
+                151,
+                0,
+                0,
+                216,
+                272,
+                imagesx($photo),
+                imagesy($photo)
+            );
+        }
+
+        ob_start();
+        imagepng($layout);
+        $contents = ob_get_clean() ?: null;
+
+        imagedestroy($layout);
+
+        if ($photo) {
+            imagedestroy($photo);
+        }
+
+        return $contents ? 'data:image/png;base64,' . base64_encode($contents) : null;
+    }
+
+    private function drawBadgeHoles($layout): void
+    {
+        if (function_exists('imageantialias')) {
+            imageantialias($layout, true);
+        }
+
+        $border = imagecolorallocate($layout, 248, 250, 252);
+        $hole = imagecolorallocate($layout, 20, 24, 36);
+        $shadow = imagecolorallocatealpha($layout, 15, 23, 42, 55);
+
+        foreach ([270, 630] as $x) {
+            imagefilledellipse($layout, $x + 2, 40 + 3, 46, 46, $shadow);
+            imagefilledellipse($layout, $x, 40, 46, 46, $border);
+            imagefilledellipse($layout, $x, 40, 30, 30, $hole);
+        }
+    }
+
+    private function imageDataUri(?string $path, ?int $coverWidth = null, ?int $coverHeight = null): ?string
+    {
+        $path = trim((string) $path);
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (Str::startsWith($path, 'data:image/')) {
+            if (!$coverWidth || !$coverHeight) {
+                return $path;
+            }
+
+            if (preg_match('/^data:image\/[^;]+;base64,(.+)$/', $path, $matches)) {
+                $coveredContents = $this->coverImageContents(base64_decode($matches[1]), $coverWidth, $coverHeight);
+
+                return $coveredContents
+                    ? 'data:image/png;base64,' . base64_encode($coveredContents)
+                    : $path;
+            }
+
+            return $path;
+        }
+
+        $contents = null;
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            $contents = @file_get_contents($path) ?: null;
+        } else {
+            $relativePath = ltrim($path, '/');
+            $possiblePaths = [
+                public_path($relativePath),
+                public_path('storage/' . $relativePath),
+                storage_path('app/public/' . $relativePath),
+                storage_path('app/' . $relativePath),
+            ];
+
+            foreach ($possiblePaths as $possiblePath) {
+                if (is_file($possiblePath)) {
+                    $contents = file_get_contents($possiblePath);
+                    break;
+                }
+            }
+
+            if ($contents === null) {
+                try {
+                    $contents = Storage::disk('s3')->get($path);
+                } catch (\Throwable $exception) {
+                    $contents = null;
+                }
+            }
+        }
+
+        if ($contents === null || $contents === false) {
+            return null;
+        }
+
+        if ($coverWidth && $coverHeight) {
+            $coveredContents = $this->coverImageContents($contents, $coverWidth, $coverHeight);
+
+            if ($coveredContents) {
+                return 'data:image/png;base64,' . base64_encode($coveredContents);
+            }
+        }
+
+        return 'data:' . $this->imageMimeType($path) . ';base64,' . base64_encode($contents);
+    }
+
+    private function coverImageContents(string $contents, int $width, int $height): ?string
+    {
+        if (!function_exists('imagecreatefromstring')) {
+            return null;
+        }
+
+        $source = @imagecreatefromstring($contents);
+
+        if (!$source) {
+            return null;
+        }
+
+        $sourceWidth = imagesx($source);
+        $sourceHeight = imagesy($source);
+
+        if ($sourceWidth <= 0 || $sourceHeight <= 0) {
+            imagedestroy($source);
+
+            return null;
+        }
+
+        $scale = max($width / $sourceWidth, $height / $sourceHeight);
+        $cropWidth = (int) ceil($width / $scale);
+        $cropHeight = (int) ceil($height / $scale);
+        $sourceX = max(0, (int) floor(($sourceWidth - $cropWidth) / 2));
+        $sourceY = max(0, (int) floor(($sourceHeight - $cropHeight) / 2));
+        $destination = imagecreatetruecolor($width, $height);
+
+        imagecopyresampled(
+            $destination,
+            $source,
+            0,
+            0,
+            $sourceX,
+            $sourceY,
+            $width,
+            $height,
+            $cropWidth,
+            $cropHeight
+        );
+
+        ob_start();
+        imagepng($destination);
+        $coveredContents = ob_get_clean() ?: null;
+
+        imagedestroy($source);
+        imagedestroy($destination);
+
+        return $coveredContents;
+    }
+
+    private function imageMimeType(string $path): string
+    {
+        return match (strtolower(pathinfo(parse_url($path, PHP_URL_PATH) ?: $path, PATHINFO_EXTENSION))) {
+            'jpg', 'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            default => 'image/png',
+        };
     }
 
     private function newQrToken(): string
