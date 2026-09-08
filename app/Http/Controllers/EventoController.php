@@ -12,6 +12,7 @@ use App\Models\EventoProposito;
 use App\Models\InstituicoesInstituicao;
 use App\Models\InstituicoesTipoInstituicao;
 use App\Rules\ValidaCPF;
+use App\Support\SimpleQrCode;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -46,7 +47,7 @@ class EventoController extends Controller
         $this->appendInstitutionMeta($eventos->getCollection());
 
         $escopoEvento = $this->eventScopeType();
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.index', compact('eventos', 'escopoEvento', 'statusOptions'));
     }
@@ -62,7 +63,7 @@ class EventoController extends Controller
 
         $this->appendInstitutionMeta($eventos);
 
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
         $agendaEventos = $eventos->map(function (Evento $evento) use ($statusOptions) {
             $hasTime = !empty($evento->hora_inicio) || !empty($evento->hora_fim);
             $startDate = $evento->data_inicio->toDateString();
@@ -123,7 +124,7 @@ class EventoController extends Controller
         if ($eventoInstituicaoPadraoId) {
             $evento->instituicao_id = $eventoInstituicaoPadraoId;
         }
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.create', compact(
             'evento',
@@ -146,7 +147,7 @@ class EventoController extends Controller
             $this->syncEquipe($evento, $validated['equipe'] ?? []);
         });
 
-        return redirect()->route('eventos.index')->with('success', 'Evento cadastrado com sucesso.');
+        return redirect()->route('eventos.index')->with('success', __('Evento cadastrado com sucesso.'));
     }
 
     public function show(Evento $evento)
@@ -155,7 +156,7 @@ class EventoController extends Controller
 
         $evento->load(['proposito', 'equipe.eventoFuncao', 'localEvento', 'instituicao.instituicaoPai.instituicaoPai']);
         $this->appendInstitutionMeta(collect([$evento]));
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         if (request()->ajax()) {
             return view('eventos._show_modal', compact('evento', 'statusOptions'));
@@ -177,7 +178,7 @@ class EventoController extends Controller
         $eventoInstituicaoPadraoId = $escopoEvento === 'regiao'
             ? $this->resolveRegiaoId((int) $this->instituicaoId())
             : null;
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.edit', compact(
             'evento',
@@ -202,7 +203,7 @@ class EventoController extends Controller
             $this->syncEquipe($evento, $validated['equipe'] ?? []);
         });
 
-        return redirect()->route('eventos.index')->with('success', 'Evento atualizado com sucesso.');
+        return redirect()->route('eventos.index')->with('success', __('Evento atualizado com sucesso.'));
     }
 
     public function destroy(Evento $evento)
@@ -210,7 +211,7 @@ class EventoController extends Controller
         $this->ensureSameInstituicao($evento);
         $evento->delete();
 
-        return redirect()->route('eventos.index')->with('success', 'Evento excluido com sucesso.');
+        return redirect()->route('eventos.index')->with('success', __('Evento excluído com sucesso.'));
     }
 
     public function inscrever(Request $request, Evento $evento)
@@ -364,7 +365,7 @@ class EventoController extends Controller
         $propositos = $this->propositos();
         $instituicoesEvento = $this->instituicoesEventoOptions();
         $escopoEvento = $this->eventScopeType();
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.relatorio', compact('eventos', 'propositos', 'instituicoesEvento', 'escopoEvento', 'statusOptions'));
     }
@@ -415,7 +416,7 @@ class EventoController extends Controller
         $instituicoesEvento = $this->instituicoesEventoOptions();
         $funcoesEventos = $this->funcoesEventos();
         $escopoEvento = $this->eventScopeType();
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
 
         return view('eventos.relatorio-pessoas', compact(
             'pessoas',
@@ -485,7 +486,7 @@ class EventoController extends Controller
             ->orderByDesc('data_inicio')
             ->orderBy('titulo')
             ->get(['id', 'titulo', 'data_inicio']);
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
         $summaryByType = function (string $tipo) use ($inscricoes): array {
             $items = $inscricoes->where('tipo_participante', $tipo);
             $total = $items->count();
@@ -574,10 +575,33 @@ class EventoController extends Controller
         $evento->load(['proposito', 'equipe.eventoFuncao', 'instituicao.instituicaoPai.instituicaoPai']);
         $evento->load('localEvento');
         $this->appendInstitutionMeta(collect([$evento]));
-        $statusOptions = self::STATUS;
+        $statusOptions = $this->statusOptions();
         $filename = 'evento-' . Str::slug($evento->titulo ?: 'relatorio') . '.pdf';
 
         $pdf = FacadePdf::loadView('eventos.pdf.evento', compact('evento', 'statusOptions'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream($filename);
+    }
+
+    public function carteirinhasPdf(Evento $evento)
+    {
+        $this->ensureSameInstituicao($evento);
+
+        $evento->load(['proposito', 'localEvento', 'instituicao.instituicaoPai.instituicaoPai']);
+        $this->appendInstitutionMeta(collect([$evento]));
+
+        $inscricoes = EventoInscricao::query()
+            ->with(['membro', 'clerigo', 'igreja'])
+            ->where('evento_id', $evento->id)
+            ->orderBy('nome')
+            ->get();
+        $this->appendQrCodeImages($inscricoes, 4, true);
+        $this->appendBadgeData($inscricoes, $evento);
+
+        $filename = 'carteirinhas-' . Str::slug($evento->titulo ?: 'evento') . '.pdf';
+
+        $pdf = FacadePdf::loadView('eventos.pdf.carteirinhas', compact('evento', 'inscricoes'))
             ->setPaper('a4', 'portrait');
 
         return $pdf->stream($filename);
@@ -706,17 +730,17 @@ class EventoController extends Controller
             'equipe.*.contato' => ['nullable', 'string', 'max:60'],
             'equipe.*.lider' => ['nullable', 'boolean'],
         ], [
-            'instituicao_id.required' => $isRegionalScope ? 'Selecione o local do evento.' : 'Selecione a igreja ou congregação do evento.',
-            'instituicao_id.in' => 'A instituição selecionada não está disponível para o perfil logado.',
-            'evento_local_id.required' => 'Selecione o local do evento.',
-            'evento_local_id.exists' => 'O local selecionado não está disponível para a região logada.',
-            'evento_proposito_id.required' => 'Selecione o tipo do evento.',
-            'titulo.required' => 'Informe o nome do evento.',
-            'data_inicio.required' => 'Informe a data inicial da agenda.',
-            'data_inicio.date_format' => 'Informe a data inicial no formato dd/mm/aaaa.',
-            'data_fim.date_format' => 'Informe a data final no formato dd/mm/aaaa.',
-            'hora_inicio.date_format' => 'Informe a hora inicial no formato HH:mm.',
-            'hora_fim.date_format' => 'Informe a hora final no formato HH:mm.',
+            'instituicao_id.required' => $isRegionalScope ? __('Selecione o local do evento.') : __('Selecione a igreja ou congregação do evento.'),
+            'instituicao_id.in' => __('A instituição selecionada não está disponível para o perfil logado.'),
+            'evento_local_id.required' => __('Selecione o local do evento.'),
+            'evento_local_id.exists' => __('O local selecionado não está disponível para a região logada.'),
+            'evento_proposito_id.required' => __('Selecione o tipo do evento.'),
+            'titulo.required' => __('Informe o nome do evento.'),
+            'data_inicio.required' => __('Informe a data inicial da agenda.'),
+            'data_inicio.date_format' => __('Informe a data inicial no formato dd/mm/aaaa.'),
+            'data_fim.date_format' => __('Informe a data final no formato dd/mm/aaaa.'),
+            'hora_inicio.date_format' => __('Informe a hora inicial no formato HH:mm.'),
+            'hora_fim.date_format' => __('Informe a hora final no formato HH:mm.'),
         ]);
 
         if (!empty($validated['data_fim'])) {
@@ -725,7 +749,7 @@ class EventoController extends Controller
 
             if ($dataFim->lt($dataInicio)) {
                 throw ValidationException::withMessages([
-                    'data_fim' => 'A data final deve ser igual ou posterior a data inicial.',
+                    'data_fim' => __('A data final deve ser igual ou posterior a data inicial.'),
                 ]);
             }
         }
@@ -891,6 +915,253 @@ class EventoController extends Controller
             ->all();
     }
 
+    private function appendQrCodeImages($inscricoes, int $scale = 4, bool $createMissingTokens = false): void
+    {
+        $inscricoes->each(function (EventoInscricao $inscricao) use ($scale, $createMissingTokens) {
+            if (empty($inscricao->qr_token) && $createMissingTokens) {
+                $inscricao->qr_token = $this->newQrToken();
+                $inscricao->save();
+            }
+
+            $inscricao->qr_code = $inscricao->qr_token
+                ? SimpleQrCode::pngDataUri($inscricao->qr_token, $scale)
+                : null;
+        });
+    }
+
+    private function appendBadgeData($inscricoes, Evento $evento): void
+    {
+        $eventLocal = $this->eventLocationLabel($evento);
+
+        $inscricoes->each(function (EventoInscricao $inscricao) use ($eventLocal) {
+            $participant = $inscricao->clerigo ?: $inscricao->membro;
+            $igreja = $inscricao->igreja;
+            $cidade = trim((string) ($igreja->cidade ?? data_get($participant, 'cidade', '')));
+            $uf = trim((string) ($igreja->uf ?? data_get($participant, 'uf', '')));
+            $local = $eventLocal !== '-' ? $eventLocal : '';
+
+            $inscricao->badge_funcao = $inscricao->funcao_eclesiastica ?: ($inscricao->origem === 'clerigo' ? 'Clérigo' : 'Membro');
+            $inscricao->badge_photo = $this->imageDataUri(data_get($participant, 'foto'), 132, 166);
+            $inscricao->badge_layout = $this->badgeLayoutDataUri($inscricao->badge_photo);
+            $inscricao->badge_local = collect([$local, $cidade])
+                ->filter()
+                ->unique()
+                ->implode(' - ') ?: '-';
+            $inscricao->badge_estado = $uf ?: '-';
+        });
+    }
+
+    private function badgeLayoutDataUri(?string $photoDataUri): ?string
+    {
+        if (!function_exists('imagecreatefrompng')) {
+            return null;
+        }
+
+        $layoutPath = public_path('theme/images/carteira-digital.png');
+
+        if (!is_file($layoutPath)) {
+            return null;
+        }
+
+        $layout = @imagecreatefrompng($layoutPath);
+
+        if (!$layout) {
+            return null;
+        }
+
+        $photo = null;
+
+        if ($photoDataUri && preg_match('/^data:image\/[^;]+;base64,(.+)$/', $photoDataUri, $matches)) {
+            $photo = @imagecreatefromstring(base64_decode($matches[1]));
+        }
+
+        if ($photoDataUri && !$photo) {
+            if ($layout) {
+                imagedestroy($layout);
+            }
+
+            return null;
+        }
+
+        imagealphablending($layout, true);
+        imagesavealpha($layout, true);
+
+        $this->drawBadgeHoles($layout);
+
+        if ($photo) {
+            imagecopyresampled(
+                $layout,
+                $photo,
+                630,
+                151,
+                0,
+                0,
+                216,
+                272,
+                imagesx($photo),
+                imagesy($photo)
+            );
+        }
+
+        ob_start();
+        imagepng($layout);
+        $contents = ob_get_clean() ?: null;
+
+        imagedestroy($layout);
+
+        if ($photo) {
+            imagedestroy($photo);
+        }
+
+        return $contents ? 'data:image/png;base64,' . base64_encode($contents) : null;
+    }
+
+    private function drawBadgeHoles($layout): void
+    {
+        if (function_exists('imageantialias')) {
+            imageantialias($layout, true);
+        }
+
+        $border = imagecolorallocate($layout, 248, 250, 252);
+        $hole = imagecolorallocate($layout, 20, 24, 36);
+        $shadow = imagecolorallocatealpha($layout, 15, 23, 42, 55);
+
+        foreach ([270, 630] as $x) {
+            imagefilledellipse($layout, $x + 2, 40 + 3, 46, 46, $shadow);
+            imagefilledellipse($layout, $x, 40, 46, 46, $border);
+            imagefilledellipse($layout, $x, 40, 30, 30, $hole);
+        }
+    }
+
+    private function imageDataUri(?string $path, ?int $coverWidth = null, ?int $coverHeight = null): ?string
+    {
+        $path = trim((string) $path);
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (Str::startsWith($path, 'data:image/')) {
+            if (!$coverWidth || !$coverHeight) {
+                return $path;
+            }
+
+            if (preg_match('/^data:image\/[^;]+;base64,(.+)$/', $path, $matches)) {
+                $coveredContents = $this->coverImageContents(base64_decode($matches[1]), $coverWidth, $coverHeight);
+
+                return $coveredContents
+                    ? 'data:image/png;base64,' . base64_encode($coveredContents)
+                    : $path;
+            }
+
+            return $path;
+        }
+
+        $contents = null;
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            $contents = @file_get_contents($path) ?: null;
+        } else {
+            $relativePath = ltrim($path, '/');
+            $possiblePaths = [
+                public_path($relativePath),
+                public_path('storage/' . $relativePath),
+                storage_path('app/public/' . $relativePath),
+                storage_path('app/' . $relativePath),
+            ];
+
+            foreach ($possiblePaths as $possiblePath) {
+                if (is_file($possiblePath)) {
+                    $contents = file_get_contents($possiblePath);
+                    break;
+                }
+            }
+
+            if ($contents === null) {
+                try {
+                    $contents = Storage::disk('s3')->get($path);
+                } catch (\Throwable $exception) {
+                    $contents = null;
+                }
+            }
+        }
+
+        if ($contents === null || $contents === false) {
+            return null;
+        }
+
+        if ($coverWidth && $coverHeight) {
+            $coveredContents = $this->coverImageContents($contents, $coverWidth, $coverHeight);
+
+            if ($coveredContents) {
+                return 'data:image/png;base64,' . base64_encode($coveredContents);
+            }
+        }
+
+        return 'data:' . $this->imageMimeType($path) . ';base64,' . base64_encode($contents);
+    }
+
+    private function coverImageContents(string $contents, int $width, int $height): ?string
+    {
+        if (!function_exists('imagecreatefromstring')) {
+            return null;
+        }
+
+        $source = @imagecreatefromstring($contents);
+
+        if (!$source) {
+            return null;
+        }
+
+        $sourceWidth = imagesx($source);
+        $sourceHeight = imagesy($source);
+
+        if ($sourceWidth <= 0 || $sourceHeight <= 0) {
+            imagedestroy($source);
+
+            return null;
+        }
+
+        $scale = max($width / $sourceWidth, $height / $sourceHeight);
+        $cropWidth = (int) ceil($width / $scale);
+        $cropHeight = (int) ceil($height / $scale);
+        $sourceX = max(0, (int) floor(($sourceWidth - $cropWidth) / 2));
+        $sourceY = max(0, (int) floor(($sourceHeight - $cropHeight) / 2));
+        $destination = imagecreatetruecolor($width, $height);
+
+        imagecopyresampled(
+            $destination,
+            $source,
+            0,
+            0,
+            $sourceX,
+            $sourceY,
+            $width,
+            $height,
+            $cropWidth,
+            $cropHeight
+        );
+
+        ob_start();
+        imagepng($destination);
+        $coveredContents = ob_get_clean() ?: null;
+
+        imagedestroy($source);
+        imagedestroy($destination);
+
+        return $coveredContents;
+    }
+
+    private function imageMimeType(string $path): string
+    {
+        return match (strtolower(pathinfo(parse_url($path, PHP_URL_PATH) ?: $path, PATHINFO_EXTENSION))) {
+            'jpg', 'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            default => 'image/png',
+        };
+    }
+
     private function newQrToken(): string
     {
         do {
@@ -992,6 +1263,13 @@ class EventoController extends Controller
     private function parsePtBrDate(string $date): Carbon
     {
         return Carbon::createFromFormat('d/m/Y', $date)->startOfDay();
+    }
+
+    private function statusOptions(): array
+    {
+        return collect(self::STATUS)
+            ->map(fn ($label) => __($label))
+            ->all();
     }
 
     private function ensureSameInstituicao(Evento $evento): void

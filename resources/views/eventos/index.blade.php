@@ -15,14 +15,14 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                    <h4>Eventos</h4>
+                    <h4>{{ __('Eventos') }}</h4>
                 </div>
             </div>
         </div>
         <div class="widget-content widget-content-area">
             <div class="mb-3">
                 @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-novo'))
-                    <a href="{{ route('eventos.create') }}" class="btn btn-primary btn-sm">Novo</a>
+                    <a href="{{ route('eventos.create') }}" class="btn btn-primary btn-sm">{{ __('Novo') }}</a>
                 @endif
             </div>
 
@@ -30,19 +30,19 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Evento</th>
+                            <th>{{ __('Evento') }}</th>
                             @if ($escopoEvento === 'regiao')
-                                <th>Distrito</th>
+                                <th>{{ __('Distrito') }}</th>
                             @endif
                             @if (in_array($escopoEvento, ['regiao', 'distrito'], true))
-                                <th>Igreja</th>
+                                <th>{{ __('Igreja') }}</th>
                             @endif
-                            <th>Local</th>
+                            <th>{{ __('Local') }}</th>
                             <th>{{ __('Tipo') }}</th>
-                            <th>Agenda</th>
-                            <th>Líder</th>
-                            <th>Status</th>
-                            <th style="width: 190px;">Ações</th>
+                            <th>{{ __('Agenda') }}</th>
+                            <th>{{ __('Líder') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th style="width: 235px;">{{ __('Ações') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,7 +53,7 @@
                                     $agenda .= ' ' . substr((string) $evento->hora_inicio, 0, 5);
                                 }
                                 if ($evento->data_fim) {
-                                    $agenda .= ' até ' . optional($evento->data_fim)->format('d/m/Y');
+                                    $agenda .= ' ' . __('até') . ' ' . optional($evento->data_fim)->format('d/m/Y');
                                     if ($evento->hora_fim) {
                                         $agenda .= ' ' . substr((string) $evento->hora_fim, 0, 5);
                                     }
@@ -73,7 +73,7 @@
                                 <td>{{ optional($evento->lider)->nome ?: '-' }}</td>
                                 <td>{{ $statusOptions[$evento->status] ?? $evento->status }}</td>
                                 <td class="table-action">
-                                    <a href="{{ route('eventos.show', $evento) }}" class="btn btn-sm btn-info btn-rounded bs-tooltip btn-evento-detalhes" title="Detalhes" aria-label="Detalhes" data-url="{{ route('eventos.show', $evento) }}">
+                                    <a href="{{ route('eventos.show', $evento) }}" class="btn btn-sm btn-info btn-rounded bs-tooltip btn-evento-detalhes" title="{{ __('Detalhes') }}" aria-label="{{ __('Detalhes') }}" data-url="{{ route('eventos.show', $evento) }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                             class="feather feather-eye">
@@ -91,8 +91,17 @@
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                         </svg>
                                     </button>
+                                    <a href="{{ route('eventos.carteirinhas-pdf', $evento) }}" target="_blank" class="btn btn-sm btn-warning btn-rounded bs-tooltip" title="{{ __('Carteirinhas dos Participantes') }}" aria-label="{{ __('Carteirinhas dos Participantes') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-credit-card">
+                                            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                            <line x1="2" y1="10" x2="22" y2="10"></line>
+                                            <line x1="6" y1="15" x2="10" y2="15"></line>
+                                        </svg>
+                                    </a>
                                     @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-editar'))
-                                        <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-sm btn-dark btn-rounded bs-tooltip" title="Editar" aria-label="Editar">
+                                        <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-sm btn-dark btn-rounded bs-tooltip" title="{{ __('Editar') }}" aria-label="{{ __('Editar') }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                 class="feather feather-edit-2">
@@ -101,10 +110,10 @@
                                         </a>
                                     @endif
                                     @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-excluir'))
-                                        <form method="POST" action="{{ route('eventos.destroy', $evento) }}" class="d-inline" onsubmit="return confirm('Deseja excluir este evento?')">
+                                        <form method="POST" action="{{ route('eventos.destroy', $evento) }}" class="d-inline" onsubmit="return confirm(@js(__('Deseja excluir este evento?')))">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger btn-rounded bs-tooltip" title="Excluir" aria-label="Excluir">
+                                            <button type="submit" class="btn btn-sm btn-danger btn-rounded bs-tooltip" title="{{ __('Excluir') }}" aria-label="{{ __('Excluir') }}">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="feather feather-trash-2">
@@ -121,7 +130,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ 7 + ($escopoEvento === 'regiao' ? 1 : 0) + (in_array($escopoEvento, ['regiao', 'distrito'], true) ? 1 : 0) }}" class="text-center">Nenhum evento encontrado.</td>
+                                <td colspan="{{ 7 + ($escopoEvento === 'regiao' ? 1 : 0) + (in_array($escopoEvento, ['regiao', 'distrito'], true) ? 1 : 0) }}" class="text-center">{{ __('Nenhum evento encontrado.') }}</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -136,7 +145,7 @@
 <div class="modal fade" id="eventoDetalhesModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
-            <div class="modal-body" style="min-height: 180px;">Carregando...</div>
+            <div class="modal-body" style="min-height: 180px;">{{ __('Carregando...') }}</div>
         </div>
     </div>
 </div>
@@ -179,7 +188,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         const modal = $('#eventoDetalhesModal');
         const modalContent = modal.find('.modal-content');
-        const loadingHtml = '<div class="modal-body" style="min-height: 180px;">Carregando...</div>';
+        const loadingHtml = '<div class="modal-body" style="min-height: 180px;">' + window.__('Carregando...') + '</div>';
 
         $(document).on('click', '.btn-evento-detalhes', function (event) {
             event.preventDefault();
@@ -200,11 +209,11 @@
                 error: function () {
                     modalContent.html(
                         '<div class="modal-header">' +
-                            '<h5 class="modal-title">Detalhes do Evento</h5>' +
-                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                            '<h5 class="modal-title">' + window.__('Detalhes do Evento') + '</h5>' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="' + window.__('Fechar') + '"><span aria-hidden="true">&times;</span></button>' +
                         '</div>' +
-                        '<div class="modal-body"><div class="alert alert-danger mb-0">Não foi possível carregar os detalhes do evento.</div></div>' +
-                        '<div class="modal-footer"><button type="button" class="btn btn-light" data-dismiss="modal">Fechar</button></div>'
+                        '<div class="modal-body"><div class="alert alert-danger mb-0">' + window.__('Não foi possível carregar os detalhes do evento.') + '</div></div>' +
+                        '<div class="modal-footer"><button type="button" class="btn btn-light" data-dismiss="modal">' + window.__('Fechar') + '</button></div>'
                     );
                 }
             });

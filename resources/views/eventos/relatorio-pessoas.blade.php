@@ -15,7 +15,7 @@
 
 @section('content')
 @php
-    $tituloRelatorio = 'PESSOAS DO EVENTO';
+    $tituloRelatorio = __('PESSOAS DO EVENTO');
 @endphp
 
 <div class="col-lg-12 col-12 layout-spacing">
@@ -23,8 +23,8 @@
         <div class="widget-header">
             <div class="row">
                 <div class="col-12">
-                    <h4>Pessoas do Evento</h4>
-                    <p class="pl-3">Registros encontrados: {{ $pessoas->count() }}</p>
+                    <h4>{{ __('Pessoas do Evento') }}</h4>
+                    <p class="pl-3">{{ __('Registros encontrados') }}: {{ $pessoas->count() }}</p>
                 </div>
             </div>
         </div>
@@ -33,8 +33,8 @@
             <form method="GET" class="mb-3">
                 <div class="row align-items-center">
                     <div class="col-lg-2 mb-2">
-                        <select name="evento_id" class="form-control form-control-sm" title="Evento">
-                            <option value="">Todos os eventos</option>
+                        <select name="evento_id" class="form-control form-control-sm" title="{{ __('Evento') }}">
+                            <option value="">{{ __('Todos os eventos') }}</option>
                             @foreach ($eventOptions as $eventOption)
                                 <option value="{{ $eventOption->id }}" {{ (string) request('evento_id') === (string) $eventOption->id ? 'selected' : '' }}>
                                     {{ optional($eventOption->data_inicio)->format('d/m/Y') }} - {{ $eventOption->titulo }}
@@ -44,8 +44,8 @@
                     </div>
 
                     <div class="col-lg-2 mb-2">
-                        <select name="instituicao_id" class="form-control form-control-sm" title="Sede ou congregação">
-                            <option value="">Todas as sedes/congregações</option>
+                        <select name="instituicao_id" class="form-control form-control-sm" title="{{ __('Sede ou congregação') }}">
+                            <option value="">{{ __('Todas as sedes/congregações') }}</option>
                             @foreach ($instituicoesEvento->groupBy('grupo') as $grupo => $instituicoesGrupo)
                                 <optgroup label="{{ $grupo }}">
                                     @foreach ($instituicoesGrupo as $instituicaoEvento)
@@ -59,8 +59,8 @@
                     </div>
 
                     <div class="col-lg-2 mb-2">
-                        <select name="evento_funcao_id" class="form-control form-control-sm" title="Função">
-                            <option value="">Todas as funções</option>
+                        <select name="evento_funcao_id" class="form-control form-control-sm" title="{{ __('Função') }}">
+                            <option value="">{{ __('Todas as funções') }}</option>
                             @foreach ($funcoesEventos as $funcaoEvento)
                                 <option value="{{ $funcaoEvento->id }}" {{ (string) request('evento_funcao_id') === (string) $funcaoEvento->id ? 'selected' : '' }}>
                                     {{ $funcaoEvento->nome }}
@@ -70,15 +70,15 @@
                     </div>
 
                     <div class="col-lg-1 mb-2">
-                        <select name="lider" class="form-control form-control-sm" title="Liderança">
-                            <option value="">Todos</option>
-                            <option value="1" {{ request('lider') === '1' ? 'selected' : '' }}>Líder</option>
-                            <option value="0" {{ request('lider') === '0' ? 'selected' : '' }}>Equipe</option>
+                        <select name="lider" class="form-control form-control-sm" title="{{ __('Liderança') }}">
+                            <option value="">{{ __('Todos') }}</option>
+                            <option value="1" {{ request('lider') === '1' ? 'selected' : '' }}>{{ __('Líder') }}</option>
+                            <option value="0" {{ request('lider') === '0' ? 'selected' : '' }}>{{ __('Equipe') }}</option>
                         </select>
                     </div>
 
                     <div class="col-lg-1 mb-2">
-                        <select name="status" class="form-control form-control-sm" title="Status do evento">
+                        <select name="status" class="form-control form-control-sm" title="{{ __('Status do evento') }}">
                             <option value="">Status</option>
                             @foreach ($statusOptions as $value => $label)
                                 <option value="{{ $value }}" {{ request('status') === $value ? 'selected' : '' }}>{{ $label }}</option>
@@ -87,16 +87,16 @@
                     </div>
 
                     <div class="col-lg-1 mb-2">
-                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="form-control form-control-sm" title="Data inicial">
+                        <input type="date" name="data_inicio" value="{{ request('data_inicio') }}" class="form-control form-control-sm" title="{{ __('Data inicial') }}">
                     </div>
 
                     <div class="col-lg-1 mb-2">
-                        <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="form-control form-control-sm" title="Data final">
+                        <input type="date" name="data_fim" value="{{ request('data_fim') }}" class="form-control form-control-sm" title="{{ __('Data final') }}">
                     </div>
 
                     <div class="col-lg-2 mb-2">
-                        <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
-                        <a href="{{ route('eventos.relatorio.pessoas') }}" class="btn btn-light btn-sm">Limpar</a>
+                        <button type="submit" class="btn btn-primary btn-sm">{{ __('Filtrar') }}</button>
+                        <a href="{{ route('eventos.relatorio.pessoas') }}" class="btn btn-light btn-sm">{{ __('Limpar') }}</a>
                     </div>
                 </div>
             </form>
@@ -105,22 +105,22 @@
                 <table class="table table-bordered table-striped table-hover mb-4 display nowrap" id="pessoas-evento-table" style="width: 100%;">
                     <thead>
                         <tr>
-                            <th>EVENTO</th>
+                            <th>{{ __('EVENTO') }}</th>
                             @if ($escopoEvento === 'regiao')
-                                <th>DISTRITO</th>
+                                <th>{{ __('DISTRITO') }}</th>
                             @endif
                             @if (in_array($escopoEvento, ['regiao', 'distrito'], true))
-                                <th>IGREJA</th>
+                                <th>{{ __('IGREJA') }}</th>
                             @endif
-                            <th>SEDE/CONGREGAÇÃO</th>
-                            <th>PROPÓSITO</th>
-                            <th>AGENDA</th>
-                            <th>LOCAL DO EVENTO</th>
-                            <th>STATUS</th>
-                            <th>FUNÇÃO</th>
-                            <th>NOME DA PESSOA</th>
-                            <th>CONTATO</th>
-                            <th>LÍDER</th>
+                            <th>{{ __('SEDE/CONGREGAÇÃO') }}</th>
+                            <th>{{ __('PROPÓSITO') }}</th>
+                            <th>{{ __('AGENDA') }}</th>
+                            <th>{{ __('LOCAL DO EVENTO') }}</th>
+                            <th>{{ __('STATUS') }}</th>
+                            <th>{{ __('FUNÇÃO') }}</th>
+                            <th>{{ __('NOME DA PESSOA') }}</th>
+                            <th>{{ __('CONTATO') }}</th>
+                            <th>{{ __('LÍDER') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,7 +132,7 @@
                                     $agenda .= ' ' . substr((string) $evento->hora_inicio, 0, 5);
                                 }
                                 if ($evento->data_fim) {
-                                    $agenda .= ' até ' . optional($evento->data_fim)->format('d/m/Y');
+                                    $agenda .= ' ' . __('até') . ' ' . optional($evento->data_fim)->format('d/m/Y');
                                     if ($evento->hora_fim) {
                                         $agenda .= ' ' . substr((string) $evento->hora_fim, 0, 5);
                                     }
@@ -154,7 +154,7 @@
                                 <td>{{ optional($pessoa->eventoFuncao)->nome ?: ($pessoa->funcao ?: '-') }}</td>
                                 <td>{{ $pessoa->nome }}</td>
                                 <td>{{ $pessoa->contato ?: '-' }}</td>
-                                <td>{{ $pessoa->lider ? 'Sim' : 'Não' }}</td>
+                                <td>{{ $pessoa->lider ? __('Sim') : __('Não') }}</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -175,28 +175,28 @@
 <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"></script>
 <script>
     const reportTitle = @json($tituloRelatorio);
-    const language = {
+    const language = Object.assign({}, window.IMW_DATATABLE_LANGUAGE || {}, {
         decimal: ',',
         thousands: '.',
-        emptyTable: 'Nenhum registro encontrado',
-        info: 'Mostrando de _START_ até _END_ de _TOTAL_ registros',
-        infoEmpty: 'Mostrando 0 até 0 de 0 registros',
-        infoFiltered: '(Filtrados de _MAX_ registros)',
-        lengthMenu: '_MENU_ resultados por página',
-        loadingRecords: 'Carregando...',
-        processing: 'Processando...',
-        search: 'Pesquisar',
-        zeroRecords: 'Nenhum registro encontrado',
-        paginate: {first: 'Primeiro', last: 'Último', next: 'Próximo', previous: 'Anterior'},
+        emptyTable: window.__('Nenhum registro encontrado'),
+        info: window.__('Mostrando de _START_ até _END_ de _TOTAL_ registros'),
+        infoEmpty: window.__('Mostrando 0 até 0 de 0 registros'),
+        infoFiltered: window.__('(Filtrados de _MAX_ registros)'),
+        lengthMenu: window.__('_MENU_ resultados por página'),
+        loadingRecords: window.__('Carregando...'),
+        processing: window.__('Processando...'),
+        search: window.__('Pesquisar'),
+        zeroRecords: window.__('Nenhum registro encontrado'),
+        paginate: {first: window.__('Primeiro'), last: window.__('Último'), next: window.__('Próximo'), previous: window.__('Anterior')},
         buttons: {
-            pageLength: {'-1': 'Mostrar todos os registros', '_': 'Mostrar %d registros'}
+            pageLength: {'-1': window.__('Mostrar todos os registros'), '_': window.__('Mostrar %d registros')}
         }
-    };
+    });
 
     new DataTable('#pessoas-evento-table', {
         language: language,
         pageLength: 10,
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'Todos']],
+        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, window.__('Todos')]],
         layout: {
             topStart: {
                 buttons: [

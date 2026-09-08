@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ config('locales.supported.' . app()->getLocale() . '.html_lang', str_replace('_', '-', app()->getLocale())) }}">
 <head>
     <meta charset="UTF-8">
-    <title>Relatório de Evento</title>
+    <title>{{ __('Relatório de Evento') }}</title>
     <style>
         * {
             box-sizing: border-box;
@@ -97,7 +97,7 @@
             $agenda .= ' ' . substr((string) $evento->hora_inicio, 0, 5);
         }
         if ($evento->data_fim) {
-            $agenda .= ' até ' . optional($evento->data_fim)->format('d/m/Y');
+            $agenda .= ' ' . __('até') . ' ' . optional($evento->data_fim)->format('d/m/Y');
             if ($evento->hora_fim) {
                 $agenda .= ' ' . substr((string) $evento->hora_fim, 0, 5);
             }
@@ -105,15 +105,15 @@
     @endphp
 
     <div class="header">
-        <h1>Relatório de Evento</h1>
-        <p>Gerado em {{ now()->format('d/m/Y H:i') }}</p>
+        <h1>{{ __('Relatório de Evento') }}</h1>
+        <p>{{ __('Gerado em') }} {{ now()->format('d/m/Y H:i') }}</p>
     </div>
 
     <div class="section">
-        <div class="section-title">Dados do Evento</div>
+        <div class="section-title">{{ __('Dados do Evento') }}</div>
         <table>
             <tr>
-                <th>Evento</th>
+                <th>{{ __('Evento') }}</th>
                 <td>{{ $evento->titulo }}</td>
             </tr>
             <tr>
@@ -122,13 +122,13 @@
             </tr>
             @if (($evento->evento_distrito_nome ?? '-') !== '-')
                 <tr>
-                    <th>Distrito</th>
+                    <th>{{ __('Distrito') }}</th>
                     <td>{{ $evento->evento_distrito_nome }}</td>
                 </tr>
             @endif
             @if (($evento->evento_igreja_nome ?? '-') !== '-')
                 <tr>
-                    <th>Igreja</th>
+                    <th>{{ __('Igreja') }}</th>
                     <td>{{ $evento->evento_igreja_nome }}</td>
                 </tr>
             @endif
@@ -137,36 +137,36 @@
                 <td>{{ $evento->evento_local_nome ?? '-' }}</td>
             </tr>
             <tr>
-                <th>Agenda</th>
+                <th>{{ __('Agenda') }}</th>
                 <td>{{ $agenda ?: '-' }}</td>
             </tr>
             <tr>
-                <th>Local informado</th>
+                <th>{{ __('Local informado') }}</th>
                 <td>{{ $evento->local ?: '-' }}</td>
             </tr>
             <tr>
-                <th>Status</th>
+                <th>{{ __('Status') }}</th>
                 <td>{{ $statusOptions[$evento->status] ?? $evento->status }}</td>
             </tr>
         </table>
     </div>
 
     <div class="section">
-        <div class="section-title">Descrição / Agenda</div>
+        <div class="section-title">{{ __('Descrição / Agenda') }}</div>
         <div class="content-box">
             {!! $evento->descricao ?: '<span class="muted">-</span>' !!}
         </div>
     </div>
 
     <div class="section">
-        <div class="section-title">Equipe</div>
+        <div class="section-title">{{ __('Equipe') }}</div>
         <table>
             <thead>
                 <tr>
-                    <th>Nome</th>
+                    <th>{{ __('Nome') }}</th>
                     <th>{{ __('Equipes/Funções') }}</th>
-                    <th>Contato</th>
-                    <th>Líder</th>
+                    <th>{{ __('Contato') }}</th>
+                    <th>{{ __('Líder') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -175,11 +175,11 @@
                         <td>{{ $membro->nome }}</td>
                         <td>{{ optional($membro->eventoFuncao)->nome ?: ($membro->funcao ?: '-') }}</td>
                         <td>{{ $membro->contato ?: '-' }}</td>
-                        <td>{{ $membro->lider ? 'Sim' : 'Não' }}</td>
+                        <td>{{ $membro->lider ? __('Sim') : __('Não') }}</td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="muted">Nenhum membro de equipe informado.</td>
+                        <td colspan="4" class="muted">{{ __('Nenhum membro de equipe informado.') }}</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -187,7 +187,7 @@
     </div>
 
     <div class="section">
-        <div class="section-title">Observações</div>
+        <div class="section-title">{{ __('Observações') }}</div>
         <div class="content-box">
             {!! $evento->observacoes ?: '<span class="muted">-</span>' !!}
         </div>
