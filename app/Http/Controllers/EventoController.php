@@ -12,6 +12,7 @@ use App\Models\EventoProposito;
 use App\Models\InstituicoesInstituicao;
 use App\Models\InstituicoesTipoInstituicao;
 use App\Rules\ValidaCPF;
+use App\Support\SimpleQrCode;
 use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -583,6 +584,27 @@ class EventoController extends Controller
         return $pdf->stream($filename);
     }
 
+    public function carteirinhasPdf(Evento $evento)
+    {
+        $this->ensureSameInstituicao($evento);
+
+        $evento->load(['proposito', 'localEvento', 'instituicao.instituicaoPai.instituicaoPai']);
+        $this->appendInstitutionMeta(collect([$evento]));
+
+        $inscricoes = EventoInscricao::query()
+            ->where('evento_id', $evento->id)
+            ->orderBy('nome')
+            ->get();
+        $this->appendQrCodeImages($inscricoes, 4, true);
+
+        $filename = 'carteirinhas-' . Str::slug($evento->titulo ?: 'evento') . '.pdf';
+
+        $pdf = FacadePdf::loadView('eventos.pdf.carteirinhas', compact('evento', 'inscricoes'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream($filename);
+    }
+
     public function uploadEditorImage(Request $request)
     {
         $request->validate([
@@ -889,6 +911,20 @@ class EventoController extends Controller
             ->unique()
             ->values()
             ->all();
+    }
+
+    private function appendQrCodeImages($inscricoes, int $scale = 4, bool $createMissingTokens = false): void
+    {
+        $inscricoes->each(function (EventoInscricao $inscricao) use ($scale, $createMissingTokens) {
+            if (empty($inscricao->qr_token) && $createMissingTokens) {
+                $inscricao->qr_token = $this->newQrToken();
+                $inscricao->save();
+            }
+
+            $inscricao->qr_code = $inscricao->qr_token
+                ? SimpleQrCode::pngDataUri($inscricao->qr_token, $scale)
+                : null;
+        });
     }
 
     private function newQrToken(): string

@@ -244,6 +244,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/editor-image/{token}', 'editorImage')->name('editor-image')->middleware('signed');
             Route::get('/relatorio/eventos', 'relatorio')->name('relatorio');
             Route::get('/relatorio/eventos/{evento}/pdf', 'relatorioEventoPdf')->name('relatorio.evento-pdf');
+            Route::get('/carteirinhas/{evento}/pdf', 'carteirinhasPdf')->name('carteirinhas-pdf');
             Route::get('/relatorio/pessoas', 'relatorioPessoas')->name('relatorio.pessoas');
             Route::get('/relatorio/inscritos', 'relatorioInscritos')->name('relatorio.inscritos');
             Route::get('/relatorio/presencas', 'relatorioPresencas')->name('relatorio.presencas');
