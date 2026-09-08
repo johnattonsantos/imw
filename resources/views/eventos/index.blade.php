@@ -42,7 +42,7 @@
                             <th>{{ __('Agenda') }}</th>
                             <th>{{ __('Líder') }}</th>
                             <th>{{ __('Status') }}</th>
-                            <th style="width: 190px;">{{ __('Ações') }}</th>
+                            <th style="width: 235px;">{{ __('Ações') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,6 +91,15 @@
                                             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                                         </svg>
                                     </button>
+                                    <a href="{{ route('eventos.carteirinhas-pdf', $evento) }}" target="_blank" class="btn btn-sm btn-warning btn-rounded bs-tooltip" title="{{ __('Carteirinhas dos Participantes') }}" aria-label="{{ __('Carteirinhas dos Participantes') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="feather feather-credit-card">
+                                            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                                            <line x1="2" y1="10" x2="22" y2="10"></line>
+                                            <line x1="6" y1="15" x2="10" y2="15"></line>
+                                        </svg>
+                                    </a>
                                     @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-editar'))
                                         <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-sm btn-dark btn-rounded bs-tooltip" title="{{ __('Editar') }}" aria-label="{{ __('Editar') }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"

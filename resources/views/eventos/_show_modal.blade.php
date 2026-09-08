@@ -8,6 +8,7 @@
     @include('eventos._show_content')
 </div>
 <div class="modal-footer">
+    <a href="{{ route('eventos.carteirinhas-pdf', $evento) }}" target="_blank" class="btn btn-warning">{{ __('Carteirinhas') }}</a>
     @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-editar'))
         <a href="{{ route('eventos.edit', $evento) }}" class="btn btn-dark">{{ __('Editar') }}</a>
     @endif
