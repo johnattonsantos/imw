@@ -1180,14 +1180,14 @@
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('regiao/juridico*') ? 'collapse show' : '' }}" id="juridico-regiao"
                          data-parent="#juridico-regiao">
-                         <li {!! Request::is('regiao/juridico/acoes*') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-acoes'))
-                                 <a href="{{ route('regiao.juridico.acoes.index') }}">Ações Judiciais</a>
-                             @endif
-                         </li>
                          <li {!! Request::is('regiao/juridico/advogados*') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-advogados'))
                                  <a href="{{ route('regiao.juridico.advogados.index') }}">Advogados</a>
+                             @endif
+                         </li>
+                         <li {!! Request::is('regiao/juridico/acoes*') ? 'class="active"' : '' !!}>
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-acoes'))
+                                 <a href="{{ route('regiao.juridico.acoes.index') }}">Ações Judiciais</a>
                              @endif
                          </li>
                          <li class="submenu-fixo mt-3 mb-3">
