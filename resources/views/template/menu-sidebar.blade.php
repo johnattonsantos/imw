@@ -1083,7 +1083,7 @@
                          </li>
                          <li class="submenu-fixo mt-3 mb-3">
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('juridico-regiao-relatorios'))
-                                 <span>Relatórios</span>
+                                 <span>{{ __('Relatórios') }}</span>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/juridico/relatorios*') ? 'class="active"' : '' !!}>
