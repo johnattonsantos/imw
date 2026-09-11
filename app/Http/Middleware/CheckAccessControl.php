@@ -8,18 +8,24 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckAccessControl
 {
-    public function handle(Request $request, Closure $next, $regraNome)
+    public function handle(Request $request, Closure $next, ...$regras)
     {
         $user = Auth::user();
 
         if (!$user) {
             abort(403, 'Acesso não autorizado');
         }
-        
-        if (!$user->hasPerfilRegra($regraNome)) {
+
+        foreach ($regras as $regraNome) {
+            if ($user->hasPerfilRegra($regraNome)) {
+                return $next($request);
+            }
+        }
+
+        if (empty($regras)) {
             abort(403, 'Acesso não autorizado');
         }
 
-        return $next($request);
+        abort(403, 'Acesso não autorizado');
     }
 }

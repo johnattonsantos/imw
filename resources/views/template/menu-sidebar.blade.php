@@ -128,9 +128,9 @@
                      </a>
                  </li>
              @endif
-              @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao'))
+              @if (auth()->check() && (auth()->user()->hasPerfilRegra('comunicacao') || auth()->user()->hasPerfilRegra('comunicacao-chat-pastores')))
                   <li class="menu {{ Request::is('comunicacao*') ? 'active' : '' }}">
-                     <a href="{{ route('comunicacao.index') }}" aria-expanded="false" class="dropdown-toggle">
+                     <a href="#comunicacao-menu" data-toggle="collapse" aria-expanded="{{ Request::is('comunicacao*') ? 'true' : 'false' }}" class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -144,7 +144,27 @@
                                  </span>
                              @endif
                          </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
                      </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('comunicacao*') ? 'collapse show' : '' }}" id="comunicacao-menu" data-parent="#accordionExample">
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao'))
+                             <li {!! Request::is('comunicacao') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('comunicacao.index') }}">{{ __('Comunicação') }}</a>
+                             </li>
+                         @endif
+                         @if (auth()->check() && (auth()->user()->hasPerfilRegra('comunicacao') || auth()->user()->hasPerfilRegra('comunicacao-chat-pastores')))
+                             <li {!! Request::is('comunicacao/chat-pastores*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('comunicacao.chat-pastores.index') }}">{{ __('Chat de Pastores') }}</a>
+                             </li>
+                         @endif
+                     </ul>
                  </li>
             @endif
             @if (auth()->check() && auth()->user()->hasPerfilRegra('documentos-igrejas-visualizar'))

@@ -8,6 +8,7 @@ use App\Http\Controllers\CongregacoesController;
 use App\Http\Controllers\CongregadosController;
 use App\Http\Controllers\ClerigoPerfilController;
 use App\Http\Controllers\CategoriaComunicacaoController;
+use App\Http\Controllers\ComunicacaoChatPastoresController;
 use App\Http\Controllers\ComunicacaoController;
 use App\Http\Controllers\ContabilidadeController;
 use App\Http\Controllers\DistritoRelatorioController;
@@ -209,6 +210,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/export/xlsx', 'exportXlsx')->name('export.xlsx');
             Route::get('/export/pdf', 'exportPdf')->name('export.pdf');
         })->middleware(['seguranca:comunicacao']);
+
+        Route::prefix('comunicacao/chat-pastores')->name('comunicacao.chat-pastores.')->controller(ComunicacaoChatPastoresController::class)->middleware(['seguranca:comunicacao,comunicacao-chat-pastores'])->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/store', 'store')->name('store');
+            Route::get('/destinatarios', 'destinatarios')->name('destinatarios');
+            Route::get('/conversas/{conversa}', 'show')->name('show');
+            Route::post('/conversas/{conversa}/responder', 'reply')->name('reply');
+        });
 
         Route::prefix('documentos-para-igrejas')->name('documentos-igrejas.')->controller(DocumentosIgrejasController::class)->middleware(['seguranca:documentos-igrejas-gerenciar'])->group(function () {
             Route::get('/', 'regionalIndex')->name('index');
