@@ -128,9 +128,9 @@
                      </a>
                  </li>
              @endif
-              @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao'))
+              @if (auth()->check() && (auth()->user()->hasPerfilRegra('comunicacao') || auth()->user()->hasPerfilRegra('comunicacao-chat-pastores')))
                   <li class="menu {{ Request::is('comunicacao*') ? 'active' : '' }}">
-                     <a href="{{ route('comunicacao.index') }}" aria-expanded="false" class="dropdown-toggle">
+                     <a href="#comunicacao-menu" data-toggle="collapse" aria-expanded="{{ Request::is('comunicacao*') ? 'true' : 'false' }}" class="dropdown-toggle">
                          <div class="">
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -144,7 +144,27 @@
                                  </span>
                              @endif
                          </div>
+                         <div>
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                 stroke-linecap="round" stroke-linejoin="round"
+                                 class="feather feather-chevron-right">
+                                 <polyline points="9 18 15 12 9 6"></polyline>
+                             </svg>
+                         </div>
                      </a>
+                     <ul class="collapse submenu list-unstyled {{ Request::is('comunicacao*') ? 'collapse show' : '' }}" id="comunicacao-menu" data-parent="#accordionExample">
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('comunicacao'))
+                             <li {!! Request::is('comunicacao') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('comunicacao.index') }}">{{ __('Comunicação') }}</a>
+                             </li>
+                         @endif
+                         @if (auth()->check() && (auth()->user()->hasPerfilRegra('comunicacao') || auth()->user()->hasPerfilRegra('comunicacao-chat-pastores')))
+                             <li {!! Request::is('comunicacao/chat-pastores*') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('comunicacao.chat-pastores.index') }}">{{ __('Chat de Pastores') }}</a>
+                             </li>
+                         @endif
+                     </ul>
                  </li>
             @endif
             @if (auth()->check() && auth()->user()->hasPerfilRegra('documentos-igrejas-visualizar'))
@@ -178,7 +198,7 @@
                                  <line x1="8" y1="2" x2="8" y2="6"></line>
                                  <line x1="3" y1="10" x2="21" y2="10"></line>
                              </svg>
-                             <span>{{ __('Eventos') }}</span>
+                             <span>Eventos</span>
                          </div>
                          <div>
                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -190,33 +210,24 @@
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('eventos*') ? 'collapse show' : '' }}" id="eventos-menu" data-parent="#accordionExample">
                          <li {!! Request::is('eventos') || Request::is('eventos/novo') || Request::is('eventos/detalhes*') || Request::is('eventos/editar*') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('eventos.index') }}">{{ __('Eventos') }}</a>
+                             <a href="{{ route('eventos.index') }}">Eventos</a>
                          </li>
                          <li {!! Request::is('eventos/agenda') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('eventos.agenda') }}">{{ __('Agenda de Eventos') }}</a>
-                         </li>
-                         <li {!! Request::is('eventos/presenca') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('eventos.presenca') }}">{{ __('Presença do Evento') }}</a>
+                             <a href="{{ route('eventos.agenda') }}">Agenda de Eventos</a>
                          </li>
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('evento-funcao'))
                              <li {!! Request::is('eventos/funcoes*') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('eventos.funcoes.index') }}">{{ __('Funções Eventos') }}</a>
+                                 <a href="{{ route('eventos.funcoes.index') }}">Funções Eventos</a>
                              </li>
                          @endif
                          <li class="submenu-fixo mt-3 mb-3">
-                             <span>{{ __('Relatórios') }}</span>
+                             <span>Relatórios</span>
                          </li>
                          <li {!! Request::is('eventos/relatorio/eventos') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('eventos.relatorio') }}">{{ __('Eventos') }}</a>
+                             <a href="{{ route('eventos.relatorio') }}">Eventos</a>
                          </li>
                          <li {!! Request::is('eventos/relatorio/pessoas') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('eventos.relatorio.pessoas') }}">{{ __('Pessoas do Evento') }}</a>
-                         </li>
-                         <li {!! Request::is('eventos/relatorio/inscritos') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('eventos.relatorio.inscritos') }}">{{ __('Inscritos no Evento') }}</a>
-                         </li>
-                         <li {!! Request::is('eventos/relatorio/presencas') ? 'class="active"' : '' !!}>
-                             <a href="{{ route('eventos.relatorio.presencas') }}">{{ __('Histórico de Presença') }}</a>
+                             <a href="{{ route('eventos.relatorio.pessoas') }}">Pessoas do Evento</a>
                          </li>
                      </ul>
                  </li>
@@ -949,17 +960,17 @@
                         @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-acompanhamento-validacoes'))
                          <li {!! Request::is('regiao/relatorio/acompanhamento-validacoes') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('regiao.relatorio.acompanhamento-validacoes') }}">{{ __('Validação de Membros') }}</a>
+<a href="{{ route('regiao.relatorio.acompanhamento-validacoes') }}">{{ __('Validação de Membros') }}</a>
                          </li>
                         @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-perfil-membros-recebidos'))
                          <li {!! Request::is('regiao/relatorio/perfil-membros-recebidos') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('regiao.relatorio.perfil-membros-recebidos') }}">{{ __('Perfil dos Membros Recebidos') }}</a>
+                                 <a href="{{ route('regiao.relatorio.perfil-membros-recebidos') }}">Perfil dos Membros Recebidos</a>
                          </li>
                         @endif
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-perfil-membros-excluidos'))
                          <li {!! Request::is('regiao/relatorio/perfil-membros-excluidos') ? 'class="active"' : '' !!}>
-                                 <a href="{{ route('regiao.relatorio.perfil-membros-excluidos') }}">{{ __('Perfil dos Membros Excluídos') }}</a>
+                                 <a href="{{ route('regiao.relatorio.perfil-membros-excluidos') }}">Perfil dos Membros Excluídos</a>
                          </li>
                         @endif
                           @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-estatistica-genero'))
