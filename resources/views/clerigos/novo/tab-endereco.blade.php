@@ -116,17 +116,6 @@
                 @enderror
             </div>
 
-            <div class="col-12 mt-3 col-md-4">
-                <label for="residencia_propria_fgts">{{ __('Utilizou FGTS?') }}</label>
-                <select class="form-control @error('residencia_propria_fgts') is-invalid @enderror"
-                    id="residencia_propria_fgts" name="residencia_propria_fgts">
-                    <option value="0" {{ old('residencia_propria_fgts') == '0' ? 'selected' : '' }}>{{ __('Não') }}</option>
-                    <option value="1" {{ old('residencia_propria_fgts') == '1' ? 'selected' : '' }}>{{ __('Sim') }}</option>
-                </select>
-                @error('residencia_propria_fgts')
-                    <span class="help-block text-danger">{{ $message }}</span>
-                @enderror
-            </div>
         </div>
     </blockquote>
 </div>

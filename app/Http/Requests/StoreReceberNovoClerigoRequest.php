@@ -36,10 +36,10 @@ class StoreReceberNovoClerigoRequest extends FormRequest
 
         return [
             'nome' => 'required|max:255',
-            'identidade' => ['required', 'max:13', 'regex:/^\d{3}\.\d{3}\.\d{3}-\d$/'],
-            'identidade_uf' => 'required',
-            'orgao_emissor' => 'required|max:50',
-            'data_emissao' => ['required', 'date', new RangeDateRule],
+            'identidade' => ['nullable', 'max:13', 'regex:/^\d{3}\.\d{3}\.\d{3}-\d$/'],
+            'identidade_uf' => 'nullable',
+            'orgao_emissor' => 'nullable|max:50',
+            'data_emissao' => ['nullable', 'date', new RangeDateRule],
             'cpf' => $cpfRules,
             'situacao' => 'required',
             'endereco' => 'required|max:255',

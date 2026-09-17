@@ -76,79 +76,10 @@
                                     {{ __('Endereço') }}
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="border-top-registros-geral" data-toggle="tab"
-                                    href="#border-top-registro-geral" role="tab"
-                                    aria-controls="border-top-registro-geral" aria-selected="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-users">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg>
-                                    {{ __('Registro Geral') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="border-top-pisp-paseps" data-toggle="tab"
-                                    href="#border-top-pisp-pasep" role="tab" aria-controls="border-top-pisp-pasep"
-                                    aria-selected="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
-                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                    </svg>
-                                    {{ __('Pis/Pasep') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="border-top-carteira-trabalhos" data-toggle="tab"
-                                    href="#border-top-carteira-trabalho" role="tab"
-                                    aria-controls="border-top-carteira-trabalho" aria-selected="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
-                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                    </svg>
-                                    {{ __('Carteira de Trabalho') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="border-top-titulos-eleitor" data-toggle="tab"
-                                    href="#border-top-titulo-eleitor" role="tab"
-                                    aria-controls="border-top-titulo-eleitor" aria-selected="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
-                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                    </svg>
-                                    {{ __('Título de Eleitor') }}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="border-top-habilitacoes" data-toggle="tab"
-                                    href="#border-top-habilitacao" role="tab" aria-controls="border-top-habilitacao"
-                                    aria-selected="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="feather feather-bookmark">
-                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                                    </svg>
-                                    {{ __('Carteira de Habilitação') }}
-                                </a>
-                            </li>
-
                         </ul>
                         <div class="tab-content" id="borderTopContent">
                             @include('clerigos.novo.tab-dados-pessoais')
                             @include('clerigos.novo.tab-endereco')
-                            @include('clerigos.novo.tab-registro-geral')
-                            @include('clerigos.novo.tab-pisp-pasep')
-                            @include('clerigos.novo.tab-carteira-trabalho')
-                            @include('clerigos.novo.tab-habilitacao')
-                            @include('clerigos.novo.tab-titulo-eleitor')
 
                         </div>
                     </div>
@@ -199,8 +130,6 @@
             Inputmask("999.999.999-99").mask(document.getElementById("cpf"));
             Inputmask("(99) 99999-9999").mask(document.getElementById("telefone_preferencial"));
             Inputmask("(99) 99999-9999").mask(document.getElementById("telefone_alternativo"));
-            Inputmask("9999 9999 9999").mask(document.getElementById("titulo_eleitor"));
-            Inputmask("999.999.999-9").mask(document.getElementById("identidade"));
 
             const cpfInput = document.getElementById("cpf");
             const cpfLabel = document.getElementById("cpf-label");
