@@ -30,4 +30,9 @@ class PerfilController extends Controller
         return view('perfil.carteira-digital', ['usuario' => $usuario]);
     }
 
+    public function cartaoMembro(Request $request) {
+        $membro = app(ListPerfilService::class)->cartaoMembro();
+        return view('perfil.cartao-membro', ['membro' => $membro]);
+    }
+
 }
