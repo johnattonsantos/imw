@@ -60,6 +60,7 @@ use App\Http\Controllers\RelatorioClerigoPrebendasController;
 use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\TotalizacaoController;
 use App\Http\Controllers\UsuarioController;
+use App\Http\Controllers\ValidarMembroController;
 use App\Http\Controllers\VisitantesController;
 use App\Http\Middleware\VerificaInstituicao;
 use App\Http\Middleware\VerificaPerfil;
@@ -71,6 +72,7 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/idioma', [LocaleController::class, 'update'])->name('locale.update');
+Route::get('/validar-membro', [ValidarMembroController::class, 'show'])->name('validar-membro.show');
 
 // Rota para mostrar o formulário de esqueci a senha
 Route::get('/esqueci-senha', [AuthController::class, 'showResetRequestForm'])->name('password.request');
@@ -109,6 +111,8 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('secretaria/membro')->name('membro.')->group(function () {
             Route::get('', [MembrosController::class, 'index'])->name('index')->middleware(['seguranca:membros-index']);
             Route::get('list', [MembrosController::class, 'list'])->name('list')->middleware(['seguranca:membros-index']);
+            Route::get('carteirinhas', [MembrosController::class, 'carteirinhas'])->name('carteirinhas.index');
+            Route::post('carteirinhas/pdf', [MembrosController::class, 'carteirinhasPdf'])->name('carteirinhas.pdf');
             Route::get('editar/{id}', [MembrosController::class, 'editar'])->name('editar')->middleware(['seguranca:membros-editar'])->can('checkSameChurch', [\App\Models\MembresiaMembro::class, 'id']);
             Route::get('receber-novo/{id}', [MembrosController::class, 'receberNovo'])->name('receber_novo')->middleware(['seguranca:membros-recebernovo']);
             Route::post('receber-novo-store/{id}', [MembrosController::class, 'storeReceberNovo'])->name('receber_novo.store')->middleware(['seguranca:membros-recebernovo']);

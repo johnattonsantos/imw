@@ -117,6 +117,25 @@
             border-radius: 10px;
         }
 
+        .member-credential__qr {
+            position: absolute;
+            top: 294px;
+            right: 74px;
+            z-index: 2;
+            width: 72px;
+            height: 72px;
+            padding: 4px;
+            background: #fff;
+            border-radius: 6px;
+            box-shadow: 0 6px 18px rgba(15, 27, 67, .12);
+        }
+
+        .member-credential__qr img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
         .member-credential__title {
             position: relative;
             z-index: 1;
@@ -201,6 +220,21 @@
             text-align: left;
         }
 
+        .member-credential__footer {
+            position: absolute;
+            right: 22px;
+            bottom: 14px;
+            left: 120px;
+            z-index: 2;
+            padding: 3px;
+            background: transparent;
+            color: #263040;
+            font-size: 13px;
+            line-height: 1;
+            text-align: right;
+            white-space: nowrap;
+        }
+
         .member-card__empty {
             max-width: 760px;
             margin: 32px auto;
@@ -225,6 +259,13 @@
                 top: auto;
                 right: auto;
                 margin: 14px auto 0;
+            }
+
+            .member-credential__qr {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 10px auto 0;
             }
 
             .member-credential__body {
@@ -268,6 +309,12 @@
                                 @endif
                             </div>
 
+                            @if($membro->qr_code)
+                                <div class="member-credential__qr">
+                                    <img src="{{ $membro->qr_code }}" alt="{{ __('QR Code de validação') }}">
+                                </div>
+                            @endif
+
                             <h2 class="member-credential__title">{{ __('Credencial') }}</h2>
 
                             <div class="member-credential__body">
@@ -287,6 +334,10 @@
                                     <span class="member-credential__label">{{ __('Nome') }}:</span>
                                     <div class="member-credential__value member-credential__value--name">{{ $membro->nome }}</div>
                                 </div>
+                            </div>
+
+                            <div class="member-credential__footer">
+                                {{ __('Esse documento, vale pelo pedido de 4 anos, a partir de sua impressão') }}
                             </div>
 
                         </section>
