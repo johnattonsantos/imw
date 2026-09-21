@@ -6,6 +6,7 @@ use App\Http\Requests\UpdatePerfilRequest;
 use App\Models\PerfilUser;
 use App\Services\ServicePerfil\ListPerfilService;
 use App\Services\ServicePerfil\UpdatePerfilService;
+use App\Support\SimpleQrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -32,6 +33,14 @@ class PerfilController extends Controller
 
     public function cartaoMembro(Request $request) {
         $membro = app(ListPerfilService::class)->cartaoMembro();
+        if ($membro) {
+            try {
+                $membro->qr_code = SimpleQrCode::pngDataUri(route('validar-membro.show', ['membro' => $membro->id]), 4);
+            } catch (\Throwable $e) {
+                $membro->qr_code = null;
+            }
+        }
+
         return view('perfil.cartao-membro', ['membro' => $membro]);
     }
 
