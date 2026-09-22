@@ -107,21 +107,17 @@ class UpdateMembroRequest extends FormRequest
             'data_batismo' => [
                 'nullable',
                 'date',
-                function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate, $mensagemIdadeMinimaMembro) {
+                function ($attribute, $value, $fail) use ($dataNascimento, $minDate, $currentDate) {
                     if (strtotime($value) <= strtotime($dataNascimento)) {
                         $fail(__('A data de batismo deve ser após a data de nascimento.'));
                         return;
                     }
-                    if (strtotime($value) < strtotime($minDate) || strtotime($value) > strtotime($currentDate)) {
-                        $fail(__('A data de batismo deve ser após a data de nascimento e a data atual.'));
+                    if (strtotime($value) < strtotime($minDate)) {
+                        $fail(__('A data de batismo deve ser igual ou posterior a 01/01/1910.'));
                         return;
                     }
-                    if (
-                        !empty($dataNascimento) &&
-                        strtotime($dataNascimento) <= strtotime('-10 years') &&
-                        strtotime($value) < strtotime($dataNascimento . ' +10 years')
-                    ) {
-                        $fail(__($mensagemIdadeMinimaMembro));
+                    if (strtotime($value) > strtotime($currentDate)) {
+                        $fail(__('A data de batismo não pode ser maior que a data atual.'));
                         return;
                     }
                 },
