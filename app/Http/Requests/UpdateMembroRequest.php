@@ -50,6 +50,9 @@ class UpdateMembroRequest extends FormRequest
         $cpf = preg_replace('/[^0-9]/', '', $this->input('cpf', ''));
         $membroIdRegraRol = $membroId;
         $igrejaRecadastramentoId = null;
+        $statusMembro = (string) ($this->input('status') ?: DB::table('membresia_membros')->where('id', $membroId)->value('status'));
+        $contatoObrigatorio = $isRecadastramento || $statusMembro === 'A';
+        $regraContatoObrigatorio = $contatoObrigatorio ? 'required' : 'nullable';
 
         if ($isRecadastramento && $cpf !== '') {
             $igrejaRecadastramentoId = DB::table('membresia_migracao')
@@ -272,7 +275,7 @@ class UpdateMembroRequest extends FormRequest
                     // Membro inativo em outra igreja segue para a confirmação no service.
                 },
             ],
-            'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {
+            'email_preferencial' => [$regraContatoObrigatorio, 'email', function ($attribute, $value, $fail) {
                 if ($value) {
                     if (!preg_match('/@.*\.\w{2,}$/', $value)) {
                         $fail(__('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.'));
@@ -281,18 +284,20 @@ class UpdateMembroRequest extends FormRequest
             }],
             'email_alternativo' => 'email|nullable',
             'telefone_preferencial' => [
-                $isRecadastramento ? 'required' : 'nullable',
+                $regraContatoObrigatorio,
                 'regex:/^(\+\d{2}\s?)?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/',
                 'min:10'
             ],
             'telefone_alternativo' => ['nullable', 'regex:/^(\+\d{2}\s?)?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/', 'min:10'],
             'telefone_whatsapp' => ['nullable', 'regex:/^(\+\d{2}\s?)?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/', 'min:10'],
-            'cep' => $isRecadastramento ? 'required' : 'nullable',
-            'endereco' => $isRecadastramento ? 'required' : 'nullable',
-            'numero' => $isRecadastramento ? 'required' : 'nullable',
-            'bairro' => $isRecadastramento ? 'required' : 'nullable',
-            'cidade' => $isRecadastramento ? 'required' : 'nullable',
-            'estado' => $isRecadastramento ? 'required' : 'nullable',
+            'cep' => $regraContatoObrigatorio,
+            'endereco' => $regraContatoObrigatorio,
+            'numero' => $regraContatoObrigatorio,
+            'complemento' => $regraContatoObrigatorio,
+            'bairro' => $regraContatoObrigatorio,
+            'cidade' => $regraContatoObrigatorio,
+            'estado' => $regraContatoObrigatorio,
+            'observacoes' => $regraContatoObrigatorio,
             'data_casamento' => [
                 'nullable',
                 'date',
@@ -323,13 +328,16 @@ class UpdateMembroRequest extends FormRequest
             'dt_exclusao.required_if' => 'Para status Inativo, a data de exclusão é obrigatória.',
             'modo_exclusao_id.required_if' => 'Para status Inativo, o modo de exclusão é obrigatório.',
             'cpf.required_if' => 'O CPF é obrigatório quando o status estiver Ativo.',
+            'email_preferencial.required' => 'O campo E-mail é obrigatório.',
             'telefone_preferencial.required' => 'O campo Telefone é obrigatório.',
             'cep.required' => 'O campo CEP é obrigatório.',
             'endereco.required' => 'O campo Endereço é obrigatório.',
             'numero.required' => 'O campo Número é obrigatório.',
+            'complemento.required' => 'O campo Complemento é obrigatório.',
             'bairro.required' => 'O campo Bairro é obrigatório.',
             'cidade.required' => 'O campo Cidade é obrigatório.',
             'estado.required' => 'O campo Estado é obrigatório.',
+            'observacoes.required' => 'O campo Observações é obrigatório.',
             'profissao.required' => 'O campo Profissão é obrigatório.',
         ];
     }
