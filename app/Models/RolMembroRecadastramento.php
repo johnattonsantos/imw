@@ -13,10 +13,18 @@ class RolMembroRecadastramento extends Model implements Auditable
 
     protected $table = 'vw_rol_membros_recadastro';
 
+    protected $primaryKey = 'membro_id';
+
+    public $incrementing = false;
+
+    public $timestamps = false;
+
+    protected $keyType = 'string';
+
     protected $casts = [
         'dt_recepcao'   => 'date',
         'dt_exclusao'   => 'date',
-        'dt_nascimento' => 'date',
+        'data_nascimento' => 'date',
     ];
 
     public function regiao()

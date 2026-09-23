@@ -3,7 +3,7 @@
 namespace App\Rules;
 
 use App\Models\MembresiaRolPermanente;
-use App\Models\MembresiaRolPermanenteRecadastramento;
+use App\Models\RolMembroRecadastramento;
 use App\Traits\Identifiable;
 use Illuminate\Contracts\Validation\Rule;
 
@@ -38,7 +38,7 @@ class UniqueRolIgrejaRule implements Rule
             return true;
         }
 
-        $model = $this->useMigracao ? MembresiaRolPermanenteRecadastramento::class : MembresiaRolPermanente::class;
+        $model = $this->useMigracao ? RolMembroRecadastramento::class : MembresiaRolPermanente::class;
 
         $hasRolPermanente = (booL) $model::where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
             ->where('numero_rol', $value)
