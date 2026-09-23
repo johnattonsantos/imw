@@ -297,7 +297,7 @@ class UpdateMembroRequest extends FormRequest
             'bairro' => $regraContatoObrigatorio,
             'cidade' => $regraContatoObrigatorio,
             'estado' => $regraContatoObrigatorio,
-            'observacoes' => $regraContatoObrigatorio,
+            'observacoes' => 'nullable',
             'data_casamento' => [
                 'nullable',
                 'date',
@@ -337,7 +337,6 @@ class UpdateMembroRequest extends FormRequest
             'bairro.required' => 'O campo Bairro é obrigatório.',
             'cidade.required' => 'O campo Cidade é obrigatório.',
             'estado.required' => 'O campo Estado é obrigatório.',
-            'observacoes.required' => 'O campo Observações é obrigatório.',
             'profissao.required' => 'O campo Profissão é obrigatório.',
         ];
     }
