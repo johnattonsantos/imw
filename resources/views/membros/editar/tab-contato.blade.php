@@ -1,6 +1,6 @@
 @php
   $isRecadastramento = request()->routeIs('recadastramento-membro.editar') || request()->routeIs('recadastramento-membro.update');
-  $contatoObrigatorio = $isRecadastramento || (!$isRecadastramento && old('status', $pessoa->status) === \App\Models\MembresiaMembro::STATUS_ATIVO);
+  $contatoObrigatorio = old('status', $pessoa->status) === \App\Models\MembresiaMembro::STATUS_ATIVO;
 @endphp
 
 <div class="tab-pane fade" id="border-top-contato" role="tabpanel" aria-labelledby="border-top-contatos">

@@ -651,12 +651,41 @@
           $('#cpf-label').text(cpfRequired ? '* CPF' : 'CPF');
         }
 
+        function toggleContatoRequirementByStatus() {
+          const status = $('#status').val();
+          const contatoRequired = status === 'A';
+          const contactFieldIds = [
+            'telefone_preferencial',
+            'cep',
+            'endereco',
+            'numero',
+            'complemento',
+            'bairro',
+            'cidade',
+            'estado',
+          ];
+
+          contactFieldIds.forEach(function (fieldId) {
+            const $field = $('#' + fieldId);
+            const $label = $('label[for="' + fieldId + '"]');
+
+            $field.prop('required', contatoRequired);
+
+            if ($label.length) {
+              const labelText = $label.text().replace(/^\*\s*/, '');
+              $label.text(contatoRequired ? '* ' + labelText : labelText);
+            }
+          });
+        }
+
         toggleExclusaoFieldsByStatus();
         toggleCpfRequirementByStatus();
+        toggleContatoRequirementByStatus();
         $('#status').on('change', function () {
           handleStatusTransition();
           toggleExclusaoFieldsByStatus();
           toggleCpfRequirementByStatus();
+          toggleContatoRequirementByStatus();
         });
 
         $('#dt_exclusao, #modo_exclusao_id').on('change input', function () {
