@@ -275,7 +275,7 @@ class UpdateMembroRequest extends FormRequest
                     // Membro inativo em outra igreja segue para a confirmação no service.
                 },
             ],
-            'email_preferencial' => [$regraContatoObrigatorio, 'email', function ($attribute, $value, $fail) {
+            'email_preferencial' => ['nullable', 'email', function ($attribute, $value, $fail) {
                 if ($value) {
                     if (!preg_match('/@.*\.\w{2,}$/', $value)) {
                         $fail(__('O campo e-mail deve conter um sufixo de domínio válido com pelo menos dois caracteres após o ponto.'));
@@ -328,7 +328,6 @@ class UpdateMembroRequest extends FormRequest
             'dt_exclusao.required_if' => 'Para status Inativo, a data de exclusão é obrigatória.',
             'modo_exclusao_id.required_if' => 'Para status Inativo, o modo de exclusão é obrigatório.',
             'cpf.required_if' => 'O CPF é obrigatório quando o status estiver Ativo.',
-            'email_preferencial.required' => 'O campo E-mail é obrigatório.',
             'telefone_preferencial.required' => 'O campo Telefone é obrigatório.',
             'cep.required' => 'O campo CEP é obrigatório.',
             'endereco.required' => 'O campo Endereço é obrigatório.',
