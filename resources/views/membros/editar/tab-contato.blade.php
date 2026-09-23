@@ -93,8 +93,8 @@
       </div>
       <div class="row mb-4">
         <div class="col-xl-12">
-          <label for="observacoes">{{ $contatoObrigatorio ? '* ' : '' }}{{ __('Observações') }}</label>
-          <input type="text" class="form-control" id="observacoes" name="observacoes"  value="{{ old('observacoes', $pessoa->contato->observacoes) }}" maxlength="1000" {{ $contatoObrigatorio ? 'required' : '' }}>
+          <label for="observacoes">{{ __('Observações') }}</label>
+          <input type="text" class="form-control" id="observacoes" name="observacoes"  value="{{ old('observacoes', $pessoa->contato->observacoes) }}" maxlength="1000">
           @error('observacoes')
             <span class="help-block text-danger">{{ $message }}</span>
           @enderror
