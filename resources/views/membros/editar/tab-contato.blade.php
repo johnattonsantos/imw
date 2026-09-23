@@ -7,8 +7,8 @@
     <blockquote class="blockquote">
       <div class="row mb-4">
       <div class="col-xl-3">
-          <label for="email_preferencial">{{ $contatoObrigatorio ? '* ' : '' }}{{ __('E-mail') }}</label>
-          <input type="email" class="form-control @error('email_preferencial') is-invalid @enderror" id="email_preferencial" name="email_preferencial" value="{{ old('email_preferencial', $pessoa->contato->email_preferencial) }}" maxlength="100" {{ $contatoObrigatorio ? 'required' : '' }}>
+          <label for="email_preferencial">{{ __('E-mail') }}</label>
+          <input type="email" class="form-control @error('email_preferencial') is-invalid @enderror" id="email_preferencial" name="email_preferencial" value="{{ old('email_preferencial', $pessoa->contato->email_preferencial) }}" maxlength="100">
           @error('email_preferencial')
             <span class="help-block text-danger">{{ $message }}</span>
           @enderror
