@@ -51,7 +51,7 @@ class UpdateMembroRequest extends FormRequest
         $membroIdRegraRol = $membroId;
         $igrejaRecadastramentoId = null;
         $statusMembro = (string) ($this->input('status') ?: DB::table('membresia_membros')->where('id', $membroId)->value('status'));
-        $contatoObrigatorio = $isRecadastramento || $statusMembro === 'A';
+        $contatoObrigatorio = $statusMembro === 'A';
         $regraContatoObrigatorio = $contatoObrigatorio ? 'required' : 'nullable';
 
         if ($isRecadastramento && $cpf !== '') {
