@@ -5,19 +5,26 @@ namespace App\Models;
 use Awobaz\Compoships\Compoships;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 use OwenIt\Auditing\Auditable as AuditableTrait;
 
 class MembresiaRolPermanenteRecadastramento extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes, Compoships, AuditableTrait;
+    use HasFactory, Compoships, AuditableTrait;
 
     const STATUS_RECEBIMENTO = 'A';
     const STATUS_EXCLUSAO = 'I';
     const STATUS_TRANSFERENCIA = 'T';
 
-    protected $table = 'membresia_rolpermanente_migracao';
+    protected $table = 'vw_rol_membros_recadastro';
+
+    protected $primaryKey = 'membro_id';
+
+    public $incrementing = false;
+
+    public $timestamps = false;
+
+    protected $keyType = 'string';
 
     protected $fillable = [
         'lastrec',

@@ -99,12 +99,13 @@ class MembresiaMembroRecadastramento extends Model implements Auditable
 
     public function rolPermanente()
     {
-        return $this->hasMany(MembresiaRolPermanenteRecadastramento::class, 'membro_id');
+        return $this->hasMany(RolMembroRecadastramento::class, 'membro_id', 'id');
     }
 
     public function rolAtualSessionIgreja(): HasOne
     {
-        return $this->hasOne(MembresiaRolPermanenteRecadastramento::class, 'membro_id', 'id')->withTrashed()->where('lastrec', 1)->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id);
+        return $this->hasOne(RolMembroRecadastramento::class, 'membro_id', 'id')
+            ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id);
     }
 
     public function disciplinas()
