@@ -55,6 +55,103 @@ class ListPerfilService
         return $pessoa;
     }
 
+    public function cartaoMembro(): ?object
+    {
+        $usuario = Auth::user();
+        if (!$usuario) {
+            return null;
+        }
+
+        $cpf = preg_replace('/\D+/', '', (string) $usuario->cpf);
+        $email = mb_strtolower(trim((string) $usuario->email));
+        $pessoaUsuario = null;
+
+        if ($usuario->pessoa_id) {
+            $pessoaUsuario = PessoasPessoa::query()->select('id', 'cpf', 'email', 'foto')->find($usuario->pessoa_id);
+        }
+
+        if ($cpf === '' && $pessoaUsuario) {
+            $cpf = preg_replace('/\D+/', '', (string) optional($pessoaUsuario)->cpf);
+        }
+
+        if ($cpf === '' && $email === '') {
+            return null;
+        }
+
+        $pessoaFoto = PessoasPessoa::query()
+            ->select('id', 'cpf', 'email', 'foto')
+            ->whereNotNull('foto')
+            ->where('foto', '<>', '')
+            ->where(function ($query) use ($cpf, $email, $usuario) {
+                if ($email !== '') {
+                    $query->orWhereRaw('LOWER(email) = ?', [$email]);
+                }
+
+                if ($usuario->pessoa_id) {
+                    $query->orWhere('id', $usuario->pessoa_id);
+                }
+
+                if ($cpf !== '') {
+                    $query->orWhereRaw(
+                        "REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', '') = ?",
+                        [$cpf]
+                    );
+                }
+            })
+            ->orderByRaw(
+                "CASE
+                    WHEN LOWER(email) = ? THEN 0
+                    WHEN id = ? THEN 1
+                    WHEN REPLACE(REPLACE(REPLACE(cpf, '.', ''), '-', ''), ' ', '') = ? THEN 2
+                    ELSE 3
+                END",
+                [$email, (int) $usuario->pessoa_id, $cpf]
+            )
+            ->first();
+
+        $membro = DB::table('membresia_membros as mm')
+            ->leftJoin('membresia_funcoeseclesiasticas as mfe', 'mfe.id', '=', 'mm.funcao_eclesiastica_id')
+            ->leftJoin('membresia_contatos as mc', function ($join) {
+                $join->on('mc.membro_id', '=', 'mm.id')
+                    ->whereNull('mc.deleted_at');
+            })
+            ->select([
+                'mm.id',
+                'mm.nome',
+                'mm.data_nascimento',
+                'mm.status',
+                'mm.foto',
+                'mfe.descricao as funcao_eclesiastica',
+            ])
+            ->whereNull('mm.deleted_at')
+            ->where(function ($query) use ($cpf, $email) {
+                if ($cpf !== '') {
+                    $query->orWhereRaw(
+                        "REPLACE(REPLACE(REPLACE(mm.cpf, '.', ''), '-', ''), ' ', '') = ?",
+                        [$cpf]
+                    );
+                }
+
+                if ($email !== '') {
+                    $query->orWhereRaw('LOWER(mc.email_preferencial) = ?', [$email])
+                        ->orWhereRaw('LOWER(mc.email_alternativo) = ?', [$email]);
+                }
+            })
+            ->orderByRaw("CASE WHEN mm.status = 'A' THEN 0 ELSE 1 END")
+            ->orderBy('mm.nome')
+            ->first();
+
+        if ($membro && $pessoaFoto && $pessoaFoto->foto) {
+            $membro->foto = $this->resolveFotoUrl((string) $pessoaFoto->foto);
+        } elseif ($membro && $pessoaUsuario && $pessoaUsuario->foto) {
+            $membro->foto = $this->resolveFotoUrl((string) $pessoaUsuario->foto);
+        } elseif ($membro && $membro->foto) {
+            $membro->foto = $this->resolveFotoUrl((string) $membro->foto);
+        }
+
+        return $membro;
+    }
+
     private function resolveFotoUrl(string $foto): string
     {
         if (Str::startsWith($foto, ['http://', 'https://'])) {

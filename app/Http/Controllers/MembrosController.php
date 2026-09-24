@@ -16,6 +16,8 @@ use App\Http\Requests\StoreReceberMembroExternoRequest;
 use App\Http\Requests\StoreTransferenciaInternaRequest;
 use App\Http\Requests\UpdateDisciplinarRequest;
 use App\Http\Requests\UpdateMembroRequest;
+use App\Models\InstituicoesInstituicao;
+use App\Models\InstituicoesTipoInstituicao;
 use App\Models\MembresiaMembro;
 use App\Models\NotificacaoTransferencia;
 use App\DataTables\RolMembroDatatable;
@@ -43,8 +45,12 @@ use App\Services\ServiceMembrosGeral\EditarMembroRecadastramentoService;
 use App\Services\ServiceMembrosGeral\EditarMembroService;
 use App\Services\ServiceMembrosGeral\UpdateMembroRecadastramentoService;
 use App\Services\ServiceMembrosGeral\UpdateMembroService;
+use App\Support\SimpleQrCode;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MembrosController extends Controller
 {
@@ -54,10 +60,211 @@ class MembrosController extends Controller
         return view('membros.index', $data);
     }
 
+    public function carteirinhas()
+    {
+        $this->authorizeCarteirinhas();
+        $igrejas = $this->igrejasDisponiveisCarteirinhas();
+        $igrejaIds = $igrejas->pluck('id')->map(fn ($id) => (int) $id)->toArray();
+
+        return view('membros.carteirinhas.index', [
+            'igrejas' => $igrejas,
+            'membros' => $this->membrosCarteirinhas($igrejaIds),
+        ]);
+    }
+
+    public function carteirinhasPdf(Request $request)
+    {
+        $this->authorizeCarteirinhas();
+
+        $igrejas = $this->igrejasDisponiveisCarteirinhas();
+        $igrejaIds = $igrejas->pluck('id')->map(fn ($id) => (int) $id)->toArray();
+        $igrejaId = $request->input('igreja_id');
+        $membroIdsSelecionados = collect($request->input('membros', []))
+            ->filter()
+            ->map(fn ($id) => (string) $id)
+            ->values()
+            ->all();
+
+        abort_if(empty($membroIdsSelecionados), 422, __('Selecione ao menos um membro para imprimir as carteirinhas.'));
+
+        if ($igrejaId !== 'all' && $igrejaId !== null && $igrejaId !== '') {
+            $igrejaId = (int) $igrejaId;
+            abort_unless(in_array($igrejaId, $igrejaIds, true), 403);
+            $igrejaIds = [$igrejaId];
+        }
+
+        $membros = $this->membrosCarteirinhas($igrejaIds, $membroIdsSelecionados)
+            ->map(function ($membro) {
+                $membro->foto_data_uri = $this->imageDataUri($membro->foto);
+                $membro->qr_code = $this->memberQrCodeDataUri($membro->id);
+                return $membro;
+            });
+
+        $pdf = FacadePdf::loadView('membros.carteirinhas.pdf', [
+            'membros' => $membros,
+            'background' => $this->localAssetDataUri(public_path('theme/images/fundo-carteirinha.png')),
+            'logo' => $this->localAssetDataUri(public_path('theme/images/logo-evento.png')),
+            'igrejaSelecionada' => $igrejaId === 'all' || $igrejaId === null || $igrejaId === ''
+                ? __('Todas as Igrejas')
+                : optional($igrejas->firstWhere('id', $igrejaId))->nome,
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('carteirinhas-membros-' . now()->format('YmdHis') . '.pdf');
+    }
+
     public function indexRecadastramento()
     {
         $data = app(IdentificaDadosIndexRecadastramentoService::class)->execute();
         return view('membros.index_recadastramento', $data);
+    }
+
+    private function authorizeCarteirinhas(): void
+    {
+        $perfil = Str::lower(Str::ascii((string) data_get(session('session_perfil'), 'perfil_nome', '')));
+        $temPerfilPermitido = Str::contains($perfil, ['administrador', 'pastor', 'secretario', 'secretaria']);
+
+        abort_unless($temPerfilPermitido || auth()->user()->hasPerfilRegra('membros-index'), 403);
+    }
+
+    private function membrosCarteirinhas(array $igrejaIds, array $membroIds = [])
+    {
+        return DB::table('membresia_membros as mm')
+            ->leftJoin('membresia_funcoeseclesiasticas as mfe', 'mfe.id', '=', 'mm.funcao_eclesiastica_id')
+            ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'mm.igreja_id')
+            ->select([
+                'mm.id',
+                'mm.nome',
+                'mm.data_nascimento',
+                'mm.foto',
+                'igreja.nome as igreja',
+                'mfe.descricao as funcao_eclesiastica',
+            ])
+            ->whereNull('mm.deleted_at')
+            ->where('mm.status', MembresiaMembro::STATUS_ATIVO)
+            ->where('mm.vinculo', MembresiaMembro::VINCULO_MEMBRO)
+            ->whereIn('mm.igreja_id', $igrejaIds)
+            ->when(!empty($membroIds), fn ($query) => $query->whereIn('mm.id', $membroIds))
+            ->orderBy('igreja.nome')
+            ->orderBy('mm.nome')
+            ->get();
+    }
+
+    private function igrejasDisponiveisCarteirinhas()
+    {
+        $sessionPerfil = session('session_perfil');
+        $instituicaoId = (int) data_get($sessionPerfil, 'instituicao_id');
+        $instituicao = InstituicoesInstituicao::find($instituicaoId);
+
+        if (!$instituicao) {
+            return collect();
+        }
+
+        if ((int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::IGREJA_LOCAL) {
+            return InstituicoesInstituicao::query()
+                ->where('id', $instituicao->id)
+                ->orderBy('nome')
+                ->get(['id', 'nome']);
+        }
+
+        if ((int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::DISTRITO) {
+            return InstituicoesInstituicao::query()
+                ->where('instituicao_pai_id', $instituicao->id)
+                ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+                ->where('ativo', 1)
+                ->whereNull('data_encerramento')
+                ->orderBy('nome')
+                ->get(['id', 'nome']);
+        }
+
+        $regiaoId = (int) data_get($sessionPerfil, 'instituicoes.regiao.id', 0);
+        if ((int) $instituicao->tipo_instituicao_id === InstituicoesTipoInstituicao::REGIAO) {
+            $regiaoId = $instituicao->id;
+        }
+
+        if (!$regiaoId) {
+            return collect();
+        }
+
+        return InstituicoesInstituicao::query()
+            ->from('instituicoes_instituicoes as igreja')
+            ->join('instituicoes_instituicoes as distrito', 'distrito.id', '=', 'igreja.instituicao_pai_id')
+            ->where('distrito.instituicao_pai_id', $regiaoId)
+            ->where('igreja.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
+            ->where('igreja.ativo', 1)
+            ->whereNull('igreja.data_encerramento')
+            ->orderBy('igreja.nome')
+            ->get(['igreja.id', 'igreja.nome']);
+    }
+
+    private function imageDataUri(?string $path): ?string
+    {
+        $path = trim((string) $path);
+
+        if ($path === '') {
+            return null;
+        }
+
+        if (Str::startsWith($path, ['http://', 'https://'])) {
+            try {
+                $contents = @file_get_contents($path);
+                return $contents ? $this->dataUriFromContents($contents, $path) : null;
+            } catch (\Throwable $e) {
+                return null;
+            }
+        }
+
+        $relativePath = ltrim($path, '/');
+        $candidatePaths = [
+            public_path($relativePath),
+            storage_path('app/public/' . Str::after($relativePath, 'storage/')),
+        ];
+
+        foreach ($candidatePaths as $candidatePath) {
+            if (is_file($candidatePath)) {
+                return $this->localAssetDataUri($candidatePath);
+            }
+        }
+
+        try {
+            if (Storage::disk('s3')->exists($path)) {
+                return $this->dataUriFromContents(Storage::disk('s3')->get($path), $path);
+            }
+        } catch (\Throwable $e) {
+            return null;
+        }
+
+        return null;
+    }
+
+    private function memberQrCodeDataUri(string $membroId): ?string
+    {
+        try {
+            return SimpleQrCode::pngDataUri(route('validar-membro.show', ['membro' => $membroId]), 3);
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
+
+    private function localAssetDataUri(string $path): ?string
+    {
+        if (!is_file($path)) {
+            return null;
+        }
+
+        return $this->dataUriFromContents((string) file_get_contents($path), $path);
+    }
+
+    private function dataUriFromContents(string $contents, string $path): string
+    {
+        $extension = strtolower(pathinfo(parse_url($path, PHP_URL_PATH) ?: $path, PATHINFO_EXTENSION));
+        $mime = match ($extension) {
+            'jpg', 'jpeg' => 'image/jpeg',
+            'webp' => 'image/webp',
+            'gif' => 'image/gif',
+            default => 'image/png',
+        };
+
+        return 'data:' . $mime . ';base64,' . base64_encode($contents);
     }
 
     public function listRecadastramento(Request $request)

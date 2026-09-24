@@ -276,9 +276,22 @@
                          </div>
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('secretaria/*') ? 'collapse show' : '' }}" id="secretaria" data-parent="#secretaria">
-                         <li {!! Request::is('secretaria/membro*') ? 'class="active"' : '' !!}>
+                         <li {!! Request::is('secretaria/membro*') && !Request::is('secretaria/membro/carteirinhas*') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('membros-index'))
                                  <a href="{{ route('membro.index') }}">{{ __('Membros') }}</a>
+                             @endif
+                         </li>
+                         @php
+                             $perfilCarteirinhas = \Illuminate\Support\Str::lower(\Illuminate\Support\Str::ascii((string) data_get(session('session_perfil'), 'perfil_nome', '')));
+                             $podeVerCarteirinhas = auth()->check()
+                                 && (
+                                     auth()->user()->hasPerfilRegra('membros-index')
+                                     || \Illuminate\Support\Str::contains($perfilCarteirinhas, ['administrador', 'pastor', 'secretario', 'secretaria'])
+                                 );
+                         @endphp
+                         <li {!! Request::is('secretaria/membro/carteirinhas*') ? 'class="active"' : '' !!}>
+                             @if ($podeVerCarteirinhas)
+                                 <a href="{{ route('membro.carteirinhas.index') }}">{{ __('Carteirinhas') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('secretaria/recadastramento-membro*') ? 'class="active"' : '' !!}>
@@ -1838,6 +1851,9 @@
                      </li>
                      <li {!! Request::is('usuario/perfil/carteira-digital') ? 'class="active"' : '' !!}>
                          <a href="{{ route('perfil.carteira-digital') }}"> Carteira Digital</a>
+                     </li>
+                     <li {!! Request::is('usuario/perfil/cartao-membro') ? 'class="active"' : '' !!}>
+                         <a href="{{ route('perfil.cartao-membro') }}"> {{ __('Cartão de Membro') }}</a>
                      </li>
                      @if (auth()->user()->pessoa_id)
                          <li {!! Request::is('usuario/clerigos/perfil/dependentes') ? 'class="active"' : '' !!}>

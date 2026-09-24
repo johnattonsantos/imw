@@ -1,12 +1,15 @@
 {
-	"folders": [
-		{
-			"name": "imw",
-			"path": "."
-		},
-		{
-			"path": "../phyton"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "name": "imw",
+            "path": "."
+        },
+        {
+            "path": "../phyton"
+        },
+        {
+            "path": "docs/sql"
+        }
+    ],
+    "settings": {}
 }
