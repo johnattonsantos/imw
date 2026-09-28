@@ -103,11 +103,13 @@ class MembrosController extends Controller
         $pdf = FacadePdf::loadView('membros.carteirinhas.pdf', [
             'membros' => $membros,
             'background' => $this->localAssetDataUri(public_path('theme/images/fundo-carteirinha.png')),
-            'logo' => $this->localAssetDataUri(public_path('theme/images/logo-evento.png')),
+            'logo' => $this->localAssetDataUri(public_path('theme/images/logo-carteirinha.png')),
+            'titleLine' => $this->localAssetDataUri(public_path('theme/images/linha-carteirinha.png')),
             'igrejaSelecionada' => $igrejaId === 'all' || $igrejaId === null || $igrejaId === ''
                 ? __('Todas as Igrejas')
                 : optional($igrejas->firstWhere('id', $igrejaId))->nome,
-        ])->setPaper('a4', 'landscape');
+            'igrejaLogada' => (string) data_get(session('session_perfil'), 'instituicao_nome', ''),
+        ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('carteirinhas-membros-' . now()->format('YmdHis') . '.pdf');
     }

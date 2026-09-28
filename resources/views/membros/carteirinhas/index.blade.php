@@ -78,7 +78,7 @@
 
                         <p class="text-muted mb-0">
                             <span id="total-selecionados-carteirinhas">0</span>
-                            {{ __('membro(s) selecionado(s). O PDF será gerado em A4 paisagem com 4 carteirinhas por página.') }}
+                            {{ __('membro(s) selecionado(s). O PDF será gerado em A4 com 8 carteirinhas em tamanho de CNH por página.') }}
                         </p>
                     @endif
                 </form>

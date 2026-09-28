@@ -299,7 +299,7 @@
                     <div class="member-card-page">
                         <section class="member-credential" aria-label="{{ __('Cartão de Membro') }}">
                             <div class="member-credential__top">
-                                <img src="{{ asset('theme/images/logo-evento.png') }}" class="member-credential__logo" alt="{{ __('Igreja Metodista Wesleyana') }}">
+                                <img src="{{ asset('theme/images/logo-carteirinha.png') }}" class="member-credential__logo" alt="{{ __('Igreja Metodista Wesleyana') }}">
                                 <p class="member-credential__slogan">"{{ __('Santidade como estilo de vida') }}"</p>
                             </div>
 
