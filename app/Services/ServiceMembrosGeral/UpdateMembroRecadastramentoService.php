@@ -4,6 +4,8 @@ namespace App\Services\ServiceMembrosGeral;
 
 use Carbon\Carbon;
 use App\Exceptions\CpfDuplicadoConfirmacaoNecessariaException;
+use App\Exceptions\MembroNotFoundException;
+use App\Exceptions\RecadastramentoJaValidadoException;
 use App\Services\Media\MemberPhotoUploadService;
 use App\Models\MembresiaCurso;
 use App\Models\MembresiaSetor;
@@ -29,8 +31,19 @@ class UpdateMembroRecadastramentoService
     public function execute(array $data, $vinculo): void
     {
         $membroMigracaoId = $data['membro_id']; // id vindo do GET/recadastramento
-        $membroMigracao = MembresiaMembroRecadastramento::find($membroMigracaoId);
-        $membroDestinoId = $this->resolveMembroDestinoId($data, $membroMigracaoId);
+        $membroMigracao = MembresiaMembroRecadastramento::where('id', $membroMigracaoId)
+            ->lockForUpdate()
+            ->first();
+
+        if (! $membroMigracao) {
+            throw new MembroNotFoundException('Registro não encontrado.');
+        }
+
+        if ($membroMigracao->validado) {
+            throw new RecadastramentoJaValidadoException();
+        }
+
+        $membroDestinoId = $this->resolveMembroDestinoId($data, $membroMigracaoId, $membroMigracao);
         $reutilizandoMembroInativoOutraIgreja = (string) $membroDestinoId !== (string) $membroMigracaoId;
         $data['membro_id'] = $membroDestinoId;
         $data['rol_atual'] = $this->resolveRolAtual($data, $membroMigracao);
@@ -59,7 +72,11 @@ class UpdateMembroRecadastramentoService
         $this->updateValidadoFlags($membroDestinoId, $membroMigracaoId);
     }
 
-    private function resolveMembroDestinoId(array $data, string $membroMigracaoId): string
+    private function resolveMembroDestinoId(
+        array $data,
+        string $membroMigracaoId,
+        MembresiaMembroRecadastramento $membroMigracao
+    ): string
     {
         $status = $data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO;
         $cpf = preg_replace('/[^0-9]/', '', (string) ($data['cpf'] ?? ''));
@@ -69,7 +86,6 @@ class UpdateMembroRecadastramentoService
         }
 
         $consultaCpf = app(ConsultaCpfMembroService::class);
-        $membroMigracao = MembresiaMembroRecadastramento::find($membroMigracaoId);
         $membroDuplicado = $consultaCpf->findMembroDuplicadoRecadastramento(
             $cpf,
             $membroMigracaoId,

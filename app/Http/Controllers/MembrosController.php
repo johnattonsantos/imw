@@ -7,6 +7,7 @@ use App\Exceptions\MembroNotFoundException;
 use App\Exceptions\ReceberNovoMembroException;
 use App\Exceptions\ReintegrarMembroException;
 use App\Exceptions\CpfDuplicadoConfirmacaoNecessariaException;
+use App\Exceptions\RecadastramentoJaValidadoException;
 use App\Http\Requests\DeletarMembroRequest;
 use App\Http\Requests\StoreDisciplinarRequest;
 use App\Http\Requests\StoreReceberNovoMembroRequest;
@@ -392,6 +393,16 @@ class MembrosController extends Controller
                     'message' => $e->getMessage(),
                     'membro_id' => $e->membro()->id,
                 ]);
+        } catch (RecadastramentoJaValidadoException $e) {
+            DB::rollback();
+            return redirect()
+                ->route('recadastramento-membro.indexRecadastramento')
+                ->with('error', __($e->getMessage()));
+        } catch (MembroNotFoundException $e) {
+            DB::rollback();
+            return redirect()
+                ->route('recadastramento-membro.indexRecadastramento')
+                ->with('error', __('Registro não encontrado.'));
         } catch(\Exception $e) {
             DB::rollback();
             report($e);
