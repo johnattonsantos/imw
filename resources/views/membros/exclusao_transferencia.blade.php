@@ -64,7 +64,7 @@
           <label class="control-label">{{ __('* Data:') }}</label>
         </div>
         <div class="col-lg-6">
-          <input type="date" class="form-control @error('dt_notificacao') is-invalid @enderror" id="dt_notificacao" name="dt_notificacao" value="{{ old('dt_notificacao', date('Y-m-d')) }}" placeholder="{{ __('ex: 31/12/2000') }}">
+          <input type="date" class="form-control @error('dt_notificacao') is-invalid @enderror" id="dt_notificacao" name="dt_notificacao" value="{{ old('dt_notificacao', date('Y-m-d')) }}" max="{{ date('Y-m-d') }}" required placeholder="{{ __('ex: 31/12/2000') }}">
           @error('dt_notificacao')
           <div class="invalid-feedback">{{ $message }}</div>
           @enderror

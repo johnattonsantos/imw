@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DatePreviousToRecebimentoRule;
+use App\Rules\RangeDateRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTransferenciaInternaRequest extends FormRequest
@@ -23,8 +25,16 @@ class StoreTransferenciaInternaRequest extends FormRequest
      */
     public function rules()
     {
+        $membroId = $this->route('id');
+
         return [
-            //
+            'dt_transferencia' => [
+                'bail',
+                'required',
+                'date',
+                new RangeDateRule(),
+                new DatePreviousToRecebimentoRule($membroId),
+            ],
         ];
     }
 }

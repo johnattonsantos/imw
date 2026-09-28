@@ -55,7 +55,7 @@
             <label class="control-label">{{ __('* Data:') }}</label>
           </div>
           <div class="col-lg-6">
-            <input type="date" class="form-control @error('dt_resposta') is-invalid @enderror" id="dt_resposta" name="dt_resposta" value="{{ old('dt_resposta', date('Y-m-d')) }}" placeholder="{{ __('ex: 31/12/2000') }}">
+            <input type="date" class="form-control @error('dt_resposta') is-invalid @enderror" id="dt_resposta" name="dt_resposta" value="{{ old('dt_resposta', date('Y-m-d')) }}" min="{{ \Carbon\Carbon::parse($notificacao->dt_abertura)->format('Y-m-d') }}" max="{{ date('Y-m-d') }}" required placeholder="{{ __('ex: 31/12/2000') }}">
             @error('dt_resposta')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
