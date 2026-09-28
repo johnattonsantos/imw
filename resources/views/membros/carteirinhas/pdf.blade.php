@@ -6,7 +6,7 @@
     <style>
         @page {
             margin: 8mm;
-            size: A4 landscape;
+            size: A4 portrait;
         }
 
         * {
@@ -31,12 +31,12 @@
         .member-card {
             position: relative;
             display: inline-block;
-            width: 137mm;
-            height: 77mm;
-            margin: 0 2.5mm 6mm 0;
+            width: 85.6mm;
+            height: 54mm;
+            margin: 0 4mm 5mm 0;
             overflow: hidden;
-            border: 1px solid #d5dbe8;
-            border-radius: 5mm;
+            border: .35mm solid #d5dbe8;
+            border-radius: 3mm;
             background: #fff;
             vertical-align: top;
         }
@@ -50,19 +50,19 @@
 
         .member-card__logo {
             position: absolute;
-            top: 8mm;
-            left: 11mm;
-            width: 58mm;
+            top: 5mm;
+            left: 6mm;
+            width: 37mm;
             height: auto;
         }
 
         .member-card__slogan {
             position: absolute;
-            top: 7mm;
-            right: 7mm;
-            width: 30mm;
+            top: 4.5mm;
+            right: 5mm;
+            width: 22mm;
             color: #073978;
-            font-size: 7.2px;
+            font-size: 5.2px;
             font-style: italic;
             font-weight: bold;
             line-height: 1.15;
@@ -72,13 +72,13 @@
 
         .member-card__photo {
             position: absolute;
-            top: 18mm;
-            right: 7mm;
-            width: 29mm;
-            height: 34mm;
+            top: 10.8mm;
+            right: 5mm;
+            width: 15.8mm;
+            height: 21.8mm;
             overflow: hidden;
-            border: .9mm solid #173f91;
-            border-radius: 3mm;
+            border: .55mm solid #173f91;
+            border-radius: 2mm;
             background: #eef1f8;
         }
 
@@ -98,10 +98,10 @@
         .member-card__photo-placeholder::before {
             content: "";
             position: absolute;
-            top: 9mm;
+            top: 5.8mm;
             left: 50%;
-            width: 9mm;
-            height: 9mm;
+            width: 5.6mm;
+            height: 5.6mm;
             border-radius: 50%;
             background: #c9d3e6;
             transform: translateX(-50%);
@@ -111,9 +111,9 @@
             content: "";
             position: absolute;
             left: 50%;
-            bottom: 7mm;
-            width: 16mm;
-            height: 11mm;
+            bottom: 4.5mm;
+            width: 10mm;
+            height: 7.2mm;
             border-radius: 12mm 12mm 4mm 4mm;
             background: #c9d3e6;
             transform: translateX(-50%);
@@ -121,12 +121,12 @@
 
         .member-card__qr {
             position: absolute;
-            top: 54mm;
-            right: 13mm;
+            top: 35mm;
+            right: 6mm;
             width: 15mm;
             height: 15mm;
-            padding: .5mm;
-            background: #fff;
+            padding: 0;
+            background: transparent;
         }
 
         .member-card__qr img {
@@ -137,51 +137,75 @@
 
         .member-card__title {
             position: absolute;
-            top: 35mm;
-            left: 0;
-            width: 100%;
+            top: 22.4mm;
+            left: 6mm;
+            width: 55mm;
             margin: 0;
             color: #173f91;
-            font-size: 13px;
+            font-size: 10.8px;
             font-style: italic;
             font-weight: bold;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.7px;
             text-align: center;
             text-transform: uppercase;
         }
 
+        .member-card__title-line {
+            position: absolute;
+            top: 26.4mm;
+            left: 10mm;
+            width: 47mm;
+            height: 3mm;
+            object-fit: fill;
+        }
+
+        .member-card__church {
+            position: absolute;
+            top: 29.2mm;
+            left: 6mm;
+            width: 55mm;
+            color: #173f91;
+            font-size: 7px;
+            font-weight: bold;
+            letter-spacing: .7px;
+            line-height: 1;
+            text-align: center;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
         .member-card__field {
             position: absolute;
-            min-height: 9.5mm;
-            border: .8mm solid #173f91;
-            border-radius: 1.5mm;
+            min-height: 7.2mm;
+            border: .45mm solid #173f91;
+            border-radius: 1mm;
             background: rgba(255, 255, 255, .95);
-            padding: 1.2mm 2mm .8mm;
+            padding: .6mm 1.2mm .5mm;
         }
 
         .member-card__field--birth {
-            top: 45mm;
-            left: 6mm;
-            width: 33mm;
+            top: 33.6mm;
+            left: 4mm;
+            width: 24mm;
         }
 
         .member-card__field--role {
-            top: 45mm;
-            left: 46mm;
-            width: 43mm;
+            top: 33.6mm;
+            left: 31.8mm;
+            width: 26.8mm;
         }
 
         .member-card__field--name {
-            top: 58mm;
-            left: 6mm;
-            width: 82mm;
+            top: 42.3mm;
+            left: 4mm;
+            width: 54.6mm;
         }
 
         .member-card__label {
             display: block;
-            margin-bottom: .4mm;
+            margin-bottom: .2mm;
             color: #1a2f65;
-            font-size: 6.5px;
+            font-size: 4.2px;
             font-style: italic;
             font-weight: bold;
         }
@@ -190,22 +214,22 @@
             display: block;
             width: 100%;
             color: #3f4652;
-            font-size: 9px;
+            font-size: 6px;
             line-height: 1.15;
             text-align: left;
         }
 
         .member-card__value--name {
-            font-size: 11px;
+            font-size: 7px;
         }
 
         .member-card__footer {
             position: absolute;
-            right: 5mm;
-            bottom: 2.2mm;
-            left: 5mm;
+            right: 3.5mm;
+            bottom: 1.5mm;
+            left: 3.5mm;
             color: #fff;
-            font-size: 9px;
+            font-size: 5.2px;
             font-weight: bold;
             text-align: center;
             text-shadow: 0 1px 1px rgba(0, 0, 0, .35);
@@ -214,8 +238,8 @@
 
         .member-card__footer-text {
             display: inline-block;
-            padding: .6mm 2mm;
-            border-radius: 2mm;
+            padding: .35mm 1.2mm;
+            border-radius: 1.2mm;
             background: #fff;
             color: #173f91;
             line-height: 1;
@@ -232,7 +256,7 @@
     @if($membros->isEmpty())
         <p class="empty-message">{{ __('Nenhum membro ativo encontrado para a seleção informada.') }}</p>
     @else
-        @foreach($membros->chunk(4) as $pageMembers)
+        @foreach($membros->chunk(8) as $pageMembers)
             <div class="page">
                 @foreach($pageMembers as $membro)
                     <section class="member-card">
@@ -261,6 +285,10 @@
                         @endif
 
                         <h1 class="member-card__title">{{ __('Credencial') }}</h1>
+                        @if($titleLine)
+                            <img src="{{ $titleLine }}" class="member-card__title-line" alt="">
+                        @endif
+                        <div class="member-card__church">{{ \Illuminate\Support\Str::upper($igrejaLogada ?: __('Igreja Metodista Wesleyana')) }}</div>
 
                         <div class="member-card__field member-card__field--birth">
                             <span class="member-card__label">{{ __('Nascimento') }}:</span>
@@ -278,7 +306,7 @@
                         </div>
 
                         <div class="member-card__footer">
-                            <span class="member-card__footer-text">{{ __('Esse documento, vale pelo pedido de 4 anos, a partir de sua impressão') }}</span>
+                            <span class="member-card__footer-text">{{ __('Esse documento vale pelo período de 4 anos a partir de sua impressão') }} {{ now()->format('d/m/Y') }}</span>
                         </div>
                     </section>
                 @endforeach

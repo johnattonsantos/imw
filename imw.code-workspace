@@ -6,6 +6,9 @@
 		},
 		{
 			"path": "../phyton"
+		},
+		{
+			"path": "docs/sql"
 		}
 	],
 	"settings": {}

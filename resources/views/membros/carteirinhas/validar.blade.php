@@ -134,7 +134,7 @@
 <body>
     <main class="validation-card">
         <header class="validation-card__header">
-            <img src="{{ asset('theme/images/logo-evento.png') }}" class="validation-card__logo" alt="{{ __('Igreja Metodista Wesleyana') }}">
+            <img src="{{ asset('theme/images/logo-carteirinha.png') }}" class="validation-card__logo" alt="{{ __('Igreja Metodista Wesleyana') }}">
             <div class="validation-card__heading">
                 <h1 class="validation-card__title">{{ __('Validação de Membro') }}</h1>
                 <p class="validation-card__subtitle">{{ __('Igreja Metodista Wesleyana') }}</p>
