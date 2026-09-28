@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Rules\DatePreviousToRecebimentoRule;
+use App\Rules\RangeDateRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreExclusaoPorTransferenciaRequest extends FormRequest
@@ -27,8 +28,14 @@ class StoreExclusaoPorTransferenciaRequest extends FormRequest
         $membroId = $this->route('id');
 
         return [
-            'dt_notificacao' => ['required', new DatePreviousToRecebimentoRule($membroId)],
-            'igreja_id'      => 'required'
+            'dt_notificacao' => [
+                'bail',
+                'required',
+                'date',
+                new RangeDateRule(),
+                new DatePreviousToRecebimentoRule($membroId),
+            ],
+            'igreja_id' => 'required',
         ];
     }
 }
