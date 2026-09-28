@@ -16,7 +16,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $debugIps = array_filter(
+            array_map('trim', explode(',', env('DEBUG_IPS', '')))
+        );
+
+        if (in_array(request()->ip(), $debugIps, true)) {
+            config(['app.debug' => true]);
+        }
     }
 
     /**
