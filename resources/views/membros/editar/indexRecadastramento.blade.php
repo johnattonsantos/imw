@@ -201,7 +201,7 @@
               return valid;
           }
 
-          $('form').on('submit', function (event) {
+          $('#membro-recadastramento-form').on('submit', function (event) {
               const form = this;
 
               const invalidDadosPessoais = Array.from(form.querySelectorAll('#border-top-dados-pessoal [required]'))
@@ -275,7 +275,19 @@
               if (!validateFormacaoEclesiastica() || !validateMinisterialDates()) {
                   event.preventDefault();
                   toastr.warning('Por favor, corrija os erros de data antes de enviar.');
+                  return;
               }
+
+              const $form = $(this);
+              if ($form.data('submitting')) {
+                  event.preventDefault();
+                  return;
+              }
+
+              $form.data('submitting', true);
+              const $submitButtons = $form.find('button[type="submit"], input[type="submit"]');
+              $submitButtons.prop('disabled', true);
+              $submitButtons.filter('button').text('Processando...');
           });
 
           // Funcionalidade de preenchimento automático de endereço pelo CEP
