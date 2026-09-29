@@ -44,6 +44,7 @@ class UpdateRegiaoService
             'endereco' => $request->input('endereco'),
             'telefone' => $request->input('telefone'),
             'ddd' => $request->input('ddd'),
+            'email' => $request->input('email') ?: null,
             'ativo' => $ativo,
             'inss' => 0,
         ];
