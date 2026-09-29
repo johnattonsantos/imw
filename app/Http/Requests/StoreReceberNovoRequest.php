@@ -56,6 +56,7 @@ class StoreReceberNovoRequest extends FormRequest
             'uf' => 'required',
             'endereco' => 'required',
             'ddd' => 'required|max:2',
+            'email' => 'nullable|email|max:255',
             'ativo' => 'required|boolean',
             'data_encerramento' => [
                 'nullable',
@@ -89,6 +90,8 @@ class StoreReceberNovoRequest extends FormRequest
             'uf.max' => 'O estado não pode ter mais que 2 caracteres.',
             'endereco.required' => 'O endereço é obrigatório.',
             'ddd.required' => 'O DDD é obrigatório.',
+            'email.email' => 'Informe um e-mail válido.',
+            'email.max' => 'O e-mail não pode ter mais que 255 caracteres.',
             'ativo.required' => 'O status é obrigatório.',
             'ativo.boolean' => 'O status informado é inválido.',
             'data_encerramento.required' => 'Para inativar a instituição, informe a data de encerramento.',

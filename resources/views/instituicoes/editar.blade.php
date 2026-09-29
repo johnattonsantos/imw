@@ -246,6 +246,15 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="col-md-5 form-group">
+                        <label for="email">{{ __('E-mail') }}</label>
+                        <input class="form-control @error('email') is-invalid @enderror" type="email"
+                            id="email" name="email" value="{{ old('email', $instituicao['email']) }}" maxlength="255">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

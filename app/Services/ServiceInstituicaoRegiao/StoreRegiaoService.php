@@ -38,6 +38,7 @@ class StoreRegiaoService
             'endereco' => $request->input('endereco'),
             'telefone' => $request->input('telefone'),
             'ddd' => $request->input('ddd'),
+            'email' => $request->input('email') ?: null,
             'ativo' => (int) $request->boolean('ativo'),
             'inss' => 0,
         ];
