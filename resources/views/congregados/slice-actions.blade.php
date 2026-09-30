@@ -38,4 +38,14 @@
             <line x1="14" y1="11" x2="14" y2="17"></line>
         </svg>
     </button>
+@else
+    <form action="{{ route('congregado.reintegrar', $congregado->id) }}" method="POST" style="display: none;"
+        id="form_reintegrar_congregado_{{ $congregado->id }}">
+        @csrf
+    </form>
+    <button title="{{ __('Reintegrar congregado') }}"
+        class="btn btn-sm btn-secondary mr-2 btn-rounded btn-confirm-reintegrar bs-tooltip"
+        data-form-id="form_reintegrar_congregado_{{ $congregado->id }}">
+        <x-bx-log-in-circle />
+    </button>
 @endif

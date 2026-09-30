@@ -25,6 +25,22 @@ $(document).ready(function () {
             })
         })
 
+        $('.btn-confirm-reintegrar').on('click', function () {
+            const formId = $(this).data('form-id')
+            swal({
+                title: __('Deseja realmente reintegrar este congregado?'),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: __('Reintegrar'),
+                confirmButtonColor: "#3085d6",
+                cancelButtonText: __('Cancelar'),
+                cancelButtonColor: "#d33",
+                padding: '2em'
+            }).then(function (result) {
+                if (result.value) document.getElementById(formId).submit()
+            })
+        })
+
         $('.btn-visualizar').click(function () {
             $('#visualizarCongregadoModal').modal('show')
             console.log($(this).data('membro-id'),"id")
