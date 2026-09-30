@@ -34,7 +34,7 @@
 @include('extras.alerts-error-all')
 @include('extras.alerts')
 <div style="margin: 0px 23px;">
-    <form id="membro-editar-form" method="POST" action="{{ route('membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data">
+    <form id="membro-editar-form" method="POST" action="{{ route('membro.update', ['id' => $pessoa->id]) }}" enctype="multipart/form-data" novalidate>
       @csrf
     <div class="row">
       <div class="col-md-12">
@@ -190,19 +190,35 @@
               return valid;
           }
 
-          $('#membro-editar-form').on('submit', function (event) {
-              if (!validateFormacaoEclesiastica() || !validateMinisterialDates()) {
-                  event.preventDefault();
-                  toastr.warning('Por favor, corrija os erros de data antes de enviar.');
-                  return;
-              }
+          function camposInvalidosObrigatorios(form, selector) {
+              return Array.from(form.querySelectorAll(selector + ' [required]'))
+                  .filter(function (field) {
+                      return !field.disabled && !field.checkValidity();
+                  });
+          }
 
-              const $form = $(this);
-              if ($form.data('submitting')) {
-                  event.preventDefault();
-                  return;
-              }
+          function nomesCamposObrigatorios(fields) {
+              return [...new Set(fields.map(function (field) {
+                  const fieldId = field.id;
+                  if (!fieldId) return (field.name || 'Campo obrigatório').replace(/\[\]/g, '');
 
+                  const label = document.querySelector('label[for="' + fieldId + '"]');
+                  if (!label) return fieldId;
+
+                  return label.textContent.replace('*', '').trim();
+              }))].join(', ');
+          }
+
+          function exibirAbaComCamposInvalidos(tabSelector, fields, tituloAba) {
+              $(tabSelector).tab('show');
+              toastr.warning('Preencha os campos obrigatórios em ' + tituloAba + ': ' + nomesCamposObrigatorios(fields));
+
+              setTimeout(function () {
+                  fields[0].focus();
+              }, 200);
+          }
+
+          function travarBotaoSubmit($form) {
               $form.data('submitting', true);
               const $submitButtons = $form.find('button[type="submit"], input[type="submit"]');
               $submitButtons.each(function () {
@@ -216,6 +232,43 @@
                       $button.val('Processando...');
                   }
               });
+          }
+
+          $('#membro-editar-form').on('submit', function (event) {
+              const form = this;
+              const invalidDadosPessoais = camposInvalidosObrigatorios(form, '#border-top-dados-pessoal');
+              if (invalidDadosPessoais.length > 0) {
+                  event.preventDefault();
+                  exibirAbaComCamposInvalidos('#border-top-dados-pessoais', invalidDadosPessoais, 'Dados Pessoais');
+                  return;
+              }
+
+              const invalidContatos = camposInvalidosObrigatorios(form, '#border-top-contato');
+              if (invalidContatos.length > 0) {
+                  event.preventDefault();
+                  exibirAbaComCamposInvalidos('#border-top-contatos', invalidContatos, 'Contatos');
+                  return;
+              }
+
+              if (!form.checkValidity()) {
+                  event.preventDefault();
+                  form.reportValidity();
+                  return;
+              }
+
+              if (!validateFormacaoEclesiastica() || !validateMinisterialDates()) {
+                  event.preventDefault();
+                  toastr.warning('Por favor, corrija os erros de data antes de enviar.');
+                  return;
+              }
+
+              const $form = $(this);
+              if ($form.data('submitting')) {
+                  event.preventDefault();
+                  return;
+              }
+
+              travarBotaoSubmit($form);
           });
 
           // Funcionalidade de preenchimento automático de endereço pelo CEP
