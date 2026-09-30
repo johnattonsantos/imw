@@ -13,11 +13,14 @@ use App\Services\ServiceMembros\ConsultaCpfMembroService;
 use App\Services\ServicesCongregados\IdentificaDadosIndexService;
 use App\Services\ServicesCongregados\NovoCongregadoService;
 use App\Services\ServicesCongregados\SalvarCongregadoService;
+use App\Traits\Identifiable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CongregadosController extends Controller
 {
+    use Identifiable;
+
     public function index() {
         $data = app(IdentificaDadosIndexService::class)->execute();
         return view('congregados.index', $data);
@@ -106,6 +109,31 @@ class CongregadosController extends Controller
             return redirect()->route('congregado.index')->with('success', __('Registro deletado com sucesso.'));
         } catch(\Exception $e) {
             return back()->with('error', __('Falha ao deletar o registro.'));
+        }
+    }
+
+    public function reintegrar($id)
+    {
+        try {
+            DB::beginTransaction();
+
+            $congregado = MembresiaMembro::withTrashed()
+                ->where('id', $id)
+                ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)
+                ->where('vinculo', MembresiaMembro::VINCULO_CONGREGADO)
+                ->firstOrFail();
+
+            $congregado->restore();
+            $congregado->update(['status' => MembresiaMembro::STATUS_ATIVO]);
+
+            DB::commit();
+
+            return redirect()->route('congregado.index')->with('success', __('Congregado reintegrado com sucesso.'));
+        } catch(\Exception $e) {
+            DB::rollBack();
+            report($e);
+
+            return back()->with('error', __('Falha ao reintegrar o congregado.'));
         }
     }
 
