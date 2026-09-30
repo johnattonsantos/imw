@@ -41,6 +41,22 @@ $(document).ready(function () {
             })
         })
 
+        $('.btn-cancel-transferencia-congregado').on('click', function () {
+            const formId = $(this).data('form-id')
+            swal({
+                title: __('Deseja realmente cancelar esta transferência?'),
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: __('Cancelar transferência'),
+                confirmButtonColor: "#d33",
+                cancelButtonText: __('Voltar'),
+                cancelButtonColor: "#3085d6",
+                padding: '2em'
+            }).then(function (result) {
+                if (result.value) document.getElementById(formId).submit()
+            })
+        })
+
         $('.btn-visualizar').click(function () {
             $('#visualizarCongregadoModal').modal('show')
             console.log($(this).data('membro-id'),"id")

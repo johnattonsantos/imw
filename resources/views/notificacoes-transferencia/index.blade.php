@@ -27,8 +27,16 @@
     @if ($baseParams->notificacoesTransferencia && $baseParams->notificacoesTransferencia->count())
         @foreach ($baseParams->notificacoesTransferencia as $notificacao)
             @if (!$notificacao->dt_aceite && !$notificacao->dt_rejeicao)
+                @php
+                    $rotaRecebimento = optional($notificacao->membro)->vinculo === \App\Models\MembresiaMembro::VINCULO_CONGREGADO
+                        ? route('congregado.receber_congregado_externo', ['notificacao' => $notificacao->id])
+                        : route('membro.receber_membro_externo', ['notificacao' => $notificacao->id]);
+                    $tipoPessoa = optional($notificacao->membro)->vinculo === \App\Models\MembresiaMembro::VINCULO_CONGREGADO
+                        ? __('Congregado')
+                        : __('Membro');
+                @endphp
                 <a class="media server-log"
-                    href="{{ route('membro.receber_membro_externo', ['notificacao' => $notificacao->id]) }}">
+                    href="{{ $rotaRecebimento }}">
                     <div class="col-md-12" style="margin: 16px;">
                         <div id='left-rollbacks' class='dragula'>
                             <div class="card post text-post" style="">
@@ -41,7 +49,7 @@
                                                 d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
                                         </svg>
                                         <div class="media-body">
-                                            <h5 class="">Nome: {{ $notificacao->membro->nome }}</h5>
+                                            <h5 class="">{{ $tipoPessoa }}: {{ $notificacao->membro->nome }}</h5>
                                             <p class="meta-time">
                                                 Data de registro da transferência:
                                                 {{ $notificacao->dt_abertura
