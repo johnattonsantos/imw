@@ -32,7 +32,7 @@ class NotificacaoTransferencia extends Model implements Auditable
 
     public function membro()
     {
-        return $this->belongsTo(MembresiaMembro::class, 'membro_id', 'id');
+        return $this->belongsTo(MembresiaMembro::class, 'membro_id', 'id')->withTrashed();
     }
 
     public function regiaoOrigem()
