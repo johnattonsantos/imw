@@ -40,12 +40,7 @@
 
                             @foreach ($baseParams->notificacoesTransferencia as $notificacao)
                                 <div class="dropdown-item">
-                                    @php
-                                        $rotaRecebimento = optional($notificacao->membro)->vinculo === \App\Models\MembresiaMembro::VINCULO_CONGREGADO
-                                            ? route('congregado.receber_congregado_externo', ['notificacao' => $notificacao->id])
-                                            : route('membro.receber_membro_externo', ['notificacao' => $notificacao->id]);
-                                    @endphp
-                                    <a class="media server-log" href="{{ $rotaRecebimento }}">
+                                    <a class="media server-log" href="{{ route('membro.receber_membro_externo', ['notificacao' => $notificacao->id]) }}">
                                         <x-bx-door-open />
                                         <div class="media-body">
                                             <div class="data-info">

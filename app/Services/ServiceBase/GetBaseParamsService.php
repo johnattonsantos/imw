@@ -27,7 +27,7 @@ class GetBaseParamsService
             $sessionInstituicoes = session()->get('session_perfil')->instituicoes;
     
             return NotificacaoTransferencia::with([
-                    'membro:id,nome,vinculo',
+                    'membro:id,nome',
                     'regiaoOrigem:id,nome',
                     'distritoOrigem:id,nome',
                     'igrejaOrigem:id,nome'

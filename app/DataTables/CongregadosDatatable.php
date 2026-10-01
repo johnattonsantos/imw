@@ -14,7 +14,7 @@ class CongregadosDatatable extends AbstractDatatable
 
     protected function getQueryBuilder($parameters): Builder
     {
-        return MembresiaMembro::with(['congregacao', 'notificacaoTransferenciaAtiva.igrejaDestino'])
+        return MembresiaMembro::with('congregacao')
             ->select('membresia_membros.*', 'congregacoes_congregacoes.nome as congregacao')
             ->leftJoin('congregacoes_congregacoes', 'congregacoes_congregacoes.id', '=', 'membresia_membros.congregacao_id')
             ->where('igreja_id', Identifiable::fetchSessionIgrejaLocal()->id)

@@ -195,11 +195,6 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store', [CongregadosController::class, 'store'])->name('store')->middleware(['seguranca:congregados-cadastrar']);
             Route::delete('/deletar/{id}', [CongregadosController::class, 'deletar'])->name('deletar')->middleware(['seguranca:congregados-excluir']);
             Route::post('/reintegrar/{id}', [CongregadosController::class, 'reintegrar'])->name('reintegrar')->middleware(['seguranca:congregados-atualizar']);
-            Route::get('/transferencia/{id}', [CongregadosController::class, 'transferencia'])->name('transferencia')->middleware(['seguranca:congregados-atualizar']);
-            Route::post('/transferencia/store/{id}', [CongregadosController::class, 'storeTransferencia'])->name('transferencia.store')->middleware(['seguranca:congregados-atualizar']);
-            Route::delete('/transferencia/cancel/{notificacaoTransferencia}', [CongregadosController::class, 'cancelTransferencia'])->name('transferencia.cancel')->middleware(['seguranca:congregados-atualizar']);
-            Route::get('/receber-congregado-externo/{notificacao}', [CongregadosController::class, 'receberCongregadoExterno'])->name('receber_congregado_externo')->middleware(['seguranca:congregados-cadastrar']);
-            Route::post('/receber-congregado-externo/store/{notificacao}', [CongregadosController::class, 'storeReceberCongregadoExterno'])->name('receber_congregado_externo.store')->middleware(['seguranca:congregados-cadastrar']);
             Route::get('/editar/{id}', [CongregadosController::class, 'editar'])->name('editar')->middleware(['seguranca:congregados-editar'])->can('checkSameChurch', [\App\Models\MembresiaMembro::class, 'id']);
         });
 
