@@ -1,33 +1,15 @@
 @if (!$congregado->deleted_at)
-    @if($congregado->notificacaoTransferenciaAtiva)
-        <form action="{{ route('congregado.transferencia.cancel', $congregado->notificacaoTransferenciaAtiva->id) }}"
-            method="POST" style="display: none;"
-            id="form_cancel_notificacao_transferencia_congregado_{{ $congregado->notificacaoTransferenciaAtiva->id }}">
-            @csrf
-            @method('DELETE')
-        </form>
-        <button title="{{ __('Cancelar Transferência') }}"
-            class="btn btn-sm btn-danger mr-2 btn-rounded btn-cancel-transferencia-congregado bs-tooltip"
-            data-form-id="form_cancel_notificacao_transferencia_congregado_{{ $congregado->notificacaoTransferenciaAtiva->id }}">
-            <x-bx-transfer-alt />
-        </button>
-    @else
-        <a href="{{ route('membro.receber_novo', ['id' => $congregado->id]) }}" title="{{ __('Receber congregado como Membro') }}"
-            class="btn btn-sm btn-dark mr-2 btn-rounded bs-tooltip">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="feather feather-user-plus">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="8.5" cy="7" r="4"></circle>
-                <line x1="20" y1="8" x2="20" y2="14"></line>
-                <line x1="23" y1="11" x2="17" y2="11"></line>
-            </svg>
-        </a>
-        <a href="{{ route('congregado.transferencia', ['id' => $congregado->id]) }}" title="{{ __('Transferir congregado para outra igreja') }}"
-            class="btn btn-sm btn-secondary mr-2 btn-rounded bs-tooltip">
-            <x-bx-transfer-alt />
-        </a>
-    @endif
+    <a href="{{ route('membro.receber_novo', ['id' => $congregado->id]) }}" title="{{ __('Receber congregado como Membro') }}"
+        class="btn btn-sm btn-dark mr-2 btn-rounded bs-tooltip">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-user-plus">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+        </svg>
+    </a>
     <button class="btn btn-sm btn-info mr-2 btn-rounded btn-visualizar bs-tooltip" title="{{ __('Visualizar dados da pessoa') }}"
         data-membro-id="{{ $congregado->id }}">
         <x-bx-show />
@@ -57,31 +39,13 @@
         </svg>
     </button>
 @else
-    @if($congregado->notificacaoTransferenciaAtiva)
-        <form action="{{ route('congregado.transferencia.cancel', $congregado->notificacaoTransferenciaAtiva->id) }}"
-            method="POST" style="display: none;"
-            id="form_cancel_notificacao_transferencia_congregado_{{ $congregado->notificacaoTransferenciaAtiva->id }}">
-            @csrf
-            @method('DELETE')
-        </form>
-        <button title="{{ __('Cancelar Transferência') }}"
-            class="btn btn-sm btn-danger mr-2 btn-rounded btn-cancel-transferencia-congregado bs-tooltip"
-            data-form-id="form_cancel_notificacao_transferencia_congregado_{{ $congregado->notificacaoTransferenciaAtiva->id }}">
-            <x-bx-transfer-alt />
-        </button>
-    @else
-        <form action="{{ route('congregado.reintegrar', $congregado->id) }}" method="POST" style="display: none;"
-            id="form_reintegrar_congregado_{{ $congregado->id }}">
-            @csrf
-        </form>
-        <button title="{{ __('Reintegrar congregado') }}"
-            class="btn btn-sm btn-secondary mr-2 btn-rounded btn-confirm-reintegrar bs-tooltip"
-            data-form-id="form_reintegrar_congregado_{{ $congregado->id }}">
-            <x-bx-log-in-circle />
-        </button>
-        <a href="{{ route('congregado.transferencia', ['id' => $congregado->id]) }}" title="{{ __('Transferir congregado para outra igreja') }}"
-            class="btn btn-sm btn-secondary mr-2 btn-rounded bs-tooltip">
-            <x-bx-transfer-alt />
-        </a>
-    @endif
+    <form action="{{ route('congregado.reintegrar', $congregado->id) }}" method="POST" style="display: none;"
+        id="form_reintegrar_congregado_{{ $congregado->id }}">
+        @csrf
+    </form>
+    <button title="{{ __('Reintegrar congregado') }}"
+        class="btn btn-sm btn-secondary mr-2 btn-rounded btn-confirm-reintegrar bs-tooltip"
+        data-form-id="form_reintegrar_congregado_{{ $congregado->id }}">
+        <x-bx-log-in-circle />
+    </button>
 @endif
