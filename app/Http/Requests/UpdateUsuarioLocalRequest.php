@@ -6,9 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use App\Rules\ValidaCPF;
 use App\Models\User;
+use App\Http\Requests\Concerns\DetectsProfileOnlyUpdate;
 
 class UpdateUsuarioLocalRequest extends FormRequest
 {
+    use DetectsProfileOnlyUpdate;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -28,6 +31,7 @@ class UpdateUsuarioLocalRequest extends FormRequest
     {
 
         $userId = $this->route('id');
+        $profileOnly = $this->isProfileOnlyUpdate(User::findOrFail($userId));
         return [
             'name' => 'required|string|max:255',
             'email' => [
@@ -41,7 +45,10 @@ class UpdateUsuarioLocalRequest extends FormRequest
             'perfil_id' => 'required',
            'cpf' => [
                 'required',
-                function ($attribute, $value, $fail) use ($userId) {
+                function ($attribute, $value, $fail) use ($userId, $profileOnly) {
+                    if ($profileOnly) {
+                        return;
+                    }
                     $cpfSemMascara = $this->removeMascaraCPF($value);
                     $user = User::where('cpf', $cpfSemMascara)->where('id', '!=', $userId)->first();
                     if ($user) {
