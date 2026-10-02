@@ -3,12 +3,15 @@
 namespace App\Http\Requests;
 
 use App\Models\User;
+use App\Http\Requests\Concerns\DetectsProfileOnlyUpdate;
 use App\Rules\ValidaCPF;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class UpdateUsuarioRequest extends FormRequest
 {
+    use DetectsProfileOnlyUpdate;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -27,6 +30,7 @@ class UpdateUsuarioRequest extends FormRequest
     public function rules()
     {
         $userId = $this->route('id');
+        $profileOnly = $this->isProfileOnlyUpdate(User::findOrFail($userId));
         return [
             'name' => 'required|string|max:255',
             'email' => [
@@ -40,7 +44,10 @@ class UpdateUsuarioRequest extends FormRequest
             'cpf' => [
                 'required',
                 new ValidaCPF,
-                function ($attribute, $value, $fail) use ($userId) {
+                function ($attribute, $value, $fail) use ($userId, $profileOnly) {
+                    if ($profileOnly) {
+                        return;
+                    }
                     $cpf = preg_replace('/\D/', '', (string) $value);
                     $user = User::where('cpf', $cpf)->where('id', '!=', $userId)->first();
 
