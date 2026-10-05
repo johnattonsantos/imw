@@ -543,6 +543,7 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('regiao/estatistica')->name('regiao.')->group(function () {
+            Route::get('/relatorio/membros-ativos-inativos', [RegiaoEstatisticasController::class, 'membrosAtivosInativos'])->name('estatistica.membrosAtivosInativos')->middleware(['seguranca:regiao-menu-estatistica']);
         //Estatitisca de Membros
             Route::get('/relatorio/estatistica-membros-evolucao', [RegiaoEstatisticasController::class, 'estatisticaEvolucao'])->name('estatistica.evolucao')->middleware(['seguranca:regiao-menu-estatistica']);
             //Estatitisca de Membros

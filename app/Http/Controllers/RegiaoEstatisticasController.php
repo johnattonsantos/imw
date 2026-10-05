@@ -17,6 +17,23 @@ use Maatwebsite\Excel\Facades\Excel;
 use PDF;
 class RegiaoEstatisticasController extends Controller
 {
+    public function membrosAtivosInativos(Request $request)
+    {
+        $params = $request->validate([
+            'periodo' => 'nullable|in:1,2,3,4,5,6',
+            'nivel' => 'nullable|in:regiao,distrito,igreja',
+            'referencia' => 'nullable|date_format:Y-m-d|before_or_equal:today',
+        ]);
+        $periodo = (int) ($params['periodo'] ?? 1);
+        $nivel = $params['nivel'] ?? 'regiao';
+        $referencia = Carbon::parse($params['referencia'] ?? Carbon::today()->toDateString());
+        $regiao = Identifiable::fetchtSessionRegiao();
+        $linhas = app(\App\Services\ServiceEstatisticas\MembrosAtivosInativosService::class)
+            ->execute($regiao->id, $periodo, $nivel, $referencia);
+
+        return view('regiao.estatisticas.membros-ativos-inativos', compact('regiao', 'periodo', 'nivel', 'referencia', 'linhas'));
+    }
+
     protected $excel;
      public function __construct(\Maatwebsite\Excel\Exporter $excel)
     {

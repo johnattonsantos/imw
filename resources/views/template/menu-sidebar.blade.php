@@ -1275,6 +1275,11 @@
                              @endif
 
                          </li>
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
+                             <li {!! Request::is('regiao/estatistica/relatorio/membros-ativos-inativos') ? 'class="active"' : '' !!}>
+                                 <a href="{{ route('regiao.estatistica.membrosAtivosInativos') }}">{{ __('Membros Ativos e Inativos') }}</a>
+                             </li>
+                         @endif
                          <li {!! Request::is('regiao/estatistica/relatorio/estatisticaescolaridade') ? 'class="active"' : '' !!}>
                              @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-escolaridade'))
                                  <a href="{{ route('regiao.relatorio.estatisticaescolaridade') }}">{{ __('Escolaridade') }}</a>
