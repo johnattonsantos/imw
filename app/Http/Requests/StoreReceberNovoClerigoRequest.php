@@ -43,7 +43,7 @@ class StoreReceberNovoClerigoRequest extends FormRequest
             'cpf' => $cpfRules,
             'situacao' => 'required',
             'endereco' => 'required|max:255',
-            'numero' => 'required',
+            'numero' => 'nullable|string|max:20',
             'complemento' => 'nullable|max:50',
             'bairro' => 'required|max:100',
             'cidade' => 'required|max:100',

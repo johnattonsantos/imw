@@ -52,8 +52,9 @@
 
             <div class="col-xl-2">
                 <label for="numero">{{ __('Número') }}</label>
-                <input type="number" class="form-control @error('numero') is-invalid @enderror" id="numero"
-                    name="numero" value="{{ old('numero', $clerigo->numero) }}" maxlength="20">
+                <input type="text" class="form-control @error('numero') is-invalid @enderror" id="numero"
+                    name="numero" value="{{ old('numero', $clerigo->numero) }}" maxlength="20" placeholder="{{ __('Número ou S/N') }}">
+                <small class="form-text text-muted">{{ __('Sem número: deixe em branco ou informe S/N.') }}</small>
                 @error('numero')
                     <span class="help-block text-danger">{{ $message }}</span>
                 @enderror
