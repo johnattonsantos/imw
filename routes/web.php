@@ -764,6 +764,7 @@ Route::middleware(['auth'])->group(function () {
         //Clérigos
         Route::prefix('clerigos')->name('clerigos.')->controller(ClerigosRegiaoController::class)->group(function () {
             Route::middleware(['seguranca:menu-instituicoes'])->group(function () {
+                Route::get('/pesquisar-cpf', 'pesquisarPorCpf')->name('pesquisar-cpf');
                 Route::get('/', 'index')->name('index');
                 Route::get('/novo', 'novo')->name('novo');
                 Route::delete('/deletar/{id}', 'deletar')->name('deletar');
