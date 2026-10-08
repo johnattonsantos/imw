@@ -9,6 +9,8 @@ use App\Models\PessoasPessoa;
 use App\Traits\LocationUtils;
 use App\Http\Requests\StoreReceberNovoClerigoRequest;
 use App\Models\PessoaStatus;
+use App\Traits\Identifiable;
+use App\Services\ServiceClerigosRegiao\PesquisarClerigosPorCpfService;
 
 ;
 use App\Services\ServiceClerigosRegiao\AtivarClerigoService;
@@ -22,8 +24,31 @@ use App\Services\ServiceClerigosRegiao\EditarClerigoService;
 
 class ClerigosRegiaoController extends Controller
 {
-
     use LocationUtils;
+
+    public function pesquisarPorCpf(Request $request)
+    {
+        $regiao = Identifiable::fetchtSessionRegiao();
+        $searched = $request->filled('cpf');
+        $cpf = preg_replace('/\D/', '', (string) $request->input('cpf'));
+        $resultado = [
+            'daRegiao' => collect(), 'outrasRegioes' => collect(),
+            'multiplasRegioes' => false, 'duplicadoNaRegiao' => false,
+        ];
+
+        if ($searched) {
+            $request->merge(['cpf' => $cpf]);
+            $request->validate(['cpf' => 'required|digits:11'], [
+                'cpf.required' => 'Informe o CPF para pesquisar.',
+                'cpf.digits' => 'O CPF deve conter exatamente 11 dígitos.',
+            ]);
+            $resultado = app(PesquisarClerigosPorCpfService::class)
+                ->execute($cpf, $regiao->id);
+        }
+
+        return view('clerigos.pesquisar-cpf', array_merge($resultado, compact('regiao', 'searched', 'cpf')));
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -442,6 +442,20 @@
                          </div>
                      </a>
                  </li>
+                 <li class="menu {{ Request::is('clerigos/pesquisar-cpf') ? 'active' : '' }}">
+                     <a href="{{ route('clerigos.pesquisar-cpf') }}" class="dropdown-toggle">
+                         <div class="">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round" class="feather feather-user-search">
+                                 <circle cx="11" cy="11" r="8"></circle>
+                                 <path d="M21 21l-4.35-4.35"></path>
+                                 <path d="M11 8a3 3 0 0 1 3 3"></path>
+                             </svg>
+                             <span>{{ __('Pesquisar Clérigo') }}</span>
+                         </div>
+                     </a>
+                 </li>
                  {{-- Menu Clérigos --}}
                  <li class="menu mx-3">
                      <a href="">{{ __('Clérigos') }}</a>
