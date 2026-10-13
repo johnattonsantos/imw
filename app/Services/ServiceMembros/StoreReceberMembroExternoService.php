@@ -48,7 +48,7 @@ class StoreReceberMembroExternoService
             $membro->update([
                 ...Identifiable::fetchSessionInstituicoesStoreMembresia(),
                 'congregacao_id' => $params['congregacao_id'],
-                'numero_rol'     => $params['numero_rol']
+                'rol_atual'      => $params['numero_rol']
             ]);
 
         } catch (\Exception $e) {
@@ -67,6 +67,8 @@ class StoreReceberMembroExternoService
         $rolAtual = MembresiaRolPermanente::where('membro_id', $membro->id)
             ->where('igreja_id', $membro->igreja_id)
             ->where('lastrec', 1)
+            ->orderByDesc('dt_recepcao')
+            ->orderByDesc('id')
             ->firstOr(fn () => throw new MembresiaRolPermanenteNotFoundException());
         
         $rolAtual->update($updateParams);
