@@ -9,6 +9,7 @@ use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\MySqlConnection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Mockery;
 use Tests\TestCase;
 
@@ -31,7 +32,7 @@ class ExclusaoMembroIgrejaTest extends TestCase
                 && $bindings === ['membro-teste', 20])
             ->andReturn([(object) [
                 'id' => 200, 'membro_id' => 'membro-teste', 'igreja_id' => 20,
-                'numero_rol' => 99, 'status' => 'A', 'dt_exclusao' => null,
+                'numero_rol' => 99, 'status' => 'A', 'dt_exclusao' => null, 'dt_recepcao' => '2024-08-29',
             ]]);
         $connection->shouldReceive('update')->once()
             ->withArgs(function ($sql, $bindings) {
@@ -62,6 +63,60 @@ class ExclusaoMembroIgrejaTest extends TestCase
     public function currentRollProvider(): array
     {
         return ['old roll from church A' => [10], 'correct roll from church B' => [99]];
+    }
+
+    /** @dataProvider exclusionDateProvider */
+    public function test_exclusion_date_is_compared_to_reception_in_current_church(string $dataExclusao, bool $permitida): void
+    {
+        $connection = Mockery::mock(MySqlConnection::class)->makePartial();
+        $connection->__construct(null, 'test');
+        $connection->shouldReceive('select')->once()
+            ->withArgs(fn ($sql) => str_contains($sql, '`membresia_membros`'))
+            ->andReturn([(object) ['id' => 'membro-teste', 'igreja_id' => 20, 'rol_atual' => 10, 'status' => 'A']]);
+        $connection->shouldReceive('select')->once()
+            ->withArgs(fn ($sql, $bindings) => str_contains($sql, '`igreja_id` = ?') && $bindings === ['membro-teste', 20])
+            ->andReturn([(object) [
+                'id' => 200, 'membro_id' => 'membro-teste', 'igreja_id' => 20,
+                'dt_recepcao' => '2026-08-29', 'status' => 'A', 'dt_exclusao' => null,
+            ]]);
+        DB::shouldReceive('beginTransaction')->once();
+        if ($permitida) {
+            $connection->shouldReceive('update')->once()
+                ->withArgs(fn ($sql, $bindings) => str_contains($sql, 'update `membresia_rolpermanente`') && end($bindings) === 200)
+                ->andReturn(1);
+            $connection->shouldReceive('update')->once()
+                ->withArgs(fn ($sql, $bindings) => str_contains($sql, 'update `membresia_membros`') && end($bindings) === 'membro-teste')
+                ->andReturn(1);
+            DB::shouldReceive('commit')->once();
+            DB::shouldReceive('rollback')->never();
+        } else {
+            $connection->shouldNotReceive('update');
+            DB::shouldReceive('commit')->never();
+            DB::shouldReceive('rollback')->once();
+        }
+
+        try {
+            $this->withModelConnection($connection, function () use ($dataExclusao) {
+                (new DeletarMembroService)->execute([
+                    'modo_exclusao_id' => 1, 'dt_exclusao' => $dataExclusao,
+                ], 'membro-teste');
+            });
+            $this->assertTrue($permitida, 'Uma exclusao anterior a recepcao foi aceita.');
+        } catch (ValidationException $e) {
+            $this->assertFalse($permitida);
+            $this->assertArrayHasKey('dt_exclusao', $e->errors());
+            $this->assertStringContainsString('29/08/2026', $e->errors()['dt_exclusao'][0]);
+        }
+    }
+
+    public function exclusionDateProvider(): array
+    {
+        return [
+            'reported case: August 14 before August 29' => ['2026-08-14', false],
+            'day before reception' => ['2026-08-28', false],
+            'same day as reception' => ['2026-08-29', true],
+            'day after reception' => ['2026-08-30', true],
+        ];
     }
 
     public function test_missing_roll_in_current_church_rolls_back_instead_of_updating_church_a(): void

@@ -4,10 +4,8 @@ namespace App\Services\ServiceMembros;
 
 use App\Exceptions\IdentificaDadosExcluirMembroException;
 use App\Models\MembresiaMembro;
-use App\Models\MembresiaRolPermanente;
 use App\Models\MembresiaSituacao;
 use App\Traits\Identifiable;
-use Illuminate\Support\Facades\Auth;
 
 class IdentificaDadosExcluirMembroService
 {
@@ -15,22 +13,16 @@ class IdentificaDadosExcluirMembroService
 
     public function execute($id)
     {
-        return [
-            'pessoa'       => $this->fetchMembroExcluir($id),
-            'modos'        => Identifiable::fetchModos(MembresiaSituacao::TIPO_EXCLUSAO),
-        ];
-    }
-
-    private function fetchMembroExcluir($id)
-    {
         $membro = Identifiable::fetchPessoa($id, MembresiaMembro::VINCULO_MEMBRO);
 
-        $rolAtual = $membro->rolPermanente()
-            ->orderByDesc('id')
-            ->firstOr(fn() => throw new IdentificaDadosExcluirMembroException('Rol atual não identificado'));
+        $rolAtual = Identifiable::fetchRolAtual($membro->id, null, $membro->igreja_id);
         if($rolAtual->dt_exclusao) {
             throw new IdentificaDadosExcluirMembroException('Não pe possível excluir um membro já excluído');
         }
-        return $membro;
+        return [
+            'pessoa' => $membro,
+            'modos' => Identifiable::fetchModos(MembresiaSituacao::TIPO_EXCLUSAO),
+            'dataRecepcao' => optional($rolAtual->dt_recepcao)->toDateString(),
+        ];
     }
 }
