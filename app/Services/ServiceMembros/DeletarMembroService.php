@@ -18,7 +18,7 @@ class DeletarMembroService
             DB::beginTransaction();
 
             $membro   = $this->fetchMembro($id);
-            $rolAtual = Identifiable::fetchRolAtual($membro->id, $membro->rol_atual);
+            $rolAtual = Identifiable::fetchRolAtual($membro->id, null, $membro->igreja_id);
 
             $rolAtual->update([
                 'modo_exclusao_id' => $data['modo_exclusao_id'], 
@@ -32,7 +32,7 @@ class DeletarMembroService
             DB::commit();
         } catch(\Exception $e) {
             DB::rollback();
-            throw new DeleteMembroException();
+            throw new DeleteMembroException('', 0, $e);
         }
     }
 

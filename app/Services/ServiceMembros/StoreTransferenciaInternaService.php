@@ -18,7 +18,7 @@ class StoreTransferenciaInternaService
             DB::beginTransaction();
 
             $membro   = $this->fetchMembro($id);
-            $rolAtual = Identifiable::fetchRolAtual($membro->id, $membro->rol_atual);
+            $rolAtual = Identifiable::fetchRolAtual($membro->id, null, $membro->igreja_id);
 
             $this->handleReCreateRol($membro->id, $rolAtual, $params);
             $membro->update(['congregacao_id' => $params['congregacao_id']]);

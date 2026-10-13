@@ -193,10 +193,12 @@ trait Identifiable
         return Auth::user()->pessoa;
     }
 
-    public static function fetchRolAtual($membroId, $numeroRol)
+    public static function fetchRolAtual($membroId, $numeroRol = null, $igrejaId = null)
     {
         return MembresiaRolPermanente::where('membro_id', $membroId)
-            ->where('numero_rol', $numeroRol)
+            ->where('igreja_id', $igrejaId ?? Identifiable::fetchSessionIgrejaLocal()->id)
+            ->when($numeroRol !== null, fn ($query) => $query->where('numero_rol', $numeroRol))
+            ->orderByDesc('dt_recepcao')
             ->orderByDesc('id')
             ->firstOr(fn() => throw new FetchRolAtualException());
     }
