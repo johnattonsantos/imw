@@ -6,6 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DeletarMembroRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge(['dt_exclusao' => now()->toDateString()]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *

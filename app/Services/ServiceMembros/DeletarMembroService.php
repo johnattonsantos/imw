@@ -6,6 +6,7 @@ use App\Exceptions\DeleteMembroException;
 use App\Models\MembresiaMembro;
 use App\Models\MembresiaRolPermanente;
 use App\Traits\Identifiable;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -16,6 +17,7 @@ class DeletarMembroService
 
     public function execute($data, $id): void
     {
+        $data['dt_exclusao'] = Carbon::today()->toDateString();
         try {
             DB::beginTransaction();
 

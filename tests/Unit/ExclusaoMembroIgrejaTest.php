@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Exceptions\DeleteMembroException;
 use App\Models\MembresiaMembro;
 use App\Services\ServiceMembros\DeletarMembroService;
+use Carbon\Carbon;
 use Illuminate\Database\ConnectionResolver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\MySqlConnection;
@@ -15,9 +16,16 @@ use Tests\TestCase;
 
 class ExclusaoMembroIgrejaTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Carbon::setTestNow();
+        parent::tearDown();
+    }
+
     /** @dataProvider currentRollProvider */
     public function test_exclusion_updates_only_current_church_even_with_stale_roll_number(int $numeroRol): void
     {
+        Carbon::setTestNow(Carbon::parse('2026-10-13 12:00:00'));
         $connection = Mockery::mock(MySqlConnection::class)->makePartial();
         $connection->__construct(null, 'test');
         $connection->shouldReceive('select')->once()
@@ -40,7 +48,7 @@ class ExclusaoMembroIgrejaTest extends TestCase
                     && str_contains($sql, 'where `id` = ?')
                     && end($bindings) === 200
                     && in_array('I', $bindings, true)
-                    && count(array_filter($bindings, fn ($value) => is_string($value) && str_starts_with($value, '2026-08-14'))) > 0;
+                    && count(array_filter($bindings, fn ($value) => is_string($value) && str_starts_with($value, '2026-10-13'))) > 0;
             })->andReturn(1);
         $connection->shouldReceive('update')->once()
             ->withArgs(function ($sql, $bindings) {
@@ -66,8 +74,9 @@ class ExclusaoMembroIgrejaTest extends TestCase
     }
 
     /** @dataProvider exclusionDateProvider */
-    public function test_exclusion_date_is_compared_to_reception_in_current_church(string $dataExclusao, bool $permitida): void
+    public function test_today_is_compared_to_reception_in_current_church(string $dataAtual, bool $permitida): void
     {
+        Carbon::setTestNow(Carbon::parse($dataAtual.' 12:00:00'));
         $connection = Mockery::mock(MySqlConnection::class)->makePartial();
         $connection->__construct(null, 'test');
         $connection->shouldReceive('select')->once()
@@ -82,7 +91,9 @@ class ExclusaoMembroIgrejaTest extends TestCase
         DB::shouldReceive('beginTransaction')->once();
         if ($permitida) {
             $connection->shouldReceive('update')->once()
-                ->withArgs(fn ($sql, $bindings) => str_contains($sql, 'update `membresia_rolpermanente`') && end($bindings) === 200)
+                ->withArgs(fn ($sql, $bindings) => str_contains($sql, 'update `membresia_rolpermanente`')
+                    && end($bindings) === 200
+                    && count(array_filter($bindings, fn ($value) => is_string($value) && str_starts_with($value, $dataAtual))) > 0)
                 ->andReturn(1);
             $connection->shouldReceive('update')->once()
                 ->withArgs(fn ($sql, $bindings) => str_contains($sql, 'update `membresia_membros`') && end($bindings) === 'membro-teste')
@@ -96,9 +107,9 @@ class ExclusaoMembroIgrejaTest extends TestCase
         }
 
         try {
-            $this->withModelConnection($connection, function () use ($dataExclusao) {
+            $this->withModelConnection($connection, function () {
                 (new DeletarMembroService)->execute([
-                    'modo_exclusao_id' => 1, 'dt_exclusao' => $dataExclusao,
+                    'modo_exclusao_id' => 1, 'dt_exclusao' => '2001-01-01',
                 ], 'membro-teste');
             });
             $this->assertTrue($permitida, 'Uma exclusao anterior a recepcao foi aceita.');
