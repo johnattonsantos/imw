@@ -44,7 +44,10 @@
             <label class="control-label">{{ __('* Data de Exclusão:') }}</label>
           </div>
           <div class="col-lg-6">
-            <input type="date" class="form-control @error('dt_exclusao') is-invalid @enderror" id="dt_exclusao" name="dt_exclusao" value="{{ old('dt_exclusao', date('Y-m-d')) }}" placeholder="{{ __('ex: 31/12/2000') }}">
+            <input type="date" class="form-control @error('dt_exclusao') is-invalid @enderror" id="dt_exclusao" name="dt_exclusao" min="{{ $dataRecepcao }}" value="{{ old('dt_exclusao', date('Y-m-d')) }}" placeholder="{{ __('ex: 31/12/2000') }}">
+            @if ($dataRecepcao)
+                <small class="form-text text-muted">{{ __('Data permitida a partir de') }} {{ \Carbon\Carbon::parse($dataRecepcao)->format('d/m/Y') }}.</small>
+            @endif
             @error('dt_exclusao')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror

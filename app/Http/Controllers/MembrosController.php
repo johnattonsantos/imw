@@ -52,6 +52,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class MembrosController extends Controller
 {
@@ -504,8 +505,9 @@ class MembrosController extends Controller
             $data = app(IdentificaDadosExcluirMembroService::class)->execute($id);
             $pessoa       = $data['pessoa'];
             $modos        = $data['modos'];
+            $dataRecepcao = $data['dataRecepcao'];
 
-            return view('membros.exclusao', compact('pessoa', 'modos'));
+            return view('membros.exclusao', compact('pessoa', 'modos', 'dataRecepcao'));
         } catch(IdentificaDadosExcluirMembroException $e) {
             return redirect()->back()->with('error', __('Erro ao tentar abrir a tela de exclusão de membro'));
         } catch(\Exception $e) {
@@ -519,6 +521,8 @@ class MembrosController extends Controller
             app(DeletarMembroService::class)->execute($request->all(), $id);
 
             return redirect()->route('membro.index')->with('success', __('Membro excluído com sucesso!'));
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             return redirect()->back()->with('error', __('Houve um erro tentar excluir este membro'));
         }
