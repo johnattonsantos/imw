@@ -9,6 +9,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreReceberMembroExternoRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge(['dt_resposta' => now()->toDateString()]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *

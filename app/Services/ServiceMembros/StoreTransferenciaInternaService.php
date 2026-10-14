@@ -14,6 +14,7 @@ class StoreTransferenciaInternaService
 
     public function execute($params, $id): void
     {
+        $params['dt_transferencia'] = now()->toDateString();
         try {
             DB::beginTransaction();
 

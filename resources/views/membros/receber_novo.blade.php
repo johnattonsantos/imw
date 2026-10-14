@@ -57,7 +57,7 @@
             <label class="control-label">{{ __('* Data de Recepção:') }}</label>
           </div>
           <div class="col-lg-6">
-            <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ old('dt_recepcao', date('Y-m-d')) }}" placeholder="{{ __('ex: 31/12/2000') }}">
+            <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ now()->toDateString() }}" readonly placeholder="{{ __('ex: 31/12/2000') }}">
             @error('dt_recepcao')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror

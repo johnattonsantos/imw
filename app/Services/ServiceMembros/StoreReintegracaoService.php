@@ -61,6 +61,8 @@ class StoreReintegracaoService
     
     private function fetchParams($params)
     {
+        $params['dt_recepcao'] = now()->toDateString();
+        $params['dt_exclusao'] = null;
         $params['status']      = MembresiaRolPermanente::STATUS_RECEBIMENTO;
         $params['lastrec']     = 1;
 

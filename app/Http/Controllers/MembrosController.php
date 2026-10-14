@@ -325,6 +325,7 @@ class MembrosController extends Controller
             $disciplinas = app(ListDisciplinasMembroService::class)->execute($id);
             return view('membros.editar.indexRecadastramento', [
                 'pessoa'               => $pessoa['pessoa'],
+                'datasRol'             => $pessoa['datasRol'],
                 'ministerios'          => $pessoa['ministerios'],
                 'funcoes'              => $pessoa['funcoes'],
                 'cursos'               => $pessoa['cursos'],
