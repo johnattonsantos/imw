@@ -23,6 +23,19 @@ class UpdateMembroRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        $membroId = $this->input('membro_id');
+        $membro = DB::table('membresia_membros')->where('id', $membroId)->first();
+        $rol = $membro ? DB::table('membresia_rolpermanente')->where('membro_id', $membroId)
+            ->where('igreja_id', $membro->igreja_id)->whereNull('deleted_at')
+            ->orderByDesc('dt_recepcao')->orderByDesc('id')->first() : null;
+        $inativo = ($this->input('status') ?: ($membro->status ?? 'A')) === 'I';
+        $novo = $rol && !$inativo && $rol->dt_exclusao !== null;
+        $this->merge(\App\Support\DatasRolPermanente::paraRegistro(
+            $rol->dt_recepcao ?? null, $rol->dt_exclusao ?? null, $inativo, $novo
+        ));
+        if (!$inativo) {
+            $this->merge(['modo_exclusao_id' => null]);
+        }
         if (!$this->routeIs('recadastramento-membro.update')) {
             return;
         }

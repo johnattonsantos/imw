@@ -17,6 +17,7 @@ use App\Exceptions\MembroNotFoundException;
 use App\Models\GCeuMembros;
 use App\Models\MembresiaFuncaoEclesiastica;
 use App\Models\MembresiaFormacaoEclesiastica;
+use App\Support\DatasRolPermanente;
 
 class UpdateMembroService
 {
@@ -35,9 +36,6 @@ class UpdateMembroService
         $this->handleUpdateFormacoes($dataFormacoes, $membroID);
         $this->handleUpdateMinisteriais($dataMinisteriais, $membroID);
         $this->handleUpdateGceu($dataGceu, $membroID);
-        if (isset($data['rol_atual']) && $data['rol_atual']) {
-            $this->updateMembroRol($data['rol_atual'], $membroID);
-        }
         $this->updateDadosRolPermanente($data, $membroID);
         if (isset($data['foto']) && $data['foto']) {
             $this->handlePhotoUpload($data['foto'], $membroID);
@@ -306,30 +304,33 @@ class UpdateMembroService
             ->delete();
     }
 
-    private function updateMembroRol($rolAtual, $membroId)
-    {
-        $rolPermanente = MembresiaRolPermanente::where('membro_id', $membroId)->where('lastrec', 1)->first();
-        if ($rolPermanente) {
-            $rolPermanente->numero_rol = $rolAtual ?? null;
-            $rolPermanente->save();
-        }
-    }
     private function updateDadosRolPermanente(array $data, $membroId): void
     {
-        $rolPermanente = MembresiaRolPermanente::where('membro_id', $membroId)->where('lastrec', 1)->first();
+        $membro = MembresiaMembro::findOrFail($membroId);
+        $rolPermanente = MembresiaRolPermanente::where('membro_id', $membroId)
+            ->where('igreja_id', $membro->igreja_id)->orderByDesc('dt_recepcao')->orderByDesc('id')->first();
         if ($rolPermanente) {
-            if (array_key_exists('dt_recepcao', $data) && !empty($data['dt_recepcao'])) {
-                $rolPermanente->dt_recepcao = Carbon::parse($data['dt_recepcao']);
+            $inativo = $membro->status === MembresiaMembro::STATUS_INATIVO;
+            $novo = !$inativo && $rolPermanente->dt_exclusao !== null;
+            $datas = DatasRolPermanente::paraRegistro(
+                optional($rolPermanente->dt_recepcao)->toDateString(),
+                optional($rolPermanente->dt_exclusao)->toDateString(), $inativo, $novo
+            );
+            if ($novo) {
+                $anterior = $rolPermanente;
+                $rolPermanente = $anterior->replicate();
+                $anterior->update(['lastrec' => 0]);
+                $rolPermanente->lastrec = 1;
+            }
+            $rolPermanente->fill($datas);
+            $rolPermanente->status = $inativo ? 'I' : 'A';
+            if (!empty($data['rol_atual'])) {
+                $rolPermanente->numero_rol = $data['rol_atual'];
             }
             if (array_key_exists('modo_recepcao_id', $data) && !empty($data['modo_recepcao_id'])) {
                 $rolPermanente->modo_recepcao_id = $data['modo_recepcao_id'];
             }
-            if (array_key_exists('dt_exclusao', $data)) {
-                $rolPermanente->dt_exclusao = !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null;
-            }
-            if (array_key_exists('modo_exclusao_id', $data)) {
-                $rolPermanente->modo_exclusao_id = $data['modo_exclusao_id'] ?? null;
-            }
+            $rolPermanente->modo_exclusao_id = $inativo ? ($data['modo_exclusao_id'] ?? $rolPermanente->modo_exclusao_id) : null;
             $rolPermanente->save();
         }
     }

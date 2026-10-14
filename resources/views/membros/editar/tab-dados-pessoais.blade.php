@@ -509,7 +509,7 @@
               <div class="row mb-4">
                 <div class="col-xl-3">
                   <label for="dt_recepcao">{{ __('* Data de Recepção') }}</label>
-                  <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ old('dt_recepcao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_recepcao)->format('Y-m-d')) }}" required>
+                  <input type="date" class="form-control @error('dt_recepcao') is-invalid @enderror" id="dt_recepcao" name="dt_recepcao" value="{{ $datasRol['dt_recepcao'] }}" required readonly>
                   @error('dt_recepcao')
                     <span class="help-block text-danger">{{ $message }}</span>
                   @enderror
@@ -530,7 +530,8 @@
                 </div>
                 <div class="col-xl-3">
                   <label for="dt_exclusao">{{ __('Data de Exclusão') }}</label>
-                  <input type="date" class="form-control @error('dt_exclusao') is-invalid @enderror" id="dt_exclusao" name="dt_exclusao" value="{{ old('dt_exclusao', optional(optional($pessoa->rolAtualSessionIgreja)->dt_exclusao)->format('Y-m-d')) }}">
+                  <input type="date" class="form-control @error('dt_exclusao') is-invalid @enderror" id="dt_exclusao" name="dt_exclusao" value="{{ $datasRol['dt_exclusao'] }}" readonly>
+                  <small class="form-text text-muted">{{ __('Novas ações usam a data atual. Datas históricas não podem ser editadas.') }}</small>
                   @error('dt_exclusao')
                     <span class="help-block text-danger">{{ $message }}</span>
                   @enderror
@@ -592,6 +593,7 @@
 
     $(document).ready(function () {
       if ($('#status').length) {
+        const recepcaoOriginal = $('#dt_recepcao').val();
         const exclusaoCache = {
           dt_exclusao: ($('#dt_exclusao').val() || '').trim(),
           modo_exclusao_id: ($('#modo_exclusao_id').val() || '').trim(),
@@ -620,12 +622,14 @@
             rememberExclusaoValues();
             $('#dt_exclusao').val('');
             $('#modo_exclusao_id').val('');
+            if (exclusaoCache.dt_exclusao !== '') {
+              $('#dt_recepcao').val(@json(now()->toDateString()));
+            }
           }
 
           if (status === 'I') {
-            if ((($('#dt_exclusao').val() || '').trim() === '') && exclusaoCache.dt_exclusao !== '') {
-              $('#dt_exclusao').val(exclusaoCache.dt_exclusao);
-            }
+            $('#dt_recepcao').val(recepcaoOriginal);
+            $('#dt_exclusao').val(exclusaoCache.dt_exclusao || @json(now()->toDateString()));
             if ((($('#modo_exclusao_id').val() || '').trim() === '') && exclusaoCache.modo_exclusao_id !== '') {
               $('#modo_exclusao_id').val(exclusaoCache.modo_exclusao_id);
             }
@@ -637,6 +641,15 @@
         function toggleExclusaoFieldsByStatus() {
           const status = $('#status').val();
           const isInativo = status === 'I';
+
+          if (isInativo && !$('#dt_exclusao').val()) {
+            $('#dt_exclusao').val(@json(now()->toDateString()));
+          } else if (!isInativo) {
+            $('#dt_exclusao').val('');
+            if (exclusaoCache.dt_exclusao !== '') {
+              $('#dt_recepcao').val(@json(now()->toDateString()));
+            }
+          }
 
           $('#dt_exclusao').prop('required', isInativo);
           $('#modo_exclusao_id').prop('required', isInativo);

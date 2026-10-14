@@ -51,6 +51,8 @@ class StoreReceberNovoMembroService
     
     private function fetchCreateParams($params)
     {
+        $params['dt_recepcao'] = now()->toDateString();
+        $params['dt_exclusao'] = null;
         $params['status'] = MembresiaRolPermanente::STATUS_RECEBIMENTO;
 
         return [...$params, ...Identifiable::fetchSessionInstituicoesStoreMembresia()];

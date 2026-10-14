@@ -456,11 +456,18 @@ class UpdateMembroRecadastramentoService
         $regiaoId = $membro->regiao_id ?: self::fetchtSessionRegiao()->id;
 
         $isInativo = ($data['status'] ?? MembresiaMembroRecadastramento::STATUS_ATIVO) === MembresiaMembroRecadastramento::STATUS_INATIVO;
+        $rolExistente = MembresiaRolPermanente::where('membro_id', $membroId)
+            ->where('igreja_id', $igrejaId)->orderByDesc('dt_recepcao')->orderByDesc('id')->first();
+        $criarNovoRegistro = $criarNovoRegistro || ($rolExistente && !$isInativo && $rolExistente->dt_exclusao !== null);
+        $datas = \App\Support\DatasRolPermanente::paraRegistro(
+            optional(optional($rolExistente)->dt_recepcao)->toDateString(),
+            optional(optional($rolExistente)->dt_exclusao)->toDateString(), $isInativo, $criarNovoRegistro
+        );
         $payload = [
             'numero_rol' => isset($data['rol_atual']) ? (int) $data['rol_atual'] : null,
-            'dt_recepcao' => Carbon::parse($data['dt_recepcao']),
+            'dt_recepcao' => $datas['dt_recepcao'],
             'modo_recepcao_id' => $data['modo_recepcao_id'],
-            'dt_exclusao' => $isInativo && !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null,
+            'dt_exclusao' => $datas['dt_exclusao'],
             'modo_exclusao_id' => $isInativo ? ($data['modo_exclusao_id'] ?? null) : null,
             'status' => $isInativo ? MembresiaRolPermanente::STATUS_EXCLUSAO : MembresiaRolPermanente::STATUS_RECEBIMENTO,
             'distrito_id' => $distritoId,
@@ -482,10 +489,11 @@ class UpdateMembroRecadastramentoService
             return;
         }
 
-        MembresiaRolPermanente::updateOrCreate(
-            ['membro_id' => $membroId, 'lastrec' => 1],
-            $payload
-        );
+        if ($rolExistente) {
+            $rolExistente->update($payload);
+        } else {
+            MembresiaRolPermanente::create(array_merge($payload, ['membro_id' => $membroId]));
+        }
     }
 
     private function updateValidadoFlags($membroId, $membroMigracaoId): void
