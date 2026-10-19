@@ -34,6 +34,7 @@ trait QuantidadeMembrosUtils
 				fn ($query) => $query->where('ii.instituicao_pai_id', $distritoId),
 			)->where('ii.tipo_instituicao_id',1)
 			->groupBy('ii.id', 'ii.nome', 'dist.nome')
+			->havingRaw('total_ate_datainicial > 0 OR total_ate_datafinal > 0')
 			->orderBy('dist.nome', 'asc')
 			->orderBy('ii.nome', 'asc')
 			->get();
