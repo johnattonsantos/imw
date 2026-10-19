@@ -14,21 +14,16 @@ trait QuantidadeMembrosUtils
 			->select('ii.id', 'ii.nome', 'dist.nome as distrito')
 			->selectRaw("
 				COUNT(CASE
-					WHEN mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
+					WHEN mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mr.id
 					ELSE NULL
 				END) AS total_ate_datainicial,
 				COUNT(CASE
-					WHEN mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
+					WHEN mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mr.id
 					ELSE NULL
 				END) AS total_ate_datafinal
 			")
-			->leftJoin('membresia_membros as mm', function ($join) {
-				$join->on('ii.id', '=', 'mm.igreja_id')
-					->where('mm.vinculo', 'M')
-					->where('mm.status', 'A');
-			})
 			->leftJoin('membresia_rolpermanente as mr', function ($join) {
-				$join->on('mr.membro_id', '=', 'mm.id');
+				$join->on('mr.igreja_id', '=', 'ii.id');
 			})
 			->leftJoin('instituicoes_instituicoes as dist', function ($join) {
 				$join->on('ii.instituicao_pai_id', '=', 'dist.id')
@@ -37,8 +32,9 @@ trait QuantidadeMembrosUtils
 			->when($distritoId == 'all' && $regiaoId, 
 				fn ($query) => $query->whereIn('ii.instituicao_pai_id', Identifiable::fetchDistritosIdByRegiao($regiaoId)),
 				fn ($query) => $query->where('ii.instituicao_pai_id', $distritoId),
-			)->where('ii.ativo',1)
+			)->where('ii.tipo_instituicao_id',1)
 			->groupBy('ii.id', 'ii.nome', 'dist.nome')
+			->havingRaw('total_ate_datainicial > 0 OR total_ate_datafinal > 0')
 			->orderBy('dist.nome', 'asc')
 			->orderBy('ii.nome', 'asc')
 			->get();
