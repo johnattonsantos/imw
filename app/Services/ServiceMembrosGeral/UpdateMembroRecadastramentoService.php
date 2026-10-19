@@ -459,15 +459,11 @@ class UpdateMembroRecadastramentoService
         $rolExistente = MembresiaRolPermanente::where('membro_id', $membroId)
             ->where('igreja_id', $igrejaId)->orderByDesc('dt_recepcao')->orderByDesc('id')->first();
         $criarNovoRegistro = $criarNovoRegistro || ($rolExistente && !$isInativo && $rolExistente->dt_exclusao !== null);
-        $datas = \App\Support\DatasRolPermanente::paraRegistro(
-            optional(optional($rolExistente)->dt_recepcao)->toDateString(),
-            optional(optional($rolExistente)->dt_exclusao)->toDateString(), $isInativo, $criarNovoRegistro
-        );
         $payload = [
             'numero_rol' => isset($data['rol_atual']) ? (int) $data['rol_atual'] : null,
-            'dt_recepcao' => $datas['dt_recepcao'],
+            'dt_recepcao' => Carbon::parse($data['dt_recepcao']),
             'modo_recepcao_id' => $data['modo_recepcao_id'],
-            'dt_exclusao' => $datas['dt_exclusao'],
+            'dt_exclusao' => $isInativo && !empty($data['dt_exclusao']) ? Carbon::parse($data['dt_exclusao']) : null,
             'modo_exclusao_id' => $isInativo ? ($data['modo_exclusao_id'] ?? null) : null,
             'status' => $isInativo ? MembresiaRolPermanente::STATUS_EXCLUSAO : MembresiaRolPermanente::STATUS_RECEBIMENTO,
             'distrito_id' => $distritoId,
