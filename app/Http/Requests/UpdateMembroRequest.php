@@ -23,6 +23,15 @@ class UpdateMembroRequest extends FormRequest
 
     protected function prepareForValidation()
     {
+        if ($this->routeIs('recadastramento-membro.update')) {
+            $rolAtual = $this->input('rol_atual');
+            $rolNormalizado = is_string($rolAtual) ? trim($rolAtual) : $rolAtual;
+            if ($rolNormalizado === '' || (is_numeric($rolNormalizado) && (int) $rolNormalizado === 0)) {
+                $this->merge(['rol_atual' => null]);
+            }
+            return;
+        }
+
         $membroId = $this->input('membro_id');
         $membro = DB::table('membresia_membros')->where('id', $membroId)->first();
         $rol = $membro ? DB::table('membresia_rolpermanente')->where('membro_id', $membroId)
@@ -35,19 +44,6 @@ class UpdateMembroRequest extends FormRequest
         ));
         if (!$inativo) {
             $this->merge(['modo_exclusao_id' => null]);
-        }
-        if (!$this->routeIs('recadastramento-membro.update')) {
-            return;
-        }
-
-        $rolAtual = $this->input('rol_atual');
-        if ($rolAtual === null) {
-            return;
-        }
-
-        $rolNormalizado = is_string($rolAtual) ? trim($rolAtual) : $rolAtual;
-        if ($rolNormalizado === '' || (is_numeric($rolNormalizado) && (int) $rolNormalizado === 0)) {
-            $this->merge(['rol_atual' => null]);
         }
     }
 

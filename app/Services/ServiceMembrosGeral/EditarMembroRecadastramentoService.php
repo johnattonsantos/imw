@@ -39,12 +39,11 @@ class EditarMembroRecadastramentoService
         $rolOficial = \App\Models\MembresiaRolPermanente::where('membro_id', $id)
             ->where('igreja_id', $pessoa->igreja_id ?: $igrejaId)
             ->orderByDesc('dt_recepcao')->orderByDesc('id')->first();
-        $inativo = $pessoa->status === 'I';
-        $novo = $rolOficial && !$inativo && $rolOficial->dt_exclusao !== null;
-        $datasRol = \App\Support\DatasRolPermanente::paraRegistro(
-            optional(optional($rolOficial)->dt_recepcao)->toDateString(),
-            optional(optional($rolOficial)->dt_exclusao)->toDateString(), $inativo, $novo
-        );
+        $rolExibicao = $rolOficial ?: $pessoa->rolAtualSessionIgreja;
+        $datasRol = [
+            'dt_recepcao' => optional(optional($rolExibicao)->dt_recepcao)->toDateString(),
+            'dt_exclusao' => optional(optional($rolExibicao)->dt_exclusao)->toDateString(),
+        ];
 
         $ministerios = MembresiaSetor::orderBy('descricao', 'asc')->get();
         $funcoes = MembresiaTipoAtuacao::orderBy('descricao', 'asc')->get();
