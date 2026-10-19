@@ -32,7 +32,7 @@ class DatePreviousToRecebimentoRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        return Carbon::parse($value)->gt($this->dtRecepcao);
+        return Carbon::parse($value)->gte($this->dtRecepcao);
     }
 
     /**
@@ -42,6 +42,6 @@ class DatePreviousToRecebimentoRule implements Rule
      */
     public function message()
     {
-        return "A data informada deve ser maior que a data de recebimento do membro ({$this->dtRecepcao->format('d/m/Y')})";
+        return "A data informada deve ser igual ou posterior à data de recebimento do membro ({$this->dtRecepcao->format('d/m/Y')})";
     }
 }

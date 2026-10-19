@@ -36,6 +36,15 @@ class EditarMembroRecadastramentoService
         }
         
         $igrejaId = Identifiable::fetchSessionIgrejaLocal()->id;
+        $rolOficial = \App\Models\MembresiaRolPermanente::where('membro_id', $id)
+            ->where('igreja_id', $pessoa->igreja_id ?: $igrejaId)
+            ->orderByDesc('dt_recepcao')->orderByDesc('id')->first();
+        $inativo = $pessoa->status === 'I';
+        $novo = $rolOficial && !$inativo && $rolOficial->dt_exclusao !== null;
+        $datasRol = \App\Support\DatasRolPermanente::paraRegistro(
+            optional(optional($rolOficial)->dt_recepcao)->toDateString(),
+            optional(optional($rolOficial)->dt_exclusao)->toDateString(), $inativo, $novo
+        );
 
         $ministerios = MembresiaSetor::orderBy('descricao', 'asc')->get();
         $funcoes = MembresiaTipoAtuacao::orderBy('descricao', 'asc')->get();
@@ -48,6 +57,7 @@ class EditarMembroRecadastramentoService
         $gceuMembros = GCeuMembros::where(['membro_id' => $id])->get();
         return [
             'pessoa'               => $pessoa,
+            'datasRol'             => $datasRol,
             'ministerios'          => $ministerios,
             'funcoes'              => $funcoes,
             'cursos'               => $cursos,

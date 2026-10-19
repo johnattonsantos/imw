@@ -19,6 +19,7 @@ class StoreNotificacaoExclusaoPorTransferenciaService
 
     public function execute($params, $id): void
     {
+        $params['dt_notificacao'] = now()->toDateString();
         try {
             DB::beginTransaction();
 

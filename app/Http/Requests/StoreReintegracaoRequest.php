@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 class StoreReintegracaoRequest extends FormRequest
 {
+    protected function prepareForValidation()
+    {
+        $this->merge(['dt_recepcao' => now()->toDateString()]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *

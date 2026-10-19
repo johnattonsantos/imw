@@ -16,6 +16,7 @@ class StoreReceberMembroExternoService
 
     public function execute (array $params, NotificacaoTransferencia $notificacao) 
     {
+        $params['dt_resposta'] = now()->toDateString();
         $this->handleUpdateNotificacao($params, $notificacao);
 
         if($params['action'] == 'accept')
