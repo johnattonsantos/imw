@@ -41,7 +41,7 @@
             <p>Contagem no encerramento de cada ano eclesiástico (novembro a outubro). O ano em andamento vai até a data de referência. Cada membro é contado uma vez no agrupamento escolhido, conforme sua última recepção até aquela data.</p>
             <div class="table-responsive">
                 <table class="table table-striped">
-                    <thead><tr><th>{{ ['regiao' => 'Região', 'distrito' => 'Distrito', 'igreja' => 'Igreja'][$nivel] }}</th><th>Período</th><th class="text-right">Ativos</th><th class="text-right">Inativos</th><th class="text-right">Total</th></tr></thead>
+                    <thead><tr><th>{{ ['regiao' => 'Região', 'distrito' => 'Distrito', 'igreja' => 'Igreja'][$nivel] }}</th><th>Período</th><th class="text-right">Ativos</th><th class="text-right">Inativos</th><th class="text-right">Total</th><th class="text-right">Crescimento dos ativos (%)</th></tr></thead>
                     <tbody>
                         @forelse ($linhas as $linha)
                             <tr>
@@ -50,13 +50,24 @@
                                 <td class="text-right">{{ number_format($linha['ativos'], 0, ',', '.') }}</td>
                                 <td class="text-right">{{ number_format($linha['inativos'], 0, ',', '.') }}</td>
                                 <td class="text-right">{{ number_format($linha['ativos'] + $linha['inativos'], 0, ',', '.') }}</td>
+                                <td class="text-right">
+                                    @if ($linha['crescimento_ativos'] === null)
+                                        <span class="text-muted">Sem base inicial</span>
+                                    @else
+                                        <strong class="{{ $linha['crescimento_ativos'] > 0 ? 'text-success' : ($linha['crescimento_ativos'] < 0 ? 'text-danger' : 'text-muted') }}">
+                                            {{ $linha['crescimento_ativos'] > 0 ? '+' : '' }}{{ number_format($linha['crescimento_ativos'], 2, ',', '.') }}%
+                                        </strong>
+                                    @endif
+                                    <small class="d-block text-muted">{{ number_format($linha['ativos_iniciais'], 0, ',', '.') }} para {{ number_format($linha['ativos'], 0, ',', '.') }} ativos</small>
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5">Nenhuma instituição encontrada.</td></tr>
+                            <tr><td colspan="6">Nenhuma instituição encontrada.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+            <p class="text-muted small">Crescimento dos ativos = (ativos finais − ativos iniciais) ÷ ativos iniciais × 100. Quando não há ativos no início e há no fim, o percentual não é calculável.</p>
         </div>
     </div>
 </div>
