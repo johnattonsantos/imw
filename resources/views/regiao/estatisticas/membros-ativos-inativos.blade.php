@@ -13,7 +13,7 @@
         --comparison-border: #dce4ee;
         --comparison-start: #edf3fc;
         --comparison-end: #edf7f5;
-        min-width: 640px;
+        min-width: 800px;
         table-layout: fixed;
         border: 1px solid var(--comparison-border);
     }
@@ -24,7 +24,7 @@
         padding: 16px 12px;
     }
     .membership-comparison .comparison-institution {
-        width: 28%;
+        width: 24%;
         text-align: left;
     }
     .membership-comparison thead .comparison-start { background: var(--comparison-start); }
@@ -100,6 +100,7 @@
                                 <span class="comparison-title">Fim do período</span>
                                 @if(count($linhas))<span class="comparison-date">{{ \Carbon\Carbon::parse($linhas[0]['fim'])->format('d/m/Y') }}</span>@endif
                             </th>
+                            <th rowspan="2" scope="col" class="comparison-divider">Crescimento<br>dos ativos (%)</th>
                         </tr>
                         <tr>
                             <th scope="col" class="comparison-start comparison-divider">Ativos</th>
@@ -116,13 +117,24 @@
                                 <td class="comparison-count comparison-inactive">{{ number_format($linha['inativos_iniciais'], 0, ',', '.') }}</td>
                                 <td class="comparison-count comparison-active comparison-divider">{{ number_format($linha['ativos_finais'], 0, ',', '.') }}</td>
                                 <td class="comparison-count comparison-inactive">{{ number_format($linha['inativos_finais'], 0, ',', '.') }}</td>
+                                <td class="comparison-divider">
+                                    @if ($linha['crescimento_ativos'] === null)
+                                        <span class="text-muted">Sem base inicial</span>
+                                    @else
+                                        <strong class="comparison-count {{ $linha['crescimento_ativos'] > 0 ? 'text-success' : ($linha['crescimento_ativos'] < 0 ? 'text-danger' : 'text-muted') }}">
+                                            {{ $linha['crescimento_ativos'] > 0 ? '+' : '' }}{{ number_format($linha['crescimento_ativos'], 2, ',', '.') }}%
+                                        </strong>
+                                    @endif
+                                    <small class="d-block text-muted">{{ number_format($linha['ativos_iniciais'], 0, ',', '.') }} para {{ number_format($linha['ativos_finais'], 0, ',', '.') }} ativos</small>
+                                </td>
                             </tr>
                         @empty
-                            <tr><td colspan="5">Nenhuma instituição encontrada.</td></tr>
+                            <tr><td colspan="6">Nenhuma instituição encontrada.</td></tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+            <p class="text-muted small">Crescimento dos ativos = (ativos finais − ativos iniciais) ÷ ativos iniciais × 100. Quando não há ativos no início e há no fim, o percentual não é calculável.</p>
         </div>
     </div>
 </div>

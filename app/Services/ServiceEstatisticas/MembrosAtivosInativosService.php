@@ -59,10 +59,20 @@ class MembrosAtivosInativosService
                 'inativos_iniciais' => (int) ($inicial->inativos ?? 0),
                 'ativos_finais' => (int) ($final->ativos ?? 0),
                 'inativos_finais' => (int) ($final->inativos ?? 0),
+                'crescimento_ativos' => $this->percentualCrescimento((int) ($inicial->ativos ?? 0), (int) ($final->ativos ?? 0)),
             ];
         }
 
         return $linhas;
+    }
+
+    public function percentualCrescimento(int $inicial, int $final): ?float
+    {
+        if ($inicial === 0) {
+            return $final === 0 ? 0.0 : null;
+        }
+
+        return round(($final - $inicial) / $inicial * 100, 2);
     }
 
     private function contagensNaData(int $regiaoId, string $coluna, string $fim): \Illuminate\Support\Collection
