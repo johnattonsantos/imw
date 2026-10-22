@@ -81,6 +81,12 @@
                 <h4 style="text-transform: uppercase">
                   Ministério: {{ $ministerioNome }} | Quantidade de integrantes: {{ $quantidadeIntegrantes }}
                 </h4>
+                <p class="px-3 mb-3">
+                  <strong>{{ __('Nº de homens (30 anos ou mais)') }}:</strong> {{ $quantidadeHomens30Mais }}
+                  <span class="mx-2">|</span>
+                  <strong>{{ __('Nº de mulheres (30 anos ou mais)') }}:</strong> {{ $quantidadeMulheres30Mais }}
+                  <small class="d-block text-muted">{{ __('Quantidades referentes ao ministério e ao vínculo selecionados, pela idade atual.') }}</small>
+                </p>
             </div>
         </div>
       </div>

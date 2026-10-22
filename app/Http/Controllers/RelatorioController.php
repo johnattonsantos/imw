@@ -150,6 +150,8 @@ class RelatorioController extends Controller
                 'ministerioNome' => $data['ministerioNome'],
                 'integrantes' => $data['integrantes'],
                 'quantidadeIntegrantes' => $data['quantidadeIntegrantes'],
+                'quantidadeHomens30Mais' => $data['quantidadeHomens30Mais'],
+                'quantidadeMulheres30Mais' => $data['quantidadeMulheres30Mais'],
                 'incluirCongregados' => $data['incluirCongregados'],
             ]);
         } catch (\Exception $e) {
