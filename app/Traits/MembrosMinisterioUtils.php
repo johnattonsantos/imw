@@ -87,7 +87,31 @@ trait MembrosMinisterioUtils
                     WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 60 
                         AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
                     ELSE NULL
-                END) AS Sessenta_Y
+                END) AS Sessenta_Y,
+                COUNT(CASE
+                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
+                        AND mm.sexo = 'M'
+                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
+                    ELSE NULL
+                END) AS Homens30_X,
+                COUNT(CASE
+                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
+                        AND mm.sexo = 'M'
+                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
+                    ELSE NULL
+                END) AS Homens30_Y,
+                COUNT(CASE
+                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
+                        AND mm.sexo = 'F'
+                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
+                    ELSE NULL
+                END) AS Mulheres30_X,
+                COUNT(CASE
+                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
+                        AND mm.sexo = 'F'
+                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
+                    ELSE NULL
+                END) AS Mulheres30_Y
             ")
             ->leftJoin('membresia_membros as mm', function ($join) use ($vinculoCondition) {
                 $join->on('ii.id', '=', 'mm.igreja_id')
@@ -117,6 +141,15 @@ trait MembrosMinisterioUtils
             ->orderBy('dist.nome', 'asc')
             ->orderBy('ii.nome', 'asc')
             ->get();
+
+        foreach ($results as $row) {
+            // Keep totals based on disjoint age groups: seniors also appear in the new 30+ readings.
+            foreach (['X', 'Y'] as $data) {
+                $row->{'Total_'.$data} = $row->{'Kids_'.$data} + $row->{'Conexao_'.$data}
+                    + $row->{'Fire_'.$data} + $row->{'Move_'.$data} + $row->{'Homens_'.$data}
+                    + $row->{'Mulheres_'.$data} + $row->{'Sessenta_'.$data};
+            }
+        }
 
         return $results;
     }

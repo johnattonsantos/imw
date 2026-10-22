@@ -101,6 +101,7 @@ use Carbon\Carbon;
         <div class="date">Data do Relatório: {{ \Carbon\Carbon::now()->format('m/Y') }}</div>
     </div>
 
+    <p style="font-size: 11px;">Homens e mulheres: 30 anos ou mais, incluindo 60+. A coluna 60+ apresenta um recorte adicional; o total geral não duplica essas pessoas.</p>
     <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
         <thead class="thead-dark">
             <tr>
@@ -109,8 +110,8 @@ use Carbon\Carbon;
                 <th width="40px" style="text-align: center" colspan="2">{{ __('CONEXÃO') }}</th>
                 <th width="40px" style="text-align: center" colspan="2">{{ __('FIRE') }}</th>
                 <th width="40px" style="text-align: center" colspan="2">{{ __('MOVE') }}</th>
-                <th width="40px" style="text-align: center" colspan="2">{{ __('HOMENS') }}</th>
-                <th width="40px" style="text-align: center" colspan="2">{{ __('MULHERES') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('HOMENS (30+)') }}</th>
+                <th width="40px" style="text-align: center" colspan="2">{{ __('MULHERES (30+)') }}</th>
                 <th width="40px" style="text-align: center" colspan="2">60+</th>
                 <th width="40px" style="text-align: center" colspan="2">{{ __('TOTAL') }}</th>
             </tr>
@@ -149,6 +150,8 @@ use Carbon\Carbon;
             $totalMulheres_Y = 0;
             $totalSessenta_X = 0;
             $totalSessenta_Y = 0;
+            $totalGeral_X = 0;
+            $totalGeral_Y = 0;
             @endphp
             @foreach($lancamentos as $lancamento)
             @php
@@ -160,12 +163,14 @@ use Carbon\Carbon;
             $totalFire_Y += $lancamento->Fire_Y;
             $totalMove_X += $lancamento->Move_X;
             $totalMove_Y += $lancamento->Move_Y;
-            $totalHomens_X += $lancamento->Homens_X;
-            $totalHomens_Y += $lancamento->Homens_Y;
-            $totalMulheres_X += $lancamento->Mulheres_X;
-            $totalMulheres_Y += $lancamento->Mulheres_Y;
+            $totalHomens_X += $lancamento->Homens30_X;
+            $totalHomens_Y += $lancamento->Homens30_Y;
+            $totalMulheres_X += $lancamento->Mulheres30_X;
+            $totalMulheres_Y += $lancamento->Mulheres30_Y;
             $totalSessenta_X += $lancamento->Sessenta_X;
             $totalSessenta_Y += $lancamento->Sessenta_Y;
+            $totalGeral_X += $lancamento->Total_X;
+            $totalGeral_Y += $lancamento->Total_Y;
             @endphp
             <tr>
                 <td style="text-align: left;">{{ $lancamento->nome }}</td>
@@ -177,14 +182,14 @@ use Carbon\Carbon;
                 <td style="text-align: right">{{ $lancamento->Fire_Y }}</td>
                 <td style="text-align: right">{{ $lancamento->Move_X }}</td>
                 <td style="text-align: right">{{ $lancamento->Move_Y }}</td>
-                <td style="text-align: right">{{ $lancamento->Homens_X }}</td>
-                <td style="text-align: right">{{ $lancamento->Homens_Y }}</td>
-                <td style="text-align: right">{{ $lancamento->Mulheres_X }}</td>
-                <td style="text-align: right">{{ $lancamento->Mulheres_Y }}</td>
+                <td style="text-align: right">{{ $lancamento->Homens30_X }}</td>
+                <td style="text-align: right">{{ $lancamento->Homens30_Y }}</td>
+                <td style="text-align: right">{{ $lancamento->Mulheres30_X }}</td>
+                <td style="text-align: right">{{ $lancamento->Mulheres30_Y }}</td>
                 <td style="text-align: right">{{ $lancamento->Sessenta_X }}</td>
                 <td style="text-align: right">{{ $lancamento->Sessenta_Y }}</td>
-                <td style="text-align: right">{{ $lancamento->Kids_X + $lancamento->Conexao_X + $lancamento->Fire_X + $lancamento->Move_X + $lancamento->Homens_X + $lancamento->Mulheres_X + $lancamento->Sessenta_X }}</td>
-                <td style="text-align: right">{{ $lancamento->Kids_Y + $lancamento->Conexao_Y + $lancamento->Fire_Y + $lancamento->Move_Y + $lancamento->Homens_Y + $lancamento->Mulheres_Y + $lancamento->Sessenta_Y }}</td>
+                <td style="text-align: right">{{ $lancamento->Total_X }}</td>
+                <td style="text-align: right">{{ $lancamento->Total_Y }}</td>
             </tr>
             @endforeach
             <tr class="thead-dark">
@@ -203,8 +208,8 @@ use Carbon\Carbon;
                 <th style="text-align: right">{{ $totalMulheres_Y }}</th>
                 <th style="text-align: right">{{ $totalSessenta_X }}</th>
                 <th style="text-align: right">{{ $totalSessenta_Y }}</th>
-                <th style="text-align: right">{{ $totalKids_X + $totalConexao_X + $totalFire_X + $totalMove_X + $totalHomens_X + $totalMulheres_X + $totalSessenta_X }}</th>
-                <th style="text-align: right">{{ $totalKids_Y + $totalConexao_Y + $totalFire_Y + $totalMove_Y + $totalHomens_Y + $totalMulheres_Y + $totalSessenta_Y }}</th>
+                <th style="text-align: right">{{ $totalGeral_X }}</th>
+                <th style="text-align: right">{{ $totalGeral_Y }}</th>
             </tr>
         </tbody>
     </table>
