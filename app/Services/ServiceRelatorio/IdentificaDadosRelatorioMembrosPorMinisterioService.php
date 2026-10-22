@@ -4,6 +4,7 @@ namespace App\Services\ServiceRelatorio;
 
 use App\Models\MembresiaMembro;
 use App\Traits\Identifiable;
+use Carbon\Carbon;
 use DB;
 
 class IdentificaDadosRelatorioMembrosPorMinisterioService
@@ -18,8 +19,8 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                 'conexao' => 'Conexão (até 13 anos)',
                 'fire' => 'Fire (até 17 anos)',
                 'move' => 'Move (até 30 anos)',
-                'mulheres' => 'Mulheres (todas as idades)',
-                'homens' => 'Homens (todas as idades)',
+                'mulheres' => 'Mulheres (30 anos ou mais)',
+                'homens' => 'Homens (30 anos ou mais)',
                 '60+' => '60+ (acima de 60 anos)',
             ];
             $ministerioSelecionado = (string) (isset($request['ministerio']) ? $request['ministerio'] : 'todos');
@@ -36,6 +37,8 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                 ->leftJoin('membresia_contatos as mc', 'mc.membro_id', '=', 'mm.id')
                 ->select(
                     'mm.nome',
+                    'mm.sexo',
+                    'mm.data_nascimento',
                     DB::raw("COALESCE(NULLIF(mc.telefone_preferencial, ''), NULLIF(mc.telefone_whatsapp, ''), '-') as contato")
                 )
                 ->where('mm.igreja_id', $igrejaId)
@@ -70,10 +73,12 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                         ->whereRaw("$idadeExpr <= 30");
                     break;
                 case 'mulheres':
-                    $query->where('mm.sexo', 'F');
+                    $query->where('mm.sexo', 'F')
+                        ->whereDate('mm.data_nascimento', '<=', Carbon::today()->subYearsNoOverflow(30)->toDateString());
                     break;
                 case 'homens':
-                    $query->where('mm.sexo', 'M');
+                    $query->where('mm.sexo', 'M')
+                        ->whereDate('mm.data_nascimento', '<=', Carbon::today()->subYearsNoOverflow(30)->toDateString());
                     break;
                 case '60+':
                     $query->whereNotNull('mm.data_nascimento')
@@ -84,6 +89,9 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
             $integrantes = $query->orderBy('mm.nome')->get();  
             $ministerioNome = $ministerios[$ministerioSelecionado];
             $quantidadeIntegrantes = $integrantes->count();
+            $limiteNascimento = Carbon::today()->subYearsNoOverflow(30)->toDateString();
+            $adultos = $integrantes->filter(fn ($integrante) => !empty($integrante->data_nascimento)
+                && substr((string) $integrante->data_nascimento, 0, 10) <= $limiteNascimento);
 
             return [
                 'integrantes' => $integrantes,
@@ -91,6 +99,8 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                 'ministerioSelecionado' => $ministerioSelecionado,
                 'ministerioNome' => $ministerioNome,
                 'quantidadeIntegrantes' => $quantidadeIntegrantes,
+                'quantidadeHomens30Mais' => $adultos->where('sexo', 'M')->count(),
+                'quantidadeMulheres30Mais' => $adultos->where('sexo', 'F')->count(),
                 'incluirCongregados' => $incluirCongregados,
             ];
     }
