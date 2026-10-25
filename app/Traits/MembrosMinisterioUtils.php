@@ -37,8 +37,8 @@ trait MembrosMinisterioUtils
         foreach ($datas as $sufixo => $data) {
             foreach ($faixasEtarias as $faixa => $condicao) {
                 $sql = 'COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, ?) '
-                    .$condicao['operator'].' AND mr.dt_recepcao <= ? '
-                    .'AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > ?)';
+                    .$condicao['operator'].' AND mr.dt_recepcao < ? '
+                    .'AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao >= ?)';
                 $bindings = array_merge([$data], $condicao['bounds'], [$data, $data]);
 
                 if (isset($condicao['sexo'])) {
