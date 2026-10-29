@@ -9,145 +9,79 @@ trait MembrosMinisterioUtils
 {
     public static function fetch($dataInicial, $dataFinal, $tipo, $distritoId, $regiaoId = null)
     {
-        $vinculoCondition = $tipo === 'C' ? ['C', 'M'] : ['M'];
+        $faixasEtarias = [
+            'Kids' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [0, 9]],
+            'Conexao' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [10, 13]],
+            'Fire' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [14, 17]],
+            'Move' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [18, 29]],
+            'Homens' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [30, 59], 'sexo' => 'M'],
+            'Mulheres' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [30, 59], 'sexo' => 'F'],
+            'Sessenta' => ['operator' => '>= ?', 'bounds' => [60]],
+            'Homens30' => ['operator' => '>= ?', 'bounds' => [30], 'sexo' => 'M'],
+            'Mulheres30' => ['operator' => '>= ?', 'bounds' => [30], 'sexo' => 'F'],
+        ];
 
-        $results = DB::table('instituicoes_instituicoes as ii')
-            ->select('ii.id as igreja_id', 'ii.nome', 'dist.id as distrito_id', 'dist.nome as distrito')
-            ->selectRaw("
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 0 AND 9 
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Kids_X,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 0 AND 9 
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Kids_Y,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 10 AND 13 
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Conexao_X,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 10 AND 13 
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Conexao_Y,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 14 AND 17 
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Fire_X,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 14 AND 17 
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Fire_Y,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 18 AND 29 
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Move_X,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 18 AND 29 
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Move_Y,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 30 AND 59 
-                        AND mm.sexo = 'M' 
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Homens_X,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 30 AND 59 
-                        AND mm.sexo = 'M' 
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Homens_Y,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 30 AND 59 
-                        AND mm.sexo = 'F' 
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Mulheres_X,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN 30 AND 59 
-                        AND mm.sexo = 'F' 
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Mulheres_Y,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 60 
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Sessenta_X,
-                COUNT(CASE 
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 60 
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Sessenta_Y,
-                COUNT(CASE
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
-                        AND mm.sexo = 'M'
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Homens30_X,
-                COUNT(CASE
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
-                        AND mm.sexo = 'M'
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Homens30_Y,
-                COUNT(CASE
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
-                        AND mm.sexo = 'F'
-                        AND mr.dt_recepcao <= '{$dataInicial}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataInicial}') THEN mm.id
-                    ELSE NULL
-                END) AS Mulheres30_X,
-                COUNT(CASE
-                    WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) >= 30
-                        AND mm.sexo = 'F'
-                        AND mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mm.id
-                    ELSE NULL
-                END) AS Mulheres30_Y
-            ")
-            ->leftJoin('membresia_membros as mm', function ($join) use ($vinculoCondition) {
-                $join->on('ii.id', '=', 'mm.igreja_id')
-                    ->whereIn('mm.vinculo', $vinculoCondition);
+        $datas = [
+            'X' => $dataInicial,
+            'Y' => $dataFinal,
+        ];
+
+        $results = DB::table('membresia_rolpermanente as mr')
+            ->join('membresia_membros as mm', 'mm.id', '=', 'mr.membro_id')
+            ->join('instituicoes_instituicoes as ii', function ($join) {
+                $join->on('ii.id', '=', 'mr.igreja_id')
+                    ->where('ii.tipo_instituicao_id', 1);
             })
-            ->leftJoin('membresia_rolpermanente as mr', function ($join) {
-                $join->on('mr.membro_id', '=', 'mm.id');
-            })
+            ->select('ii.id as igreja_id', 'ii.nome', 'dist.id as distrito_id', 'dist.nome as distrito');
+
+        foreach ($datas as $sufixo => $data) {
+            foreach ($faixasEtarias as $faixa => $condicao) {
+                $sql = 'COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, ?) '
+                    .$condicao['operator'].' AND mr.dt_recepcao <= ? '
+                    .'AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > ?)';
+                $bindings = array_merge([$data], $condicao['bounds'], [$data, $data]);
+
+                if (isset($condicao['sexo'])) {
+                    $sql .= ' AND mm.sexo = ?';
+                    $bindings[] = $condicao['sexo'];
+                }
+
+                $sql .= ' THEN mr.id END) AS `'.$faixa.'_'.$sufixo.'`';
+
+                $results->selectRaw($sql, $bindings);
+            }
+        }
+
+        $results
             ->leftJoin('instituicoes_instituicoes as dist', function ($join) {
-				$join->on('ii.instituicao_pai_id', '=', 'dist.id')
-					->where('dist.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
+                $join->on('ii.instituicao_pai_id', '=', 'dist.id')
+                    ->where('dist.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
                     ->where('dist.ativo', 1);
-			})
-            ->when($distritoId == 'all' && $regiaoId,
+            })
+            ->when(
+                $distritoId == 'all' && $regiaoId,
                 fn ($query) => $query->whereIn(
                     'ii.instituicao_pai_id',
                     DB::table('instituicoes_instituicoes')
+                        ->select('id')
                         ->where('instituicao_pai_id', $regiaoId)
                         ->where('tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
                         ->whereNull('data_encerramento')
-                        ->pluck('id')
-                        ->toArray()
                 ),
                 fn ($query) => $query->where('ii.instituicao_pai_id', $distritoId)
             )
             ->groupBy('ii.id', 'ii.nome', 'dist.id', 'dist.nome')
             ->orderBy('dist.nome', 'asc')
-            ->orderBy('ii.nome', 'asc')
-            ->get();
+            ->orderBy('ii.nome', 'asc');
+
+        $results = $results->get();
 
         foreach ($results as $row) {
             // Keep totals based on disjoint age groups: seniors also appear in the new 30+ readings.
-            foreach (['X', 'Y'] as $data) {
-                $row->{'Total_'.$data} = $row->{'Kids_'.$data} + $row->{'Conexao_'.$data}
-                    + $row->{'Fire_'.$data} + $row->{'Move_'.$data} + $row->{'Homens_'.$data}
-                    + $row->{'Mulheres_'.$data} + $row->{'Sessenta_'.$data};
+            foreach (['X', 'Y'] as $sufixo) {
+                $row->{'Total_'.$sufixo} = $row->{'Kids_'.$sufixo} + $row->{'Conexao_'.$sufixo}
+                    + $row->{'Fire_'.$sufixo} + $row->{'Move_'.$sufixo} + $row->{'Homens_'.$sufixo}
+                    + $row->{'Mulheres_'.$sufixo} + $row->{'Sessenta_'.$sufixo};
             }
         }
 

@@ -20,7 +20,7 @@ trait QuantidadeMembrosUtils
 				COUNT(CASE
 					WHEN mr.dt_recepcao <= '{$dataFinal}' AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > '{$dataFinal}') THEN mr.id
 					ELSE NULL
-				END) AS total_ate_datafinal
+					END) AS total_ate_datafinal
 			")
 			->leftJoin('membresia_rolpermanente as mr', function ($join) {
 				$join->on('mr.igreja_id', '=', 'ii.id');
