@@ -21,24 +21,22 @@
                 <div class="row">
                     @php
                         $cards = [
-                            ['titulo' => 'GCEUs', 'total' => $totalGceus, 'rota' => route('gceu.index')],
-                            ['titulo' => 'Membros', 'total' => $totalMembros, 'rota' => route('gceu.membros')],
-                            ['titulo' => 'Cartas Pastorais', 'total' => $totalCartasPastorais, 'rota' => route('gceu.carta-pastoral')],
-                            ['titulo' => 'Diários', 'total' => $totalDiarios, 'rota' => route('gceu.diario')],
-                            ['titulo' => 'Cadastros de Reunião', 'total' => $totalReuniaoPessoas, 'rota' => route('gceu.reuniao-pessoas')],
+                            ['titulo' => 'GCEUs', 'total' => $totalGceus],
+                            ['titulo' => 'Membros', 'total' => $totalMembros],
+                            ['titulo' => 'Cartas Pastorais', 'total' => $totalCartasPastorais],
+                            ['titulo' => 'Diários', 'total' => $totalDiarios],
+                            ['titulo' => 'Cadastros de Reunião', 'total' => $totalReuniaoPessoas],
                         ];
                     @endphp
 
                     @foreach ($cards as $card)
                         <div class="col-md-6 col-xl-3 mb-4">
-                            <a href="{{ $card['rota'] }}" class="text-decoration-none">
-                                <div class="card h-100 border-0 shadow-sm">
-                                    <div class="card-body">
-                                        <h6 class="text-uppercase text-muted mb-2">{{ $card['titulo'] }}</h6>
-                                        <h2 class="mb-0 text-dark">{{ $card['total'] }}</h2>
-                                    </div>
+                            <div class="card h-100 border-0 shadow-sm">
+                                <div class="card-body">
+                                    <h6 class="text-uppercase text-muted mb-2">{{ $card['titulo'] }}</h6>
+                                    <h2 class="mb-0 text-dark">{{ $card['total'] }}</h2>
                                 </div>
-                            </a>
+                            </div>
                         </div>
                     @endforeach
                 </div>
