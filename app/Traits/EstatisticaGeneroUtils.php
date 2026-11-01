@@ -15,7 +15,7 @@ trait EstatisticaGeneroUtils
             ->join('instituicoes_instituicoes as ii', 'ii.id', '=', 'mr.igreja_id')
             ->select('ii.id', 'ii.nome', 'dist.nome as distrito')
             ->selectRaw(
-                'COUNT(CASE WHEN mr.dt_recepcao <= ? AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > ?) THEN mr.id END) AS total_x',
+                'COUNT(CASE WHEN mr.dt_recepcao < ? AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao >= ?) THEN mr.id END) AS total_x',
                 [$dataInicial, $dataInicial]
             )
             ->selectRaw(
@@ -23,7 +23,7 @@ trait EstatisticaGeneroUtils
                 [$dataFinal, $dataFinal]
             )
             ->selectRaw(
-                "COUNT(CASE WHEN mr.dt_recepcao <= ? AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > ?) AND mm.sexo = 'M' THEN mr.id END) AS total_masculino_x",
+                "COUNT(CASE WHEN mr.dt_recepcao < ? AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao >= ?) AND mm.sexo = 'M' THEN mr.id END) AS total_masculino_x",
                 [$dataInicial, $dataInicial]
             )
             ->selectRaw(
@@ -31,7 +31,7 @@ trait EstatisticaGeneroUtils
                 [$dataFinal, $dataFinal]
             )
             ->selectRaw(
-                "COUNT(CASE WHEN mr.dt_recepcao <= ? AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > ?) AND mm.sexo = 'F' THEN mr.id END) AS total_feminino_x",
+                "COUNT(CASE WHEN mr.dt_recepcao < ? AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao >= ?) AND mm.sexo = 'F' THEN mr.id END) AS total_feminino_x",
                 [$dataInicial, $dataInicial]
             )
             ->selectRaw(
