@@ -152,6 +152,8 @@
                             <th style="text-align: left;">F</th>
                             <th style="text-align: left;">M</th>
                             <th style="text-align: left;">F</th>
+                            <th style="text-align: left;">M</th>
+                            <th style="text-align: left;">F</th>
                             <th style="text-align: left;">-</th>
                             <th style="text-align: left;">M</th>
                             <th style="text-align: left;">F</th>
