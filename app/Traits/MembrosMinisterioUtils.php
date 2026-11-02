@@ -35,10 +35,13 @@ trait MembrosMinisterioUtils
             ->select('ii.id as igreja_id', 'ii.nome', 'dist.id as distrito_id', 'dist.nome as distrito');
 
         foreach ($datas as $sufixo => $data) {
+            $operadorRecepcao = $sufixo === 'X' ? '<' : '<=';
+            $operadorExclusao = $sufixo === 'X' ? '>=' : '>';
+
             foreach ($faixasEtarias as $faixa => $condicao) {
                 $sql = 'COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, mm.data_nascimento, ?) '
-                    .$condicao['operator'].' AND mr.dt_recepcao <= ? '
-                    .'AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao > ?)';
+                    .$condicao['operator'].' AND mr.dt_recepcao '.$operadorRecepcao.' ? '
+                    .'AND (mr.dt_exclusao IS NULL OR mr.dt_exclusao '.$operadorExclusao.' ?)';
                 $bindings = array_merge([$data], $condicao['bounds'], [$data, $data]);
 
                 if (isset($condicao['sexo'])) {
