@@ -9,7 +9,7 @@ use function PHPUnit\Framework\isNull;
 
 trait GetIgrejasAll
 {
-    public static function fetchIgrejas()
+    public static function fetchIgrejas(bool $somenteAtivas = true)
     {
         // $igrejas = DB::table('instituicoes_instituicoes as igreja')
         //     ->select(
@@ -28,9 +28,14 @@ trait GetIgrejasAll
         //     ->orderBy('igreja.id')
         //     ->get();
 
-        $igrejas = VwIgreja::whereIn('distrito_id', Identifiable::fetchDistritosIdByRegiao(Identifiable::fetchtSessionRegiao()->id))
-            ->whereNull('deleted_at')
-            ->where('ativo', 1)->get();
+        $query = VwIgreja::whereIn('distrito_id', Identifiable::fetchDistritosIdByRegiao(Identifiable::fetchtSessionRegiao()->id))
+            ->whereNull('deleted_at');
+
+        if ($somenteAtivas) {
+            $query->where('ativo', 1);
+        }
+
+        $igrejas = $query->get();
         return $igrejas;
     }
 
