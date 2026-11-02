@@ -12,7 +12,7 @@ class GetEstatisticaAnoEclesiasticoTodosService
 {
     public function execute(array $params = [])
     {
-        $getIgrejas = app(GetIgrejas::class)->execute();
+        $getIgrejas = app(GetIgrejas::class)->execute(['somente_ativas' => false]);
     
         $membresias = [];
         foreach($getIgrejas as $igreja){
