@@ -12,7 +12,7 @@ class GetEstatisticaAnoEclesiasticoTodosService
 {
     public function execute(array $params = [])
     {
-        $getIgrejas = app(GetIgrejas::class)->execute();
+        $getIgrejas = app(GetIgrejas::class)->execute(['somente_ativas' => false]);
     
         $membresias = [];
         foreach($getIgrejas as $igreja){
@@ -87,6 +87,7 @@ class GetEstatisticaAnoEclesiasticoTodosService
         $dataInicial = isset($params['data_inicial']) ? $params['data_inicial'] : '';
         $dataFinal = isset($params['data_final']) ? $params['data_final'] : '';
         $query = "SELECT 
+            ms.id AS situacao_id,
             descricao,
             
             (	SELECT count(*) 
