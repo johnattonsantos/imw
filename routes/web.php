@@ -63,6 +63,7 @@ use App\Http\Controllers\RelatorioController;
 use App\Http\Controllers\TotalizacaoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\ValidarMembroController;
+use App\Http\Controllers\ValidarClerigoController;
 use App\Http\Controllers\VisitantesController;
 use App\Http\Middleware\VerificaInstituicao;
 use App\Http\Middleware\VerificaPerfil;
@@ -75,6 +76,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/idioma', [LocaleController::class, 'update'])->name('locale.update');
 Route::get('/validar-membro', [ValidarMembroController::class, 'show'])->name('validar-membro.show');
+Route::get('/validar-clerigo', [ValidarClerigoController::class, 'show'])->name('validar-clerigo.show')->middleware('signed');
 
 // Rota para mostrar o formulário de esqueci a senha
 Route::get('/esqueci-senha', [AuthController::class, 'showResetRequestForm'])->name('password.request');
