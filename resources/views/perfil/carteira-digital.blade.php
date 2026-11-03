@@ -47,6 +47,20 @@
         .regiao_top{
             position: absolute; top:213px; left: 330px; font-size: 14px; color: #4361ee; z-index: 1;
         }
+        .carteira-qrcode {
+            position: absolute;
+            top: 238px;
+            left: 70px;
+            width: 180px;
+            height: 180px;
+            z-index: 2;
+            background: #fff;
+        }
+        .carteira-qrcode img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
         .superintendente-nome{
             position: absolute;
             top: 978px;
@@ -181,6 +195,11 @@
                 <div class="carteira-viewport">
                     <div class="carteira-wrapper">
                         <div class="regiao_top">{{ $regiaoEclesiastica }}</div>
+                        @if ($qrCode)
+                            <a href="{{ $validacaoUrl }}" target="_blank" rel="noopener noreferrer" class="carteira-qrcode" aria-label="{{ __('Validar credencial de clérigo') }}">
+                                <img src="{{ $qrCode }}" alt="{{ __('QR Code de validação da credencial de clérigo') }}">
+                            </a>
+                        @endif
                         <div class="superintendente-nome">{{ $usuario->superintendente_regional_nome }}</div>
                         <div class="superintendente-regiao">{{ $superintendenteRegiao }}</div>
                         <img src="{{ $usuario->foto }}" class="foto" alt="">
@@ -192,12 +211,17 @@
                         <div class="categoria">{{ isset($usuario->categoria) ? mb_convert_case($usuario->categoria, MB_CASE_TITLE, "UTF-8") : '' }}</div>
                         <div class="dt-consagracao">{{ formatDate($usuario->data_consagracao) }}</div>
                         <div class="dt-ordenacao">{{ formatDate($usuario->data_ordenacao) }}</div>
-                        <div class="validade">{{ __('Validade') }}: 31/10/2027</div>
+                        <div class="validade">{{ __('Validade') }}: {{ $validadeCarteira }}</div>
                         <div class="contato-sede">{{ __('Sede Administrativa') }}: {{ $telefoneSedeAdministrativa }}</div>
                         <div class="regiao_bottom">{{ $regiaoEclesiastica }}</div>
                         <img src="{{ asset('theme/images/carteira-digital.png') }}" class="carteira-bg" alt="">
                     </div>
                 </div>
+                @if ($validacaoUrl)
+                    <div class="text-center mt-3">
+                        <a href="{{ $validacaoUrl }}" target="_blank" rel="noopener noreferrer">{{ __('Validar credencial') }}</a>
+                    </div>
+                @endif
             </div>
             @else
                 <div class="widget-content widget-content-area">
