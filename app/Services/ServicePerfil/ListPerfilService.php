@@ -40,12 +40,9 @@ class ListPerfilService
         }
 
         $instituicao = $this->getLoggedRegionInstitution($pessoa);
-        $superintendenteRegional = $this->getActiveRegionalSuperintendent($instituicao);
-
-        $pessoa['nome_regiao'] = optional($instituicao)->nome ?? '';
-        $pessoa['nome_regiao_formatado'] = $this->formatRegionName($pessoa['nome_regiao']);
-        $pessoa['telefone_sede_administrativa'] = $this->formatPersonPhone($superintendenteRegional);
-        $pessoa['superintendente_regional_nome'] = $this->formatPersonName(optional($superintendenteRegional)->nome);
+        foreach ($this->contextoCarteira($instituicao) as $campo => $valor) {
+            $pessoa[$campo] = $valor;
+        }
 
         if ($pessoa->foto) {
             $pessoa->foto = $this->resolveFotoUrl((string) $pessoa->foto);
@@ -53,6 +50,18 @@ class ListPerfilService
 
         $pessoa['pessoa_id'] = $usuario->pessoa_id;
         return $pessoa;
+    }
+
+    public function contextoCarteira(?InstituicoesInstituicao $instituicao): array
+    {
+        $superintendente = $this->getActiveRegionalSuperintendent($instituicao);
+
+        return [
+            'nome_regiao' => optional($instituicao)->nome ?? '',
+            'nome_regiao_formatado' => $this->formatRegionName(optional($instituicao)->nome),
+            'telefone_sede_administrativa' => $this->formatPersonPhone($superintendente),
+            'superintendente_regional_nome' => $this->formatPersonName(optional($superintendente)->nome),
+        ];
     }
 
     public function cartaoMembro(): ?object
