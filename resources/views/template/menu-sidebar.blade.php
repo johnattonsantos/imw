@@ -1248,7 +1248,7 @@
                     <ul class="collapse submenu list-unstyled {{ (Request::is('regiao/estatistica/*') || Request::is('regiao/relatorio/estatisticas-gceu') || Request::is('regiao/relatorio/aspirantes-por-igrejas')) ? 'collapse show' : '' }}" id="estatistica-regiao"
                          data-parent="#estatistica-regiao">
                          <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-membros-evolucao'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <span>{{ __('Membros') }}</span>
                              @endif
                          </li>
@@ -1258,12 +1258,12 @@
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/estatistica-membros-evolucao') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-membros-evolucao'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatistica.evolucao') }}">{{ __('Evolução') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/estatistica-total-membresia') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-total-membresia'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatistica.totalMembresia') }}">{{ __('Total Membresia') }}</a>
                              @endif
 
@@ -1274,22 +1274,22 @@
                              </li>
                          @endif
                          <li {!! Request::is('regiao/estatistica/relatorio/estatisticaescolaridade') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-escolaridade'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.relatorio.estatisticaescolaridade') }}">{{ __('Escolaridade') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/estatisticaestadocivil') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-estado-civl'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.relatorio.estatisticaestadocivil') }}">{{ __('Estado Civil') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/estatisticageneroporcentagem') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-genero'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.relatorio.estatisticageneroporcentagem') }}">{{ __('Gênero') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/estatisticatotalmembros') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-quantidade-membros'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.relatorio.estatisticatotalmembros') }}">{{ __('Quantidade de Membros') }}</a>
                              @endif
                          </li>
@@ -1310,84 +1310,72 @@
                          </li>
 
                          <li {!! Request::is('regiao/estatistica/relatorio/historiconomeacoes') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-hitorico-nomeacoes'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatistica.historiconomeacoes') }}">{{ __('Histórico de Nomeacões') }}</a>
                              @endif
                          </li>
 
                          <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-totalizacao-distrito'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <span>{{ __('Totalização') }}</span>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totaldistritoregiao') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-totalizacao-distrito'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.totalizacao.totaldistritoregiao') }}">
                                      {{ __('Distrito por Região') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totalcongregacoesigrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-totalizacao-congregacoes-igrejas'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.totalizacao.totalcongregacoesigrejas') }}">
                                      {{ __('Congregações por Igrejas') }}</a>
                              @endif
                          </li>
 
                          <li {!! Request::is('regiao/estatistica/relatorio/totalcongregacoesdistritos') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-totalizacao-congregacoes-distrito'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.totalizacao.totalcongregacoesdistritos') }}"> {{ __('Congregações por Distritos') }}</a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totalfrentemissionaria') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-frente-missionaria'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.totalizacao.totalfrentemissionaria') }}"> {{ __('Frentes Missionárias') }}</a>
                              @endif
                          </li>
                          <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-distrito-membros'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <span>{{ __('Os 10 Distritos') }}</span>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/distritomaisbatismo') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-distrito-batismo'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.dezmais.distritomaisbatismo') }}"> {{ __('Mais Batizaram') }}
-                                 </a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('regiao/estatistica/relatorio/distritomaismembros') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-distrito-membros'))
-                                 <a href="{{ route('regiao.dezmais.distritomaismembros') }}"> {{ __('Mais Números de Membros') }}
                                  </a>
                              @endif
                          </li>
 
                          <li {!! Request::is('regiao/estatistica/relatorio/distritomaiscrescerammembros') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-distrito-crescimento'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.dezmais.distritomaiscrescerammembros') }}">
                                      {{ __('Mais Cresceram em Membros') }}
                                  </a>
                              @endif
                          </li>
                          <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-igreja-batismo'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <span>{{ __('Os 10 Igrejas') }}</span>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/igrejamaisbatismo') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-igreja-batismo'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.dezmais.igrejamaisbatismo') }}"> {{ __('Mais Batizaram') }}
-                                 </a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('regiao/estatistica/relatorio/igrejamaismembros') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-igreja-membros'))
-                                 <a href="{{ route('regiao.dezmais.igrejamaismembros') }}"> {{ __('Mais Números de Membros') }}
                                  </a>
                              @endif
                          </li>
 
                          <li {!! Request::is('regiao/estatistica/relatorio/igrejamaiscrescerammembros') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-igreja-crescimento'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.dezmais.igrejamaiscrescerammembros') }}">
                                      {{ __('Mais Cresceram em Membros') }}
                                  </a>
@@ -1395,36 +1383,36 @@
                          </li>
 
                          <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-clerigo-situacao'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <span> {{ __('Clérigos por situação') }}</span>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totalclerigosnomeacoes') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-clerigo-situacao'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatisticaclerigos.totalclerigosnomeacoes') }}">{{ __('Nomeação') }}
                                  </a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totalclerigosstatus') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-clerigo-status'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatisticaclerigos.totalclerigosstatus') }}">{{ __('Status') }}
                                  </a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totalclerigosfaxiaetaria') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-clerigo-faixa-etaria'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatisticaclerigos.totalclerigosfaxiaetaria') }}">{{ __('Faixa etária') }}
                                  </a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/totalclerigosporvinculo') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-clerigo-tipo-vinculo'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatisticaclerigos.totalclerigosporvinculo') }}">{{ __('Tipo de vínculo') }}
                                  </a>
                              @endif
                          </li>
                          <li {!! Request::is('regiao/estatistica/relatorio/ticketmedio') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-estatistica-clerigo-ticket-medio'))
+                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-estatistica'))
                                  <a href="{{ route('regiao.estatistica.ticketmedio') }}">{{ __('Ticket Médio') }}
                                  </a>
                              @endif

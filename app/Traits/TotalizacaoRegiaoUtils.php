@@ -193,31 +193,9 @@ trait TotalizacaoRegiaoUtils
 
         return $totalPorcentagem;
     }
-    public static function fetchDezDistritoCresceramMembros($dataFinal, $dataInicial, $regiaoId)
+    public static function fetchDezDistritoCresceramMembros($dataFinal, $dataInicial, $regiaoId, $crescimento = 'absoluto')
     {
-        $instituicoes = DB::table('instituicoes_instituicoes as ii')
-            ->leftJoin('membresia_rolpermanente as mr', function ($join) use ($dataInicial, $dataFinal) {
-                $join->on('mr.distrito_id', '=', 'ii.id')
-                    ->whereIn('mr.modo_recepcao_id', [1, 2, 3]) // Batismo, Adesão, Reconciliação
-                    ->whereBetween('mr.dt_recepcao', [$dataInicial, $dataFinal]);
-            })
-            ->selectRaw('COUNT(DISTINCT mr.membro_id) as total, ii.nome')
-            ->where('ii.regiao_id', $regiaoId)
-            ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::DISTRITO)
-            ->where('ii.ativo', 1)
-            ->whereNull('ii.data_encerramento')
-            ->groupBy('ii.id', 'ii.nome')
-            ->orderByDesc('total')
-            ->limit(10)
-            ->get();
-
-        $total = $instituicoes->sum('total');
-        $totalPorcentagem = $instituicoes->map(function ($instituicao) use ($total) {
-            $instituicao->percentual = ($total > 0) ? ($instituicao->total * 100) / $total : 0;
-            return $instituicao;
-        });
-
-        return $totalPorcentagem;
+        return self::fetchRankingCrescimento($dataFinal, $dataInicial, $regiaoId, 'distrito_id', InstituicoesTipoInstituicao::DISTRITO, $crescimento);
     }
 
 
@@ -288,31 +266,50 @@ trait TotalizacaoRegiaoUtils
 
         return $totalPorcentagem;
     }
-    public static function fetchDezIgrejaCresceramMembros($dataFinal, $dataInicial, $regiaoId)
+    public static function fetchDezIgrejaCresceramMembros($dataFinal, $dataInicial, $regiaoId, $crescimento = 'absoluto')
     {
-        $instituicoes = DB::table('instituicoes_instituicoes as ii')
-            ->leftJoin('membresia_rolpermanente as mr', function ($join) use ($dataInicial, $dataFinal) {
-                $join->on('mr.igreja_id', '=', 'ii.id')
-                    ->whereIn('mr.modo_recepcao_id', [1, 2, 3]) // Batismo, Adesão, Reconciliação
-                    ->whereBetween('mr.dt_recepcao', [$dataInicial, $dataFinal]);
-            })
-            ->selectRaw('COUNT(DISTINCT mr.membro_id) as total, ii.nome')
-            ->where('ii.regiao_id', $regiaoId)
-            ->where('ii.tipo_instituicao_id', InstituicoesTipoInstituicao::IGREJA_LOCAL)
-            ->where('ii.ativo', 1)
-            ->whereNull('ii.data_encerramento')
-            ->groupBy('ii.id', 'ii.nome')
-            ->orderByDesc('total')
-            ->limit(10)
-            ->get();
+        return self::fetchRankingCrescimento($dataFinal, $dataInicial, $regiaoId, 'igreja_id', InstituicoesTipoInstituicao::IGREJA_LOCAL, $crescimento);
+    }
 
-        $total = $instituicoes->sum('total');
-        $totalPorcentagem = $instituicoes->map(function ($instituicao) use ($total) {
-            $instituicao->percentual = ($total > 0) ? ($instituicao->total * 100) / $total : 0;
+    private static function fetchRankingCrescimento($dataFinal, $dataInicial, $regiaoId, $coluna, $tipo, $crescimento)
+    {
+        // The opening balance precedes actions on the first day of the selected period.
+        $base = DB::table('membresia_rolpermanente as base')
+            ->selectRaw('COUNT(DISTINCT base.membro_id)')
+            ->whereColumn('base.'.$coluna, 'ii.id')
+            ->where('base.regiao_id', $regiaoId)->whereNull('base.deleted_at')
+            ->where('base.dt_recepcao', '<', $dataInicial)
+            ->where(fn ($query) => $query->whereNull('base.dt_exclusao')->orWhere('base.dt_exclusao', '>=', $dataInicial));
+
+        $saldoFinal = DB::table('membresia_rolpermanente as encerramento')
+            ->selectRaw('COUNT(DISTINCT encerramento.membro_id)')
+            ->whereColumn('encerramento.'.$coluna, 'ii.id')
+            ->where('encerramento.regiao_id', $regiaoId)->whereNull('encerramento.deleted_at')
+            ->where('encerramento.dt_recepcao', '<=', $dataFinal)
+            ->where(fn ($query) => $query->whereNull('encerramento.dt_exclusao')->orWhere('encerramento.dt_exclusao', '>', $dataFinal));
+
+        $query = DB::table('instituicoes_instituicoes as ii')
+            ->select('ii.nome')
+            ->selectSub($base, 'base_inicial')
+            ->selectSub($saldoFinal, 'base_final')
+            ->where('ii.regiao_id', $regiaoId)
+            ->where('ii.tipo_instituicao_id', $tipo)
+            ->where('ii.ativo', 1)
+            ->whereNull('ii.data_encerramento');
+        $variacoes = DB::table($query, 'saldos')->select('saldos.*')
+            ->selectRaw('CAST(base_final AS SIGNED) - CAST(base_inicial AS SIGNED) AS total');
+        $ranking = DB::table($variacoes, 'ranking')->select('ranking.*')
+            ->selectRaw('CASE WHEN base_inicial > 0 THEN total * 100.0 / base_inicial WHEN total = 0 THEN 0 ELSE NULL END AS percentual');
+        if ($crescimento === 'percentual') {
+            $ranking->orderByDesc('percentual');
+        }
+
+        return $ranking->orderByDesc('total')->orderBy('nome')->limit(10)->get()->map(function ($instituicao) {
+            $instituicao->percentual = $instituicao->base_inicial > 0
+                ? ($instituicao->total * 100) / $instituicao->base_inicial
+                : ($instituicao->total == 0 ? 0.0 : null);
             return $instituicao;
         });
-
-        return $totalPorcentagem;
     }
     public static function fetchFrenteMissionaria($instituicao)
     {
