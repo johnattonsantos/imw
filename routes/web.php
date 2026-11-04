@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuditoriaController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\ClerigosRegiaoController;
+use App\Http\Controllers\CarteirasClerigosController;
 use App\Http\Controllers\CongregacoesController;
 use App\Http\Controllers\CongregadosController;
 use App\Http\Controllers\ClerigoPerfilController;
@@ -765,6 +766,8 @@ Route::middleware(['auth'])->group(function () {
         //Clérigos
         Route::prefix('clerigos')->name('clerigos.')->controller(ClerigosRegiaoController::class)->group(function () {
             Route::middleware(['seguranca:menu-instituicoes'])->group(function () {
+                Route::get('/carteiras/impressao', [CarteirasClerigosController::class, 'index'])->name('carteiras.index');
+                Route::post('/carteiras/impressao/pdf', [CarteirasClerigosController::class, 'pdf'])->name('carteiras.pdf');
                 Route::get('/pesquisar-cpf', 'pesquisarPorCpf')->name('pesquisar-cpf');
                 Route::get('/', 'index')->name('index');
                 Route::get('/novo', 'novo')->name('novo');

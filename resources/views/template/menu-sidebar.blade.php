@@ -501,6 +501,9 @@
                          <li {!! Request::is('clerigos', 'clerigos/nomeacoes/*', 'clerigos/novo*', 'clerigos/editar/*') ? 'class="active"' : '' !!}>
                              <a href="{{ route('clerigos.index') }}">{{ __('Clérigos') }}</a>
                          </li>
+                         <li {!! Request::is('clerigos/carteiras/impressao*') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('clerigos.carteiras.index') }}">{{ __('Impressão de Carteiras de Clérigos') }}</a>
+                         </li>
                          <li {!! Request::is('clerigos/prebendas','clerigos/prebendas/*') ? 'class="active"' : '' !!}>
                              <a href="{{ route('clerigos.prebendas.index') }}">{{ __('Prebendas') }}</a>
                          </li>
