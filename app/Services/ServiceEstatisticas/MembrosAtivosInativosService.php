@@ -41,27 +41,26 @@ class MembrosAtivosInativosService
             })
             ->whereNull('deleted_at')->orderBy('nome')->get(['id', 'nome']);
 
-        $linhas = [];
-        foreach ($this->datas($periodo, $referencia) as $intervalo) {
-            $fim = $intervalo['fim'];
-            $contagensIniciais = $this->contagensNaData($regiaoId, $coluna, $intervalo['inicio']);
-            $contagens = $intervalo['inicio'] === $fim ? $contagensIniciais : $this->contagensNaData($regiaoId, $coluna, $fim);
+        $intervalos = $this->datas($periodo, $referencia);
+        $inicio = $intervalos[0]['inicio'];
+        $fim = $intervalos[count($intervalos) - 1]['fim'];
+        $contagensIniciais = $this->contagensNaData($regiaoId, $coluna, $inicio);
+        $contagensFinais = $inicio === $fim ? $contagensIniciais : $this->contagensNaData($regiaoId, $coluna, $fim);
 
-            foreach ($instituicoes as $instituicao) {
-                $contagem = $contagens->get($instituicao->id);
-                $inicial = $contagensIniciais->get($instituicao->id);
-                $ativosIniciais = (int) ($inicial->ativos ?? 0);
-                $ativosFinais = (int) ($contagem->ativos ?? 0);
-                $linhas[] = [
-                    'instituicao' => $instituicao->nome,
-                    'inicio' => $intervalo['inicio'],
-                    'fim' => $fim,
-                    'ativos' => $ativosFinais,
-                    'inativos' => (int) ($contagem->inativos ?? 0),
-                    'ativos_iniciais' => $ativosIniciais,
-                    'crescimento_ativos' => $this->percentualCrescimento($ativosIniciais, $ativosFinais),
-                ];
-            }
+        $linhas = [];
+        foreach ($instituicoes as $instituicao) {
+            $inicial = $contagensIniciais->get($instituicao->id);
+            $final = $contagensFinais->get($instituicao->id);
+            $linhas[] = [
+                'instituicao' => $instituicao->nome,
+                'inicio' => $inicio,
+                'fim' => $fim,
+                'ativos_iniciais' => (int) ($inicial->ativos ?? 0),
+                'inativos_iniciais' => (int) ($inicial->inativos ?? 0),
+                'ativos_finais' => (int) ($final->ativos ?? 0),
+                'inativos_finais' => (int) ($final->inativos ?? 0),
+                'crescimento_ativos' => $this->percentualCrescimento((int) ($inicial->ativos ?? 0), (int) ($final->ativos ?? 0)),
+            ];
         }
 
         return $linhas;
@@ -78,7 +77,7 @@ class MembrosAtivosInativosService
 
     private function contagensNaData(int $regiaoId, string $coluna, string $fim): \Illuminate\Support\Collection
     {
-        // Reconstruct the status from the last reception known at the snapshot date.
+        // Reconstruct each snapshot from the last reception known at that date.
         return DB::table('membresia_rolpermanente as rol')
             ->where('rol.regiao_id', $regiaoId)->whereNull('rol.deleted_at')
             ->where('rol.dt_recepcao', '<=', $fim)

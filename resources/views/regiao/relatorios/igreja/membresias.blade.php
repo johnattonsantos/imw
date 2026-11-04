@@ -93,7 +93,7 @@
                         <tr>
                             <th colspan="2"></th>
                             <th colspan="12" style="text-align: center;">{{ __('RECEBIDOS') }}</th>
-                            <th colspan="14" style="text-align: center;">{{ __('EXCLUÍDOS') }}</th>
+                            <th colspan="16" style="text-align: center;">{{ __('EXCLUÍDOS') }}</th>
                             <th colspan="7" style="text-align: center;">{{ __('ROL') }}</th>
                             <th style="text-align: center;"></th>
                         </tr>
@@ -112,6 +112,7 @@
                             <th colspan="2" style="text-align: center;">{{ __('FALECIMENTO') }}</th>
                             <th colspan="2" style="text-align: center;">{{ __('DUPLICIDADE') }}</th>
                             <th colspan="2" style="text-align: center;">{{ __('TRANSFERÊNCIA') }}</th>
+                            <th colspan="2" style="text-align: center;">{{ __('NOVO CLÉRIGO') }}</th>
                             <th colspan="2" style="text-align: center;">{{ __('TOTAL') }}</th>
                             <th colspan="2" style="text-align: center;">{{ __('ANTERIOR') }}</th>
                             <th style="text-align: center;">{{ __('TOTAL') }}</th>
@@ -123,6 +124,8 @@
                         <tr>
                             <th></th>
                             <th></th>
+                            <th style="text-align: left;">M</th>
+                            <th style="text-align: left;">F</th>
                             <th style="text-align: left;">M</th>
                             <th style="text-align: left;">F</th>
                             <th style="text-align: left;">M</th>
@@ -210,9 +213,14 @@
                                 $totalTransferenciaExcluidosM[] = $transferenciaExcluidosM;
                                 $transferenciaExcluidosF = $item['membrosExcluidos'][5]->sexo_feminino;
                                 $totalTransferenciaExcluidosF[] = $transferenciaExcluidosF;
-                                $totalExcluidoM = $item['membrosExcluidos'][0]->sexo_masculino + $item['membrosExcluidos'][1]->sexo_masculino + $item['membrosExcluidos'][2]->sexo_masculino + $item['membrosExcluidos'][3]->sexo_masculino + $item['membrosExcluidos'][4]->sexo_masculino + $item['membrosExcluidos'][5]->sexo_masculino;
+                                $novoClerigo = $item['membrosExcluidos']->firstWhere('situacao_id', 14);
+                                $novoClerigoM = $novoClerigo->sexo_masculino ?? 0;
+                                $novoClerigoF = $novoClerigo->sexo_feminino ?? 0;
+                                $totalNovoClerigoM[] = $novoClerigoM;
+                                $totalNovoClerigoF[] = $novoClerigoF;
+                                $totalExcluidoM = $item['membrosExcluidos'][0]->sexo_masculino + $item['membrosExcluidos'][1]->sexo_masculino + $item['membrosExcluidos'][2]->sexo_masculino + $item['membrosExcluidos'][3]->sexo_masculino + $item['membrosExcluidos'][4]->sexo_masculino + $item['membrosExcluidos'][5]->sexo_masculino + $novoClerigoM;
                                 $valorTotalExcluidoM[] = $totalExcluidoM;
-                                $totalExcluidoF = $item['membrosExcluidos'][0]->sexo_feminino + $item['membrosExcluidos'][1]->sexo_feminino + $item['membrosExcluidos'][2]->sexo_feminino + $item['membrosExcluidos'][3]->sexo_feminino + $item['membrosExcluidos'][4]->sexo_feminino + $item['membrosExcluidos'][5]->sexo_feminino;
+                                $totalExcluidoF = $item['membrosExcluidos'][0]->sexo_feminino + $item['membrosExcluidos'][1]->sexo_feminino + $item['membrosExcluidos'][2]->sexo_feminino + $item['membrosExcluidos'][3]->sexo_feminino + $item['membrosExcluidos'][4]->sexo_feminino + $item['membrosExcluidos'][5]->sexo_feminino + $novoClerigoF;
                                 $valorTotalExcluidoF[] = $totalExcluidoF;
                                 $rolAnteriorM = $item['rolAnterior']->sexo_masculino;
                                 $totalRolAnteriorM[] = $rolAnteriorM;
@@ -259,6 +267,8 @@
                                 <td style="text-align: center;">{{ $duplicidadeF }}</td>
                                 <td style="text-align: center;">{{ $transferenciaExcluidosM }}</td>
                                 <td style="text-align: center;">{{ $transferenciaExcluidosF }}</td>
+                                <td style="text-align: center;">{{ $novoClerigoM }}</td>
+                                <td style="text-align: center;">{{ $novoClerigoF }}</td>
                                 <td style="text-align: center;">{{ $totalExcluidoM }}</td>
                                 <td style="text-align: center;">{{ $totalExcluidoF }}</td>
                                 <td style="text-align: center;">{{ $rolAnteriorM }}</td>
@@ -310,6 +320,8 @@
                             <td style="text-align: center;">{{ array_sum($totalDuplicidadeF) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalTransferenciaExcluidosM) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalTransferenciaExcluidosF) }}</td>
+                            <td style="text-align: center;">{{ array_sum($totalNovoClerigoM) }}</td>
+                            <td style="text-align: center;">{{ array_sum($totalNovoClerigoF) }}</td>
                             <td style="text-align: center;">{{ array_sum($valorTotalExcluidoM) }}</td>
                             <td style="text-align: center;">{{ array_sum($valorTotalExcluidoF) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalRolAnteriorM) }}</td>
@@ -335,7 +347,7 @@
                         <tr>
                             <th colspan="2"></th>
                             <th colspan="6" style="text-align: center;">{{ __('RECEBIDOS') }}</th>
-                            <th colspan="7" style="text-align: center;">{{ __('EXCLUÍDOS') }}</th>
+                            <th colspan="8" style="text-align: center;">{{ __('EXCLUÍDOS') }}</th>
                             <th colspan="3" style="text-align: center;">{{ __('ROL') }}</th>
                             <th style="text-align: center;"></th>
                         </tr>
@@ -354,6 +366,7 @@
                             <th style="text-align: center;">{{ __('FALECIMENTO') }}</th>
                             <th style="text-align: center;">{{ __('DUPLICIDADE') }}</th>
                             <th style="text-align: center;">{{ __('TRANSFERÊNCIA') }}</th>
+                            <th style="text-align: center;">{{ __('NOVO CLÉRIGO') }}</th>
                             <th style="text-align: center;">{{ __('TOTAL') }}</th>
                             <th style="text-align: center;">{{ __('ANTERIOR') }}</th>
                             <th style="text-align: center;">{{ __('ATUAL') }}</th>
@@ -367,9 +380,14 @@
                                 $totalRecebidoM = $item['membrosRecebidos'][0]->sexo_masculino + $item['membrosRecebidos'][1]->sexo_masculino + $item['membrosRecebidos'][2]->sexo_masculino + $item['membrosRecebidos'][3]->sexo_masculino + $item['membrosRecebidos'][4]->sexo_masculino;
                                 $totalRecebidoF = $item['membrosRecebidos'][0]->sexo_feminino + $item['membrosRecebidos'][1]->sexo_feminino + $item['membrosRecebidos'][2]->sexo_feminino + $item['membrosRecebidos'][3]->sexo_feminino + $item['membrosRecebidos'][4]->sexo_feminino;
 
-                                $totalExcluidoM = $item['membrosExcluidos'][0]->sexo_masculino + $item['membrosExcluidos'][1]->sexo_masculino + $item['membrosExcluidos'][2]->sexo_masculino + $item['membrosExcluidos'][3]->sexo_masculino + $item['membrosExcluidos'][4]->sexo_masculino + $item['membrosExcluidos'][5]->sexo_masculino;
+                                $novoClerigo = $item['membrosExcluidos']->firstWhere('situacao_id', 14);
+                                $novoClerigoM = $novoClerigo->sexo_masculino ?? 0;
+                                $novoClerigoF = $novoClerigo->sexo_feminino ?? 0;
+                                $totalNovoClerigo = $novoClerigoM + $novoClerigoF;
+                                $totalNovoClerigoVertical[] = $totalNovoClerigo;
+                                $totalExcluidoM = $item['membrosExcluidos'][0]->sexo_masculino + $item['membrosExcluidos'][1]->sexo_masculino + $item['membrosExcluidos'][2]->sexo_masculino + $item['membrosExcluidos'][3]->sexo_masculino + $item['membrosExcluidos'][4]->sexo_masculino + $item['membrosExcluidos'][5]->sexo_masculino + $novoClerigoM;
 
-                                $totalExcluidoF = $item['membrosExcluidos'][0]->sexo_feminino + $item['membrosExcluidos'][1]->sexo_feminino + $item['membrosExcluidos'][2]->sexo_feminino + $item['membrosExcluidos'][3]->sexo_feminino + $item['membrosExcluidos'][4]->sexo_feminino + $item['membrosExcluidos'][5]->sexo_feminino;
+                                $totalExcluidoF = $item['membrosExcluidos'][0]->sexo_feminino + $item['membrosExcluidos'][1]->sexo_feminino + $item['membrosExcluidos'][2]->sexo_feminino + $item['membrosExcluidos'][3]->sexo_feminino + $item['membrosExcluidos'][4]->sexo_feminino + $item['membrosExcluidos'][5]->sexo_feminino + $novoClerigoF;
                                 $adesao = $item['membrosRecebidos'][1]->sexo_masculino + $item['membrosRecebidos'][1]->sexo_feminino;
                                 $totalAdesao[] = $adesao;
                                 $batismo = $item['membrosRecebidos'][0]->sexo_masculino + $item['membrosRecebidos'][0]->sexo_feminino;
@@ -420,6 +438,7 @@
                                 <td style="text-align: center;">{{ $falecimento }}</td>
                                 <td style="text-align: center;">{{ $duplicidade }}</td>
                                 <td style="text-align: center;">{{ $transferenciaExcluidos }}</td>
+                                <td style="text-align: center;">{{ $totalNovoClerigo }}</td>
                                 <td style="text-align: center;">{{ $excluidos }}</td>
                                 <td style="text-align: center;">{{ $rolAnterior }}</td>
                                 <td style="text-align: center;">{{ $rolAtual }}</td>
@@ -455,6 +474,7 @@
                             <td style="text-align: center;">{{ array_sum($totalFalecimento) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalDuplicidade) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalTransferenciaExcluidos) }}</td>
+                            <td style="text-align: center;">{{ array_sum($totalNovoClerigoVertical) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalExcluidos) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalRolAnterior) }}</td>
                             <td style="text-align: center;">{{ array_sum($totalRolAtual) }}</td>
