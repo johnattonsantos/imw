@@ -128,11 +128,12 @@ class TotalizacaoController extends Controller
     }
     public function distritomaiscrescerammembros(Request $request)
     {
+        $request->validate(['crescimento' => 'nullable|in:absoluto,percentual']);
 
         $dataFinal = $request->input('data_final');
         $dataInicial = $request->input('data_inicial');
 
-        $data = app(DezDisitritosMaisReceberamMembrosService::class)->execute($dataFinal, $dataInicial);
+        $data = app(DezDisitritosMaisReceberamMembrosService::class)->execute($dataFinal, $dataInicial, $request->input('crescimento', 'absoluto'));
 
         return view('regiao.dezmais.distritomaiscrescerammembros', $data);
     }
@@ -159,11 +160,12 @@ class TotalizacaoController extends Controller
     }
     public function igrejamaiscrescerammembros(Request $request)
     {
+        $request->validate(['crescimento' => 'nullable|in:absoluto,percentual']);
 
         $dataFinal = $request->input('data_final');
         $dataInicial = $request->input('data_inicial');
 
-        $data = app(DezIgrejasMaisReceberamMembrosService::class)->execute($dataFinal, $dataInicial);
+        $data = app(DezIgrejasMaisReceberamMembrosService::class)->execute($dataFinal, $dataInicial, $request->input('crescimento', 'absoluto'));
 
         return view('regiao.dezmais.igrejamaiscrescerammembros', $data);
     }

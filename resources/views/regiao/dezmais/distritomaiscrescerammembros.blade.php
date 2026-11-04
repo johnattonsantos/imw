@@ -4,7 +4,7 @@
     <x-breadcrumb :breadcrumbs="[
         ['text' => 'Home', 'url' => '/', 'active' => false],
         ['text' => 'Totalização', 'url' => '#', 'active' => false],
-        ['text' => '10+ Distritos em Números de Membros', 'url' => '#', 'active' => true],
+        ['text' => '10+ Distritos que Mais Cresceram', 'url' => '#', 'active' => true],
     ]"></x-breadcrumb>
 @endsection
 
@@ -30,7 +30,7 @@
             <div class="widget-header">
                 <div class="row">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-                        <h4>10+ Distritos em Números de Membros- {{ $regiao->nome }}</h4>
+                        <h4>10+ Distritos que Mais Cresceram- {{ $regiao->nome }}</h4>
                     </div>
                 </div>
             </div>
@@ -59,6 +59,15 @@
                     </div>
 
                     <div class="form-group row mb-4">
+                        <div class="col-lg-3 text-right"><label for="crescimento">Tipo de crescimento:</label></div>
+                        <div class="col-lg-3">
+                            <select id="crescimento" name="crescimento" class="form-control">
+                                <option value="absoluto" @selected($crescimento === 'absoluto')>Absoluto (número de membros)</option>
+                                <option value="percentual" @selected($crescimento === 'percentual')>Percentual (%)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-4">
                         <div class="col-lg-2"></div>
                         <div class="col-lg-6">
                             <button id="btn_buscar" type="submit" name="action" value="buscar"
@@ -81,43 +90,10 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12">
-                                    <h6 class="mt-3 text-uppercase">10+ Distritos em Números de Membros -
+                                    <h6 class="mt-3 text-uppercase">10+ Distritos que Mais Cresceram -
                                         {{ $regiao->nome }}</h6>
                                     <div class="table-responsive">
-                                        @php
-                                            $totalQuantidade = $lancamentos->sum('total');
-                                            $totalPercentual = $lancamentos->sum('percentual');
-                                        @endphp
-                                        <table class="table table-striped display nowrap"
-                                            id="distritos-mais-cresceram-membros"
-                                            style="font-size: 90%; margin-top: 15px; width: 100%;">
-                                            <thead class="thead-dark">
-                                                <tr>
-                                                    <th style="text-align: left;">{{ __('Distrito') }}</th>
-                                                    <th style="text-align: center;">{{ __('Quantide de Membros Recebidos') }}</th>
-                                                    <th style="text-align: center;">{{ __('Percentual') }}</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($lancamentos as $lancamento)
-                                                    <tr>
-                                                        <td>{{ $lancamento->nome }}</td>
-                                                        <td style="text-align: center;">{{ $lancamento->total }}</td>
-                                                        <td style="text-align: center;">
-                                                            {{ number_format($lancamento->percentual, 2) }}%</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                            <tfoot>
-                                                <tr>
-                                                    <th style="text-align: left;">{{ __('Total Geral') }}</th>
-                                                    <th style="text-align: center;">{{ $totalQuantidade }}</th>
-                                                    <th style="text-align: center;">
-                                                        {{ number_format($totalPercentual, 2, ',', '.') }}%
-                                                    </th>
-                                                </tr>
-                                            </tfoot>
-                                        </table>
+                                        @include('regiao.dezmais.partials.tabela-crescimento', ['tableId' => 'distritos-mais-cresceram-membros', 'instituicaoLabel' => 'Distrito'])
                                     </div>
                                 </div>
                             </div>
@@ -156,6 +132,7 @@
 
             if ($('#distritos-mais-cresceram-membros').length) {
                 new DataTable('#distritos-mais-cresceram-membros', {
+                    order: [[{{ $crescimento === 'percentual' ? 3 : 2 }}, 'desc'], [0, 'asc']],
                     scrollX: true,
                     layout: {
                         topStart: {
@@ -166,14 +143,14 @@
                                     className: 'btn btn-primary btn-rounded',
                                     text: '<i class="fas fa-file-excel"></i> Excel',
                                     titleAttr: 'Excel',
-                                    title: 'IMW - 10+ DISTRITOS EM NÚMEROS DE MEMBROS'
+                                    title: 'IMW - 10+ DISTRITOS QUE MAIS CRESCERAM EM MEMBROS'
                                 },
                                 {
                                     extend: 'pdfHtml5',
                                     className: 'btn btn-primary btn-rounded',
                                     text: '<i class="fas fa-file-pdf"></i> PDF',
                                     titleAttr: 'PDF',
-                                    title: 'IMW - 10+ DISTRITOS EM NÚMEROS DE MEMBROS',
+                                    title: 'IMW - 10+ DISTRITOS QUE MAIS CRESCERAM EM MEMBROS',
                                     customize: function(doc) {
                                         doc.content.splice(0, 1);
                                         doc.pageMargins = [20, 50, 20, 30];
@@ -190,7 +167,7 @@
                                                 columns: [{
                                                     alignment: 'center',
                                                     italics: false,
-                                                    text: 'IMW - 10+ DISTRITOS EM NÚMEROS DE MEMBROS',
+                                                    text: 'IMW - 10+ DISTRITOS QUE MAIS CRESCERAM EM MEMBROS',
                                                     fontSize: 14
                                                 }],
                                                 margin: [20, 20, 0, 0]

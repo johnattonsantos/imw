@@ -12,7 +12,7 @@ class DezIgrejasMaisReceberamMembrosService
     use Identifiable;
 
 
-    public function execute($dataFinal, $dataInicial)
+    public function execute($dataFinal, $dataInicial, $crescimento = 'absoluto')
     {
 
         $dataInicial ??= Carbon::now()->format('Y-m-d');
@@ -20,7 +20,8 @@ class DezIgrejasMaisReceberamMembrosService
         $regiao = Identifiable::fetchtSessionRegiao();
 
         return [
-            'lancamentos' => TotalizacaoRegiaoUtils::fetchDezIgrejaCresceramMembros($dataFinal, $dataInicial, $regiao->id),
+            'lancamentos' => TotalizacaoRegiaoUtils::fetchDezIgrejaCresceramMembros($dataFinal, $dataInicial, $regiao->id, $crescimento),
+            'crescimento' => $crescimento,
             'distritos'   => Identifiable::fetchDistritosByRegiao($regiao->id),
             'regiao'      => $regiao
         ];
