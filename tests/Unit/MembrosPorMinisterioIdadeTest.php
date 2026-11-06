@@ -25,38 +25,42 @@ class MembrosPorMinisterioIdadeTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_summary_includes_thirtieth_birthday_and_seniors_but_excludes_younger_and_unknown_ages(): void
+    public function test_summary_includes_ages_thirty_to_fifty_nine_but_excludes_sixty_and_unknown_ages(): void
     {
         $connection = $this->connection();
         $connection->shouldReceive('select')->once()->andReturn(array_map(fn ($dados) => (object) $dados, [
             ['sexo' => 'M', 'data_nascimento' => '1996-10-22'],
             ['sexo' => 'M', 'data_nascimento' => '1996-10-23'],
             ['sexo' => 'M', 'data_nascimento' => '1960-01-01'],
+            ['sexo' => 'M', 'data_nascimento' => '1966-10-23'],
+            ['sexo' => 'M', 'data_nascimento' => '1966-10-22'],
             ['sexo' => 'F', 'data_nascimento' => '1996-10-22'],
             ['sexo' => 'F', 'data_nascimento' => '1996-10-23'],
             ['sexo' => 'F', 'data_nascimento' => '1960-01-01'],
+            ['sexo' => 'F', 'data_nascimento' => '1966-10-23'],
+            ['sexo' => 'F', 'data_nascimento' => '1966-10-22'],
             ['sexo' => 'F', 'data_nascimento' => null],
         ]));
 
         $data = (new IdentificaDadosRelatorioMembrosPorMinisterioService)->execute();
         $this->assertSame(2, $data['quantidadeHomens30Mais']);
         $this->assertSame(2, $data['quantidadeMulheres30Mais']);
-        $this->assertSame(7, $data['quantidadeIntegrantes']);
+        $this->assertSame(11, $data['quantidadeIntegrantes']);
     }
 
     /** @dataProvider ministryProvider */
-    public function test_gender_filters_apply_inclusive_thirty_year_cutoff(string $ministerio, string $sexo): void
+    public function test_gender_filters_apply_inclusive_thirty_to_fifty_nine_range(string $ministerio, string $sexo): void
     {
         $connection = $this->connection();
         $connection->shouldReceive('select')->once()->withArgs(function ($sql, $bindings) use ($sexo) {
             $this->assertStringContainsString('`mm`.`sexo` = ?', $sql);
-            $this->assertStringContainsString('date(`mm`.`data_nascimento`) <= ?', $sql);
-            $this->assertSame([20, 'A', 'M', $sexo, '1996-10-22'], $bindings);
+            $this->assertStringContainsString('TIMESTAMPDIFF(YEAR, mm.data_nascimento, CURDATE()) BETWEEN ? AND ?', $sql);
+            $this->assertSame([20, 'A', 'M', $sexo, 30, 59], $bindings);
             return true;
         })->andReturn([]);
 
         $data = (new IdentificaDadosRelatorioMembrosPorMinisterioService)->execute(['ministerio' => $ministerio]);
-        $this->assertStringContainsString('30 anos ou mais', $data['ministerioNome']);
+        $this->assertStringContainsString('30 a 59 anos', $data['ministerioNome']);
     }
 
     public function ministryProvider(): array

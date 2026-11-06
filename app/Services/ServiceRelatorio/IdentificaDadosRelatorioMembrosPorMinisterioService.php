@@ -19,8 +19,8 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                 'conexao' => 'Conexão (até 13 anos)',
                 'fire' => 'Fire (até 17 anos)',
                 'move' => 'Move (até 30 anos)',
-                'mulheres' => 'Mulheres (30 anos ou mais)',
-                'homens' => 'Homens (30 anos ou mais)',
+                'mulheres' => 'Mulheres (30 a 59 anos)',
+                'homens' => 'Homens (30 a 59 anos)',
                 '60+' => '60+ (acima de 60 anos)',
             ];
             $ministerioSelecionado = (string) (isset($request['ministerio']) ? $request['ministerio'] : 'todos');
@@ -74,11 +74,11 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
                     break;
                 case 'mulheres':
                     $query->where('mm.sexo', 'F')
-                        ->whereDate('mm.data_nascimento', '<=', Carbon::today()->subYearsNoOverflow(30)->toDateString());
+                        ->whereRaw("$idadeExpr BETWEEN ? AND ?", [30, 59]);
                     break;
                 case 'homens':
                     $query->where('mm.sexo', 'M')
-                        ->whereDate('mm.data_nascimento', '<=', Carbon::today()->subYearsNoOverflow(30)->toDateString());
+                        ->whereRaw("$idadeExpr BETWEEN ? AND ?", [30, 59]);
                     break;
                 case '60+':
                     $query->whereNotNull('mm.data_nascimento')
@@ -90,8 +90,10 @@ class IdentificaDadosRelatorioMembrosPorMinisterioService
             $ministerioNome = $ministerios[$ministerioSelecionado];
             $quantidadeIntegrantes = $integrantes->count();
             $limiteNascimento = Carbon::today()->subYearsNoOverflow(30)->toDateString();
+            $limiteSessenta = Carbon::today()->subYearsNoOverflow(60)->toDateString();
             $adultos = $integrantes->filter(fn ($integrante) => !empty($integrante->data_nascimento)
-                && substr((string) $integrante->data_nascimento, 0, 10) <= $limiteNascimento);
+                && substr((string) $integrante->data_nascimento, 0, 10) <= $limiteNascimento
+                && substr((string) $integrante->data_nascimento, 0, 10) > $limiteSessenta);
 
             return [
                 'integrantes' => $integrantes,

@@ -103,8 +103,8 @@ use Carbon\Carbon;
                                             <th width="60px" style="text-align: center" colspan="2">{{ __('CONEXÃO') }}</th>
                                             <th width="60px" style="text-align: center" colspan="2">{{ __('FIRE') }}</th>
                                             <th width="60px" style="text-align: center" colspan="2">{{ __('MOVE') }}</th>
-                                            <th width="60px" style="text-align: center" colspan="2">{{ __('HOMENS (30+)') }}</th>
-                                            <th width="60px" style="text-align: center" colspan="2">{{ __('MULHERES (30+)') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('HOMENS (30 A 59 ANOS)') }}</th>
+                                            <th width="60px" style="text-align: center" colspan="2">{{ __('MULHERES (30 A 59 ANOS)') }}</th>
                                             <th width="60px" style="text-align: center" colspan="2">60+</th>
                                             <th width="60px" style="text-align: center" colspan="2">{{ __('TOTAL') }}</th>
                                         </tr>
@@ -156,10 +156,10 @@ use Carbon\Carbon;
                                         $totalFire_Y += $lancamento->Fire_Y;
                                         $totalMove_X += $lancamento->Move_X;
                                         $totalMove_Y += $lancamento->Move_Y;
-                                        $totalHomens_X += $lancamento->Homens30_X;
-                                        $totalHomens_Y += $lancamento->Homens30_Y;
-                                        $totalMulheres_X += $lancamento->Mulheres30_X;
-                                        $totalMulheres_Y += $lancamento->Mulheres30_Y;
+                                        $totalHomens_X += $lancamento->Homens_X;
+                                        $totalHomens_Y += $lancamento->Homens_Y;
+                                        $totalMulheres_X += $lancamento->Mulheres_X;
+                                        $totalMulheres_Y += $lancamento->Mulheres_Y;
                                         $totalSessenta_X += $lancamento->Sessenta_X;
                                         $totalSessenta_Y += $lancamento->Sessenta_Y;
                                         $totalGeral_X += $lancamento->Total_X;
@@ -175,10 +175,10 @@ use Carbon\Carbon;
                                             <td style="text-align: right">{{ $lancamento->Fire_Y }}</td>
                                             <td style="text-align: right">{{ $lancamento->Move_X }}</td>
                                             <td style="text-align: right">{{ $lancamento->Move_Y }}</td>
-                                            <td style="text-align: right">{{ $lancamento->Homens30_X }}</td>
-                                            <td style="text-align: right">{{ $lancamento->Homens30_Y }}</td>
-                                            <td style="text-align: right">{{ $lancamento->Mulheres30_X }}</td>
-                                            <td style="text-align: right">{{ $lancamento->Mulheres30_Y }}</td>
+                                            <td style="text-align: right">{{ $lancamento->Homens_X }}</td>
+                                            <td style="text-align: right">{{ $lancamento->Homens_Y }}</td>
+                                            <td style="text-align: right">{{ $lancamento->Mulheres_X }}</td>
+                                            <td style="text-align: right">{{ $lancamento->Mulheres_Y }}</td>
                                             <td style="text-align: right">{{ $lancamento->Sessenta_X }}</td>
                                             <td style="text-align: right">{{ $lancamento->Sessenta_Y }}</td>
                                             <td style="text-align: right">{{ $lancamento->Total_X }}</td>

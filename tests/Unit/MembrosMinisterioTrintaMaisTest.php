@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class MembrosMinisterioTrintaMaisTest extends TestCase
 {
-    public function test_thirty_plus_readings_include_seniors_without_duplicating_totals(): void
+    public function test_thirty_to_fifty_nine_readings_exclude_seniors_without_duplicating_totals(): void
     {
         $connection = Mockery::mock(MySqlConnection::class)->makePartial();
         $connection->__construct(null, 'test');
@@ -20,16 +20,19 @@ class MembrosMinisterioTrintaMaisTest extends TestCase
             'Homens_X' => 1, 'Mulheres_X' => 1, 'Sessenta_X' => 2,
             'Kids_Y' => 0, 'Conexao_Y' => 0, 'Fire_Y' => 0, 'Move_Y' => 2,
             'Homens_Y' => 1, 'Mulheres_Y' => 1, 'Sessenta_Y' => 2,
-            'Homens30_X' => 2, 'Mulheres30_X' => 2, 'Homens30_Y' => 2, 'Mulheres30_Y' => 2,
         ];
-        $connection->shouldReceive('select')->once()->withArgs(function ($sql) {
+        $connection->shouldReceive('select')->once()->withArgs(function ($sql, $bindings) {
+            $this->assertStringNotContainsString('Homens30_', $sql);
+            $this->assertStringNotContainsString('Mulheres30_', $sql);
+            $this->assertSame(14, substr_count($sql, 'COUNT(CASE WHEN'));
             foreach (['Homens' => 'M', 'Mulheres' => 'F'] as $nome => $sexo) {
                 foreach (['X' => '2025-11-01', 'Y' => '2026-10-22'] as $sufixo => $data) {
-                    $this->assertMatchesRegularExpression(
-                        '/TIMESTAMPDIFF\(YEAR, mm\.data_nascimento, CURDATE\(\)\) >= 30\s+'
-                        ."AND mm.sexo = '$sexo'\s+AND mr.dt_recepcao <= '$data'.*?AS {$nome}30_{$sufixo}/s",
-                        $sql
-                    );
+                    preg_match('/COUNT\(CASE WHEN [^`]+ AS `'.$nome.'_'.$sufixo.'`/', $sql, $matches, PREG_OFFSET_CAPTURE);
+                    $this->assertNotEmpty($matches);
+                    [$expression, $offset] = $matches[0];
+                    $this->assertStringContainsString('TIMESTAMPDIFF(YEAR, mm.data_nascimento, ?) BETWEEN ? AND ?', $expression);
+                    $bindingOffset = substr_count(substr($sql, 0, $offset), '?');
+                    $this->assertSame([$data, 30, 59, $data, $data, $sexo], array_slice($bindings, $bindingOffset, 6));
                 }
             }
             return true;
@@ -39,8 +42,6 @@ class MembrosMinisterioTrintaMaisTest extends TestCase
             use MembrosMinisterioUtils;
         };
         $resultado = $service::fetch('2025-11-01', '2026-10-22', 'M', 2)->first();
-        $this->assertSame(2, $resultado->Homens30_X);
-        $this->assertSame(2, $resultado->Mulheres30_Y);
         $this->assertSame(6, $resultado->Total_X);
         $this->assertSame(6, $resultado->Total_Y);
         $this->assertSame(1, $resultado->Homens_X);
