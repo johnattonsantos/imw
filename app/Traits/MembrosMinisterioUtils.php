@@ -17,8 +17,6 @@ trait MembrosMinisterioUtils
             'Homens' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [30, 59], 'sexo' => 'M'],
             'Mulheres' => ['operator' => 'BETWEEN ? AND ?', 'bounds' => [30, 59], 'sexo' => 'F'],
             'Sessenta' => ['operator' => '>= ?', 'bounds' => [60]],
-            'Homens30' => ['operator' => '>= ?', 'bounds' => [30], 'sexo' => 'M'],
-            'Mulheres30' => ['operator' => '>= ?', 'bounds' => [30], 'sexo' => 'F'],
         ];
 
         $datas = [
@@ -80,7 +78,6 @@ trait MembrosMinisterioUtils
         $results = $results->get();
 
         foreach ($results as $row) {
-            // Keep totals based on disjoint age groups: seniors also appear in the new 30+ readings.
             foreach (['X', 'Y'] as $sufixo) {
                 $row->{'Total_'.$sufixo} = $row->{'Kids_'.$sufixo} + $row->{'Conexao_'.$sufixo}
                     + $row->{'Fire_'.$sufixo} + $row->{'Move_'.$sufixo} + $row->{'Homens_'.$sufixo}
