@@ -186,7 +186,7 @@ trait BalanceteUtils
         FROM 
             financeiro_caixas fc
             LEFT JOIN 
-            financeiro_lancamentos fl ON fc.id = fl.caixa_id AND fl.deleted_at IS NULL 
+            financeiro_lancamentos fl ON fc.id = fl.caixa_id AND fl.deleted_at IS NULL AND fl.conciliado = 1
             AND fl.data_movimento BETWEEN '$dataInicial' AND '$dataFinal'
         LEFT JOIN 
         (
