@@ -17,27 +17,37 @@ class ValidarMembroController extends Controller
             $membro->status_descricao = $this->statusDescricao($membro->status);
         }
 
-        return view('membros.carteirinhas.validar', [
+        return response()->view('membros.carteirinhas.validar', [
             'membro' => $membro,
             'membroId' => $membroId,
-        ]);
+        ])->header('Cache-Control', 'no-store, private');
     }
 
     private function findMembro(string $membroId): ?object
     {
+        $hoje = today()->toDateString();
+        $pastorAtual = DB::table('pessoas_nomeacoes as pn')
+            ->join('pessoas_pessoas as pastor', 'pastor.id', '=', 'pn.pessoa_id')
+            ->join('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
+            ->whereColumn('pn.instituicao_id', 'igreja.id')
+            ->where('pf.titular', 1)
+            ->where('pastor.status_id', 1)
+            ->whereDate('pn.data_nomeacao', '<=', $hoje)
+            ->where(function ($query) use ($hoje) {
+                $query->whereNull('pn.data_termino')
+                    ->orWhereDate('pn.data_termino', '>=', $hoje);
+            })
+            ->whereNull('pn.deleted_at')
+            ->whereNull('pastor.deleted_at')
+            ->whereNotNull('pastor.nome')
+            ->where('pastor.nome', '<>', '')
+            ->orderByDesc('pn.data_nomeacao')
+            ->orderByDesc('pn.id')
+            ->select('pastor.nome')
+            ->limit(1);
+
         return DB::table('membresia_membros as mm')
             ->leftJoin('instituicoes_instituicoes as igreja', 'igreja.id', '=', 'mm.igreja_id')
-            ->leftJoin('pessoas_nomeacoes as pn', function ($join) {
-                $join->on('pn.instituicao_id', '=', 'igreja.id')
-                    ->whereNull('pn.data_termino')
-                    ->whereNull('pn.deleted_at');
-            })
-            ->leftJoin('pessoas_pessoas as pastor', function ($join) {
-                $join->on('pastor.id', '=', 'pn.pessoa_id')
-                    ->where('pastor.categoria', 'pastor')
-                    ->whereNull('pastor.deleted_at');
-            })
-            ->leftJoin('pessoas_funcaoministerial as pf', 'pf.id', '=', 'pn.funcao_ministerial_id')
             ->where('mm.id', $membroId)
             ->whereNull('mm.deleted_at')
             ->select([
@@ -45,9 +55,8 @@ class ValidarMembroController extends Controller
                 'mm.nome',
                 'mm.status',
                 'igreja.nome as igreja_nome',
-                DB::raw("COALESCE(MAX(CASE WHEN pf.ordem IN (3, 4, 5) THEN pastor.nome END), MAX(pastor.nome), igreja.pastor) as pastor_nome"),
             ])
-            ->groupBy('mm.id', 'mm.nome', 'mm.status', 'igreja.nome', 'igreja.pastor')
+            ->selectSub($pastorAtual, 'pastor_nome')
             ->first();
     }
 
