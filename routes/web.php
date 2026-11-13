@@ -417,6 +417,9 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('regiao/relatorio')->name('regiao.')->group(function () {
+            Route::get('/irrf-por-igreja', [\App\Http\Controllers\IrrfPorIgrejaController::class, 'index'])
+                ->name('relatorio.irrf-por-igreja')
+                ->middleware(['seguranca:regiao-menu-relatorio', 'seguranca:regiao-menu-relatorio-financeiro']);
             Route::get('/ebd/dashboard', [RegiaoEbdRelatorioController::class, 'dashboard'])->name('relatorio.ebd.dashboard')->middleware(['seguranca:regiao-ebd-dashboard']);
             Route::get('/ebd/estatisticas', [RegiaoEbdRelatorioController::class, 'estatisticas'])->name('relatorio.ebd.estatisticas')->middleware(['seguranca:regiao-ebd-estatisticas']);
             Route::get('/ebd/alunos', [RegiaoEbdRelatorioController::class, 'alunos'])->name('relatorio.ebd.alunos')->middleware(['seguranca:regiao-ebd-alunos']);

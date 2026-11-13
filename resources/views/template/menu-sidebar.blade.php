@@ -514,7 +514,7 @@
 
                  @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-financeiro'))
              <li class="menu">
-                 <a href="#financeiro" data-toggle="collapse" aria-expanded="{{Request::is('financeiro/*') ? 'true' : 'false' }}" class="dropdown-toggle">
+                 <a href="#financeiro" data-toggle="collapse" aria-expanded="{{Request::is('financeiro/*', 'regiao/relatorio/irrf-por-igreja') ? 'true' : 'false' }}" class="dropdown-toggle">
                      <div class="">
                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -532,7 +532,7 @@
                          </svg>
                      </div>
                  </a>
-                 <ul class="collapse submenu list-unstyled {{ Request::is('financeiro/*') ? 'collapse show' : '' }}" id="financeiro" data-parent="#financeiro">
+                 <ul class="collapse submenu list-unstyled {{ Request::is('financeiro/*', 'regiao/relatorio/irrf-por-igreja') ? 'collapse show' : '' }}" id="financeiro" data-parent="#financeiro">
                      <li {!! Request::is('financeiro/movimento-caixa') ? 'class="active"' : '' !!}>
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('financeiro-movimentocaixa-index'))
                              <a href="{{ route('financeiro.movimento.caixa') }}">{{ __('Movimento de Caixa') }}</a>
@@ -573,6 +573,11 @@
                              <a href="{{ route('financeiro.relatorio-movimento-diario') }}">{{ __('Movimento Diário') }}</a>
                          @endif
                      </li>
+                     @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio') && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
+                         <li {!! Request::is('regiao/relatorio/irrf-por-igreja') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('regiao.relatorio.irrf-por-igreja') }}">{{ __('IRRF por Igreja') }}</a>
+                         </li>
+                     @endif
                      <li {!! Request::is('financeiro/relatorio/livrocaixa') ? 'class="active"' : '' !!}>
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('financeiro-relatorio-livrocaixa'))
                              <a href="{{ route('financeiro.relatorio-livrocaixa') }}">{{ __('Livro Caixa') }}</a>
@@ -813,6 +818,11 @@
 
                                  <a href="{{ route('regiao.relatorio.irrf') }}">{{ __('IRRF Repasse') }}</a>
 
+                         </li>
+                         @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
+                         <li {!! Request::is('regiao/relatorio/irrf-por-igreja') ? 'class="active"' : '' !!}>
+                             <a href="{{ route('regiao.relatorio.irrf-por-igreja') }}">{{ __('IRRF por Igreja') }}</a>
                          </li>
                          @endif
                          @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-lancamento-das-igrejas'))
