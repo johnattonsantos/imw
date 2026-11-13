@@ -26,7 +26,7 @@ class SecretarioRegiaoRelatoriosTest extends TestCase
     public function test_all_non_financial_menu_permissions_are_granted(): void
     {
         $menu = file_get_contents(resource_path('views/template/menu-sidebar.blade.php'));
-        $start = strpos($menu, "hasPerfilRegra('regiao-menu-relatorio')");
+        $start = strpos($menu, "__('Relatórios Regionais')");
         $end = strpos($menu, "hasPerfilRegra('juridico-regiao')", $start);
         preg_match_all("/hasPerfilRegra\('([^']+)'\)/", substr($menu, $start, $end - $start), $matches);
         $covered = array_merge($this->rules('reports'), $this->rules('financialReports'));
