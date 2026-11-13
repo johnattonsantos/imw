@@ -427,22 +427,22 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/ebd/diarios', [RegiaoEbdRelatorioController::class, 'diarios'])->name('relatorio.ebd.diarios')->middleware(['seguranca:regiao-ebd-diarios']);
             Route::get('/ebd/agendas', [RegiaoEbdRelatorioController::class, 'agendas'])->name('relatorio.ebd.agendas')->middleware(['seguranca:regiao-ebd-agendas']);
             Route::get('/ebd/geral', [RegiaoEbdRelatorioController::class, 'geral'])->name('relatorio.ebd.geral')->middleware(['seguranca:regiao-ebd-geral']);
-            Route::get('/lancamentodasigrejas', [RegiaoRelatorioController::class, 'lancamentodasigrejas'])->name('relatorio.lancamentodasigrejas')->middleware(['seguranca:regiao-ebd-lancamentodasigrejas']);
-            Route::post('/lancamentodasigrejas/pdf', [RegiaoRelatorioController::class, 'lancamentodasigrejasPdf'])->name('relatorio.lancamentodasigrejas-pdf')->middleware(['seguranca:regiao-ebd-relatorio']);
+            Route::get('/lancamentodasigrejas', [RegiaoRelatorioController::class, 'lancamentodasigrejas'])->name('relatorio.lancamentodasigrejas')->middleware(['seguranca:regiao-ebd-lancamentodasigrejas'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
+            Route::post('/lancamentodasigrejas/pdf', [RegiaoRelatorioController::class, 'lancamentodasigrejasPdf'])->name('relatorio.lancamentodasigrejas-pdf')->middleware(['seguranca:regiao-ebd-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
-            Route::get('/saldodasigrejas', [RegiaoRelatorioController::class, 'saldodasigrejas'])->name('relatorio.saldodasigrejas')->middleware(['seguranca:regiao-menu-relatorio']);
-            Route::post('/saldodasigrejas/pdf', [RegiaoRelatorioController::class, 'saldodasigrejasPdf'])->name('relatorio.saldodasigrejas-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/saldodasigrejas', [RegiaoRelatorioController::class, 'saldodasigrejas'])->name('relatorio.saldodasigrejas')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
+            Route::post('/saldodasigrejas/pdf', [RegiaoRelatorioController::class, 'saldodasigrejasPdf'])->name('relatorio.saldodasigrejas-pdf')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
-            Route::get('/livrorazaogeral', [RegiaoRelatorioController::class, 'livrorazaogeral'])->name('relatorio.livrorazaogeral')->middleware(['seguranca:regiao-menu-relatorio']);
-            Route::post('/livrorazaogeral/pdf', [RegiaoRelatorioController::class, 'livrorazaogeralPdf'])->name('relatorio.livrorazaogeral-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/livrorazaogeral', [RegiaoRelatorioController::class, 'livrorazaogeral'])->name('relatorio.livrorazaogeral')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
+            Route::post('/livrorazaogeral/pdf', [RegiaoRelatorioController::class, 'livrorazaogeralPdf'])->name('relatorio.livrorazaogeral-pdf')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
-            Route::get('/orcamento', [RegiaoRelatorioController::class, 'orcamento'])->name('relatorio.orcamento')->middleware(['seguranca:regiao-menu-relatorio']);
-            Route::post('/orcamento/pdf', [RegiaoRelatorioController::class, 'orcamentoPdf'])->name('relatorio.orcamento-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/orcamento', [RegiaoRelatorioController::class, 'orcamento'])->name('relatorio.orcamento')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
+            Route::post('/orcamento/pdf', [RegiaoRelatorioController::class, 'orcamentoPdf'])->name('relatorio.orcamento-pdf')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
-            Route::get('/variacaofinanceira', [RegiaoRelatorioController::class, 'variacaofinanceira'])->name('relatorio.variacaofinanceira')->middleware(['seguranca:regiao-menu-relatorio']);
-            Route::post('/variacaofinanceira/pdf', [RegiaoRelatorioController::class, 'variacaofinanceiraPdf'])->name('relatorio.variacaofinanceira-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/variacaofinanceira', [RegiaoRelatorioController::class, 'variacaofinanceira'])->name('relatorio.variacaofinanceira')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
+            Route::post('/variacaofinanceira/pdf', [RegiaoRelatorioController::class, 'variacaofinanceiraPdf'])->name('relatorio.variacaofinanceira-pdf')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
-            Route::get('/financeiro-por-categoria', [RegiaoRelatorioController::class, 'financeiroPorCategoria'])->name('relatorio.financeiroPorCategoria')->middleware(['seguranca:regiao-menu-relatorio']);
+            Route::get('/financeiro-por-categoria', [RegiaoRelatorioController::class, 'financeiroPorCategoria'])->name('relatorio.financeiroPorCategoria')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
             //Membresia DEV
             Route::get('/mapao', [RegiaoRelatorioController::class, 'mapao'])->name('relatorio.mapao')->middleware(['seguranca:regiao-mapao']);
@@ -464,13 +464,13 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/estatisticagenero/pdf', [RegiaoRelatorioController::class, 'estatisticageneroPdf'])->name('relatorio.estatisticagenero-pdf')->middleware(['seguranca:regiao-menu-relatorio']);
             Route::get('/estatisticas-gceu', [RegiaoRelatorioController::class, 'estatisticasGceu'])->name('relatorio.estatisticas.gceu')->middleware(['seguranca:regiao-estatistica-gceu']);
 
-            Route::get('/irrf', [ContabilidadeController::class,'irrf'])->name('relatorio.irrf')->middleware('seguranca:regiao-menu-relatorio');
+            Route::get('/irrf', [ContabilidadeController::class,'irrf'])->name('relatorio.irrf')->middleware('seguranca:regiao-menu-relatorio')->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
             Route::get('/ano-eclesiastico', [RegiaoRelatorioController::class,'anoEclesiastico'])->name('relatorio.ano.eclesiastico')->middleware('seguranca:regiao-menu-relatorio');
-             Route::get('/financeiro/balancete', [FinanceiroRelatorioController::class, 'balanceteRegiao'])->name('relatorio-balancete-regiao')->middleware(['seguranca:regiao-menu-relatorio']);
+             Route::get('/financeiro/balancete', [FinanceiroRelatorioController::class, 'balanceteRegiao'])->name('relatorio-balancete-regiao')->middleware(['seguranca:regiao-menu-relatorio'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
              //Orcamentos
-            Route::get('/cota-orcamentaria', [FinanceiroController::class, 'CotaOrcamentariaRegiao'])->name('cota.orcamentaria')->middleware(['seguranca:regiao-cota-orcamentaria']);
+            Route::get('/cota-orcamentaria', [FinanceiroController::class, 'CotaOrcamentariaRegiao'])->name('cota.orcamentaria')->middleware(['seguranca:regiao-cota-orcamentaria'])->middleware('seguranca:regiao-menu-relatorio-financeiro');
 
             //CGEU
             Route::get('/gceu', [GceuController::class, 'gceuRelatorioRegiaoGceu'])->name('relatorio.gceu')->middleware(['seguranca:gceu-regiao-lista-gceu']);

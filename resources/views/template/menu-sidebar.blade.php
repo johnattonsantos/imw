@@ -879,7 +879,7 @@
                         </li>
                         @endif
 
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboardo'))
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboard'))
                         <li {!! Request::is('regiao/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
 
                                 <a href="{{ route('regiao.relatorio.ebd.dashboard') }}">{{ __('Dashboard') }}</a>
