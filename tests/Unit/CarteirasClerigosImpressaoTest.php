@@ -109,6 +109,41 @@ class CarteirasClerigosImpressaoTest extends TestCase
         return [[1, 1], [4, 1], [5, 2]];
     }
 
+    public function test_pdf_is_returned_as_a_direct_download_instead_of_inline_post_preview(): void
+    {
+        $regiao = session('session_perfil')->instituicoes->regiao;
+        $clerigos = collect([(new PessoasPessoa)->forceFill(['id' => 12])]);
+        $service = Mockery::mock(CarteirasClerigosService::class);
+        $service->shouldReceive('listar')->once()->with(10, [12])->andReturn($clerigos);
+        $service->shouldReceive('preparar')->once()->with($clerigos, $regiao)->andReturn(collect([
+            ['nome' => 'Clerigo Teste', 'qr_code' => SimpleQrCode::pngDataUri('https://example.com/validar', 5),
+                'nome_regiao_formatado' => 'Regiao Teste', 'foto_pdf' => null,
+                'telefone_sede_administrativa' => '', 'superintendente_regional_nome' => 'Superintendente Teste'],
+        ]));
+        $service->shouldReceive('background')->once()->andReturn((new CarteirasClerigosService)->background());
+
+        $response = (new CarteirasClerigosController)->pdf(
+            Request::create('/clerigos/carteiras/impressao/pdf', 'POST', ['clerigos' => [12]]), $service
+        );
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('application/pdf', $response->headers->get('Content-Type'));
+        $this->assertMatchesRegularExpression('/^attachment; filename="?carteiras-clerigos-\d{14}\.pdf"?/', $response->headers->get('Content-Disposition'));
+        $this->assertSame('no-store, private', $response->headers->get('Cache-Control'));
+        $this->assertStringStartsWith('%PDF-', $response->getContent());
+        $this->assertSame(strlen($response->getContent()), (int) $response->headers->get('Content-Length'));
+    }
+
+    public function test_selection_form_downloads_in_the_same_tab(): void
+    {
+        $view = file_get_contents(resource_path('views/clerigos/carteiras/index.blade.php'));
+        preg_match('/<form[^>]*id="form-carteiras-clerigos"[^>]*>/', $view, $form);
+        $this->assertNotEmpty($form);
+        $this->assertStringContainsString('method="POST"', $form[0]);
+        $this->assertStringNotContainsString('target=', $form[0]);
+        $this->assertStringContainsString('Baixar PDF dos selecionados', $view);
+    }
+
     public function test_print_routes_use_existing_clergy_access_rule(): void
     {
         foreach (['clerigos.carteiras.index', 'clerigos.carteiras.pdf'] as $name) {

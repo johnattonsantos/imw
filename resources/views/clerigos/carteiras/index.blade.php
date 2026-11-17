@@ -16,10 +16,10 @@
             <p>{{ __('Região logada') }}: <strong>{{ $regiao->nome }}</strong></p>
             <p>{{ __('Selecione os clérigos para gerar o PDF. Serão impressas quatro carteiras por folha A4, no modelo da carteira digital, com QR code de validação.') }}</p>
             <p class="text-muted">{{ __('Ao imprimir o PDF, use tamanho real (100%), sem ajustar à página.') }}</p>
-            <form id="form-carteiras-clerigos" action="{{ route('clerigos.carteiras.pdf') }}" method="POST" target="_blank">
+            <form id="form-carteiras-clerigos" action="{{ route('clerigos.carteiras.pdf') }}" method="POST">
                 @csrf
                 <div class="d-flex flex-wrap align-items-center mb-3">
-                    <button id="imprimir-carteiras" type="submit" class="btn btn-primary mr-3 mb-2">{{ __('Gerar PDF dos selecionados') }}</button>
+                    <button id="imprimir-carteiras" type="submit" class="btn btn-primary mr-3 mb-2">{{ __('Baixar PDF dos selecionados') }}</button>
                     <span id="total-selecionados" class="mb-2" aria-live="polite">0 {{ __('selecionados') }}</span>
                 </div>
                 @error('clerigos')<p class="text-danger">{{ $message }}</p>@enderror
