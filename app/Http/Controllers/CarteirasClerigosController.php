@@ -34,6 +34,8 @@ class CarteirasClerigosController extends Controller
             'carteiras' => $service->preparar($clerigos, $regiao),
             'background' => $service->background(),
             'validade' => CredencialClerigo::VALIDADE,
-        ])->setPaper('a4', 'portrait')->stream('carteiras-clerigos-'.now()->format('YmdHis').'.pdf');
+        ])->setPaper('a4', 'portrait')
+            ->download('carteiras-clerigos-'.now()->format('YmdHis').'.pdf')
+            ->header('Cache-Control', 'no-store, private');
     }
 }
