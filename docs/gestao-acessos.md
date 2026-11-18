@@ -7,6 +7,15 @@ no servidor. Parametros da URL nao permitem selecionar outra regiao.
 
 ## Publicacao
 
+Alternativa para execucao manual no MySQL:
+`docs/sql/gestao_acessos_producao_18-11-2026.sql`.
+O arquivo cria as estruturas, concede a permissao ao Administrador Regiao e
+registra as duas migracoes no controle do Laravel. Preserva dados e horarios de
+monitoramento existentes. Fazer backup e interromper a execucao em qualquer erro;
+DDL do MySQL nao permite rollback atomico do script inteiro.
+
+Para aplicar pelo Laravel em vez do arquivo SQL:
+
 ```sh
 php artisan migrate --path=database/migrations/2026_11_18_120000_create_gestao_acessos.php --force
 php artisan migrate --path=database/migrations/2026_11_18_130000_create_gestao_acessos_sessoes.php --force
