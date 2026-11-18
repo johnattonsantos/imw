@@ -402,6 +402,8 @@ Route::middleware(['auth'])->group(function () {
         });
 
         Route::prefix('regiao/relatorio')->name('regiao.')->group(function () {
+            Route::get('/gestao-acessos', [\App\Http\Controllers\GestaoAcessosController::class, 'index'])
+                ->name('relatorio.gestao-acessos');
             Route::get('/irrf-por-igreja', [\App\Http\Controllers\IrrfPorIgrejaController::class, 'index'])
                 ->name('relatorio.irrf-por-igreja')
                 ->middleware(['seguranca:regiao-menu-relatorio', 'seguranca:regiao-menu-relatorio-financeiro']);
