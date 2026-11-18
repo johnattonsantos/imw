@@ -90,6 +90,22 @@ class User extends Authenticatable implements Auditable
     } */
 
 
+    public function podeVerGestaoAcessos(): bool
+    {
+        $session = session('session_perfil');
+        $regiaoId = data_get($session, 'instituicoes.regiao.id');
+        if (!$regiaoId || (int) data_get($session, 'instituicao_id') !== (int) $regiaoId) {
+            return false;
+        }
+
+        return $this->hasPerfilRegra('regiao-gestao-acessos') && $this->perfis()
+            ->where('perfil_user.instituicao_id', $regiaoId)
+            ->where('perfil_user.perfil_id', data_get($session, 'perfil_id'))
+            ->where('perfils.nivel', 'R')
+            ->whereIn('perfils.nome', ['Administrador Região', 'Administrador - Região', 'Administrador Regiao', 'Administrador - Regiao'])
+            ->exists();
+    }
+
     public function hasPerfilRegra($regraNome)
     {
         $sessionId = session()->get('session_perfil')->instituicao_id;
