@@ -774,6 +774,13 @@
                  </li>
              @endif
 
+             @if (auth()->check() && auth()->user()->podeVerGestaoAcessos())
+                 <li class="menu {{ Request::is('regiao/relatorio/gestao-acessos') ? 'active' : '' }}">
+                     <a href="{{ route('regiao.relatorio.gestao-acessos') }}" class="dropdown-toggle">
+                         <span>{{ __('Gestão de Acessos') }}</span>
+                     </a>
+                 </li>
+             @endif
              @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-menu-relatorio')))
                  <li class="menu">
                      <a href="#financeiro-regiao" data-toggle="collapse" aria-expanded="{{Request::is('regiao/relatorio/*') ? 'true' : 'false' }}"
