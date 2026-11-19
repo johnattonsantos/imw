@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use OwenIt\Auditing\Models\Audit;
+use App\Services\ServiceRegiaoRelatorios\SessaoAcessoService;
 
 class AuthController extends Controller
 {
@@ -22,6 +23,7 @@ class AuthController extends Controller
 
             $user = Auth::user();
             if ($user) {
+                $sessaoAcesso = app(SessaoAcessoService::class)->iniciar($request);
                 try {
                     Audit::create([
                         'user_type' => get_class($user),
@@ -33,6 +35,7 @@ class AuthController extends Controller
                         'old_values' => [],
                         'new_values' => [
                             'message' => 'Login realizado com sucesso',
+                            'gestao_sessao_id' => $sessaoAcesso['id'],
                         ],
                         'url' => $request->fullUrl(),
                         'ip_address' => $request->ip(),
@@ -86,6 +89,7 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         if ($user) {
+            $sessaoAcessoId = app(SessaoAcessoService::class)->finalizar($request);
             try {
                 Audit::create([
                     'user_type' => get_class($user),
@@ -97,6 +101,7 @@ class AuthController extends Controller
                     'old_values' => [],
                     'new_values' => [
                         'message' => 'Logout realizado com sucesso',
+                        'gestao_sessao_id' => $sessaoAcessoId,
                     ],
                     'url' => $request->fullUrl(),
                     'ip_address' => $request->ip(),
