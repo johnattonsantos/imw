@@ -54,9 +54,9 @@ class GestaoAcessosService
                     ->whereColumn('registrada.user_id', 'a.user_id')
                     ->whereRaw("registrada.id = JSON_UNQUOTE(JSON_EXTRACT(CASE WHEN JSON_VALID(a.new_values) THEN a.new_values ELSE '{}' END, '$.gestao_sessao_id'))");
             })
-            ->selectRaw("COALESCE(i.nome, 'Instituição não registrada (vínculo atual exclusivo à região)') as instituicao")
+            ->selectRaw("COALESCE(i.nome, 'Não informado no histórico') as instituicao")
             ->addSelect('u.name as usuario')
-            ->selectRaw("'Perfil não registrado' as perfil, NULL as sessao_id")
+            ->selectRaw("'Não informado no histórico' as perfil, NULL as sessao_id")
             ->addSelect('a.created_at as primeiro')->selectRaw('NULL as ultimo')
             ->addSelect('a.created_at as primeiro_uso', 'a.created_at as ultimo_uso')
             ->selectRaw("'login_antigo' as origem, a.id as ordenacao_id");
