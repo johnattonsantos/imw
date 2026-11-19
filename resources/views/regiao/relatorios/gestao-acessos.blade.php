@@ -35,7 +35,7 @@
 
             <h5>Acessos por perfil: {{ $inicio->format('d/m/Y') }} a {{ $fim->format('d/m/Y') }}</h5>
             <div class="table-responsive mb-4"><table class="table table-bordered table-striped">
-                <thead><tr><th>Instituição</th><th>Usuário</th><th>Perfil</th><th>Login</th></tr></thead>
+                <thead><tr><th>Instituição</th><th>Usuário</th><th>Perfil</th><th>Logado</th></tr></thead>
                 <tbody>@forelse($quadros['perfis'] as $linha)
                     <tr><td>{{ $linha->instituicao }}</td><td>{{ $linha->usuario }}</td><td>{{ $linha->perfil }}</td>
                         <td>{{ $linha->primeiro ? \Carbon\Carbon::parse($linha->primeiro)->format('d/m/Y H:i:s') : 'Login não registrado (sessão anterior)' }}</td>
