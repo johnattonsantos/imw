@@ -24,6 +24,7 @@ class AuthController extends Controller
             $user = Auth::user();
             if ($user) {
                 $sessaoAcesso = app(SessaoAcessoService::class)->iniciar($request);
+                $request->session()->put('pastor_login_pendente', $sessaoAcesso['id']);
                 try {
                     Audit::create([
                         'user_type' => get_class($user),

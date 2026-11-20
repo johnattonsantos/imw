@@ -126,6 +126,9 @@
 
 @section('content')
 @include('extras.alerts')
+@if($exibirMensagemPastor ?? false)
+    @include('extras.mensagem-pastor')
+@endif
 <div class="container-fluid h-100">
 <div class="container-fluid h-100">
 @if($instituicao->tipoInstituicao->sigla == 'I')
