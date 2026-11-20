@@ -541,6 +541,9 @@ class HomeController extends Controller
         }
 
         return view('dashboard', [
+            'exibirMensagemPastor' => $isIgrejaLocal && $isPerfilPastor
+                ? app(\App\Services\MensagemPastorService::class)->registrar($request)
+                : false,
             'activeMembrosCount' => $activeMembrosCount,
             'activeCongregadosCount' => $activeCongregadosCount,
             'activeVisitantesCount' => $activeVisitantesCount,
