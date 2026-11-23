@@ -1,4 +1,25 @@
  <style>
+     #sidebar #financeiro-regiao .regional-group-toggle {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         font-weight: 600;
+         padding: 10px 12px 10px 61px;
+     }
+     #sidebar #financeiro-regiao .regional-group-toggle[aria-expanded="true"] svg {
+         transform: rotate(90deg);
+     }
+     #sidebar #financeiro-regiao .sub-submenu > li > a {
+         font-size: 12px;
+         color: #888ea8;
+         padding-left: 75px;
+     }
+     #sidebar #financeiro-regiao .sub-submenu > li.active > a {
+         color: #2196f3;
+     }
+     #sidebar #financeiro-regiao .sub-submenu > li > a::before {
+         left: 62px;
+     }
      #sidebar ul.menu-categories li.menu>#notificacao {
          background-color: inherit !important;
          color: inherit !important;
@@ -774,14 +795,7 @@
                  </li>
              @endif
 
-             @if (auth()->check() && auth()->user()->podeVerGestaoAcessos())
-                 <li class="menu {{ Request::is('regiao/relatorio/gestao-acessos') ? 'active' : '' }}">
-                     <a href="{{ route('regiao.relatorio.gestao-acessos') }}" class="dropdown-toggle">
-                         <span>{{ __('Gestão de Acessos') }}</span>
-                     </a>
-                 </li>
-             @endif
-             @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-menu-relatorio')))
+             @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-menu-relatorio') || auth()->user()->podeVerGestaoAcessos()))
                  <li class="menu">
                      <a href="#financeiro-regiao" data-toggle="collapse" aria-expanded="{{Request::is('regiao/relatorio/*') ? 'true' : 'false' }}"
                          class="dropdown-toggle">
@@ -808,19 +822,9 @@
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('regiao/relatorio/*') ? 'collapse show' : '' }}" id="financeiro-regiao"
                          data-parent="#financeiro-regiao">
-                         <!-- <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
-                                 <span>{{ __('Contabilidade') }}</span>
-                             @endif
-                         </li> -->
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-financeiro'))
-                         <li class="submenu-fixo mt-3 mb-3">
 
-                                 <span>{{ __('Financeiro') }}</span>
-
-                         </li>
-                         @endif
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-lancamento-das-igrejas'))
+                        <x-regional-report-group id="relatorios-regionais-financeiro" title="Financeiro">
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-lancamento-das-igrejas'))
                          <li {!! Request::is('regiao/relatorio/irrf') ? 'class="active"' : '' !!}>
 
                                  <a href="{{ route('regiao.relatorio.irrf') }}">{{ __('IRRF Repasse') }}</a>
@@ -888,14 +892,9 @@
 
                         </li>
                         @endif
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-ebd'))
-                        <li class="submenu-fixo mt-3 mb-3">
+                        </x-regional-report-group>
 
-                        <span>{{ __('EBD') }}</span>
-
-                        </li>
-                        @endif
-
+                        <x-regional-report-group id="relatorios-regionais-ebd" title="EBD">
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-ebd-dashboard'))
                         <li {!! Request::is('regiao/relatorio/ebd/dashboard') ? 'class="active"' : '' !!}>
 
@@ -963,13 +962,9 @@
 
                         </li>
                         @endif
-                        @if (auth()->check() && (auth()->user()->hasPerfilRegra('regiao-relatorio-membros-ministerio') || auth()->user()->hasPerfilRegra('regiao-mapao')))
-                         <li class="submenu-fixo mt-3 mb-3">
+                        </x-regional-report-group>
 
-                                 <span>{{ __('Membresia') }}</span>
-
-                         </li>
-                         @endif
+                        <x-regional-report-group id="relatorios-regionais-membresia" title="Membresia">
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-mapao'))
                          <li {!! Request::is('regiao/relatorio/mapao') ? 'class="active"' : '' !!}>
 
@@ -1029,13 +1024,9 @@
 
                          </li>
                          @endif
-                          @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-instituicoes-igrejas'))
-                        <li class="submenu-fixo mt-3 mb-3">
+                        </x-regional-report-group>
 
-                                <span>{{ __('Clérigos') }}</span>
-
-                        </li>
-                        @endif
+                        <x-regional-report-group id="relatorios-regionais-clerigos" title="Clérigos">
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('relatorio-clerigos-aniversariantes'))
                         <li {!! Request::is('regiao/relatorio/clerigos-aniversariantes') ? 'class="active"' : '' !!}>
 
@@ -1083,13 +1074,9 @@
 
                          </li>
                          @endif
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('menu-relatorios-congregacoes-igrejas'))
-                         <li class="submenu-fixo mt-3 mb-3">
+                        </x-regional-report-group>
 
-                                <span>{{ __('Igrejas') }}</span>
-
-                        </li>
-                        @endif
+                        <x-regional-report-group id="relatorios-regionais-igrejas" title="Igrejas">
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-relatorio-congregacoes-igrejas'))
                         <li {!! Request::is('regiao/relatorio/congregacoes-por-igrejas') ? 'class="active"' : '' !!}>
 
@@ -1139,10 +1126,10 @@
 
                         </li>
                         @endif
+                        </x-regional-report-group>
+
+                        <x-regional-report-group id="relatorios-regionais-patrimonio" title="Patrimônio">
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('regiao-menu-relatorio-patrimonio'))
-                            <li class="submenu-fixo mt-3 mb-3">
-                                <span>{{ __('Patrimônio') }}</span>
-                            </li>
                             <li {!! Request::is('regiao/relatorio/patrimonio/imoveis_cadastrados') ? 'class="active"' : '' !!}>
                                 <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'imoveis_cadastrados']) }}">{{ __('Imóveis cadastrados') }}</a>
                             </li>
@@ -1171,10 +1158,10 @@
                                 <a href="{{ route('regiao.relatorio.patrimonio.lista', ['relatorio' => 'bens_por_igreja_unidade']) }}">{{ __('Bens por igreja/unidade') }}</a>
                             </li>
                         @endif
+                        </x-regional-report-group>
+
+                        <x-regional-report-group id="relatorios-regionais-gceu" title="GCEU">
                         @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-relatorios'))
-                            <li class="submenu-fixo mt-3 mb-3">
-                                <span>{{ __('GCEU') }}</span>
-                            </li>
                             @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-regiao-lista-gceu'))
                             <li {!! Request::is('regiao/relatorio/gceu') ? 'class="active"' : '' !!}>
 
@@ -1204,7 +1191,13 @@
                             </li>
                             @endif
                         @endif
-	                     </ul>
+                        </x-regional-report-group>
+                        @if (auth()->check() && auth()->user()->podeVerGestaoAcessos())
+                            <li {!! Request::is('regiao/relatorio/gestao-acessos') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('regiao.relatorio.gestao-acessos') }}">{{ __('Histórico de Acessos') }}</a>
+                            </li>
+                        @endif
+                     </ul>
 	                 </li>
 	             @endif
 
