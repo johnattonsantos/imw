@@ -8,17 +8,15 @@ use Illuminate\Support\Facades\DB;
 
 class GestaoAcessosService
 {
-    public function sessoes(int $regiaoId, string $inicio, string $fim, string $usuario = '')
+    public function consultaSessoes(int $regiaoId, string $inicio, string $fim, string $usuario = '', ?int $instituicaoId = null)
     {
-        $limite = Carbon::parse($fim)->addDay()->toDateString().' 00:00:00';
+        $limite = Carbon::parse($fim)->addDay()->startOfDay()->toDateTimeString();
         $sessoes = DB::table('gestao_acessos_sessao_perfis as p')
             ->join('gestao_acessos_sessoes as s', 's.id', '=', 'p.sessao_id')
             ->where('p.regiao_id', $regiaoId)
-            ->where('p.primeiro_uso', '<', $limite)
-            ->where(function ($q) use ($inicio) {
-                $q->where('p.ultimo_uso', '>=', $inicio.' 00:00:00')
-                    ->orWhere('s.logout_em', '>=', $inicio.' 00:00:00');
-            })
+            ->whereNotNull('s.login_em')
+            ->where('s.login_em', '>=', $inicio.' 00:00:00')->where('s.login_em', '<', $limite)
+            ->when($instituicaoId, fn ($q) => $q->where('p.instituicao_id', $instituicaoId))
             ->select('p.instituicao_nome as instituicao', 'p.usuario_nome as usuario', 'p.perfil_nome as perfil',
                 's.id as sessao_id', 's.login_em as primeiro', 's.logout_em as ultimo', 'p.primeiro_uso', 'p.ultimo_uso')
             ->selectRaw("'sessao' as origem, p.id as ordenacao_id");
@@ -28,11 +26,13 @@ class GestaoAcessosService
             ->join('users as u', 'u.id', '=', 'a.user_id')
             ->leftJoin('instituicoes_instituicoes as i', 'i.id', '=', 'a.instituicao_id')
             ->where('a.event', 'login')->where('a.user_type', User::class)
+            ->whereNotNull('a.created_at')
             ->where('a.created_at', '>=', $inicio.' 00:00:00')->where('a.created_at', '<', $limite)
+            ->when($instituicaoId, fn ($q) => $q->where('a.instituicao_id', $instituicaoId))
             ->where(function ($q) use ($instituicoes) {
                 $q->whereIn('a.instituicao_id', clone $instituicoes)
                     ->orWhere(function ($q) use ($instituicoes) {
-                        // Unscoped logins are shown only for users currently exclusive to this region.
+                        // Never infer the institution of a historical login from ambiguous current links.
                         $q->whereNull('a.instituicao_id')
                             ->whereExists(function ($q) use ($instituicoes) {
                                 $q->selectRaw('1')->from('perfil_user as local')
@@ -49,7 +49,6 @@ class GestaoAcessosService
                     });
             })
             ->whereNotExists(function ($q) {
-                // Do not duplicate the audit login of a session already tracked explicitly.
                 $q->selectRaw('1')->from('gestao_acessos_sessoes as registrada')
                     ->whereColumn('registrada.user_id', 'a.user_id')
                     ->whereRaw("registrada.id = JSON_UNQUOTE(JSON_EXTRACT(CASE WHEN JSON_VALID(a.new_values) THEN a.new_values ELSE '{}' END, '$.gestao_sessao_id'))");
@@ -61,24 +60,81 @@ class GestaoAcessosService
             ->addSelect('a.created_at as primeiro_uso', 'a.created_at as ultimo_uso')
             ->selectRaw("'login_antigo' as origem, a.id as ordenacao_id");
 
-        return DB::query()->fromSub($sessoes->unionAll($logins), 'acessos')
-            ->when(trim($usuario) !== '', function ($q) use ($usuario) {
-                $nome = str_replace(['!', '%', '_'], ['!!', '!%', '!_'], trim($usuario));
-                $q->whereRaw("acessos.usuario LIKE ? ESCAPE '!'", ['%'.$nome.'%']);
-            })
-            ->orderByDesc('ultimo_uso')->orderByDesc('origem')->orderByDesc('ordenacao_id')
+        if (trim($usuario) !== '') {
+            $nome = $this->termoLike($usuario);
+            $sessoes->whereRaw("p.usuario_nome LIKE ? ESCAPE '!'", [$nome]);
+            $logins->whereRaw("u.name LIKE ? ESCAPE '!'", [$nome]);
+        }
+
+        return DB::query()->fromSub($sessoes->unionAll($logins), 'acessos');
+    }
+
+    public function sessoes(int $regiaoId, string $inicio, string $fim, string $usuario = '')
+    {
+        return $this->consultaSessoes($regiaoId, $inicio, $fim, $usuario)
+            ->orderByDesc('primeiro')->orderByDesc('origem')->orderByDesc('ordenacao_id')
             ->paginate(50)->withQueryString();
+    }
+
+    public function datatable(int $regiaoId, array $filtros, array $tabela): array
+    {
+        $query = $this->consultaSessoes($regiaoId, $filtros['data_inicial'], $filtros['data_final'],
+            trim($filtros['usuario'] ?? ''), isset($filtros['instituicao_id']) ? (int) $filtros['instituicao_id'] : null);
+        $total = (clone $query)->count();
+        $busca = trim(data_get($tabela, 'search.value', '') ?? '');
+        if ($busca !== '') {
+            $query->where(function ($q) use ($busca) {
+                foreach (['instituicao', 'usuario', 'perfil'] as $coluna) {
+                    $q->orWhereRaw("acessos.$coluna LIKE ? ESCAPE '!'", [$this->termoLike($busca)]);
+                }
+                $q->orWhereRaw("DATE_FORMAT(acessos.primeiro, '%d/%m/%Y %H:%i:%s') LIKE ? ESCAPE '!'", [$this->termoLike($busca)]);
+            });
+        }
+        $filtrado = $busca === '' ? $total : (clone $query)->count();
+        $colunas = ['instituicao', 'usuario', 'perfil', 'primeiro'];
+        $coluna = $colunas[(int) data_get($tabela, 'order.0.column', 3)] ?? 'primeiro';
+        $direcao = data_get($tabela, 'order.0.dir') === 'asc' ? 'asc' : 'desc';
+        $linhas = $query->orderBy($coluna, $direcao)->orderByDesc('origem')->orderByDesc('ordenacao_id')
+            ->offset(max(0, (int) ($tabela['start'] ?? 0)))
+            ->limit(min(100, max(10, (int) ($tabela['length'] ?? 25))))->get();
+
+        return ['draw' => (int) ($tabela['draw'] ?? 0), 'recordsTotal' => $total, 'recordsFiltered' => $filtrado,
+            'data' => $linhas->map(fn ($linha) => [
+                'instituicao' => $linha->instituicao, 'usuario' => $linha->usuario, 'perfil' => $linha->perfil,
+                'primeiro' => Carbon::parse($linha->primeiro)->format('d/m/Y H:i:s'),
+            ])->all()];
+    }
+
+    private function termoLike(string $termo): string
+    {
+        return '%'.str_replace(['!', '%', '_'], ['!!', '!%', '!_'], trim($termo)).'%';
+    }
+
+    public function instituicoes(int $regiaoId)
+    {
+        return DB::table('instituicoes_instituicoes as i')
+            ->join('instituicoes_tiposinstituicao as t', 't.id', '=', 'i.tipo_instituicao_id')
+            ->whereIn('i.id', $this->instituicoesDaRegiao($regiaoId))
+            ->whereNull('i.deleted_at')
+            ->select('i.id', 'i.nome', 't.nome as tipo')
+            ->orderBy('t.nome')->orderBy('i.nome')->get();
+    }
+
+    public function instituicaoPermitida(int $regiaoId, int $instituicaoId): bool
+    {
+        return DB::table('instituicoes_instituicoes')->where('id', $instituicaoId)
+            ->whereNull('deleted_at')->whereIn('id', $this->instituicoesDaRegiao($regiaoId))->exists();
     }
 
     private function instituicoesDaRegiao(int $regiaoId)
     {
         return DB::table('instituicoes_instituicoes as regional')
             ->leftJoin('instituicoes_instituicoes as pai_regional', 'pai_regional.id', '=', 'regional.instituicao_pai_id')
+            ->leftJoin('instituicoes_instituicoes as avo_regional', 'avo_regional.id', '=', 'pai_regional.instituicao_pai_id')
             ->select('regional.id')->where(function ($q) use ($regiaoId) {
-                $q->where(fn ($q) => $q->where('regional.tipo_instituicao_id', 3)->where('regional.id', $regiaoId))
-                    ->orWhere(fn ($q) => $q->where('regional.tipo_instituicao_id', 2)->where('regional.instituicao_pai_id', $regiaoId))
-                    ->orWhere(fn ($q) => $q->where('regional.tipo_instituicao_id', 1)->where('pai_regional.tipo_instituicao_id', 2)
-                        ->where('pai_regional.instituicao_pai_id', $regiaoId));
+                $q->where('regional.id', $regiaoId)->orWhere('regional.instituicao_pai_id', $regiaoId)
+                    ->orWhere('pai_regional.instituicao_pai_id', $regiaoId)
+                    ->orWhere('avo_regional.instituicao_pai_id', $regiaoId);
             });
     }
 
