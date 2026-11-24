@@ -1,4 +1,8 @@
 function exportReportToExcel() {
+    if (window.IMWReportTables && document.querySelector('table[data-report-table]')) {
+        window.IMWReportTables.exportExcel(XLSX);
+        return;
+    }
     const table = document.querySelector("table");
     const rows = table.querySelectorAll("tr");
 

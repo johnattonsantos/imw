@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -69,7 +70,7 @@
             </div>
 
             <div class="table-responsive">
-                <table class="table table-bordered table-striped table-hover">
+                <table data-report-table class="table table-bordered table-striped table-hover">
                     <thead>
                         <tr>
                             <th>Processo</th>
@@ -99,7 +100,6 @@
                                 <td>{{ $acao->custo_demanda !== null ? 'R$ ' . number_format((float) $acao->custo_demanda, 2, ',', '.') : '-' }}</td>
                             </tr>
                         @empty
-                            <tr><td colspan="10" class="text-center">Nenhum registro encontrado.</td></tr>
                         @endforelse
                     </tbody>
                     <tfoot>

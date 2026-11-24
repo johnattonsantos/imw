@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -27,7 +28,7 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
                         <label class="control-label">{{ __('* Ano:') }}</label>
@@ -67,7 +68,7 @@
                     <div class="row">
                         <div class="col-12">
                             <h6 class="mt-3">ORÇAMENTO - {{ session('session_perfil')->instituicao_nome }}</h6>
-                            <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                            <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th width="300" style="text-align: left">{{ __('IGREJA') }}</th>
@@ -131,6 +132,8 @@
                                     $totalDezembro += $lancamento->dezembro;
                                     @endphp
                                     @endforeach
+                                    </tbody>
+                                    <tfoot>
                                     <tr class="font-weight-bold">
                                         <td>{{ __('Totais') }}</td>
                                         <td style="text-align: right">{{ number_format($totalJaneiro, 2, ',', '.') }}</td>
@@ -146,7 +149,7 @@
                                         <td style="text-align: right">{{ number_format($totalNovembro, 2, ',', '.') }}</td>
                                         <td style="text-align: right">{{ number_format($totalDezembro, 2, ',', '.') }}</td>
                                     </tr>
-                                </tbody>
+                                </tfoot>
                             </table>
 
                         </div>

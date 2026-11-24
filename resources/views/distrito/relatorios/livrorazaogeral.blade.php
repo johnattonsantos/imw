@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -26,7 +27,7 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4">
                     <div class="col-lg-2 text-right">
                         <label class="control-label">{{ __('* Data Inicial:') }}</label>
@@ -76,34 +77,28 @@
                         <div class="col-12">
                             <h5 class="mt-3">LIVRO RAZÃO GERAL - {{ session('session_perfil')->instituicao_nome }}</h5>
                             <p>Período de {{ \Carbon\Carbon::parse(request()->input('dt_inicial'))->format('d/m/Y') }} a {{ \Carbon\Carbon::parse(request()->input('dt_final'))->format('d/m/Y') }}</p>
-                            <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th width="200" style="text-align: left">{{ __('CONTAS') }}</th>
-                                        <th width="100" style="text-align: right">{{ __('ENTRADAS') }}</th>
-                                        <th width="100" style="text-align: right">{{ __('SAÍDAS') }}</th>
-                                        <th width="100" style="text-align: right">{{ __('TOTAL') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($lancamentos as $key => $group)
-                                    <tr style="font-weight: bold;">
-                                        <td colspan="3">{{ $key }}</td>
-                                        <td style="text-align: right">R$ {{ number_format($group['total'], 2, ',', '.') }}</td>
-                                    </tr>
-                                    @foreach($group['movimentos'] as $lancamento)
-                                    @if($lancamento->total_entradas > 0 || $lancamento->total_saidas > 0)
-                                    <tr>
-                                        <td>{{ $lancamento->data_movimentacao }} - {{ $lancamento->instituicao_nome }}</td>
-                                        <td style="text-align: right">R$ {{ number_format($lancamento->total_entradas, 2, ',', '.') }}</td>
-                                        <td style="text-align: right">R$ {{ number_format($lancamento->total_saidas, 2, ',', '.') }}</td>
-                                        <td style="text-align: right"></td>
-                                    </tr>
-                                    @endif
-                                    @endforeach
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <table data-report-table class="table table-striped">
+    <thead class="thead-dark"><tr><th>{{ __('CONTA / MOVIMENTO') }}</th><th>{{ __('ENTRADAS') }}</th><th>{{ __('SAÍDAS') }}</th><th>{{ __('SALDO DA CONTA') }}</th></tr></thead>
+    <tbody>
+        @foreach($lancamentos as $key => $group)
+            @foreach($group['movimentos'] as $lancamento)
+                @if($lancamento->total_entradas > 0 || $lancamento->total_saidas > 0)
+                    <tr>
+                        <td><strong>{{ $key }}</strong><br>{{ $lancamento->data_movimentacao }} - {{ $lancamento->instituicao_nome }}</td>
+                        <td class="text-right">R$ {{ number_format($lancamento->total_entradas, 2, ',', '.') }}</td>
+                        <td class="text-right">R$ {{ number_format($lancamento->total_saidas, 2, ',', '.') }}</td>
+                        <td></td>
+                    </tr>
+                @endif
+            @endforeach
+        @endforeach
+    </tbody>
+    <tfoot>
+        @foreach($lancamentos as $key => $group)
+            <tr><th colspan="3">{{ $key }}</th><th class="text-right">R$ {{ number_format($group['total'], 2, ',', '.') }}</th></tr>
+        @endforeach
+    </tfoot>
+</table>
 
                         </div>
                     </div>

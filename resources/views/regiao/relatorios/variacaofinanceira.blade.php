@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -85,7 +86,7 @@
                         <div class="col-12">
                             <h5 class="mt-3">VARIAÇÃO FINANCEIRA - {{ $instituicao->nome }}</h5>
                             <p>Período de {{request()->input('dt_inicial')}} a {{ request()->input('dt_final')}}</p>
-                            <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                            <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th width="200" style="text-align: left">{{ __('IGREJA') }}</th>

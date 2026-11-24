@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -26,7 +27,7 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
                         <label class="control-label">{{ __('* Período (Inicial e Final):') }}</label>
@@ -88,10 +89,11 @@
         </div>
         <div class="widget-content widget-content-area">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover mb-4">
+                <table data-report-table class="table table-bordered table-hover mb-4">
                     <thead>
                         <tr>
                             <th>{{ __('DATA') }}</th>
+                            <th>{{ __('CAIXA') }}</th>
                             <th>{{ __('PLANO DE CONTA') }}</th>
                             <th>{{ __('ENTRADA') }}</th>
                             <th>{{ __('SAÍDA') }}</th>
@@ -124,17 +126,9 @@
 
                         @foreach ($groupedLancamentos as $dataMovimento => $lancamentosCaixa)
                             @foreach($lancamentosCaixa as $caixaDescricao => $lancamentosData)
-                                <tr>
-                                    <td><b>{{ \Carbon\Carbon::parse($dataMovimento)->format('d/m/Y') }}</b></td>
-                                    <td><b>{{ $caixaDescricao }}</b></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
                                 @foreach ($lancamentosData as $lancamento)
                                 <tr>
-                                    <td></td>
+                                    <td data-order="{{ $dataMovimento }}">{{ \Carbon\Carbon::parse($dataMovimento)->format('d/m/Y') }}</td><td>{{ $caixaDescricao }}</td>
                                     <td>{{ $lancamento->planoConta->numeracao }} - {{ $lancamento->planoConta->nome }}</td>
                                     <td style="{{ $lancamento->tipo_lancamento === 'E' ? 'color: green;' : 'color: red;' }}">
                                         {{ $lancamento->tipo_lancamento === 'E' ? 'R$ ' . number_format($lancamento->valor, 2, ',', '.') : '-' }}

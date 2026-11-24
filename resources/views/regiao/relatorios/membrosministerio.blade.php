@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -37,7 +38,7 @@ $dataInicialCalculada = $dataInicial ?? $dataInicialPeriodo;
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4">
                     <div class="col-lg-3 text-right">
                         <label class="control-label">{{ __('* Distrito:') }}</label>
@@ -114,7 +115,7 @@ $dataInicialCalculada = $dataInicial ?? $dataInicialPeriodo;
                             <h6 class="mt-3">MEMBROS POR MINISTÉRIO - {{ optional($instituicao)->nome ?? $regiao->nome }}</h6>
                             <div class="table-responsive">
                                 <p style="font-size: 11px;">Homens e mulheres: 30 anos ou mais, incluindo 60+. A coluna 60+ apresenta um recorte adicional; o total geral não duplica essas pessoas.</p>
-                                <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                                <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th width="30px" style="text-align: left" rowspan="2">{{ __('DISTRITO') }}</th>
@@ -206,7 +207,9 @@ $dataInicialCalculada = $dataInicial ?? $dataInicialPeriodo;
                                             <td style="text-align: right">{{ $lancamento->Total_Y }}</td>
                                         </tr>
                                         @endforeach
-                                        <tr class="thead-dark">
+                                        </tbody>
+                                    <tfoot>
+                                    <tr class="thead-dark">
                                             <th colspan="2" style="text-align: left">{{ __('TOTAL') }}</th>
                                             <th style="text-align: right">{{ $totalKids_X }}</th>
                                             <th style="text-align: right">{{ $totalKids_Y }}</th>
@@ -225,7 +228,7 @@ $dataInicialCalculada = $dataInicial ?? $dataInicialPeriodo;
                                             <th style="text-align: right">{{ $totalGeral_X }}</th>
                                             <th style="text-align: right">{{ $totalGeral_Y }}</th>
                                         </tr>
-                                    </tbody>
+                                    </tfoot>
                                 </table>
                             </div>
 

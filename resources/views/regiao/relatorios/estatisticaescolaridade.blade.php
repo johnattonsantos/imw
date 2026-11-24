@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
     <x-breadcrumb :breadcrumbs="[
@@ -102,7 +103,7 @@
                                     <h6 class="mt-3">QUANTIDADE DE MEMBROS -
                                         {{ optional($instituicao)->nome ?? $regiao->nome }}</h6>
                                     <div class="table-responsive">
-                                        <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                                        <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                             <thead class="thead-dark">
                                                 <tr>
                                                     <th style="text-align: left;">{{ __('Instituição') }}</th>
