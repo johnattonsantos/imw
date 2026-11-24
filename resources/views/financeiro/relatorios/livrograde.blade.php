@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
     <x-breadcrumb :breadcrumbs="[
@@ -60,7 +61,7 @@
             </div>
             <div class="widget-content widget-content-area">
 
-                <div class="row">
+                <div class="row pt-3">
                     <div class="col-xl-12 col-md-12 col-sm-12 col-12">
 
                         @php
@@ -106,7 +107,7 @@
                             </svg> {{ __('Ocorreu um erro ao carregar os dados. Por favor, tente novamente mais tarde.') }}
                         </div>
                         <input type="hidden" id="get-ano">
-                        <table id="livrograde" class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                        <table data-report-table id="livrograde" class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                             <thead class="thead-dark">
                                 <tr>
                                     <th width="50px">{{ __('ROL') }}</th>
@@ -281,7 +282,7 @@
                 head: headRows(),
                 body: bodyRows(5),
                 theme: 'grid',
-                html: '#livrograde'
+                html: window.IMWReportTables ? window.IMWReportTables.snapshot(document.getElementById('livrograde')) : '#livrograde'
             })
 
             doc.save('table.pdf')
@@ -332,6 +333,7 @@
                     'X-CSRF-TOKEN': csrfToken
                 },
                 success: function(response) {
+                    if (window.IMWReportTables) window.IMWReportTables.destroy('#livrograde');
                     $('#livrograde').removeClass('d-none');
                     $('#noDataAlert').addClass('d-none');
                     $('#livrograde tbody').empty();
@@ -359,6 +361,7 @@
                         $('#livrograde tbody').append(newRow);
                     });
 
+                    if (window.IMWReportTables) window.IMWReportTables.init('#livrograde');
                     $('#loadingIndicator').addClass('d-none');
                 },
                 error: function(xhr, status, error) {

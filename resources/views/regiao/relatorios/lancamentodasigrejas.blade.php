@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -85,7 +86,7 @@
                     <div class="row">
                         <div class="col-12">
                             <h6 class="mt-3">LANÇAMENTO(S) DA(S) IGREJA(S) - {{ isset($instituicao->nome) ? $instituicao->nome : 'Todas' }}</h6>
-                            <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                            <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <!--    <th width="300" style="text-align: left">{{ __('DISTRITO') }}</th> -->

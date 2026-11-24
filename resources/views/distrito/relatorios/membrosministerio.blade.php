@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -31,7 +32,7 @@ use Carbon\Carbon;
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data_inicial">
                     <div class="col-lg-3 text-right">
                         <label class="control-label">{{ __('* Data Inicial:') }}</label>
@@ -95,7 +96,7 @@ use Carbon\Carbon;
                             <h6 class="mt-3">MEMBROS POR MINISTÉRIO - {{ session('session_perfil')->instituicao_nome }}</h6>
                             <div class="table-responsive">
                                 <p style="font-size: 11px;">Homens e mulheres: 30 anos ou mais, incluindo 60+. A coluna 60+ apresenta um recorte adicional; o total geral não duplica essas pessoas.</p>
-                                <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                                <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th width="500px" style="text-align: left" rowspan="2">{{ __('IGREJA') }}</th>
@@ -185,7 +186,9 @@ use Carbon\Carbon;
                                             <td style="text-align: right">{{ $lancamento->Total_Y }}</td>
                                         </tr>
                                         @endforeach
-                                        <tr class="thead-dark">
+                                        </tbody>
+                                    <tfoot>
+                                    <tr class="thead-dark">
                                             <th style="text-align: left">{{ __('TOTAL') }}</th>
                                             <th style="text-align: right">{{ $totalKids_X }}</th>
                                             <th style="text-align: right">{{ $totalKids_Y }}</th>
@@ -204,7 +207,7 @@ use Carbon\Carbon;
                                             <th style="text-align: right">{{ $totalGeral_X }}</th>
                                             <th style="text-align: right">{{ $totalGeral_Y }}</th>
                                         </tr>
-                                    </tbody>
+                                    </tfoot>
                                 </table>
                             </div>
 

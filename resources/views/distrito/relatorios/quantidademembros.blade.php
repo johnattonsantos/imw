@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -38,7 +39,7 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <input type="hidden" id="data_inicial" name="data_inicial" value="{{ $dataInicialCalculada }}">
 
                 <div class="form-group row mb-4" id="filtros_data_final">
@@ -99,14 +100,14 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                         <div class="col-12">
                             <h6 class="mt-3">QUANTIDADE DE MEMBROS - {{ session('session_perfil')->instituicao_nome }}</h6>
                             <div class="table-responsive">
-                                <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                                <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th style="text-align: left" rowspan="2">{{ __('IGREJA') }}</th>
-                                            <th width="100px" style="text-align: left" rowspan="2">
+                                            <th style="text-align: left">{{ __('IGREJA') }}</th>
+                                            <th width="100px" style="text-align: left">
                                                 TOTAL EM {{ \Carbon\Carbon::parse($dataInicialCalculada)->format('d/m/Y') }}
                                             </th>
-                                            <th width="100px" style="text-align: left" rowspan="2">
+                                            <th width="100px" style="text-align: left">
                                                 TOTAL EM {{ \Carbon\Carbon::parse($dataFinalSelecionada)->format('d/m/Y') }}
                                             </th>
                                         </tr>

@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('content')
     @include('extras.alerts')
@@ -52,7 +53,7 @@
                 <div class="statbox widget box box-shadow">
                     <div class="widget-header p-3"><h4 class="mb-0">Relatórios Patrimoniais</h4></div>
                     <div class="widget-content widget-content-area">
-                        <form method="GET" action="{{ route($routeRelatorioIndex) }}">
+                        <form class="pt-3" method="GET" action="{{ route($routeRelatorioIndex) }}">
                             <div class="row">
                                 <div class="mb-3 col-md-4">
                                     <label>Relatório *</label>
@@ -131,7 +132,7 @@
                         <small class="text-muted d-block mb-2">Filtros são aplicados conforme os campos disponíveis em cada relatório.</small>
 
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover mb-0">
+                            <table data-report-table class="table table-bordered table-striped table-hover mb-0">
                                 <thead>
                                     <tr>
                                         @foreach ($report['headings'] as $heading)
@@ -147,10 +148,7 @@
                                             @endforeach
                                         </tr>
                                     @empty
-                                        <tr>
-                                            <td colspan="{{ count($report['headings']) }}" class="text-center">Nenhum dado encontrado para os filtros informados.</td>
-                                        </tr>
-                                    @endforelse
+                        @endforelse
                                 </tbody>
                             </table>
                         </div>
