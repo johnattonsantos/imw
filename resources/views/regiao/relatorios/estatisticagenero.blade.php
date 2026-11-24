@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -37,7 +38,7 @@ $dataInicialCalculada = $dataInicial ?? $dataInicialPeriodo;
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4">
                     <div class="col-lg-3 text-right">
                         <label class="control-label">{{ __('* Distrito:') }}</label>
@@ -113,7 +114,7 @@ $dataInicialCalculada = $dataInicial ?? $dataInicialPeriodo;
                         <div class="col-12">
                             <h6 class="mt-3">QUANTIDADE DE MEMBROS - {{ optional($instituicao)->nome ?? $regiao->nome }}</h6>
                             <div class="table-responsive">
-                                <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                                <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th colspan="2" width="200px" style="text-align: left"></th>

@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -26,7 +27,7 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
                         <label class="control-label">{{ __('* Mês/Ano:') }}</label>
@@ -66,7 +67,7 @@
                     <div class="row">
                         <div class="col-12">
                             <h6 class="mt-3">SALDO DE CAIXAS - {{ session('session_perfil')->instituicao_nome }}</h6>
-                            <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                            <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th width="150" style="text-align: left">{{ __('IGREJA') }}</th>
@@ -98,6 +99,8 @@
                                         <td style="text-align: right">{{ number_format($lancamento->total, 2, ',', '.') }}</td>
                                     </tr>
                                     @endforeach
+                                    </tbody>
+                                    <tfoot>
                                     <tr>
                                         <td>{{ __('TOTAL') }}</td>
                                         <td style="text-align: right">{{ number_format(array_sum($saldoCxPrincipal), 2, ',', '.') }}</td>
@@ -107,7 +110,7 @@
                                         <td style="text-align: right">{{ number_format(array_sum($saldoCxOutros), 2, ',', '.') }}</td>
                                         <td style="text-align: right">{{ number_format(array_sum($total), 2, ',', '.') }}</td>
                                     </tr>
-                                </tbody>
+                                </tfoot>
                             </table>
                         </div>
                     </div>

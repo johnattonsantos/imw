@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
     <x-breadcrumb :breadcrumbs="[
@@ -26,7 +27,7 @@
                 </div>
             </div>
             <div class="widget-content widget-content-area">
-                <form class="form-vertical" id="filter_form" method="GET">
+                <form class="form-vertical pt-3" id="filter_form" method="GET">
                     <div class="form-group row mb-4" id="filtros_data">
                         <div class="col-lg-2 text-right">
                             <label class="control-label">{{ __('* Data Inicial:') }}</label>
@@ -72,59 +73,28 @@
                 </div>
                 <div class="widget-content widget-content-area">
                     <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th colspan="3">{{ __('CONTA/DATA/ORIGEM/DESTINO') }}</th>
-                                <th>{{ __('ENTRADA') }} </th>
-                                <th class="text-right">{{ __('SAÍDA') }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @foreach ($lancamentosPorConta as $planoConta)
-                                <tr style="font-weight: bold; background-color: #f3effc">
-                                    <td colspan="5">
-                                        <div class="d-flex justify-content-between">
-                                            <span>
-                                                {{ $planoConta->numeracao }} - {{ $planoConta->nome }}
-                                            </span>
-                                            <span>
-                                                Total: {{ $planoConta->total }}
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @php
-                                    $totalEntradas = 0;
-                                    $totalSaidas = 0;
-                                @endphp
-
-                                @foreach ($planoConta->lancamentos as $lancamento)
-
-                                    <tr>
-                                        <td colspan="3">
-                                            {{ \Carbon\Carbon::parse($lancamento->data_lancamento)->format('d/m/Y') }} -
-                                            {{ $lancamento->caixa->descricao }} -
-                                            {{ $lancamento->pagante_favorecido }}
-                                        </td>
-                                        <td class="text-right {{ $lancamento->tipo_lancamento === 'E' ? 'green' : '' }}">
-                                            {{ $lancamento->tipo_lancamento === 'E' ? 'R$ ' . number_format($lancamento->valor, 2, ',', '.') : '-' }}
-                                        </td>
-                                        <td class="text-right {{ $lancamento->tipo_lancamento === 'S' ? 'red' : '' }}">
-                                            {{ $lancamento->tipo_lancamento === 'S' ? 'R$ ' . number_format($lancamento->valor, 2, ',', '.') : '-' }}
-                                        </td>
-                                    </tr>
-                                    @php
-                                        if ($lancamento->tipo_lancamento === 'E') {
-                                            $totalEntradas += $lancamento->valor;
-                                        } else {
-                                            $totalSaidas += abs($lancamento->valor);
-                                        }
-                                    @endphp
-                                @endforeach
-                            @endforeach
-                            </tbody>
-                        </table>
+                        <table data-report-table class="table table-bordered">
+    <thead><tr><th>{{ __('CONTA') }}</th><th>{{ __('DATA') }}</th><th>{{ __('CAIXA') }}</th><th>{{ __('PAGANTE/FAVORECIDO') }}</th><th>{{ __('ENTRADA') }}</th><th>{{ __('SAÍDA') }}</th></tr></thead>
+    <tbody>
+        @foreach($lancamentosPorConta as $planoConta)
+            @foreach($planoConta->lancamentos as $lancamento)
+                <tr>
+                    <td>{{ $planoConta->numeracao }} - {{ $planoConta->nome }}</td>
+                    <td data-order="{{ $lancamento->data_lancamento }}">{{ \Carbon\Carbon::parse($lancamento->data_lancamento)->format('d/m/Y') }}</td>
+                    <td>{{ $lancamento->caixa->descricao }}</td>
+                    <td>{{ $lancamento->pagante_favorecido }}</td>
+                    <td class="text-right {{ $lancamento->tipo_lancamento === 'E' ? 'green' : '' }}">{{ $lancamento->tipo_lancamento === 'E' ? 'R$ ' . number_format($lancamento->valor, 2, ',', '.') : '-' }}</td>
+                    <td class="text-right {{ $lancamento->tipo_lancamento === 'S' ? 'red' : '' }}">{{ $lancamento->tipo_lancamento === 'S' ? 'R$ ' . number_format($lancamento->valor, 2, ',', '.') : '-' }}</td>
+                </tr>
+            @endforeach
+        @endforeach
+    </tbody>
+    <tfoot>
+        @foreach($lancamentosPorConta as $planoConta)
+            <tr><th colspan="4">{{ $planoConta->numeracao }} - {{ $planoConta->nome }}</th><th colspan="2">Total: {{ $planoConta->total }}</th></tr>
+        @endforeach
+    </tfoot>
+</table>
                     </div>
                 </div>
 

@@ -1,23 +1,28 @@
  <style>
-     #sidebar #financeiro-regiao .regional-group-toggle {
+     #sidebar #financeiro-regiao .regional-group-toggle,
+     #sidebar #financeiro-distrito .regional-group-toggle {
          display: flex;
          align-items: center;
          justify-content: space-between;
          font-weight: 600;
          padding: 10px 12px 10px 61px;
      }
-     #sidebar #financeiro-regiao .regional-group-toggle[aria-expanded="true"] svg {
+     #sidebar #financeiro-regiao .regional-group-toggle[aria-expanded="true"] svg,
+     #sidebar #financeiro-distrito .regional-group-toggle[aria-expanded="true"] svg {
          transform: rotate(90deg);
      }
-     #sidebar #financeiro-regiao .sub-submenu > li > a {
+     #sidebar #financeiro-regiao .sub-submenu > li > a,
+     #sidebar #financeiro-distrito .sub-submenu > li > a {
          font-size: 12px;
          color: #888ea8;
          padding-left: 75px;
      }
-     #sidebar #financeiro-regiao .sub-submenu > li.active > a {
+     #sidebar #financeiro-regiao .sub-submenu > li.active > a,
+     #sidebar #financeiro-distrito .sub-submenu > li.active > a {
          color: #2196f3;
      }
-     #sidebar #financeiro-regiao .sub-submenu > li > a::before {
+     #sidebar #financeiro-regiao .sub-submenu > li > a::before,
+     #sidebar #financeiro-distrito .sub-submenu > li > a::before {
          left: 62px;
      }
      #sidebar ul.menu-categories li.menu>#notificacao {
@@ -656,141 +661,128 @@
                      </a>
                      <ul class="collapse submenu list-unstyled {{ Request::is('distrito/*') ? 'collapse show' : '' }}" id="financeiro-distrito"
                          data-parent="#financeiro-distrito">
-                         <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio'))
-                                 <span>{{ __('Financeiro') }}</span>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/lancamentodasigrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-lancamento-das-igrejas'))
-                                 <a href="{{ route('distrito.relatorio.lancamentodasigrejas') }}">{{ __('Lançamento das Igrejas') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/saldodasigrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-saldo-das-igrejas'))
-                                 <a href="{{ route('distrito.relatorio.saldodasigrejas') }}">{{ __('Saldo de Caixas') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/livrorazaogeral') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-livro-razao-geral'))
-                                 <a href="{{ route('distrito.relatorio.livrorazaogeral') }}">{{ __('Livro Razão Geral') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/orcamento') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-orcamento'))
-                                 <a href="{{ route('distrito.relatorio.orcamento') }}">{{ __('Orçamento') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/variacaofinanceira') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-variacao-financeira'))
-                                 <a href="{{ route('distrito.relatorio.variacaofinanceira') }}">{{ __('Variação Financeira') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/cota-orcamentaria') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-cota-orcamentaria'))
-                                <a href="{{ route('distrito.cota.orcamentaria') }}">{{ __('Cota Orçamentária') }}</a>
-                            @endif
-                        </li>
-                        <li {!! Request::is('distrito/recursos-humanos') ? 'class="active"' : '' !!}>
-                            @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-recurso-humano'))
-                                <a href="{{ route('distrito.recurso.humano') }}">{{ __('Recursos humanos') }}</a>
-                            @endif
-                        </li>
-                         <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio'))
-                                 <span>{{ __('Membresia') }}</span>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/membrosministerio') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-membros-ministerio'))
-                                <a href="{{ route('distrito.relatorio.membrosministerio') }}">{{ __('Membros por Ministério') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/quantidademembros') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-quantidade-membros'))
-                                 <a href="{{ route('distrito.relatorio.quantidademembros') }}">{{ __('Quantidade de Membros') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/conjuges') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio-conjuges'))
-                                 <a href="{{ route('distrito.relatorio.conjuges') }}">{{ __('Cônjuges') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/congregados') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && (auth()->user()->hasPerfilRegra('distrito-menu-relatorio-congregados') || auth()->user()->hasPerfilRegra('distrito-menu-relatorio')))
-                                 <a href="{{ route('distrito.relatorio.congregados') }}">{{ __('Congregados') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/estatisticagenero') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-estatistica-genero'))
-                                 <a href="{{ route('distrito.relatorio.estatisticagenero') }}">{{ __('Estatística por Gênero') }}</a>
-                             @endif
-                         </li>
-                         <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio'))
-                                 <span>{{ __('Estatísticas') }}</span>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/relatorio/estatisticas-gceu') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-estatistica-gceu'))
-                                 <a href="{{ route('distrito.relatorio.estatisticas.gceu') }}">{{ __('Estatísticas GCEU') }}</a>
-                             @endif
-                         </li>
-
-
-                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-clerigos-aniversariantes'))
-                            <li class="submenu-fixo mt-3 mb-3">
-                                        <span>{{ __('Clérigos') }}</span>
+                        <x-regional-report-group id="relatorios-distritais-financeiro" title="Financeiro">
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-lancamento-das-igrejas'))
+                            <li {!! Request::is('distrito/relatorio/lancamentodasigrejas') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.lancamentodasigrejas') }}">{{ __('Lançamento das Igrejas') }}</a>
                             </li>
-                            <li {!! Request::is('regiao/relatorio/clerigos-aniversariantes') ? 'class="active"' : '' !!}>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-saldo-das-igrejas'))
+                            <li {!! Request::is('distrito/relatorio/saldodasigrejas') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.saldodasigrejas') }}">{{ __('Saldo de Caixas') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-livro-razao-geral'))
+                            <li {!! Request::is('distrito/relatorio/livrorazaogeral') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.livrorazaogeral') }}">{{ __('Livro Razão Geral') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-orcamento'))
+                            <li {!! Request::is('distrito/relatorio/orcamento') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.orcamento') }}">{{ __('Orçamento') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-variacao-financeira'))
+                            <li {!! Request::is('distrito/relatorio/variacaofinanceira') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.variacaofinanceira') }}">{{ __('Variação Financeira') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-cota-orcamentaria'))
+                            <li {!! Request::is('distrito/cota-orcamentaria') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.cota.orcamentaria') }}">{{ __('Cota Orçamentária') }}</a>
+                            </li>
+                        @endif
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-recurso-humano'))
+                            <li {!! Request::is('distrito/recursos-humanos') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.recurso.humano') }}">{{ __('Recursos humanos') }}</a>
+                            </li>
+                        @endif
+                        </x-regional-report-group>
+                        <x-regional-report-group id="relatorios-distritais-membresia" title="Membresia">
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-membros-ministerio'))
+                            <li {!! Request::is('distrito/relatorio/membrosministerio') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.membrosministerio') }}">{{ __('Membros por Ministério') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-quantidade-membros'))
+                            <li {!! Request::is('distrito/relatorio/quantidademembros') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.quantidademembros') }}">{{ __('Quantidade de Membros') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-relatorio-conjuges'))
+                            <li {!! Request::is('distrito/relatorio/conjuges') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.conjuges') }}">{{ __('Cônjuges') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && (auth()->user()->hasPerfilRegra('distrito-menu-relatorio-congregados') || auth()->user()->hasPerfilRegra('distrito-menu-relatorio')))
+                            <li {!! Request::is('distrito/relatorio/congregados') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.congregados') }}">{{ __('Congregados') }}</a>
+                            </li>
+                        @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-estatistica-genero'))
+                            <li {!! Request::is('distrito/relatorio/estatisticagenero') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.estatisticagenero') }}">{{ __('Estatística por Gênero') }}</a>
+                            </li>
+                        @endif
+                        </x-regional-report-group>
+                        <x-regional-report-group id="relatorios-distritais-estatisticas" title="Estatísticas">
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-estatistica-gceu'))
+                            <li {!! Request::is('distrito/relatorio/estatisticas-gceu') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.estatisticas.gceu') }}">{{ __('Estatísticas GCEU') }}</a>
+                            </li>
+                        @endif
+                        </x-regional-report-group>
+                        <x-regional-report-group id="relatorios-distritais-clerigos" title="Clérigos">
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-clerigos-aniversariantes'))
+
+
+                            <li {!! Request::is('distrito/clerigos-aniversariantes') ? 'class="active"' : '' !!}>
                                         <a href="{{ route('distrito.relatorio.clerigosaniversariantes') }}">{{ __('Clérigos Aniversariantes') }}</a>
                             </li>
                          @endif
-                         <li class="submenu-fixo mt-3 mb-3">
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-menu-igrejas'))
-                                 <span>{{ __('Igrejas') }}</span>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/congregacoes-por-igrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-congregacoes-igrejas'))
-                                 <a href="{{ route('distrito.relatorio.congregacaoporigreja') }}">{{ __('Congregações por Igrejas') }}</a>
-                             @endif
-                         </li>
-                         <li {!! Request::is('distrito/apirantes-por-igrejas') ? 'class="active"' : '' !!}>
-                             @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-aspirantes-igrejas'))
-                                 <a href="{{ route('distrito.relatorio.apirateporigreja') }}">{{ __('Aspirantes por Igrejas') }}</a>
-                             @endif
-                         </li>
-
-                        @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-relatorios'))
-                            <li class="submenu-fixo mt-3 mb-3">
-                                <span>{{ __('GCEU') }}</span>
-                            </li>
-
-                            <li {!! Request::is('distrito/relatorio-gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-lista-gceu'))
-                                    <a href="{{ route('distrito.relatorio.gceu') }}">{{ __('Lista GCEU') }}</a>
-                                @endif
-                            </li>
-
-                            <li {!! Request::is('distrito/relatorio-carta-pastoral-gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-relatorio-carta-pastoral'))
-                                    <a href="{{ route('distrito.relatorio.carta-pastoral-distrito') }}">{{ __('Carta Pastoral') }}</a>
-                                @endif
-                            </li>
-
-                            <li {!! Request::is('distrito/relatorio-funcoes-gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-lista-funcoes'))
-                                    <a href="{{ route('distrito.relatorio.funcoes.gceu') }}">{{ __('Lista Função') }}</a>
-                                @endif
-                            </li>
-
-                            <li {!! Request::is('distrito/relatorio-aniversariantes-gceu') ? 'class="active"' : '' !!}>
-                                @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-lista-aniversariantes'))
-                                    <a href="{{ route('distrito.relatorio.aniversariantes.gceu') }}">{{ __('Lista Aniversariantes') }}</a>
-                                @endif
+                        </x-regional-report-group>
+                        <x-regional-report-group id="relatorios-distritais-igrejas" title="Igrejas">
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-congregacoes-igrejas'))
+                            <li {!! Request::is('distrito/congregacoes-por-igrejas') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.congregacaoporigreja') }}">{{ __('Congregações por Igrejas') }}</a>
                             </li>
                         @endif
+                         @if (auth()->check() && auth()->user()->hasPerfilRegra('distrito-relatorio-aspirantes-igrejas'))
+                            <li {!! Request::is('distrito/apirantes-por-igrejas') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.apirateporigreja') }}">{{ __('Aspirantes por Igrejas') }}</a>
+                            </li>
+                        @endif
+                        </x-regional-report-group>
+                        <x-regional-report-group id="relatorios-distritais-gceu" title="GCEU">
+                        @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-relatorios'))
+
+
+
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-lista-gceu'))
+                            <li {!! Request::is('distrito/relatorio-gceu') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.gceu') }}">{{ __('Lista GCEU') }}</a>
+                            </li>
+                        @endif
+
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-relatorio-carta-pastoral'))
+                            <li {!! Request::is('distrito/relatorio-carta-pastoral-gceu') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.carta-pastoral-distrito') }}">{{ __('Carta Pastoral') }}</a>
+                            </li>
+                        @endif
+
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-lista-funcoes'))
+                            <li {!! Request::is('distrito/relatorio-funcoes-gceu') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.funcoes.gceu') }}">{{ __('Lista Função') }}</a>
+                            </li>
+                        @endif
+
+                            @if (auth()->check() && auth()->user()->hasPerfilRegra('gceu-distrito-lista-aniversariantes'))
+                            <li {!! Request::is('distrito/relatorio-aniversariantes-gceu') ? 'class="active"' : '' !!}>
+                                <a href="{{ route('distrito.relatorio.aniversariantes.gceu') }}">{{ __('Lista Aniversariantes') }}</a>
+                            </li>
+                        @endif
+                        @endif
+                        </x-regional-report-group>
                      </ul>
                  </li>
              @endif

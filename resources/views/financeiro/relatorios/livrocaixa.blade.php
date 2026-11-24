@@ -1,4 +1,5 @@
 @extends('template.layout')
+@include('relatorios.partials.datatable-assets')
 
 @section('breadcrumb')
 <x-breadcrumb :breadcrumbs="[
@@ -26,7 +27,7 @@
             </div>
         </div>
         <div class="widget-content widget-content-area">
-            <form class="form-vertical" id="filter_form" method="GET">
+            <form class="form-vertical pt-3" id="filter_form" method="GET">
                 <div class="form-group row mb-4" id="filtros_data">
                     <div class="col-lg-2 text-right">
                         <label class="control-label">{{ __('* Mês/Ano:') }}</label>
@@ -79,7 +80,7 @@
                     <div class="row">
                         <div class="col-12">
                             <h5 class="mt-3">{{ __('Discriminação de saldos por caixa') }}</h5>
-                            <table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
+                            <table data-report-table class="table table-striped" style="font-size: 90%; margin-top: 15px;">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>{{ __('CAIXA') }}</th>
@@ -135,6 +136,8 @@
                                     @endforeach
 
                                     {{-- Total de cada caixa --}}
+                                    </tbody>
+                                    <tfoot>
                                     <tr>
                                         <td style="text-align: left"><strong>{{ __('Total dos Caixas') }}</strong></td>
                                         <td style="text-align: right">
@@ -156,7 +159,7 @@
                                             <strong>{{ 'R$ ' . number_format($totalSaldoAtual, 2, ',', '.') }}</strong>
                                         </td>
                                     </tr>
-                                </tbody>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
@@ -168,55 +171,31 @@
                             </div> --}}
 
                     <div class="col-12 mt-3">
-                        <h5>{{ __('Discriminação dos Lançamentos por Conta') }}</h5>
+
                     </div>
                     <div class="col-12">
-                        <table class="table" style="font-size: 90%; margin-top: 15px;">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>{{ __('CONTA') }}</th>
-                                    <th>{{ __('CAIXA') }}</th>
-                                    <th width="100" style="text-align: right;">{{ __('TOTAL') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                $numerosJaExibidos = [];
-                                $somasPorNumeracao = [];
-                                @endphp
-
-                                {{-- Calcular a soma total para cada numeracao --}}
-                                @foreach ($lancamentos as $lancamento)
-                                @php
-                                if (!isset($somasPorNumeracao[$lancamento->numeracao])) {
-                                $somasPorNumeracao[$lancamento->numeracao] = 0;
-                                }
-                                $somasPorNumeracao[$lancamento->numeracao] += $lancamento->total;
-                                @endphp
-                                @endforeach
-
-                                {{-- Renderizar a tabela --}}
-                                @foreach ($lancamentos as $index => $lancamento)
-                                @if (!in_array($lancamento->numeracao, $numerosJaExibidos))
-                                <tr>
-                                    <td style="width: 100px;">{{ $lancamento->numeracao }}</td>
-                                    <td style="font-weight: bold;">
-                                        {{ $lancamento->nome }}
-                                    </td>
-                                    <td style="text-align: right; font-weight: bold;">
-                                        R$ {{ number_format($somasPorNumeracao[$lancamento->numeracao], 2, ',', '.') }}
-                                    </td>
-                                </tr>
-                                @php $numerosJaExibidos[] = $lancamento->numeracao; @endphp
-                                @endif
-                                <tr>
-                                    <td></td>
-                                    <td style="text-align: left;">{{ $lancamento->caixa }}</td>
-                                    <td style="text-align: right;">R$ {{ number_format($lancamento->total, 2, ',', '.') }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        <h5 class="mt-3">{{ __('Discriminação dos Lançamentos por Conta') }}</h5>
+@php
+    $somasPorNumeracao = [];
+    $nomesPorNumeracao = [];
+    foreach ($lancamentos as $lancamento) {
+        $somasPorNumeracao[$lancamento->numeracao] = ($somasPorNumeracao[$lancamento->numeracao] ?? 0) + $lancamento->total;
+        $nomesPorNumeracao[$lancamento->numeracao] = $lancamento->nome;
+    }
+@endphp
+<table data-report-table class="table table-bordered table-striped">
+    <thead class="thead-dark"><tr><th>{{ __('CONTA') }}</th><th>{{ __('DESCRIÇÃO') }}</th><th>{{ __('CAIXA') }}</th><th>{{ __('TOTAL') }}</th></tr></thead>
+    <tbody>
+        @foreach($lancamentos as $lancamento)
+            <tr><td>{{ $lancamento->numeracao }}</td><td>{{ $lancamento->nome }}</td><td>{{ $lancamento->caixa }}</td><td class="text-right">R$ {{ number_format($lancamento->total, 2, ',', '.') }}</td></tr>
+        @endforeach
+    </tbody>
+    <tfoot>
+        @foreach($somasPorNumeracao as $numeracao => $soma)
+            <tr><th>{{ $numeracao }}</th><th colspan="2">{{ $nomesPorNumeracao[$numeracao] }} - {{ __('Total Conta') }}</th><th class="text-right">R$ {{ number_format($soma, 2, ',', '.') }}</th></tr>
+        @endforeach
+    </tfoot>
+</table>
 
                     </div>
                 </div>
