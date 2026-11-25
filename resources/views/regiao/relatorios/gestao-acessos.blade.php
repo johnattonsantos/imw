@@ -102,7 +102,7 @@
                 <div id="historico-erro" class="alert alert-danger d-none" role="alert"></div>
                 <div class="table-responsive mb-4">
                     <table id="historico-acessos-table" class="table table-bordered table-striped table-hover mb-4" style="width: 100%">
-                        <thead><tr><th>INSTITUIÇÃO</th><th>USUÁRIO</th><th>PERFIL</th><th>INÍCIO DA SESSÃO</th></tr></thead>
+                        <thead><tr><th title="Instituição registrada no login; quando ausente, exibe os vínculos atuais do usuário.">INSTITUIÇÃO</th><th>USUÁRIO</th><th title="Vínculos atuais do usuário nas instituições exibidas, não necessariamente os utilizados no login.">PERFIL ATUAL</th><th>INÍCIO DA SESSÃO</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>

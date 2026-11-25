@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use OwenIt\Auditing\Models\Audit;
-use App\Services\ServiceRegiaoRelatorios\SessaoAcessoService;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -20,13 +20,13 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $request->session()->forget(['audit_login_pendente', 'session_perfil']);
 
             $user = Auth::user();
             if ($user) {
-                $sessaoAcesso = app(SessaoAcessoService::class)->iniciar($request);
-                $request->session()->put('pastor_login_pendente', $sessaoAcesso['id']);
+                $request->session()->put('pastor_login_pendente', (string) Str::uuid());
                 try {
-                    Audit::create([
+                    $audit = Audit::create([
                         'user_type' => get_class($user),
                         'user_id' => $user->id,
                         'instituicao_id' => $this->sessionInstituicaoId(),
@@ -36,13 +36,13 @@ class AuthController extends Controller
                         'old_values' => [],
                         'new_values' => [
                             'message' => 'Login realizado com sucesso',
-                            'gestao_sessao_id' => $sessaoAcesso['id'],
                         ],
                         'url' => $request->fullUrl(),
                         'ip_address' => $request->ip(),
                         'user_agent' => substr((string) $request->userAgent(), 0, 1023),
                         'tags' => 'auth',
                     ]);
+                    $request->session()->put('audit_login_pendente', $audit->getKey());
                 } catch (\Throwable $e) {
                     // Nunca bloquear o login por falha de auditoria.
                 }
@@ -90,7 +90,6 @@ class AuthController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $sessaoAcessoId = app(SessaoAcessoService::class)->finalizar($request);
             try {
                 Audit::create([
                     'user_type' => get_class($user),
@@ -102,7 +101,6 @@ class AuthController extends Controller
                     'old_values' => [],
                     'new_values' => [
                         'message' => 'Logout realizado com sucesso',
-                        'gestao_sessao_id' => $sessaoAcessoId,
                     ],
                     'url' => $request->fullUrl(),
                     'ip_address' => $request->ip(),
