@@ -54,6 +54,8 @@ class VerificaPerfil
             }
         }
 
+        app(\App\Services\ServiceRegiaoRelatorios\VincularInstituicaoLoginService::class)->registrar($request);
+
         return $next($request);
     }
 }
