@@ -1,4 +1,4 @@
--- MySQL/MariaDB. Publique o codigo que usa somente audits ANTES de executar.
+
 -- ATENCAO: a exclusao e definitiva. Faca backup das quatro tabelas primeiro.
 -- Alternativa a migration 2026_11_25_120000_remove_retired_gestao_acessos_tables.
 -- Nao remove audits, usuarios, perfis nem pastor_acessos_motivacionais.
