@@ -1,0 +1,661 @@
+erDiagram
+    anexos {
+        bigint id PK
+        bigint lancamento_id FK
+    }
+    audits {
+        bigint id PK
+    }
+    categoria_comunicacao {
+        bigint id PK
+        bigint instituicao_id FK
+    }
+    comunicacao {
+        bigint id PK
+        bigint instituicao_id FK
+        bigint categoria_comunicacao_id FK
+    }
+    comunicacao_chat_conversas {
+        bigint id PK
+        bigint remetente_user_id FK
+        bigint remetente_pessoa_id FK
+        bigint destinatario_pessoa_id FK
+        bigint igreja_id FK
+        bigint distrito_id FK
+        bigint regiao_id FK
+    }
+    comunicacao_chat_mensagem_leituras {
+        bigint id PK
+        bigint mensagem_id FK
+        bigint user_id FK
+        bigint pessoa_id FK
+    }
+    comunicacao_chat_mensagens {
+        bigint id PK
+        bigint conversa_id FK
+        bigint remetente_user_id FK
+        bigint remetente_pessoa_id FK
+    }
+    comunicacao_chat_participantes {
+        bigint id PK
+        bigint conversa_id FK
+        bigint user_id FK
+        bigint pessoa_id FK
+        bigint igreja_id FK
+        bigint distrito_id FK
+        bigint regiao_id FK
+    }
+    comunicacao_leituras_igrejas {
+        bigint id PK
+        bigint comunicacao_id FK
+        bigint igreja_id FK
+        bigint user_id FK
+    }
+    congregacoes_congregacoes {
+        bigint id PK
+        bigint instituicao_id FK
+    }
+    controle_importacoes_csv {
+        bigint id PK
+    }
+    deducoes_ir {
+        bigint id PK
+    }
+    documentos_igrejas {
+        bigint id PK
+        bigint regiao_id FK
+        bigint igreja_id FK
+        bigint user_id FK
+    }
+    documentos_igrejas_arquivos {
+        bigint id PK
+        bigint documento_igreja_id FK
+    }
+    ebd_agendas {
+        bigint id PK
+        bigint turma_id FK
+    }
+    ebd_alunos {
+        bigint id PK
+        char membro_id FK
+    }
+    ebd_classes {
+        bigint id PK
+        bigint igreja_id FK
+    }
+    ebd_diarios {
+        bigint id PK
+        bigint turma_id FK
+    }
+    ebd_diario_presencas {
+        bigint id PK
+        bigint diario_id FK
+        bigint aluno_id FK
+    }
+    ebd_liderancas {
+        bigint id PK
+        char membro_id FK
+    }
+    ebd_professores {
+        bigint id PK
+        char membro_id FK
+    }
+    ebd_turmas {
+        bigint id PK
+        bigint classe_id FK
+        bigint professor_id FK
+        bigint congregacao_id FK
+    }
+    ebd_turma_alunos {
+        bigint id PK
+        bigint turma_id FK
+        bigint aluno_id FK
+    }
+    eventos {
+        bigint id PK
+        bigint instituicao_id FK
+        bigint evento_local_id FK
+        bigint evento_proposito_id FK
+    }
+    evento_equipes {
+        bigint id PK
+        bigint evento_id FK
+        bigint evento_funcao_id FK
+    }
+    evento_funcoes {
+        bigint id PK
+    }
+    evento_inscricao_movimentos {
+        bigint id PK
+        bigint evento_inscricao_id FK
+        bigint evento_id FK
+        bigint registrado_por FK
+    }
+    evento_inscricoes {
+        bigint id PK
+        bigint evento_id FK
+        char membro_id FK
+        bigint pessoa_id FK
+        bigint igreja_id FK
+    }
+    evento_locais {
+        bigint id PK
+        bigint regiao_id FK
+    }
+    evento_propositos {
+        bigint id PK
+    }
+    failed_jobs {
+        bigint id PK
+    }
+    financeiro_caixas {
+        bigint id PK
+        bigint instituicao_id FK
+    }
+    financeiro_fornecedores {
+        bigint id PK
+        bigint instituicao_id FK
+    }
+    financeiro_grades {
+        bigint id PK
+        bigint distrito_id FK
+        bigint igreja_id FK
+        char membro_id FK
+        bigint regiao_id FK
+    }
+    financeiro_lancamentos {
+        bigint id PK
+        bigint tipo_pagante_favorecido_id FK
+        char membro_id FK
+        bigint clerigo_id FK
+        bigint fornecedores_id FK
+        bigint plano_conta_id FK
+        bigint caixa_id FK
+        bigint lancamento_pai_id FK
+        bigint instituicao_destino_origem_id FK
+        bigint hist_distrito_id FK
+        bigint hist_geral_id FK
+        bigint hist_igreja_id FK
+        bigint hist_orgao_id FK
+        bigint hist_regiao_id FK
+        bigint hist_secretaria_id FK
+        bigint instituicao_id FK
+    }
+    financeiro_plano_contas {
+        bigint id PK
+        bigint conta_pai_id FK
+    }
+    financeiro_plano_contas_categoria {
+        tinyint id PK
+    }
+    financeiro_plano_conta_tipo_instituicao {
+        bigint id PK
+    }
+    financeiro_saldo_consolidado_mensal {
+        bigint id PK
+        bigint caixa_id FK
+        bigint instituicao_id FK
+    }
+    financeiro_tipos_pagantes_favorecidos {
+        bigint id PK
+    }
+    formacoes {
+        bigint id PK
+    }
+    gceu_cadastros {
+        bigint id PK
+    }
+    gceu_cartas_pastorais {
+        bigint id PK
+    }
+    gceu_diario {
+        bigint id PK
+    }
+    gceu_funcoes {
+        int id PK
+    }
+    gceu_membros {
+        bigint id PK
+        bigint gceu_cadastro_id FK
+        int gceu_funcao_id FK
+    }
+    instituicoes_instituicoes {
+        bigint id PK
+        bigint tipo_instituicao_id FK
+        bigint instituicao_pai_id FK
+        bigint regiao_id FK
+    }
+    instituicoes_tiposinstituicao {
+        bigint id PK
+    }
+    juridico_regiao_acoes {
+        bigint id PK
+        bigint regiao_id FK
+        bigint instituicao_id FK
+        bigint advogado_causa_id FK
+        bigint advogado_oposicao_id FK
+    }
+    juridico_regiao_advogados {
+        bigint id PK
+        bigint regiao_id FK
+    }
+    membresia_contatos {
+        bigint id PK
+        char membro_id FK
+    }
+    membresia_cursos {
+        bigint id PK
+    }
+    membresia_disciplinas {
+        bigint id PK
+        bigint modo_disciplina_id FK
+        bigint pastor_id FK
+        char membro_id FK
+        bigint distrito_id FK
+        bigint igreja_id FK
+        bigint regiao_id FK
+        bigint congregacao_id FK
+    }
+    membresia_familiares {
+        bigint id PK
+        char membro_id FK
+    }
+    membresia_formacoes {
+        bigint id PK
+    }
+    membresia_formacoeseclesiasticas {
+        bigint id PK
+        bigint curso_id FK
+        char membro_id FK
+    }
+    membresia_funcoeseclesiasticas {
+        bigint id PK
+    }
+    membresia_funcoesministeriais {
+        bigint id PK
+        char membro_id FK
+        bigint setor_id FK
+        bigint tipoatuacao_id FK
+    }
+    membresia_membros {
+        char id PK
+        bigint distrito_id FK
+        bigint igreja_id FK
+        bigint regiao_id FK
+        bigint escolaridade_id FK
+        bigint funcao_eclesiastica_id FK
+        bigint congregacao_id FK
+    }
+    membresia_migracao {
+        char id PK
+    }
+    membresia_migracao0 {
+        int idd PK
+    }
+    membresia_rolpermanente {
+        bigint id PK
+        bigint clerigo_id FK
+        bigint distrito_id FK
+        bigint igreja_id FK
+        char membro_id FK
+        bigint modo_exclusao_id FK
+        bigint modo_recepcao_id FK
+        bigint regiao_id FK
+        bigint congregacao_id FK
+    }
+    membresia_setores {
+        bigint id PK
+    }
+    membresia_situacoes {
+        bigint id PK
+    }
+    membresia_tiposatuacao {
+        bigint id PK
+    }
+    meses {
+        tinyint id PK
+    }
+    migrations {
+        int id PK
+    }
+    notificacoes_transferencias {
+        bigint id PK
+        char membro_id FK
+        bigint regiao_origem_id FK
+        bigint distrito_origem_id FK
+        bigint igreja_origem_id FK
+        bigint regiao_destino_id FK
+        bigint distrito_destino_id FK
+        bigint igreja_destino_id FK
+        bigint user_abertura FK
+        bigint user_finalizacao FK
+    }
+    password_resets {
+        varchar email PK
+    }
+    pastor_acessos_motivacionais {
+        char login_id PK
+    }
+    patrimonio_baixas {
+        bigint id PK
+        bigint igreja_id FK
+        bigint imovel_id FK
+        bigint bem_movel_id FK
+        bigint documento_id FK
+        bigint risco_juridico_id FK
+        bigint benfeitoria_id FK
+    }
+    patrimonio_benfeitorias {
+        bigint id PK
+        bigint igreja_id FK
+        bigint imovel_id FK
+        bigint bem_movel_id FK
+        bigint documento_id FK
+    }
+    patrimonio_bens_moveis {
+        bigint id PK
+        bigint igreja_id FK
+        bigint imovel_id FK
+    }
+    patrimonio_configuracoes {
+        bigint id PK
+    }
+    patrimonio_documentos {
+        bigint id PK
+        bigint igreja_id FK
+        bigint imovel_id FK
+        bigint bem_movel_id FK
+    }
+    patrimonio_imoveis {
+        bigint id PK
+        bigint igreja_id FK
+    }
+    patrimonio_riscos_juridicos {
+        bigint id PK
+        bigint igreja_id FK
+        bigint imovel_id FK
+        bigint bem_movel_id FK
+        bigint documento_id FK
+    }
+    perfils {
+        bigint id PK
+    }
+    perfil_regra {
+        bigint id PK
+        bigint perfil_id FK
+        bigint regra_id FK
+    }
+    perfil_regra_ {
+        bigint id PK
+    }
+    perfil_user {
+        bigint id PK
+        bigint user_id FK
+        bigint perfil_id FK
+        bigint instituicao_id FK
+    }
+    personal_access_tokens {
+        bigint id PK
+    }
+    pessoas_dependentes {
+        bigint id PK
+        bigint pessoa_id FK
+    }
+    pessoas_funcaoministerial {
+        bigint id PK
+    }
+    pessoas_nomeacoes {
+        bigint id PK
+        bigint hist_distrito_id FK
+        bigint hist_geral_id FK
+        bigint hist_igreja_id FK
+        bigint hist_orgao_id FK
+        bigint hist_regiao_id FK
+        bigint hist_secretaria_id FK
+        bigint instituicao_id FK
+        bigint pessoa_id FK
+        bigint funcao_ministerial_id FK
+    }
+    pessoas_pessoas {
+        bigint id PK
+        bigint situacao_id FK
+        bigint distrito_id FK
+        bigint igreja_id FK
+        bigint regiao_id FK
+    }
+    pessoas_prebendas {
+        bigint id PK
+        bigint pessoa_id FK
+    }
+    pessoas_status {
+        bigint id PK
+    }
+    prebendas {
+        bigint id PK
+    }
+    regras {
+        bigint id PK
+    }
+    tabelas_ir {
+        bigint id PK
+    }
+    tipo_arquivo {
+        bigint id PK
+    }
+    users {
+        bigint id PK
+        bigint pessoa_id FK
+    }
+    user_instituicoes {
+        bigint id PK
+        bigint user_id FK
+        bigint instituicao_id FK
+    }
+    vw_estatistica_escolidade {
+        bigint total "Sem PK/FK declarada"
+    }
+    vw_igrejas {
+        bigint id "Sem PK/FK declarada"
+    }
+    vw_rol_membros {
+        int numero_rol "Sem PK/FK declarada"
+    }
+    vw_rol_membros_recadastro {
+        binary numero_rol "Sem PK/FK declarada"
+    }
+    financeiro_lancamentos ||--o{ anexos : "FK lancamento_id"
+    instituicoes_instituicoes |o..o{ audits : "Logica instituicao_id"
+    users |o..o{ audits : "Logica user_id"
+    instituicoes_instituicoes ||--o{ categoria_comunicacao : "FK instituicao_id"
+    categoria_comunicacao |o--o{ comunicacao : "FK categoria_comunicacao_id"
+    instituicoes_instituicoes ||--o{ comunicacao : "FK instituicao_id"
+    instituicoes_instituicoes |o--o{ comunicacao_chat_conversas : "FK distrito_id"
+    instituicoes_instituicoes |o--o{ comunicacao_chat_conversas : "FK igreja_id"
+    instituicoes_instituicoes ||--o{ comunicacao_chat_conversas : "FK regiao_id"
+    pessoas_pessoas |o--o{ comunicacao_chat_conversas : "FK destinatario_pessoa_id"
+    pessoas_pessoas ||--o{ comunicacao_chat_conversas : "FK remetente_pessoa_id"
+    users |o--o{ comunicacao_chat_conversas : "FK remetente_user_id"
+    comunicacao_chat_mensagens ||--o{ comunicacao_chat_mensagem_leituras : "FK mensagem_id"
+    pessoas_pessoas ||--o{ comunicacao_chat_mensagem_leituras : "FK pessoa_id"
+    users |o--o{ comunicacao_chat_mensagem_leituras : "FK user_id"
+    comunicacao_chat_conversas ||--o{ comunicacao_chat_mensagens : "FK conversa_id"
+    pessoas_pessoas ||--o{ comunicacao_chat_mensagens : "FK remetente_pessoa_id"
+    users |o--o{ comunicacao_chat_mensagens : "FK remetente_user_id"
+    comunicacao_chat_conversas ||--o{ comunicacao_chat_participantes : "FK conversa_id"
+    instituicoes_instituicoes |o--o{ comunicacao_chat_participantes : "FK distrito_id"
+    instituicoes_instituicoes |o--o{ comunicacao_chat_participantes : "FK igreja_id"
+    instituicoes_instituicoes ||--o{ comunicacao_chat_participantes : "FK regiao_id"
+    pessoas_pessoas ||--o{ comunicacao_chat_participantes : "FK pessoa_id"
+    users |o--o{ comunicacao_chat_participantes : "FK user_id"
+    comunicacao ||--o{ comunicacao_leituras_igrejas : "FK comunicacao_id"
+    instituicoes_instituicoes ||--o{ comunicacao_leituras_igrejas : "FK igreja_id"
+    users |o--o{ comunicacao_leituras_igrejas : "FK user_id"
+    instituicoes_instituicoes ||--o{ congregacoes_congregacoes : "FK instituicao_id"
+    instituicoes_instituicoes |o--o{ documentos_igrejas : "FK igreja_id"
+    instituicoes_instituicoes ||--o{ documentos_igrejas : "FK regiao_id"
+    users |o--o{ documentos_igrejas : "FK user_id"
+    documentos_igrejas ||--o{ documentos_igrejas_arquivos : "FK documento_igreja_id"
+    ebd_turmas |o--o{ ebd_agendas : "FK turma_id"
+    membresia_membros ||--o{ ebd_alunos : "FK membro_id"
+    instituicoes_instituicoes |o--o{ ebd_classes : "FK igreja_id"
+    ebd_alunos ||--o{ ebd_diario_presencas : "FK aluno_id"
+    ebd_diarios ||--o{ ebd_diario_presencas : "FK diario_id"
+    ebd_turmas ||--o{ ebd_diarios : "FK turma_id"
+    membresia_membros ||--o{ ebd_liderancas : "FK membro_id"
+    membresia_membros ||--o{ ebd_professores : "FK membro_id"
+    ebd_alunos ||--o{ ebd_turma_alunos : "FK aluno_id"
+    ebd_turmas ||--o{ ebd_turma_alunos : "FK turma_id"
+    congregacoes_congregacoes |o--o{ ebd_turmas : "FK congregacao_id"
+    ebd_classes ||--o{ ebd_turmas : "FK classe_id"
+    ebd_professores |o--o{ ebd_turmas : "FK professor_id"
+    evento_funcoes |o--o{ evento_equipes : "FK evento_funcao_id"
+    eventos ||--o{ evento_equipes : "FK evento_id"
+    evento_inscricoes ||--o{ evento_inscricao_movimentos : "FK evento_inscricao_id"
+    eventos ||--o{ evento_inscricao_movimentos : "FK evento_id"
+    users |o--o{ evento_inscricao_movimentos : "FK registrado_por"
+    eventos ||--o{ evento_inscricoes : "FK evento_id"
+    instituicoes_instituicoes |o--o{ evento_inscricoes : "FK igreja_id"
+    membresia_membros |o--o{ evento_inscricoes : "FK membro_id"
+    pessoas_pessoas |o--o{ evento_inscricoes : "FK pessoa_id"
+    instituicoes_instituicoes ||--o{ evento_locais : "FK regiao_id"
+    evento_locais |o--o{ eventos : "FK evento_local_id"
+    evento_propositos |o--o{ eventos : "FK evento_proposito_id"
+    instituicoes_instituicoes ||--o{ eventos : "FK instituicao_id"
+    instituicoes_instituicoes ||--o{ financeiro_caixas : "FK instituicao_id"
+    instituicoes_instituicoes ||--o{ financeiro_fornecedores : "FK instituicao_id"
+    instituicoes_instituicoes |o--o{ financeiro_grades : "FK distrito_id"
+    instituicoes_instituicoes |o--o{ financeiro_grades : "FK igreja_id"
+    instituicoes_instituicoes |o--o{ financeiro_grades : "FK regiao_id"
+    membresia_membros |o--o{ financeiro_grades : "FK membro_id"
+    financeiro_caixas ||--o{ financeiro_lancamentos : "FK caixa_id"
+    financeiro_fornecedores |o--o{ financeiro_lancamentos : "FK fornecedores_id"
+    financeiro_lancamentos |o--o{ financeiro_lancamentos : "FK lancamento_pai_id"
+    financeiro_plano_contas ||--o{ financeiro_lancamentos : "FK plano_conta_id"
+    financeiro_tipos_pagantes_favorecidos |o--o{ financeiro_lancamentos : "FK tipo_pagante_favorecido_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK hist_distrito_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK hist_geral_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK hist_igreja_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK hist_orgao_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK hist_regiao_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK hist_secretaria_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK instituicao_destino_origem_id"
+    instituicoes_instituicoes |o--o{ financeiro_lancamentos : "FK instituicao_id"
+    membresia_membros |o--o{ financeiro_lancamentos : "FK membro_id"
+    pessoas_pessoas |o--o{ financeiro_lancamentos : "FK clerigo_id"
+    financeiro_plano_contas ||..o{ financeiro_plano_conta_tipo_instituicao : "Logica plano_conta_id"
+    financeiro_plano_contas |o--o{ financeiro_plano_contas : "FK conta_pai_id"
+    financeiro_caixas ||--o{ financeiro_saldo_consolidado_mensal : "FK caixa_id"
+    instituicoes_instituicoes ||--o{ financeiro_saldo_consolidado_mensal : "FK instituicao_id"
+    gceu_cadastros ||--o{ gceu_membros : "FK gceu_cadastro_id"
+    gceu_funcoes ||--o{ gceu_membros : "FK gceu_funcao_id"
+    membresia_membros |o..o{ gceu_membros : "Logica membro_id"
+    instituicoes_instituicoes |o--o{ instituicoes_instituicoes : "FK instituicao_pai_id"
+    instituicoes_instituicoes |o--o{ instituicoes_instituicoes : "FK regiao_id"
+    instituicoes_tiposinstituicao ||--o{ instituicoes_instituicoes : "FK tipo_instituicao_id"
+    instituicoes_instituicoes ||--o{ juridico_regiao_acoes : "FK instituicao_id"
+    instituicoes_instituicoes ||--o{ juridico_regiao_acoes : "FK regiao_id"
+    juridico_regiao_advogados |o--o{ juridico_regiao_acoes : "FK advogado_causa_id"
+    juridico_regiao_advogados |o--o{ juridico_regiao_acoes : "FK advogado_oposicao_id"
+    instituicoes_instituicoes ||--o{ juridico_regiao_advogados : "FK regiao_id"
+    membresia_membros ||--o{ membresia_contatos : "FK membro_id"
+    congregacoes_congregacoes |o--o{ membresia_disciplinas : "FK congregacao_id"
+    instituicoes_instituicoes |o--o{ membresia_disciplinas : "FK distrito_id"
+    instituicoes_instituicoes |o--o{ membresia_disciplinas : "FK igreja_id"
+    instituicoes_instituicoes |o--o{ membresia_disciplinas : "FK regiao_id"
+    membresia_membros ||--o{ membresia_disciplinas : "FK membro_id"
+    membresia_migracao ||..o{ membresia_disciplinas : "Logica membro_id"
+    membresia_situacoes ||--o{ membresia_disciplinas : "FK modo_disciplina_id"
+    pessoas_pessoas ||--o{ membresia_disciplinas : "FK pastor_id"
+    membresia_membros ||--o{ membresia_familiares : "FK membro_id"
+    membresia_migracao ||..o{ membresia_familiares : "Logica membro_id"
+    membresia_cursos ||--o{ membresia_formacoeseclesiasticas : "FK curso_id"
+    membresia_membros ||--o{ membresia_formacoeseclesiasticas : "FK membro_id"
+    membresia_migracao ||..o{ membresia_formacoeseclesiasticas : "Logica membro_id"
+    membresia_membros ||--o{ membresia_funcoesministeriais : "FK membro_id"
+    membresia_migracao ||..o{ membresia_funcoesministeriais : "Logica membro_id"
+    membresia_setores ||--o{ membresia_funcoesministeriais : "FK setor_id"
+    membresia_tiposatuacao ||--o{ membresia_funcoesministeriais : "FK tipoatuacao_id"
+    congregacoes_congregacoes |o--o{ membresia_membros : "FK congregacao_id"
+    gceu_cadastros |o..o{ membresia_membros : "Logica gceu_id"
+    instituicoes_instituicoes |o--o{ membresia_membros : "FK distrito_id"
+    instituicoes_instituicoes |o--o{ membresia_membros : "FK igreja_id"
+    instituicoes_instituicoes |o--o{ membresia_membros : "FK regiao_id"
+    membresia_formacoes |o--o{ membresia_membros : "FK escolaridade_id"
+    membresia_funcoeseclesiasticas |o--o{ membresia_membros : "FK funcao_eclesiastica_id"
+    congregacoes_congregacoes |o..o{ membresia_migracao : "Logica congregacao_id"
+    gceu_cadastros |o..o{ membresia_migracao : "Logica gceu_id"
+    congregacoes_congregacoes |o--o{ membresia_rolpermanente : "FK congregacao_id"
+    instituicoes_instituicoes ||--o{ membresia_rolpermanente : "FK distrito_id"
+    instituicoes_instituicoes ||--o{ membresia_rolpermanente : "FK igreja_id"
+    instituicoes_instituicoes ||--o{ membresia_rolpermanente : "FK regiao_id"
+    membresia_membros ||--o{ membresia_rolpermanente : "FK membro_id"
+    membresia_situacoes |o--o{ membresia_rolpermanente : "FK modo_exclusao_id"
+    membresia_situacoes ||--o{ membresia_rolpermanente : "FK modo_recepcao_id"
+    pessoas_pessoas |o--o{ membresia_rolpermanente : "FK clerigo_id"
+    instituicoes_instituicoes ||--o{ notificacoes_transferencias : "FK distrito_destino_id"
+    instituicoes_instituicoes ||--o{ notificacoes_transferencias : "FK distrito_origem_id"
+    instituicoes_instituicoes ||--o{ notificacoes_transferencias : "FK igreja_destino_id"
+    instituicoes_instituicoes ||--o{ notificacoes_transferencias : "FK igreja_origem_id"
+    instituicoes_instituicoes ||--o{ notificacoes_transferencias : "FK regiao_destino_id"
+    instituicoes_instituicoes ||--o{ notificacoes_transferencias : "FK regiao_origem_id"
+    membresia_membros ||--o{ notificacoes_transferencias : "FK membro_id"
+    membresia_migracao ||..o{ notificacoes_transferencias : "Logica membro_id"
+    users ||--o{ notificacoes_transferencias : "FK user_abertura"
+    users |o--o{ notificacoes_transferencias : "FK user_finalizacao"
+    users ||..o{ pastor_acessos_motivacionais : "Logica user_id"
+    instituicoes_instituicoes |o--o{ patrimonio_baixas : "FK igreja_id"
+    patrimonio_benfeitorias |o--o{ patrimonio_baixas : "FK benfeitoria_id"
+    patrimonio_bens_moveis |o--o{ patrimonio_baixas : "FK bem_movel_id"
+    patrimonio_documentos |o--o{ patrimonio_baixas : "FK documento_id"
+    patrimonio_imoveis |o--o{ patrimonio_baixas : "FK imovel_id"
+    patrimonio_riscos_juridicos |o--o{ patrimonio_baixas : "FK risco_juridico_id"
+    instituicoes_instituicoes |o--o{ patrimonio_benfeitorias : "FK igreja_id"
+    patrimonio_bens_moveis |o--o{ patrimonio_benfeitorias : "FK bem_movel_id"
+    patrimonio_documentos |o--o{ patrimonio_benfeitorias : "FK documento_id"
+    patrimonio_imoveis |o--o{ patrimonio_benfeitorias : "FK imovel_id"
+    instituicoes_instituicoes |o--o{ patrimonio_bens_moveis : "FK igreja_id"
+    patrimonio_imoveis |o--o{ patrimonio_bens_moveis : "FK imovel_id"
+    instituicoes_instituicoes |o--o{ patrimonio_documentos : "FK igreja_id"
+    patrimonio_bens_moveis |o--o{ patrimonio_documentos : "FK bem_movel_id"
+    patrimonio_imoveis |o--o{ patrimonio_documentos : "FK imovel_id"
+    instituicoes_instituicoes |o--o{ patrimonio_imoveis : "FK igreja_id"
+    instituicoes_instituicoes |o--o{ patrimonio_riscos_juridicos : "FK igreja_id"
+    patrimonio_bens_moveis |o--o{ patrimonio_riscos_juridicos : "FK bem_movel_id"
+    patrimonio_documentos |o--o{ patrimonio_riscos_juridicos : "FK documento_id"
+    patrimonio_imoveis |o--o{ patrimonio_riscos_juridicos : "FK imovel_id"
+    perfils ||--o{ perfil_regra : "FK perfil_id"
+    regras ||--o{ perfil_regra : "FK regra_id"
+    instituicoes_instituicoes |o--o{ perfil_user : "FK instituicao_id"
+    perfils ||--o{ perfil_user : "FK perfil_id"
+    users ||--o{ perfil_user : "FK user_id"
+    pessoas_pessoas ||--o{ pessoas_dependentes : "FK pessoa_id"
+    instituicoes_instituicoes |o--o{ pessoas_nomeacoes : "FK hist_distrito_id"
+    instituicoes_instituicoes |o--o{ pessoas_nomeacoes : "FK hist_geral_id"
+    instituicoes_instituicoes |o--o{ pessoas_nomeacoes : "FK hist_igreja_id"
+    instituicoes_instituicoes |o--o{ pessoas_nomeacoes : "FK hist_orgao_id"
+    instituicoes_instituicoes |o--o{ pessoas_nomeacoes : "FK hist_regiao_id"
+    instituicoes_instituicoes |o--o{ pessoas_nomeacoes : "FK hist_secretaria_id"
+    instituicoes_instituicoes ||--o{ pessoas_nomeacoes : "FK instituicao_id"
+    pessoas_funcaoministerial |o--o{ pessoas_nomeacoes : "FK funcao_ministerial_id"
+    pessoas_pessoas ||--o{ pessoas_nomeacoes : "FK pessoa_id"
+    instituicoes_instituicoes |o--o{ pessoas_pessoas : "FK distrito_id"
+    instituicoes_instituicoes |o--o{ pessoas_pessoas : "FK igreja_id"
+    instituicoes_instituicoes |o--o{ pessoas_pessoas : "FK regiao_id"
+    pessoas_status |o--o{ pessoas_pessoas : "FK situacao_id"
+    pessoas_pessoas ||--o{ pessoas_prebendas : "FK pessoa_id"
+    instituicoes_instituicoes ||--o{ user_instituicoes : "FK instituicao_id"
+    users ||--o{ user_instituicoes : "FK user_id"
+    pessoas_pessoas |o--o{ users : "FK pessoa_id"
+    congregacoes_congregacoes |o..o{ vw_rol_membros : "Logica congregacao_id"
+    instituicoes_instituicoes ||..o{ vw_rol_membros : "Logica distrito_id"
+    instituicoes_instituicoes |o..o{ vw_rol_membros : "Logica igreja_atual_id"
+    instituicoes_instituicoes ||..o{ vw_rol_membros : "Logica igreja_id"
+    instituicoes_instituicoes ||..o{ vw_rol_membros : "Logica regiao_id"
+    notificacoes_transferencias |o..o{ vw_rol_membros : "Logica notificacao_transferencia_id"
+    congregacoes_congregacoes |o..o{ vw_rol_membros_recadastro : "Logica congregacao_id"
+    instituicoes_instituicoes |o..o{ vw_rol_membros_recadastro : "Logica distrito_id"
+    instituicoes_instituicoes |o..o{ vw_rol_membros_recadastro : "Logica igreja_atual_id"
+    instituicoes_instituicoes |o..o{ vw_rol_membros_recadastro : "Logica igreja_id"
+    instituicoes_instituicoes |o..o{ vw_rol_membros_recadastro : "Logica regiao_id"
+    membresia_migracao ||..o{ vw_rol_membros_recadastro : "Logica membro_id"
+    notificacoes_transferencias |o..o{ vw_rol_membros_recadastro : "Logica notificacao_transferencia_id"
