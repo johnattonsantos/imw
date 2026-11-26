@@ -38,13 +38,12 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                 </div>
             </div>
         </div>
-        <div class="widget-content widget-content-area">
-            <form class="form-vertical pt-3" id="filter_form" method="GET">
-                <div class="form-group row mb-4">
-                    <div class="col-lg-3 text-right">
-                        <label class="control-label">{{ __('* Distrito:') }}</label>
-                    </div>
-                    <div class="col-lg-3">
+        <div class="widget-content widget-content-area p-3 p-md-4">
+            <form class="form-vertical" id="filter_form" method="GET">
+                <input type="hidden" id="data_inicial" name="data_inicial" value="{{ $dataInicialCalculada }}">
+                <div class="form-row">
+                    <div class="form-group col-12 col-md-6 col-lg-4">
+                        <label for="distrito">{{ __('* Distrito:') }}</label>
                         <select class="form-control" id="distrito" name="distrito" required>
                             <option value="">{{ __('Selecione') }}</option>
                             <option {{ request()->input('distrito') == 'all' ? 'selected' : '' }} value="all">{{ __('Todos') }}</option>
@@ -53,22 +52,12 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                             @endforeach
                         </select>
                     </div>
-                </div>
-                <input type="hidden" id="data_inicial" name="data_inicial" value="{{ $dataInicialCalculada }}">
-
-                <div class="form-group row mb-4" id="filtros_data_final">
-                    <div class="col-lg-3 text-right">
-                        <label class="control-label">{{ __('* Data Final:') }}</label>
-                    </div>
-                    <div class="col-lg-3">
+                    <div class="form-group col-12 col-md-6 col-lg-3" id="filtros_data_final">
+                        <label for="data_final">{{ __('* Data Final:') }}</label>
                         <input type="date" class="form-control @error('data_final') is-invalid @enderror" id="data_final" name="data_final" value="{{ $dataFinalSelecionada }}" required>
                     </div>
-                </div>
-                <div class="form-group row mb-4" id="filtros_periodo">
-                    <div class="col-lg-3 text-right">
-                        <label class="control-label">{{ __('* Período:') }}</label>
-                    </div>
-                    <div class="col-lg-3">
+                    <div class="form-group col-12 col-md-6 col-lg-3" id="filtros_periodo">
+                        <label for="periodo_anos">{{ __('* Período:') }}</label>
                         <select class="form-control" id="periodo_anos" name="periodo_anos" required>
                             <option value="1" {{ (string) $periodoSelecionado === '1' ? 'selected' : '' }}>{{ __('Anuênio') }}</option>
                             <option value="2" {{ (string) $periodoSelecionado === '2' ? 'selected' : '' }}>{{ __('Biênio') }}</option>
@@ -79,15 +68,10 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                         </select>
                         <small class="form-text text-muted">{{ __('Intervalo máximo permitido: 6 anos.') }}</small>
                     </div>
-                </div>
-                <div class="form-group row mb-4">
-                    <div class="col-lg-2"></div>
-                    <div class="col-lg-6">
-                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary btn">
+                    <div class="form-group col-12 col-md-6 col-lg-2">
+                        <label class="d-none d-md-block" aria-hidden="true">&nbsp;</label>
+                        <button id="btn_buscar" type="submit" name="action" value="buscar" title="{{ __('Buscar dados do Relatório') }}" class="btn btn-primary w-100">
                             <x-bx-search /> {{ __('Buscar') }}
-                        </button>
-                        <button id="btn_relatorio" type="button" class="btn btn-secondary">
-                            <i class="fa fa-file-pdf"></i> {{ __('Relatório') }}
                         </button>
                     </div>
                 </div>
@@ -126,6 +110,8 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                                             <th width="100px" style="text-align: left">
                                                 TOTAL EM {{ \Carbon\Carbon::parse($dataFinalSelecionada)->format('d/m/Y') }}
                                             </th>
+                                            <th style="text-align: right;">{{ __('AUMENTO') }}</th>
+                                            <th style="text-align: right;">{{ __('CRESCIMENTO (%)') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -139,6 +125,8 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                                             <td style="text-align: left;">{{ $lancamento->nome }}</td>
                                             <td style="text-align: left;">{{ $lancamento->total_ate_datainicial }}</td>
                                             <td style="text-align: left;">{{ $lancamento->total_ate_datafinal }}</td>
+                                            <td style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatarAumento($lancamento->total_ate_datainicial, $lancamento->total_ate_datafinal) }}</td>
+                                            <td style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatar($lancamento->total_ate_datainicial, $lancamento->total_ate_datafinal) }}</td>
                                             @php
                                             $totalGeralInicial += $lancamento->total_ate_datainicial;
                                             $totalGeralFinal += $lancamento->total_ate_datafinal;
@@ -151,9 +139,16 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
                                             <th colspan="2" style="text-align: left;">{{ __('Total Geral') }}</th>
                                             <th style="text-align: left;">{{ $totalGeralInicial }}</th>
                                             <th style="text-align: left;">{{ $totalGeralFinal }}</th>
+                                            <th style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatarAumento($totalGeralInicial, $totalGeralFinal) }}</th>
+                                            <th style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatar($totalGeralInicial, $totalGeralFinal) }}</th>
                                         </tr>
                                     </tfoot>
                                 </table>
+                                <button type="button" id="info-calculo-membros" class="btn btn-link p-1"
+                                    aria-label="{{ __('Como são calculados o aumento e o crescimento') }}"
+                                    title="{{ __('Aumento = final - inicial. Crescimento = (final - inicial) / inicial × 100. \"-\" indica ausência de base inicial para o cálculo.') }}">
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                </button>
 
 
                             </div>
@@ -166,6 +161,9 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
             <div class="row">
                 <div class="col-12 text-center">
                     <button class="btn btn-success btn-rounded" onclick="exportReportToExcel();"><i class="fa fa-file-excel" aria-hidden="true"></i> {{ __('Exportar') }}</button>
+                    <button id="btn_relatorio" type="button" class="btn btn-secondary btn-rounded ml-2">
+                        <i class="fa fa-file-pdf" aria-hidden="true"></i> {{ __('PDF') }}
+                    </button>
                 </div>
             </div>
             <!-- Fim do Conteúdo -->
@@ -183,6 +181,16 @@ $relatorioGerado = request()->filled('periodo_anos') || request()->filled('data_
 <script src="{{ asset('theme/plugins/bootstrap-select/bootstrap-select.min.js') }}"></script>
 <script>
     $(document).ready(function() {
+        $('#info-calculo-membros').tooltip({ trigger: 'click', placement: 'top', container: 'body' });
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('#info-calculo-membros, .tooltip').length) {
+                $('#info-calculo-membros').tooltip('hide');
+            }
+        }).on('keydown', function(event) {
+            if (event.key === 'Escape') {
+                $('#info-calculo-membros').tooltip('hide');
+            }
+        });
         $('.selectpicker').selectpicker(window.IMW_SELECTPICKER_OPTIONS || {});
 
         $('#btn_relatorio').on('click', function(event) {
