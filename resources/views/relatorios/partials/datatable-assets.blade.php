@@ -7,6 +7,16 @@
             .imw-report-table-wrapper .dataTables_wrapper { width: 100%; }
             .imw-report-table-wrapper .dataTables_wrapper > .row { margin-left: 0; margin-right: 0; }
             .imw-report-table-wrapper table { width: 100% !important; }
+            .imw-report-table-wrapper table.dataTable.table > thead > tr > th,
+            .imw-report-table-wrapper table.dataTable.table > thead > tr > td {
+                background: #edf2f8;
+                color: #515365;
+            }
+            .imw-report-table-wrapper table.dataTable.table > thead.thead-dark > tr > th,
+            .imw-report-table-wrapper table.dataTable.table > thead.thead-dark > tr > td {
+                background: #343a40;
+                color: #fff;
+            }
             .imw-report-table-wrapper .table-responsive { margin-bottom: 12px; }
             .imw-report-table-wrapper .dataTables_filter input { max-width: 100%; }
             @media (max-width: 575px) {
