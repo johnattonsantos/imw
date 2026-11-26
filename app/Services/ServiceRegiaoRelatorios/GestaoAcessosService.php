@@ -138,7 +138,7 @@ class GestaoAcessosService
                 $grupos = $vinculos->groupBy('instituicao_id');
                 if ($grupos->isNotEmpty()) {
                     if (data_get($linha, 'audit_instituicao_id') === null) {
-                        $linha->instituicao = $grupos->map(fn ($grupo) => $grupo->first()->instituicao)->implode('; ').' (vínculos atuais)';
+                        $linha->instituicao = $grupos->map(fn ($grupo) => $grupo->first()->instituicao)->implode('; ');
                     }
                     $linha->perfil = $grupos->map(function ($grupo) use ($grupos) {
                         $perfis = $grupo->pluck('perfil')->unique()->implode(', ');
