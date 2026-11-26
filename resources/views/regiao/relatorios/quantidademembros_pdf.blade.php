@@ -105,11 +105,11 @@ use Carbon\Carbon;
         <thead class="thead-dark">
             <tr>
                 <th style="width: 17%" style="text-align: distrito">{{ __('DISTRITO') }}</th>
-                <th style="text-align: left" rowspan="2">{{ __('IGREJA') }}</th>
-                <th width="100px" style="text-align: left" rowspan="2">
+                <th style="text-align: left">{{ __('IGREJA') }}</th>
+                <th width="100px" style="text-align: left">
                     TOTAL EM {{ \Carbon\Carbon::parse($dataInicial)->format('d/m/Y') }}
                 </th>
-                <th width="100px" style="text-align: left" rowspan="2">
+                <th width="100px" style="text-align: left">
                     TOTAL EM {{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}
                 </th>
             </tr>
