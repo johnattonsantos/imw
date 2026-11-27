@@ -111,6 +111,8 @@ use Carbon\Carbon;
                 <th width="100px" style="text-align: left">
                     TOTAL EM {{ \Carbon\Carbon::parse($dataFinal)->format('d/m/Y') }}
                 </th>
+                <th style="text-align: right;">{{ __('AUMENTO') }}</th>
+                <th style="text-align: right;">{{ __('CRESCIMENTO (%)') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -123,6 +125,8 @@ use Carbon\Carbon;
                 <td style="text-align: left;">{{ $lancamento->nome }}</td>
                 <td style="text-align: left;">{{ $lancamento->total_ate_datainicial }}</td>
                 <td style="text-align: left;">{{ $lancamento->total_ate_datafinal }}</td>
+                <td style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatarAumento($lancamento->total_ate_datainicial, $lancamento->total_ate_datafinal) }}</td>
+                <td style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatar($lancamento->total_ate_datainicial, $lancamento->total_ate_datafinal) }}</td>
                 @php
                 $totalGeralInicial += $lancamento->total_ate_datainicial;
                 $totalGeralFinal += $lancamento->total_ate_datafinal;
@@ -135,9 +139,12 @@ use Carbon\Carbon;
                 <th style="text-align: left;">{{ __('Total Geral') }}</th>
                 <th style="text-align: left;">{{ $totalGeralInicial }}</th>
                 <th style="text-align: left;">{{ $totalGeralFinal }}</th>
+                <th style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatarAumento($totalGeralInicial, $totalGeralFinal) }}</th>
+                <th style="text-align: right;">{{ \App\Support\VariacaoQuantidadeMembros::formatar($totalGeralInicial, $totalGeralFinal) }}</th>
             </tr>
         </tfoot>
     </table>
+                <p style="font-size: 10px;">{{ __('Aumento = final - inicial. Crescimento = (final - inicial) / inicial × 100. "-" indica ausência de base inicial para o cálculo.') }}</p>
 
 </body>
 

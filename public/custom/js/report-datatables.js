@@ -31,7 +31,7 @@
         };
         $.fn.dataTable.ext.type.detect.unshift(function (value) {
             const clean = text(value).replace(/^R\$\s*/, '');
-            return clean === '' || clean === '-' || /^-?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?%?$/.test(clean) ? 'imw-number-br' : null;
+            return clean === '' || clean === '-' || /^[+-]?(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d+)?%?$/.test(clean) ? 'imw-number-br' : null;
         });
         $.fn.dataTable.ext.type.order['imw-number-br-pre'] = function (value) {
             return Number(text(value).replace(/R\$|\s|\.|%/g, '').replace(',', '.')) || 0;
